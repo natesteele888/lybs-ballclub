@@ -9,8 +9,9 @@ No build step: open `index.html` (or run a static server) and it runs. Runs enti
 - **Schedule / Practices / Roster** -- CRUD tabs, coach-editable, read-only for everyone else.
 - **GameChanger widget** -- paste the Scoreboard Widget snippet from `web.gc.com -> Tools -> Create Scoreboard Widget`; it renders in a sandboxed iframe. Display-only -- GameChanger has no API, so this is never a data source for the calendar or anything else.
 - **MAC League standings** -- mirrored from `macleague.org` by `scripts/scrape-standings.mjs`, run on a schedule (`.github/workflows/standings.yml`), never fetched live from the browser. See that script's header comment for why.
-- **Rules search & save** -- MAC League's Majors/General/Playoff rules (`data/rules-seed.json`, pulled from `macleague.org/coaching-resources/...` on 2026-10-03), searchable, with a per-device "pin for quick reference."
+- **Rules search & save** -- MAC League's full set of rulebooks (`data/rules-seed.json`, pulled from `macleague.org/coaching-resources/...`, last refreshed for the 2026 season -- see that file's `season`/`fetchedAt` fields): Rookies, Minors, Majors, Juniors & Seniors each have their own rules (they genuinely differ), plus General, Playoff, Operating Guidelines and All-Stars Information that apply more broadly. Searchable, filterable by division (a division's rules + General show together, since the league's own rules are written that way), with a per-device "pin for quick reference." Rules get amended mid-season -- several entries carry the league's own "(Updated .../changed on ...)" notes -- so re-pull this each offseason at minimum.
 - **My Calendar** -- downloads an `.ics` file combining every team this device has logged into. Built from our own Schedule/Practices data, not synced from GameChanger (no feed exists to sync from).
+- **History** -- past-season archive (currently Spring/Summer 2026): schedule/scores pulled from each team's public GameChanger page, rosters supplied by the coach (GameChanger gates rosters behind login). Player names are reduced to first name + last initial before being written anywhere.
 
 ## Design
 
