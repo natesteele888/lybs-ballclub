@@ -456,6 +456,111 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .tonightScore { font-weight: 700; color: var(--text); font-size: 14px; }
 .tonightGameLocation { font-size: 12px; color: var(--text2); }
 
+/* ---- Coaching drills (Around the Horn + Pitch Chart) ---- */
+.drillHero { text-align: center; padding: 10px 0 20px; }
+.drillHeroIcon { font-size: 30px; margin-bottom: 4px; }
+.drillHeroTitle { font-family: var(--font-display); font-size: 24px; letter-spacing: 0.02em; color: #F0C84B; }
+.drillHeroSub { font-size: 12.5px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+.drillCard {
+  background: var(--card); border: 1px solid var(--card-border); border-radius: 14px;
+  padding: 14px; margin-bottom: 12px;
+}
+.drillCardHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
+.drillCardTitle { font-family: var(--font-label); font-weight: 700; font-size: 15px; letter-spacing: 0.02em; }
+.drillChipRow { display: flex; gap: 8px; flex-wrap: wrap; }
+.drillChip {
+  padding: 9px 14px; border-radius: 10px; border: 1.5px solid var(--card-border);
+  background: rgba(255,255,255,0.04); color: var(--text2); font-family: var(--font-body);
+  font-size: 13px; font-weight: 600; cursor: pointer; min-height: 40px;
+}
+.drillChip:disabled { opacity: 0.35; cursor: default; }
+.drillChipOn { background: rgba(245,166,35,0.18); border-color: #F0C84B; color: #F0C84B; }
+.drillAddRow { display: flex; gap: 8px; margin-top: 10px; }
+.drillFreeInput {
+  flex: 1; padding: 11px 13px; border-radius: 9px; border: 1px solid var(--card-border);
+  background: rgba(3,5,18,0.6); color: var(--text); font-size: 14px; font-family: var(--font-body);
+  min-height: 40px; box-sizing: border-box; width: 100%;
+}
+.drillFreeInput:focus { outline: none; border-color: var(--lybs-blue-bright); box-shadow: 0 0 0 3px var(--glow); }
+
+.athGroupPicker { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 10px 0 4px; }
+.athGroupBtn {
+  width: 58px; height: 58px; border-radius: 14px; font-family: var(--font-display); font-size: 26px;
+  border: 2px solid var(--card-border); background: rgba(255,255,255,0.04); color: var(--text2); cursor: pointer;
+}
+.athGroupBtn:hover { border-color: #F0C84B; color: #F0C84B; }
+.athBanner {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.4); z-index: 9999;
+  text-align: center; background: rgba(5,7,28,0.92); padding: 24px 36px; border-radius: 18px;
+  border: 2px solid #F0C84B; box-shadow: 0 0 50px rgba(245,166,35,0.4); pointer-events: none;
+  transition: transform 0.25s cubic-bezier(.175,.885,.32,1.275), opacity 0.3s; opacity: 0;
+}
+.athBanner.show { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+.athBannerTitle { font-family: var(--font-display); font-size: clamp(26px,7vw,44px); color: #F0C84B; line-height: 1; }
+.athBannerSub { font-size: 13px; color: #fff; margin-top: 6px; font-weight: 700; }
+.athPillRow { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.athPill { padding: 5px 11px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.athPillDone { background: rgba(16,185,129,0.12); color: #5fd989; border: 1px solid rgba(16,185,129,0.3); }
+.athPillCur { background: rgba(245,166,35,0.15); color: #F0C84B; border: 1px solid rgba(245,166,35,0.35); }
+.athPillWait { background: rgba(255,255,255,0.04); color: var(--text3); border: 1px solid var(--card-border); }
+.athTimerCard {
+  text-align: center; padding: 22px 14px 18px; background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 18px; margin-bottom: 14px;
+}
+.athTimerDisplay { font-family: var(--font-display); font-size: 68px; line-height: 1; letter-spacing: 0.02em; color: var(--text); }
+.athTimeRun { color: #F0C84B; }
+.athTimeStop { color: #ff8a8a; }
+.athTimeAccept { color: #5fd989; }
+.athAcceptNote { font-size: 12px; margin-top: 6px; font-weight: 700; }
+.athBigBtn { width: 100%; padding: 22px; font-size: 28px; letter-spacing: 0.04em; }
+.athStopBtn { background: linear-gradient(180deg, #e35858, #9a2b2b); }
+.athStopRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.athBoardRow { gap: 10px; }
+.athBoardMedal { font-size: 18px; width: 26px; text-align: center; flex: 0 0 auto; }
+.athBoardTime { font-family: var(--font-display); font-size: 20px; color: var(--text); flex: 0 0 auto; }
+
+.pcProgressBar { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.08); margin-bottom: 10px; overflow: hidden; }
+.pcProgressFill { height: 100%; background: #ef4444; border-radius: 3px; transition: width 0.3s; }
+.pcNetFrame {
+  background: linear-gradient(135deg, rgba(30,58,120,0.5), rgba(15,30,70,0.6)); border: 3px solid rgba(76,106,235,0.5);
+  border-radius: 14px; padding: 10px; margin-bottom: 10px; box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
+}
+.pcPocketGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+.pcPocket {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  min-height: 68px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.15); cursor: pointer;
+}
+.pcPocketMed { border-color: #F0C84B; box-shadow: 0 0 8px rgba(245,166,35,0.35); }
+.pcPocketHot { border-color: #ef4444; box-shadow: 0 0 10px rgba(239,68,68,0.5); }
+.pcPocketLabel { font-size: 10px; color: rgba(255,255,255,0.55); text-align: center; line-height: 1.25; font-weight: 600; display: flex; flex-direction: column; }
+.pcPocketCount { font-family: var(--font-display); font-size: 20px; color: #fff; }
+.pcBelowNet { display: flex; gap: 8px; margin-top: 2px; }
+.pcStrikeRate {
+  flex: 1; text-align: center; padding: 10px; border-radius: 9px; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--card-border); font-family: var(--font-display); font-size: 20px;
+}
+.pcStrikeRate span { font-size: 10px; color: var(--text2); margin-left: 5px; font-family: var(--font-body); }
+.pcPendingCard { margin-top: 10px; }
+.pcTypeBtn {
+  padding: 7px 12px; border-radius: 8px; border: 1.5px solid var(--card-border); background: rgba(255,255,255,0.04);
+  color: var(--text2); font-family: var(--font-body); font-weight: 700; font-size: 12px; cursor: pointer; min-height: 38px;
+}
+.pcTypeBtnOn { background: color-mix(in srgb, var(--pt-color) 20%, transparent); border-color: var(--pt-color); color: var(--pt-color); }
+.pcTypeTag {
+  padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 700;
+  background: color-mix(in srgb, var(--pt-color) 15%, transparent); border: 1px solid color-mix(in srgb, var(--pt-color) 40%, transparent);
+  color: var(--pt-color);
+}
+.pcSpeedRow { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+.pcSpeedRow .drillFreeInput { width: 90px; flex: 0 0 auto; }
+.pcStatRow { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.pcStatTile { flex: 1; min-width: 78px; text-align: center; padding: 12px 8px; background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; }
+.pcStatValue { font-family: var(--font-display); font-size: 26px; }
+.pcStatLabel { font-size: 9.5px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+.coachingToggle { display: flex; gap: 8px; margin-bottom: 18px; }
+.coachingToggle .btn { flex: 1; }
+
 @media (min-width: 640px) {
   .tabPanel { padding: 28px 24px 60px; }
   .loginCrest { width: 180px; }
