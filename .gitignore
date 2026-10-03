@@ -7,3 +7,4 @@ node_modules/
 # directly, so committing it would just go stale in git.
 data/standings-cache.json
 data/pitchsmart-cache.json
+data/dashboard-roster-import.json
