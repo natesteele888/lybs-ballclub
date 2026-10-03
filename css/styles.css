@@ -558,8 +558,34 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .pcStatValue { font-family: var(--font-display); font-size: 26px; }
 .pcStatLabel { font-size: 9.5px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
 
-.coachingToggle { display: flex; gap: 8px; margin-bottom: 18px; }
-.coachingToggle .btn { flex: 1; }
+.coachingToggle { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; }
+.coachingToggle::-webkit-scrollbar { display: none; }
+.coachingToggle .btn { flex: 0 0 auto; white-space: nowrap; }
+
+/* ---- Depth chart ---- */
+.depthRow { gap: 10px; }
+.depthRank {
+  width: 26px; height: 26px; border-radius: 7px; background: rgba(245,166,35,0.15); color: #F0C84B;
+  font-family: var(--font-display); font-size: 15px; display: flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+}
+.depthRowActions { display: flex; gap: 6px; flex: 0 0 auto; }
+
+/* ---- Lineup builder ---- */
+.drillFieldLabel { display: block; font-size: 11px; color: var(--lybs-silver); font-family: var(--font-label); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; }
+.lineupSlot {
+  display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 10px; padding: 10px; margin-bottom: 8px; flex-wrap: wrap;
+}
+.lineupSlotNum {
+  width: 26px; height: 26px; border-radius: 50%; background: rgba(76,106,235,0.18); color: #AFC0FF;
+  font-family: var(--font-display); font-size: 14px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+}
+.lineupSlotSelect {
+  padding: 9px 10px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(3,5,18,0.6);
+  color: var(--text); font-size: 13px; font-family: var(--font-body); min-height: 40px; flex: 1 1 140px; min-width: 0;
+}
+.lineupPosSelect { flex: 0 1 80px; }
 
 @media (min-width: 640px) {
   .tabPanel { padding: 28px 24px 60px; }
