@@ -14,6 +14,19 @@
    plain jersey-number badge, not a photo -- this app has no player
    photo feature, deliberately, to avoid opening that privacy
    question at all.
+
+   Pulling this straight from Crossbar (macleague.org's registration
+   platform) or GameChanger instead of typing it in by hand isn't
+   possible today -- neither has ever offered a public API, and
+   Crossbar's own registration export carries no roster-vs-team
+   assignment info even for the people running the league (see
+   lybs-reporting's CLAUDE.md, a sibling project that hits the same
+   wall with Crossbar's export). GameChanger rosters are gated
+   behind that team's own login too (confirmed earlier building the
+   History tab: logged-out visitors see generic placeholder names).
+   If either platform ever opens a real roster API, this is the one
+   place that would change -- everything downstream already reads
+   through getPlayers()/renderTable(), not the storage shape.
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> players[]

@@ -8,6 +8,9 @@
 
    Game shape: {id, opponent, date, arriveTime, gameTime, homeAway,
      location, ourScore, oppScore, notes, updatedAt,
+     gameType ('regular' | 'playoff' | 'championship', default
+       'regular' when unset -- old games saved before this field
+       existed are just treated as regular season),
      pitchCounts: [{name, pitches}]}
 
    pitchCounts feeds js/pitch-smart.js's eligibility calculator --
@@ -101,6 +104,7 @@
       if (cache[teamId]) return cache[teamId];
       const games = await window.dbGet(window.teamPath(teamId, 'schedule'));
       cache[teamId] = Array.isArray(games) ? games : [];
+      await window.LeagueTeams.ensureLoaded();
       return cache[teamId];
     },
     getGames(teamId) {
@@ -152,17 +156,20 @@
             ourName, ourScore: g.ourScore,
             theirName: g.opponent || 'TBD', theirScore: g.oppScore,
             theirLogoUrl: club ? club.logoUrl : null,
-            result,
+            theirLinkUrl: window.LeagueTeams.teamUrl(g.opponent),
+            result, gameType: g.gameType,
           });
           return `<div class="gameResultCardWrap" data-id="${escapeHtml(g.id)}" style="cursor:pointer;">${card}</div>`;
         }
-        const badge = g.date < today ? '<span class="badge badgeTbd">?</span>' : '';
+        const tbdBadge = g.date < today ? '<span class="badge badgeTbd">?</span>' : '';
+        const typeBadge = g.gameType === 'playoff' ? '<span class="badge gameTypeBadge gameTypePlayoff">Playoff</span>'
+          : g.gameType === 'championship' ? '<span class="badge gameTypeBadge gameTypeChampionship">Championship</span>' : '';
         return `<div class="listRow" data-id="${escapeHtml(g.id)}">
           <div class="listRowMain">
-            <div class="listRowTitle">${window.ClubLogos.badgeHtml(g.opponent, 18)}${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent || 'TBD')}</div>
+            <div class="listRowTitle">${window.ClubLogos.badgeHtml(g.opponent, 18)}${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent || 'TBD')} ${typeBadge}</div>
             <div class="listRowSub">${escapeHtml(g.date || '')}${g.gameTime ? ' · ' + escapeHtml(g.gameTime) : ''}${g.location ? ' · ' + escapeHtml(g.location) : ''}</div>
           </div>
-          ${badge}
+          ${tbdBadge}
         </div>`;
       }).join('') || '<div class="emptyState">No games yet. Add the first one below.</div>';
       containerEl.innerHTML = `
@@ -186,7 +193,10 @@
       if (!editing) {
         containerEl.innerHTML = `
           <div class="detailCard">
-            <h3>${window.ClubLogos.badgeHtml(game.opponent, 26)}${game.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(game.opponent || 'TBD')}</h3>
+            <h3>${window.ClubLogos.badgeHtml(game.opponent, 26)}${game.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(game.opponent || 'TBD')}
+              ${game.gameType === 'playoff' ? '<span class="badge gameTypeBadge gameTypePlayoff">Playoff</span>' : ''}
+              ${game.gameType === 'championship' ? '<span class="badge gameTypeBadge gameTypeChampionship">Championship</span>' : ''}
+            </h3>
             <div class="detailRow">${escapeHtml(game.date || '')}${game.gameTime ? ' · ' + escapeHtml(game.gameTime) : ''}</div>
             ${game.location ? `<div class="detailRow">📍 <a href="${mapLink(game.location)}" target="_blank" rel="noopener">${escapeHtml(game.location)}</a></div>` : ''}
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}
@@ -223,6 +233,13 @@
                 <option value="Away" ${game.homeAway === 'Away' ? 'selected' : ''}>Away</option>
               </select>
             </label>
+            <label>Game type
+              <select id="fGameType">
+                <option value="regular" ${!game.gameType || game.gameType === 'regular' ? 'selected' : ''}>Regular season</option>
+                <option value="playoff" ${game.gameType === 'playoff' ? 'selected' : ''}>Playoff</option>
+                <option value="championship" ${game.gameType === 'championship' ? 'selected' : ''}>Championship</option>
+              </select>
+            </label>
             <label>Date<input type="date" id="fDate" value="${escapeHtml(game.date || '')}"></label>
             <label>Game time<input type="time" id="fGameTime" value="${escapeHtml(game.gameTime || '')}"></label>
             <label>Location / address<input id="fLocation" value="${escapeHtml(game.location || '')}"></label>
@@ -239,6 +256,7 @@
           const updated = Object.assign({}, game, {
             opponent: containerEl.querySelector('#fOpponent').value.trim(),
             homeAway: containerEl.querySelector('#fHomeAway').value,
+            gameType: containerEl.querySelector('#fGameType').value,
             date: containerEl.querySelector('#fDate').value,
             gameTime: containerEl.querySelector('#fGameTime').value,
             location: containerEl.querySelector('#fLocation').value.trim(),

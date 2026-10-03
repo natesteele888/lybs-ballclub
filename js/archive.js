@@ -29,6 +29,7 @@
         data = await fetch('data/season-archive.json').then(r => r.json()).catch(() => ({ teams: [] }));
         await window.dbPut(window.sharedPath('seasonArchive'), data);
       }
+      await window.LeagueTeams.ensureLoaded();
       cache = data;
       return cache;
     },
@@ -54,7 +55,9 @@
             ourName: t.name, ourScore: ourScore != null ? ourScore : '-',
             theirName: g.opponent, theirScore: theirScore != null ? theirScore : '-',
             theirLogoUrl: club ? club.logoUrl : null,
+            theirLinkUrl: window.LeagueTeams.teamUrl(g.opponent),
             result: g.result,
+            gameType: g.gameType,
           });
         }).join('');
       }

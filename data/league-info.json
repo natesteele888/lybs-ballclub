@@ -1,0 +1,126 @@
+{
+  "source": "macleague.org -- About Us, Our Facilities, Important Dates, League Ages pages, fetched 2026-10-03.",
+  "facilities": [
+    { "town": "Acton", "name": "Veterans Fields", "address": "655 Main St, Acton, MA 01720" },
+    { "town": "Ayer", "name": "Pirone Fields", "address": "17 School Street, Ayer, MA 01432" },
+    { "town": "Bolton", "name": "Capital & IL Fields", "address": "20 Wattaquadock Hill Road, Bolton, MA 01740" },
+    { "town": "Boxboro", "name": "Flerra Meadows", "address": "400 Stow Rd, Boxborough, MA 01719" },
+    { "town": "Boxboro", "name": "Liberty Fields", "address": "1100 Liberty Square Rd, Boxborough, MA 01719" },
+    { "town": "Groton", "name": "Cow Pond Fields", "address": "319 Cow Pond Brook Rd, Groton, MA 01450" },
+    { "town": "Harvard", "name": "Ryan Land Fields", "address": "71 Depot Road, Harvard, MA 01451" },
+    { "town": "Lancaster", "name": "Mill Street Field", "address": "400 Mill Street Extension, Lancaster, MA 01523" },
+    { "town": "Lancaster", "name": "Thayer Field", "address": "115 Packard St., Lancaster, MA 01523" },
+    { "town": "Littleton", "name": "Shaker & Cooper Fields", "address": "35 Shaker Lane, Littleton, MA" },
+    { "town": "Littleton", "name": "Shattuck Field", "address": "33 Shattuck St, Littleton, MA 01460" },
+    { "town": "Littleton", "name": "Whitcomb Field", "address": "57 Russell St, Littleton, MA 01460" },
+    { "town": "Lunenburg", "name": "Fitzgerald Field", "address": "690 Reservoir Rd, Lunenburg, MA 01462", "home": true },
+    { "town": "Lunenburg", "name": "McNally Park", "address": "260 Whalom Rd, Lunenburg, MA 01462", "home": true },
+    { "town": "Lunenburg", "name": "Powell Field", "address": "855 Massachusetts Ave, Lunenburg, MA 01462", "home": true },
+    { "town": "Maynard", "name": "DJ's Field", "address": "1 Tiger Drive, Maynard, MA" },
+    { "town": "Pepperell", "name": "Bartelson Fields", "address": "10 Jersey Street, Pepperell, MA" },
+    { "town": "Stow", "name": "Community Park Fields", "address": "60 Old Bolton Rd, Stow, MA 01775" },
+    { "town": "Shirley", "name": "Dale Prentiss Fields", "address": "39 Harvard Rd, Shirley, MA 01464" },
+    { "town": "Townsend", "name": "Craven Field", "address": "15 New Fitchburg Road, Townsend MA 01469" },
+    { "town": "Townsend", "name": "Spaulding Fields", "address": "311 Main St, Townsend, MA 01469" },
+    { "town": "Townsend", "name": "NM Baseball Field", "address": "19 Main St, Townsend, MA 01469" },
+    { "town": "Westford", "name": "Graniteville Fields", "address": "15 River Street, Westford, MA 01886" }
+  ],
+  "facilityRules": [
+    "No smoking, vaping, drinking or drug use at any field.",
+    "Most fields do not allow dogs -- check local signage.",
+    "Each town sets its own safety protocols for its home field; visiting teams and spectators must follow the home town's rules.",
+    "Fields are independently owned and operated by their local leagues -- direct field-specific questions to that town's contacts, not MAC League."
+  ],
+  "governance": {
+    "administratorEmail": "mac@taybs.org",
+    "note": "Each town may be represented by multiple people; each town gets a single vote on league matters.",
+    "officials": [
+      { "name": "Mikko Salokangas", "town": "Ayer-Shirley", "role": "Rep" },
+      { "name": "Jeremy Regan", "town": "Ayer-Shirley", "role": "Rep" },
+      { "name": "Dave Grubb", "town": "Ayer-Shirley", "role": "President" },
+      { "name": "Kara Tajima", "town": "Bolton", "role": "Rep" },
+      { "name": "Michael Coviello", "town": "Bolton", "role": "President" },
+      { "name": "Josh Pollock", "town": "Groton Dunstable", "role": "President" },
+      { "name": "James O'Leary", "town": "Harvard", "role": "President" },
+      { "name": "Adam Trussell", "town": "Lancaster", "role": "President" },
+      { "name": "Dave McManus", "town": "Littleton", "role": "President" },
+      { "name": "Nate DiPerri", "town": "Lunenburg", "role": "Rep" },
+      { "name": "TJ Loughlin", "town": "Lunenburg", "role": "President" },
+      { "name": "Adam Whelan", "town": "Maynard Stow", "role": "Rep" },
+      { "name": "Mike Grenier", "town": "Maynard Stow", "role": "President" },
+      { "name": "Chris Boyce", "town": "Pepperell", "role": "President" },
+      { "name": "Ben Marchant", "town": "Pepperell", "role": "Rep" },
+      { "name": "Keith Turgeon", "town": "Townsend Ashby", "role": "President" }
+    ]
+  },
+  "leagueAges": {
+    "note": "Age cutoff date ranges MAC League uses to assign divisions. Softball's determination date is August 31st of the prior year, not the current year. Younger kids may move up without approval; moving an older kid down needs MAC, Babe Ruth, and insurance-carrier approval.",
+    "2026": [
+      { "division": "T-Ball", "range": "5/1/2019 to 8/31/2022" },
+      { "division": "Baseball 8U Rookies", "range": "5/1/2017 to 4/30/2020" },
+      { "division": "Baseball 10U Minors", "range": "5/1/2015 to 4/30/2017" },
+      { "division": "Baseball 12U Majors", "range": "5/1/2013 to 4/30/2015" },
+      { "division": "Baseball 15/16U Juniors", "range": "5/1/2009 to 4/30/2013" },
+      { "division": "Baseball 18U Seniors", "range": "5/1/2007 to 4/30/2010" },
+      { "division": "Softball 8U Rookies", "range": "9/1/2016 to 8/31/2019" },
+      { "division": "Softball 10U Minors", "range": "9/1/2014 to 8/31/2016" },
+      { "division": "Softball 12U Majors", "range": "9/1/2012 to 8/31/2014" },
+      { "division": "Softball 16U Juniors", "range": "9/1/2008 to 8/31/2012" }
+    ],
+    "2027": [
+      { "division": "T-Ball", "range": "5/1/2020 to 8/31/2023" },
+      { "division": "Baseball 8U Rookies", "range": "5/1/2018 to 4/30/2021" },
+      { "division": "Baseball 10U Minors", "range": "5/1/2016 to 4/30/2018" },
+      { "division": "Baseball 12U Majors", "range": "5/1/2014 to 4/30/2016" },
+      { "division": "Baseball 15/16U Juniors", "range": "5/1/2010 to 4/30/2014" },
+      { "division": "Baseball 18U Seniors", "range": "5/1/2008 to 4/30/2011" },
+      { "division": "Softball 8U Rookies", "range": "9/1/2017 to 8/31/2020" },
+      { "division": "Softball 10U Minors", "range": "9/1/2015 to 8/31/2017" },
+      { "division": "Softball 12U Majors", "range": "9/1/2013 to 8/31/2015" },
+      { "division": "Softball 16U Juniors", "range": "9/1/2009 to 8/31/2013" }
+    ]
+  },
+  "seasons": [
+    {
+      "id": "2026-fall",
+      "label": "2026 Fall Season",
+      "status": "current",
+      "items": [
+        "Season start: Sunday, September 13th",
+        "Season conclusion: Sunday, November 1st (8 weeks, 8 games, 1x/week)",
+        "Game schedule -- Rookies: Sundays 9am; Minors: Sundays 12pm; Majors: Sundays 3pm; Juniors & Seniors: Sundays 10am"
+      ]
+    },
+    {
+      "id": "2027-spring",
+      "label": "2027 Spring Season",
+      "status": "draft",
+      "items": [
+        "Registrations open: Tuesday, September 1st (individual leagues may differ)",
+        "Registrations close: Sunday, March 21st",
+        "Draft schedule released: Thursday, April 1st",
+        "Practices begin: Thursday, April 1st",
+        "Final schedule released: Sunday, April 4th",
+        "Majors coaches meeting: Thursday, April 15th, 8:00-9:00pm via Zoom",
+        "Season start -- Rookies, Minors & Majors: Monday, April 26th",
+        "Blackouts: Mother's Day (May 9th); Hit-a-Thons (May 15-16); Memorial Day weekend (May 29-31, games still scheduled Fri May 28th)",
+        "Regular season end -- Minors & Majors: Sunday, June 6th (6 weeks, 12 games, 2x/week)",
+        "Playoff conclusion -- Minors & Majors: Friday, June 18th",
+        "All-Star Games: Saturday, June 19th (rain date June 26th)",
+        "Majors game schedule: Monday-Friday, no weekends. Weekday games 5:45pm."
+      ]
+    },
+    {
+      "id": "2027-summer",
+      "label": "2027 Summer Season",
+      "status": "draft",
+      "items": [
+        "Registrations open: Saturday, May 1st",
+        "Registrations close: Sunday, June 13th",
+        "Season start: Tuesday, July 6th",
+        "Season conclusion: Monday, August 9th (5 weeks, 10 games, 2x/week)",
+        "Majors game schedule: Tuesdays & Thursdays at 5:45pm"
+      ]
+    }
+  ]
+}

@@ -14,9 +14,16 @@ name: Mirror MAC League standings and Pitch Smart data
 #                        scoped by database rules to shared/macLeagueStandings
 #                        and shared/pitchSmart.
 #
-# Division IDs to track: edit both `run:` lines below. Start with just the
-# Majors division (33696) that Select/Majors-A and Majors B play in; add
-# more as other LYBS teams (Minors, etc.) come on board.
+# Division IDs: scrape-standings.mjs defaults to every known division
+# (Rookies/Minors/Majors) when run with no args, so the "League" tab's
+# tonight's-games widget has data for all three, not just our own team's.
+# Pitch Smart stays Majors-only (33696) -- that's the only division this
+# app tracks pitch counts for.
+#
+# Day-of-week note: MAC League's own game-day schedule changes by season
+# (Spring Majors plays Mon-Fri, Fall is Sundays only -- see
+# data/league-info.json's "seasons" entries) so this runs every day rather
+# than guessing which days matter for whatever season is live.
 #
 # Pitch Smart note: scrape-pitchsmart.mjs's parser is unverified as of
 # 2026-10-04 -- the league's Pitch Smart page has no data to check it
@@ -27,7 +34,7 @@ name: Mirror MAC League standings and Pitch Smart data
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: '0,30 12-21 * * 1-6' # every 30 min, 8am-9pm ET (UTC-4), Mon-Sat
+    - cron: '0,30 12-21 * * *' # every 30 min, 8am-9pm ET (UTC-4), every day
 
 jobs:
   scrape:
@@ -41,7 +48,7 @@ jobs:
         env:
           FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
           FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
-        run: node scripts/scrape-standings.mjs 33696
+        run: node scripts/scrape-standings.mjs
       - name: Scrape and push Pitch Smart data
         env:
           FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}

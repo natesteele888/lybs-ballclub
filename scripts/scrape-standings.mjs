@@ -29,13 +29,17 @@
 
    Usage:
      node scripts/scrape-standings.mjs [divisionId ...]
-     node scripts/scrape-standings.mjs 33696          # Majors
-     node scripts/scrape-standings.mjs 33696 33695     # Majors + Minors
+     node scripts/scrape-standings.mjs                # all known divisions (Rookies/Minors/Majors)
+     node scripts/scrape-standings.mjs 33696           # just Majors
 
    Division IDs come from team-registry.js's macLeagueDivisionId
    field, or from browsing macleague.org yourself -- each
-   division's URL is macleague.org/division/{id}.
+   division's URL is macleague.org/division/{id}. Confirmed live
+   2026-10-03: Rookies 33694, Minors 33695, Majors 33696 -- no
+   Juniors/Seniors division page is linked from the site right now,
+   so it's not included here.
    ============================================================ */
+const KNOWN_DIVISION_IDS = ['33694', '33695', '33696'];
 
 import { writeFile, mkdir } from 'node:fs/promises';
 import { dirname } from 'node:path';
@@ -78,15 +82,35 @@ function parseStandingsTable(html) {
   return { name: nameMatch ? nameMatch[1].trim().replace(/\s*-\s*Standings$/i, '') : null, rows };
 }
 
-// Today's Games still only lives on the bare division page.
-// Only verified against the off-season "No games scheduled" empty state --
-// re-check this regex against a live in-season page once games exist, and
-// adjust if the populated markup differs from this guess.
+// Today's Games lives on the bare division page, one "scorebox" table per
+// game (verified against a live in-season page -- 2026-10-03, Rookies
+// division, a real 2:00 PM game -- not just the off-season empty state).
+// Each scorebox has a status row (game id + start time), two team rows
+// (logo, /team/{id} link, name, score -- score is blank until the game
+// starts/finishes), and a location row.
 function parseTodayGames(html) {
   const todayMatch = html.match(/<h3>Today's Games<\/h3>([\s\S]*?)(?:<div class="col-xs-12 col-md-6">|<h3>Standings<\/h3>)/);
   if (!todayMatch) return [];
-  const text = stripTags(todayMatch[1]);
-  return text && !/no games scheduled/i.test(text) ? [text] : [];
+  const block = todayMatch[1];
+  if (/no games scheduled/i.test(block)) return [];
+  const games = [];
+  const boxRe = /<div class="scorebox">\s*<table class="">([\s\S]*?)<\/table>/g;
+  let m;
+  while ((m = boxRe.exec(block))) {
+    const chunk = m[1];
+    const statusMatch = chunk.match(/<tr class="status">\s*<td colspan="100%" data-id="(\d+)">([\s\S]*?)<\/td>\s*<\/tr>/);
+    const gameId = statusMatch ? statusMatch[1] : null;
+    const time = statusMatch ? stripTags(statusMatch[2]) : null;
+    const teams = [];
+    const teamRe = /<tr class="team">\s*<td class="logo">\s*<img src="([^"]*)">\s*<\/td>\s*<td>\s*<a href="\/team\/(\d+)">\s*([^<]+?)\s*<\/a>\s*<\/td>\s*<td class="score">([\s\S]*?)<\/td>\s*<\/tr>/g;
+    let tm;
+    while ((tm = teamRe.exec(chunk))) {
+      teams.push({ logoUrl: tm[1], teamId: tm[2], name: tm[3].trim(), score: stripTags(tm[4]) || null });
+    }
+    const locMatch = chunk.match(/<tr class="location">\s*<td colspan="100%">([^<]*)<\/td>/);
+    games.push({ gameId, time, teams, location: locMatch ? locMatch[1].trim() : null });
+  }
+  return games;
 }
 
 async function fetchDivision(divisionId) {
@@ -115,12 +139,7 @@ async function fetchDivision(divisionId) {
 }
 
 async function main() {
-  const divisionIds = process.argv.slice(2);
-  if (!divisionIds.length) {
-    console.error('Usage: node scripts/scrape-standings.mjs <divisionId> [<divisionId> ...]');
-    console.error('Example: node scripts/scrape-standings.mjs 33696   # MAC League Majors');
-    process.exit(1);
-  }
+  const divisionIds = process.argv.slice(2).length ? process.argv.slice(2) : KNOWN_DIVISION_IDS;
 
   const divisions = {};
   for (let i = 0; i < divisionIds.length; i++) {

@@ -18,21 +18,30 @@
    rules-seed.json's top-level "season" field. Re-pull from
    macleague.org/coaching-resources/ at least once each offseason.
 
-   Division filter: picking a specific division (e.g. "Majors")
-   shows that division's rules PLUS the "All" (general/league-wide)
-   ones, since those apply no matter which division you coach --
-   matching how the league's own pages frame it ("in addition to
-   the common MAC League General Rules"). "All divisions" shows
-   everything, unfiltered; selecting "All" on its own shows just the
-   general/cross-cutting rules in isolation. The selection is
-   remembered per device, same as the pin list below.
+   Browsing is category-first, not "every rule expanded at once":
+   the tab opens on a menu of the 8 categories (Majors Rules,
+   Minors Rules, General Rules, Playoff Rules, ...), each a big
+   tappable row with its rule count -- picking one drills into that
+   category's rules; a "Categories" back button returns to the
+   menu. category and division are the same underlying tag on each
+   rule, just phrased differently ("Majors Rules" / "Majors"), so a
+   division-specific category still folds in "General Rules" (the
+   rules tagged division "All") alongside it, matching how the
+   league's own pages frame it ("in addition to the common MAC
+   League General Rules") -- General Rules' own category is the one
+   place that's just itself, since folding it into itself would
+   duplicate every entry.
 
-   Search is a plain case-insensitive substring match over
-   category/section/text -- a hundred-odd rule entries doesn't need
-   a search library. "Pin" is stored in localStorage per device,
-   same privacy level as a player's remembered position in the ASL
-   Bengals app: a quick-reference convenience, not data anyone
-   else needs to see.
+   Search bypasses the category menu entirely -- typing a query
+   shows matching rules across every category at once, same plain
+   case-insensitive substring match over category/section/text a
+   hundred-odd rule entries doesn't need a search library for.
+   Clearing the query returns to wherever you were (a category, or
+   the menu). "Pin" is stored in localStorage per device, same
+   privacy level as a player's remembered position in the ASL
+   Bengals app: a quick-reference convenience, not data anyone else
+   needs to see. The current category and pinned-only toggle are
+   remembered the same way.
    ============================================================ */
 (function () {
   let cache = null; // rules[]
@@ -83,20 +92,80 @@
       let pins = getPins();
       let query = opts.initialQuery || '';
       let showPinnedOnly = false;
-      const DIVISION_KEY = 'lybsRulesDivision';
-      let division = (function () { try { return localStorage.getItem(DIVISION_KEY) || ''; } catch (e) { return ''; } })();
-      const divisions = [...new Set(cache.map(r => r.division))].sort();
+      const CATEGORY_KEY = 'lybsRulesCategory';
+      let category = (function () { try { return localStorage.getItem(CATEGORY_KEY) || ''; } catch (e) { return ''; } })();
 
+      // Category <-> division is a 1:1 tag pair on every rule (just worded
+      // differently) -- derive each category's underlying division once so
+      // picking a division-specific category can still fold "General Rules"
+      // (division "All") in alongside it, same as the old division filter did.
+      const categoryDivision = {};
+      cache.forEach(r => { if (r.category && !(r.category in categoryDivision)) categoryDivision[r.category] = r.division; });
+      const categories = Object.keys(categoryDivision).sort((a, b) => {
+        if (a === 'General Rules') return -1;
+        if (b === 'General Rules') return 1;
+        return a.localeCompare(b);
+      });
+
+      function inCategory(r, cat) {
+        const div = categoryDivision[cat];
+        if (div === 'All') return r.division === 'All';
+        return r.division === div || r.division === 'All';
+      }
       function matches(r) {
         if (showPinnedOnly && !pins.has(r.id)) return false;
-        if (division === 'All' && r.division !== 'All') return false;
-        if (division && division !== 'All' && r.division !== division && r.division !== 'All') return false;
-        if (!query) return true;
-        const q = query.toLowerCase();
-        return (r.text || '').toLowerCase().includes(q) || (r.category || '').toLowerCase().includes(q) || (r.section || '').toLowerCase().includes(q);
+        if (category && !inCategory(r, category)) return false;
+        if (query) {
+          const q = query.toLowerCase();
+          return (r.text || '').toLowerCase().includes(q) || (r.category || '').toLowerCase().includes(q) || (r.section || '').toLowerCase().includes(q);
+        }
+        // No query: pinned-only or a category is what got us here (the bare
+        // menu view never calls matches() -- see renderList's early return).
+        return showPinnedOnly || !!category;
+      }
+
+      function renderMenu() {
+        const pinnedCount = cache.filter(r => pins.has(r.id)).length;
+        const rows = categories.map(cat => {
+          // The tile shows the category's OWN rule count, not the folded-in
+          // total it'll actually display -- General Rules get mixed in when
+          // you drill in (own group header, so it's clear why), but the menu
+          // label should match the category's name, not surprise with a
+          // bigger number.
+          const count = cache.filter(r => r.category === cat).length;
+          return `
+            <div class="listRow" data-cat="${escapeHtml(cat)}">
+              <div class="listRowMain">
+                <div class="listRowTitle">${escapeHtml(cat)}</div>
+                <div class="listRowSub">${count} rule${count === 1 ? '' : 's'}</div>
+              </div>
+            </div>`;
+        }).join('');
+        containerEl.innerHTML = `
+          <div class="rulesSearchBar">
+            <input id="rulesSearchInput" placeholder="Search rules -- e.g. 'balk', 'mercy', 'pitch count'" value="${escapeHtml(query)}">
+          </div>
+          ${pinnedCount ? `
+            <div class="listRow" data-cat="__pinned">
+              <div class="listRowMain">
+                <div class="listRowTitle">★ Pinned</div>
+                <div class="listRowSub">${pinnedCount} rule${pinnedCount === 1 ? '' : 's'}</div>
+              </div>
+            </div>` : ''}
+          <div class="listBody" style="margin-top:10px;">${rows}</div>`;
+        containerEl.querySelector('#rulesSearchInput').addEventListener('input', e => { query = e.target.value; renderList(); });
+        containerEl.querySelectorAll('.listRow').forEach(row => {
+          row.addEventListener('click', () => {
+            if (row.dataset.cat === '__pinned') { showPinnedOnly = true; category = ''; }
+            else { category = row.dataset.cat; showPinnedOnly = false; }
+            try { localStorage.setItem(CATEGORY_KEY, category); } catch (e) {}
+            renderList();
+          });
+        });
       }
 
       function renderList() {
+        if (!query && !category && !showPinnedOnly) { renderMenu(); return; }
         const filtered = cache.filter(matches);
         const groups = {};
         filtered.forEach(r => {
@@ -112,49 +181,34 @@
                 <button class="pinBtn ${pins.has(r.id) ? 'pinned' : ''}" data-id="${escapeHtml(r.id)}" title="Pin for quick reference">${pins.has(r.id) ? '★' : '☆'}</button>
               </div>`).join('')}
           </div>`).join('') || '<div class="emptyState">No rules match that search.</div>';
-        listEl.innerHTML = groupsHtml;
+
+        const title = showPinnedOnly ? '★ Pinned' : (category || 'Search results');
+        containerEl.innerHTML = `
+          <div class="sectionHeader">
+            <button class="btn btnGhost btnSmall" id="rulesBackBtn">&larr; Categories</button>
+            <div class="recordLine">${escapeHtml(title)}</div>
+          </div>
+          <div class="rulesSearchBar">
+            <input id="rulesSearchInput" placeholder="Search rules -- e.g. 'balk', 'mercy', 'pitch count'" value="${escapeHtml(query)}">
+            <button class="btn btnGhost btnSmall ${showPinnedOnly ? 'active' : ''}" id="rulesPinnedToggle">${showPinnedOnly ? '★' : '☆'} Pinned only</button>
+          </div>
+          <div class="rulesList" id="rulesListEl">${groupsHtml}</div>`;
+        containerEl.querySelector('#rulesBackBtn').addEventListener('click', () => { query = ''; category = ''; showPinnedOnly = false; renderList(); });
+        containerEl.querySelector('#rulesSearchInput').addEventListener('input', e => { query = e.target.value; renderList(); });
+        containerEl.querySelector('#rulesPinnedToggle').addEventListener('click', () => { showPinnedOnly = !showPinnedOnly; renderList(); });
+        const listEl = containerEl.querySelector('#rulesListEl');
         listEl.querySelectorAll('.pinBtn').forEach(btn => {
           btn.addEventListener('click', e => {
             e.stopPropagation();
             pins = togglePin(btn.dataset.id);
-            if (showPinnedOnly) {
-              renderList();
-            } else {
+            if (showPinnedOnly) { renderList(); }
+            else {
               btn.textContent = pins.has(btn.dataset.id) ? '★' : '☆';
               btn.classList.toggle('pinned', pins.has(btn.dataset.id));
             }
           });
         });
       }
-
-      const divisionOptions = [`<option value="">All divisions</option>`]
-        .concat(divisions.map(d => `<option value="${escapeHtml(d)}" ${division === d ? 'selected' : ''}>${d === 'All' ? 'General (all divisions)' : escapeHtml(d)}</option>`));
-
-      containerEl.innerHTML = `
-        <div class="rulesSearchBar">
-          <input id="rulesSearchInput" placeholder="Search rules -- e.g. 'balk', 'mercy', 'pitch count'" value="${escapeHtml(query)}">
-          <button class="btn btnGhost btnSmall" id="rulesPinnedToggle">☆ Pinned only</button>
-        </div>
-        <div class="rulesSearchBar">
-          <select id="rulesDivisionSelect">${divisionOptions.join('')}</select>
-        </div>
-        <div class="rulesList" id="rulesListEl"></div>`;
-      const listEl = containerEl.querySelector('#rulesListEl');
-      const searchInput = containerEl.querySelector('#rulesSearchInput');
-      const pinnedToggle = containerEl.querySelector('#rulesPinnedToggle');
-      const divisionSelect = containerEl.querySelector('#rulesDivisionSelect');
-      searchInput.addEventListener('input', () => { query = searchInput.value; renderList(); });
-      pinnedToggle.addEventListener('click', () => {
-        showPinnedOnly = !showPinnedOnly;
-        pinnedToggle.classList.toggle('active', showPinnedOnly);
-        pinnedToggle.textContent = showPinnedOnly ? '★ Pinned only' : '☆ Pinned only';
-        renderList();
-      });
-      divisionSelect.addEventListener('change', () => {
-        division = divisionSelect.value;
-        try { localStorage.setItem(DIVISION_KEY, division); } catch (e) {}
-        renderList();
-      });
       renderList();
     },
   };
