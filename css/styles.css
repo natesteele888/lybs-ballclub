@@ -207,6 +207,14 @@ a { color: var(--lybs-blue-bright); }
 }
 .listRow:hover { border-color: rgba(76,106,235,0.45); transform: translateY(-1px); box-shadow: 0 10px 24px rgba(5,7,28,0.5); }
 .rosterRow { cursor: default; }
+/* Without flex:1, this shrinks to its own text width -- harmless with just
+   two flex siblings (badge, this), but with three (badge, this, a button)
+   "justify-content: space-between" splits the leftover space into the two
+   gaps around it, so a short title sits in a visibly different spot than a
+   long one. flex:1 pins it to always fill the space between its neighbors;
+   min-width:0 is required alongside it for the title/sub text to wrap
+   instead of forcing the row wider. */
+.listRowMain { flex: 1 1 auto; min-width: 0; }
 .listRowTitle { font-weight: 700; font-size: 14.5px; font-family: var(--font-body); }
 .listRowSub { font-size: 12px; color: var(--text2); margin-top: 3px; }
 .rosterNum {
@@ -603,16 +611,27 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 }
 .ssPostName { font-weight: 700; font-size: 13.5px; }
 
-/* ---- League Info field rows (club badge, or a lettered fallback for a
-   field whose town isn't one of the 10 known MAC League clubs) ---- */
+/* ---- League Info field cards (club badge, Street View photo or a
+   lettered fallback for a field whose town isn't one of the 10 known MAC
+   League clubs) ---- */
+.fieldCard {
+  background: linear-gradient(145deg, var(--card), #0C1230); border: 1px solid var(--card-border);
+  border-radius: 12px; padding: 13px 15px; margin-bottom: 10px;
+}
+.fieldCardHeader { display: flex; align-items: center; gap: 12px; }
 .fieldBadgeFallback {
-  width: 32px; height: 32px; border-radius: 7px; flex: 0 0 auto;
+  width: 44px; height: 44px; border-radius: 9px; flex: 0 0 auto;
   display: flex; align-items: center; justify-content: center;
   background: linear-gradient(160deg, var(--lybs-blue-bright), var(--lybs-blue-deep));
-  font-family: var(--font-display); font-weight: 400; font-size: 15px; color: #fff;
+  font-family: var(--font-display); font-weight: 400; font-size: 19px; color: #fff;
 }
-.fieldRowLinks { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }
-.fieldRowLinks .btn { white-space: nowrap; min-width: 84px; text-align: center; }
+.fieldStreetView { display: block; margin-top: 12px; border-radius: 10px; overflow: hidden; line-height: 0; }
+.fieldStreetViewImg { width: 100%; height: auto; display: block; background: rgba(255,255,255,0.03); }
+.fieldStreetViewFallback {
+  display: block; margin-top: 12px; padding: 14px; border-radius: 10px; text-align: center;
+  background: rgba(255,255,255,0.02); border: 1px dashed var(--card-border); text-decoration: none;
+}
+.fieldStreetViewFallback span { font-size: 12px; color: var(--text2); line-height: 1.5; }
 
 @media (min-width: 640px) {
   .tabPanel { padding: 28px 24px 60px; }
