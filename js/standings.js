@@ -49,9 +49,10 @@
           </div>`;
         return;
       }
+      await window.ClubLogos.ensureLoaded();
       const rows = (division.rows || []).map(r => `
         <tr class="${r.isUs ? 'standingsUsRow' : ''}">
-          <td>${escapeHtml(r.team)}</td>
+          <td><div class="standingsTeamCell">${window.ClubLogos.badgeHtml(r.team, 22)}${escapeHtml(r.team)}</div></td>
           <td>${escapeHtml(r.pct)}</td>
         </tr>`).join('');
       const games = (division.todayGames || []).map(g => `<div class="detailRow">${escapeHtml(g)}</div>`).join('') || '<div class="emptyState">No games today.</div>';

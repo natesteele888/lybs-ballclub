@@ -303,6 +303,10 @@ a { color: var(--lybs-blue-bright); }
   font-weight: 700; border-left: 3px solid var(--lybs-blue-bright);
 }
 .standingsUsRow td:first-child { padding-left: 10px; }
+.standingsTeamCell { display: flex; align-items: center; gap: 8px; }
+
+/* ---- MAC League club badges (hotlinked, see data/mac-league-clubs.json) ---- */
+.clubBadge { border-radius: 5px; object-fit: contain; background: rgba(255,255,255,0.9); flex: 0 0 auto; vertical-align: middle; }
 
 /* ---- Family calendar ---- */
 .teamCheckList { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }

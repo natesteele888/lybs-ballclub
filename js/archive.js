@@ -58,7 +58,7 @@
         const rows = t.games.map(g => `
           <div class="listRow" style="cursor:default;">
             <div class="listRowMain">
-              <div class="listRowTitle">${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent)}</div>
+              <div class="listRowTitle">${window.ClubLogos.badgeHtml(g.opponent, 18)}${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent)}</div>
               <div class="listRowSub">${escapeHtml(g.date)}</div>
             </div>
             ${badgeFor(g.result, g.score)}
