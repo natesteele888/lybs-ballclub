@@ -159,5 +159,62 @@
         <div class="helpText">Mirrored from macleague.org's Pitch Smart page.</div>
         <div class="listBody">${rows}</div>`;
     },
+
+    // Monday-start week containing dateStr.
+    startOfWeek(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      const day = d.getDay(); // 0 = Sunday
+      d.setDate(d.getDate() + (day === 0 ? -6 : 1 - day));
+      return d.toISOString().slice(0, 10);
+    },
+    addDays,
+
+    // The calendar view MAC League's own rest-day example already describes
+    // day by day ("pitches 36 on Monday -> can't pitch Tuesday or Wednesday
+    // -> eligible again Thursday") -- one row per pitcher who has any logged
+    // appearances, one column per day of the given week, our own scheduled
+    // games marked on their column so eligibility reads directly against
+    // the actual upcoming slate instead of a single yes/no badge.
+    renderWeeklyCalendar(containerEl, games, division, weekStart) {
+      const start = weekStart || window.PitchSmart.startOfWeek(new Date().toISOString().slice(0, 10));
+      const days = Array.from({ length: 7 }, (_, i) => addDays(start, i));
+      const dayLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+      const gamesByDate = {};
+      (games || []).forEach(g => { if (g.date) gamesByDate[g.date] = g; });
+      const byPitcher = appearancesByPitcher(games);
+      const names = Object.keys(byPitcher);
+
+      const headerCells = days.map((d, i) => {
+        const game = gamesByDate[d];
+        const mmdd = d.slice(5).replace('-', '/');
+        return `<th class="${game ? 'pcGameCol' : ''}">${dayLabels[i]}<br>${mmdd}${game ? `<div class="pcGameTag">${game.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(game.opponent || '')}</div>` : ''}</th>`;
+      }).join('');
+
+      const bodyRows = names.length ? names.map(name => {
+        const apps = byPitcher[name];
+        const cells = days.map(d => {
+          const appearance = apps.find(a => a.date === d);
+          if (appearance) return `<td class="pcCellPitched" title="${escapeHtml(name)} pitched ${appearance.pitches} on ${d}">${escapeHtml(String(appearance.pitches))}</td>`;
+          const status = computeStatus(apps.filter(a => a.date <= d), division, d);
+          return status.eligible
+            ? '<td class="pcCellEligible">&#10003;</td>'
+            : `<td class="pcCellRest" title="Out until ${status.eligibleOn}">R</td>`;
+        }).join('');
+        return `<tr><td class="pcPitcherName">${escapeHtml(name)}</td>${cells}</tr>`;
+      }).join('') : `<tr><td colspan="8"><div class="emptyState">No pitch counts logged yet -- log them on each completed game's detail page.</div></td></tr>`;
+
+      containerEl.innerHTML = `
+        <div class="pitchCalendarWrap">
+          <table class="pitchCalendar">
+            <thead><tr><th>Pitcher</th>${headerCells}</tr></thead>
+            <tbody>${bodyRows}</tbody>
+          </table>
+        </div>
+        <div class="helpText" style="margin-top:10px;">
+          <span class="pcLegendDot pcCellEligible">&#10003;</span> eligible &nbsp;
+          <span class="pcLegendDot pcCellRest">R</span> resting &nbsp;
+          <span class="pcLegendDot pcCellPitched">#</span> pitched that day, pitch count shown
+        </div>`;
+    },
   };
 })();

@@ -218,6 +218,53 @@ a { color: var(--lybs-blue-bright); }
   color: var(--lybs-silver); font-size: 11px; font-family: var(--font-label); letter-spacing: 0.05em;
   background: rgba(180,187,191,0.1); padding: 3px 9px; border-radius: 6px; text-transform: uppercase;
 }
+
+/* ---- Roster table (ESPN/MLB.com-style) ---- */
+.rosterTableWrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--card-border); }
+.rosterTable { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--card); }
+.rosterTable thead th {
+  font-family: var(--font-label); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--lybs-silver); text-align: left; padding: 10px 12px; background: rgba(46,82,232,0.12);
+  border-bottom: 1px solid var(--card-border); white-space: nowrap;
+}
+.rosterTable td { padding: 8px 12px; border-bottom: 1px solid var(--card-border); white-space: nowrap; }
+.rosterTable tbody tr:last-child td { border-bottom: none; }
+.rosterTable tbody tr:hover { background: rgba(255,255,255,0.03); }
+.rosterTable tbody tr.rosterTableEditable { cursor: pointer; }
+.rosterAvatarCell { width: 44px; }
+.rosterAvatar {
+  width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, var(--lybs-blue-bright), var(--lybs-blue-deep));
+  font-family: var(--font-display); font-weight: 400; font-size: 13px; color: #fff;
+  box-shadow: 0 2px 8px rgba(46,82,232,0.35);
+}
+.rosterTable .numCell { text-align: center; font-variant-numeric: tabular-nums; }
+.rosterTableName { font-weight: 700; }
+
+/* ---- Pitch Smart weekly calendar ---- */
+.pitchCalendarWrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--card-border); }
+.pitchCalendar { width: 100%; border-collapse: collapse; font-size: 12px; background: var(--card); }
+.pitchCalendar th {
+  font-family: var(--font-label); font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--lybs-silver); text-align: center; padding: 8px 6px; background: rgba(46,82,232,0.1);
+  border-bottom: 1px solid var(--card-border); border-left: 1px solid var(--card-border); white-space: nowrap; line-height: 1.6;
+}
+.pitchCalendar th:first-child { border-left: none; text-align: left; }
+.pitchCalendar th.pcGameCol { background: rgba(46,82,232,0.22); color: #fff; }
+.pcGameTag { font-size: 9px; font-weight: 700; color: var(--lybs-blue-bright); text-transform: none; letter-spacing: 0; margin-top: 2px; }
+.pitchCalendar td {
+  padding: 8px 6px; border-bottom: 1px solid var(--card-border); border-left: 1px solid var(--card-border);
+  text-align: center; font-variant-numeric: tabular-nums;
+}
+.pitchCalendar tbody tr:last-child td { border-bottom: none; }
+.pcPitcherName { text-align: left; font-weight: 700; white-space: nowrap; border-left: none; }
+.pcCellEligible { color: #5fd989; font-weight: 700; background: rgba(53,197,116,0.08); }
+.pcCellRest { color: #ff8a8a; font-weight: 700; background: rgba(214,69,69,0.1); }
+.pcCellPitched { color: #fff; font-weight: 800; background: rgba(46,82,232,0.18); }
+.pcLegendDot {
+  display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
+  border-radius: 5px; font-size: 10px; font-weight: 800; margin-right: 3px; vertical-align: middle;
+}
 .emptyState { color: var(--text2); font-size: 13px; padding: 30px 10px; text-align: center; line-height: 1.6; }
 .badge {
   font-family: var(--font-label); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 7px;

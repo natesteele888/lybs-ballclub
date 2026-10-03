@@ -228,10 +228,6 @@
     }
   ],
   "pending": {
-    "minorsBlackSchedule": {
-      "status": "id_not_resolving",
-      "note": "Minors Black has a real roster now but no schedule/record -- the GameChanger team ID given for it (wEZFoSqnicqz) doesn't load. Needs a corrected ID."
-    },
     "partialRosters": {
       "status": "needs_confirmation",
       "note": "Majors Blue and Minors Blue rosters are guessed-at team assignments from partial, scrolled screenshots -- please confirm those are the right teams, and send the missing players if you have them."

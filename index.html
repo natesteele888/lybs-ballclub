@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=12">
+<link rel="stylesheet" href="css/styles.css?v=14">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -57,6 +57,7 @@
     <button class="tabBtn" data-tab="roster">Roster</button>
     <button class="tabBtn" data-tab="gamechanger">GameChanger</button>
     <button class="tabBtn" data-tab="standings">Standings</button>
+    <button class="tabBtn" data-tab="pitching">Pitching</button>
     <button class="tabBtn" data-tab="rules">Rules</button>
     <button class="tabBtn" data-tab="calendar">My Calendar</button>
     <button class="tabBtn" data-tab="archive">History</button>
@@ -67,6 +68,7 @@
   <div class="tabPanel" id="tab-roster"></div>
   <div class="tabPanel" id="tab-gamechanger"></div>
   <div class="tabPanel" id="tab-standings"></div>
+  <div class="tabPanel" id="tab-pitching"></div>
   <div class="tabPanel" id="tab-rules"></div>
   <div class="tabPanel" id="tab-calendar"></div>
   <div class="tabPanel" id="tab-archive"></div>
@@ -82,24 +84,24 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=12"></script>
-<script src="js/team-registry.js?v=12"></script>
-<script src="js/cloud-auth.js?v=12"></script>
-<script src="js/team-config.js?v=12"></script>
-<script src="js/identity.js?v=12"></script>
-<script src="js/weather.js?v=12"></script>
-<script src="js/club-logos.js?v=12"></script>
-<script src="js/game-card.js?v=12"></script>
-<script src="js/pitch-smart.js?v=12"></script>
-<script src="js/calendar-export.js?v=12"></script>
-<script src="js/schedule.js?v=12"></script>
-<script src="js/practices.js?v=12"></script>
-<script src="js/roster.js?v=12"></script>
-<script src="js/gamechanger.js?v=12"></script>
-<script src="js/rules.js?v=12"></script>
-<script src="js/standings.js?v=12"></script>
-<script src="js/calendar-family.js?v=12"></script>
-<script src="js/archive.js?v=12"></script>
+<script src="js/backend.js?v=14"></script>
+<script src="js/team-registry.js?v=14"></script>
+<script src="js/cloud-auth.js?v=14"></script>
+<script src="js/team-config.js?v=14"></script>
+<script src="js/identity.js?v=14"></script>
+<script src="js/weather.js?v=14"></script>
+<script src="js/club-logos.js?v=14"></script>
+<script src="js/game-card.js?v=14"></script>
+<script src="js/pitch-smart.js?v=14"></script>
+<script src="js/calendar-export.js?v=14"></script>
+<script src="js/schedule.js?v=14"></script>
+<script src="js/practices.js?v=14"></script>
+<script src="js/roster.js?v=14"></script>
+<script src="js/gamechanger.js?v=14"></script>
+<script src="js/rules.js?v=14"></script>
+<script src="js/standings.js?v=14"></script>
+<script src="js/calendar-family.js?v=14"></script>
+<script src="js/archive.js?v=14"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -192,12 +194,38 @@
     }
   }
 
+  // ---- Pitching tab (weekly calendar) ----
+  let pitchingWeekStart = null; // 'YYYY-MM-DD', Monday; null = current week
+  async function renderPitchingTab() {
+    await window.Schedule.ensureLoaded(TEAM_ID);
+    await window.PitchSmart.ensureLoaded();
+    const el = document.getElementById('tab-pitching');
+    const games = window.Schedule.getGames(TEAM_ID);
+    const division = window.TeamConfig.current().macLeagueDivisionName || null;
+    const start = pitchingWeekStart || window.PitchSmart.startOfWeek(new Date().toISOString().slice(0, 10));
+    el.innerHTML = `
+      <div class="sectionHeader">
+        <div class="recordLine">Week of <b>${start}</b></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btnGhost btnSmall" id="pcPrevWeek">&larr; Prev</button>
+          <button class="btn btnGhost btnSmall" id="pcThisWeek">This week</button>
+          <button class="btn btnGhost btnSmall" id="pcNextWeek">Next &rarr;</button>
+        </div>
+      </div>
+      <div id="pcCalendarSlot"></div>`;
+    window.PitchSmart.renderWeeklyCalendar(el.querySelector('#pcCalendarSlot'), games, division, start);
+    el.querySelector('#pcPrevWeek').addEventListener('click', () => { pitchingWeekStart = window.PitchSmart.addDays(start, -7); renderPitchingTab(); });
+    el.querySelector('#pcNextWeek').addEventListener('click', () => { pitchingWeekStart = window.PitchSmart.addDays(start, 7); renderPitchingTab(); });
+    el.querySelector('#pcThisWeek').addEventListener('click', () => { pitchingWeekStart = null; renderPitchingTab(); });
+  }
+
   function renderTab(name) {
     if (name === 'schedule') renderScheduleTab();
     else if (name === 'practices') renderPracticesTab();
     else if (name === 'roster') renderRosterTab();
     else if (name === 'gamechanger') window.GameChanger.render(TEAM_ID, document.getElementById('tab-gamechanger'), { canEdit: canEdit(), addedBy: SESSION.name });
     else if (name === 'standings') window.Standings.render(document.getElementById('tab-standings'), window.TeamConfig.current().macLeagueDivisionId);
+    else if (name === 'pitching') renderPitchingTab();
     else if (name === 'rules') window.Rules.ensureLoaded().then(() => window.Rules.render(document.getElementById('tab-rules')));
     else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
     else if (name === 'archive') window.Archive.ensureLoaded().then(() => window.Archive.render(document.getElementById('tab-archive')));
@@ -217,6 +245,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=12"></script>
+<script src="js/auth.js?v=14"></script>
 </body>
 </html>
