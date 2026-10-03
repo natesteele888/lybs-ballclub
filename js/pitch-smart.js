@@ -43,7 +43,7 @@
 
   async function ensureLoaded() {
     if (rulesCache) return rulesCache;
-    const data = await fetch('data/pitch-smart-rules.json').then(r => r.json()).catch(() => ({ divisions: {} }));
+    const data = await fetch('data/pitch-smart-rules.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => ({ divisions: {} }));
     rulesCache = data.divisions || {};
     return rulesCache;
   }

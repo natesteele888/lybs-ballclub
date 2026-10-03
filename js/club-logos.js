@@ -16,7 +16,7 @@
 
   async function ensureLoaded() {
     if (cache) return cache;
-    const data = await fetch('data/mac-league-clubs.json').then(r => r.json()).catch(() => ({ clubs: [] }));
+    const data = await fetch('data/mac-league-clubs.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => ({ clubs: [] }));
     cache = data.clubs || [];
     return cache;
   }

@@ -26,7 +26,7 @@
   window.LeagueInfo = {
     async ensureLoaded() {
       if (cache) return cache;
-      cache = await fetch('data/league-info.json').then(r => r.json()).catch(() => null);
+      cache = await fetch('data/league-info.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => null);
       return cache;
     },
 
@@ -38,8 +38,10 @@
       let expanded = 'fields';
 
       function fieldRow(f) {
+        const badge = window.ClubLogos.badgeHtml(f.town, 32);
         return `
           <div class="listRow" style="cursor:default;">
+            ${badge || '<div class="fieldBadgeFallback">' + escapeHtml((f.town || '?').trim().charAt(0).toUpperCase()) + '</div>'}
             <div class="listRowMain">
               <div class="listRowTitle">${escapeHtml(f.name)}</div>
               <div class="listRowSub">${escapeHtml(f.town)} &middot; ${escapeHtml(f.address)}</div>

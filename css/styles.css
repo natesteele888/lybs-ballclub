@@ -603,6 +603,15 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 }
 .ssPostName { font-weight: 700; font-size: 13.5px; }
 
+/* ---- League Info field rows (club badge, or a lettered fallback for a
+   field whose town isn't one of the 10 known MAC League clubs) ---- */
+.fieldBadgeFallback {
+  width: 32px; height: 32px; border-radius: 7px; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, var(--lybs-blue-bright), var(--lybs-blue-deep));
+  font-family: var(--font-display); font-weight: 400; font-size: 15px; color: #fff;
+}
+
 @media (min-width: 640px) {
   .tabPanel { padding: 28px 24px 60px; }
   .loginCrest { width: 180px; }

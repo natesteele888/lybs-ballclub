@@ -26,7 +26,7 @@
       if (cache) return cache;
       let data = await window.dbGet(window.sharedPath('seasonArchive'));
       if (!data || !Array.isArray(data.teams) || !data.teams.length) {
-        data = await fetch('data/season-archive.json').then(r => r.json()).catch(() => ({ teams: [] }));
+        data = await fetch('data/season-archive.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => ({ teams: [] }));
         await window.dbPut(window.sharedPath('seasonArchive'), data);
       }
       await window.LeagueTeams.ensureLoaded();
