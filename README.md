@@ -49,24 +49,25 @@ python3 -m http.server 8080
 
 ## Go live
 
-1. **Create a Firebase project** (console.firebase.google.com -- free Spark plan, same as the ASL Bengals project) and enable Realtime Database.
-2. Set the real URL and Web API key in `index.html`, right before `js/backend.js` loads:
-   ```html
-   <script>
-     window.FIREBASE_DB_URL = 'https://YOUR-PROJECT-default-rtdb.firebaseio.com';
-     window.FIREBASE_API_KEY = 'YOUR_WEB_API_KEY';
-   </script>
+Status as of 2026-10-03 -- project `lybs-ballclub` exists under natesteele888@gmail.com (same account as `lybs-dashboard`), the Web app is registered, and its API key is already wired into `index.html`.
+
+1. ~~Create a Firebase project and register a Web app~~ -- **done** (`console.firebase.google.com/project/lybs-ballclub`).
+2. **Create the Realtime Database instance** -- the one step that genuinely needs a console click (the CLI's non-interactive mode can't answer the "choose a location" prompt, and doing this by extracting a token and hand-rolling the API call isn't a safe shortcut to take, so this is a manual step): go to the project's **Build -> Realtime Database -> Create Database**, pick a US location (e.g. `us-central1`), start in **locked mode** (our rules file governs access either way). Note whatever URL it gives you -- it's usually `https://lybs-ballclub-default-rtdb.firebaseio.com`, but confirm it matches.
+3. Uncomment and set `window.FIREBASE_DB_URL` in `index.html` (right above `js/backend.js`) to that URL.
+4. **Deploy the security rules** already written in `database.rules.json` (gate-account-per-`{teamId,role}` model, matching `js/cloud-auth.js`):
+   ```bash
+   npx firebase-tools@15.32.1 deploy --only database --project lybs-ballclub --account natesteele888@gmail.com
    ```
-3. **Generate real access codes** (don't ship the dev placeholders above). For each team:
+5. **Enable the Email/Password sign-in provider** -- Console -> Build -> Authentication -> Sign-in method -> Email/Password -> Enable. This is what `cloud-auth.js`'s gate accounts (`signUp`/`signInWithPassword` against Identity Toolkit) actually run on; without it every login attempt fails.
+6. **Generate real access codes** (don't ship the dev placeholders in `js/team-registry.js` to real players/parents). For each team:
    ```bash
    node -e "console.log(require('crypto').createHash('sha256').update('YOUR_REAL_CODE').digest('hex'))"
    ```
    Add the resulting hash to `js/team-registry.js`'s `codeHashes` map, mapped to `{teamId, role}`. Give out the plaintext code to players/parents (player role) or coaches (coach role) -- never commit the plaintext code anywhere.
-4. **Set Realtime Database security rules** so each team's gate account can only read/write its own `teams/{teamId}/...` subtree, `shared/*` is world-readable (standings, rules) and admin-writable, matching the gate-account-per-{teamId,role} pattern in `js/cloud-auth.js`.
-5. **Add a second team** (Majors B, Minors, ...): pick two new codes, hash them (step 3), add their entries to `codeHashes` and a bootstrap `teams.{teamId}` entry in `js/team-registry.js`. Nothing else changes -- every module reads the active team through `window.TeamConfig`.
-6. **Standings job**: add `FIREBASE_DB_URL` and `FIREBASE_DB_SECRET` (Firebase console -> Project settings -> Service accounts -> Database secrets) as repo secrets, then enable the `standings.yml` workflow (or trigger it manually once to seed the first mirror).
-7. **Deploy**: push to GitHub, enable GitHub Pages on the repo (Settings -> Pages -> Deploy from branch -> `main` / root) -- same hosting as ASL Bengals.
-8. **GameChanger widget**: once Select's GameChanger team page exists, a coach goes to `web.gc.com -> Tools -> Create Scoreboard Widget`, copies the snippet, and pastes it into the GameChanger tab (visible once signed in as a coach).
+7. **Add a second team** (Majors B, Minors, ...): pick two new codes, hash them (step 6), add their entries to `codeHashes` and a bootstrap `teams.{teamId}` entry in `js/team-registry.js`. Nothing else changes -- every module reads the active team through `window.TeamConfig`.
+8. **Standings job**: add `FIREBASE_DB_URL` and `FIREBASE_DB_SECRET` (Firebase console -> Project settings -> Service accounts -> Database secrets) as GitHub repo secrets, then enable the `standings.yml` workflow (or trigger it manually once to seed the first mirror).
+9. ~~Deploy to GitHub Pages~~ -- **done**, live at `natesteele888.github.io/lybs-ballclub`.
+10. **GameChanger widget**: once Select's GameChanger team page exists, a coach goes to `web.gc.com -> Tools -> Create Scoreboard Widget`, copies the snippet, and pastes it into the GameChanger tab (visible once signed in as a coach).
 
 ## Privacy
 

@@ -1,0 +1,23 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "teams": {
+      "$teamId": {
+        ".read": "auth != null",
+
+        "config": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" },
+        "schedule": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" },
+        "practices": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" },
+        "roster": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" },
+        "gameChangerSnippet": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" }
+      }
+    },
+
+    "shared": {
+      "rules": { ".read": "auth != null", ".write": "auth != null" },
+      "macLeagueStandings": { ".read": "auth != null", ".write": false }
+    }
+  }
+}
