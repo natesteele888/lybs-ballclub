@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=14">
+<link rel="stylesheet" href="css/styles.css?v=16">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -59,6 +59,7 @@
     <button class="tabBtn" data-tab="standings">Standings</button>
     <button class="tabBtn" data-tab="pitching">Pitching</button>
     <button class="tabBtn" data-tab="rules">Rules</button>
+    <button class="tabBtn" data-tab="league">League</button>
     <button class="tabBtn" data-tab="calendar">My Calendar</button>
     <button class="tabBtn" data-tab="archive">History</button>
   </div>
@@ -70,6 +71,7 @@
   <div class="tabPanel" id="tab-standings"></div>
   <div class="tabPanel" id="tab-pitching"></div>
   <div class="tabPanel" id="tab-rules"></div>
+  <div class="tabPanel" id="tab-league"></div>
   <div class="tabPanel" id="tab-calendar"></div>
   <div class="tabPanel" id="tab-archive"></div>
 </div>
@@ -84,24 +86,27 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=14"></script>
-<script src="js/team-registry.js?v=14"></script>
-<script src="js/cloud-auth.js?v=14"></script>
-<script src="js/team-config.js?v=14"></script>
-<script src="js/identity.js?v=14"></script>
-<script src="js/weather.js?v=14"></script>
-<script src="js/club-logos.js?v=14"></script>
-<script src="js/game-card.js?v=14"></script>
-<script src="js/pitch-smart.js?v=14"></script>
-<script src="js/calendar-export.js?v=14"></script>
-<script src="js/schedule.js?v=14"></script>
-<script src="js/practices.js?v=14"></script>
-<script src="js/roster.js?v=14"></script>
-<script src="js/gamechanger.js?v=14"></script>
-<script src="js/rules.js?v=14"></script>
-<script src="js/standings.js?v=14"></script>
-<script src="js/calendar-family.js?v=14"></script>
-<script src="js/archive.js?v=14"></script>
+<script src="js/backend.js?v=16"></script>
+<script src="js/team-registry.js?v=16"></script>
+<script src="js/cloud-auth.js?v=16"></script>
+<script src="js/team-config.js?v=16"></script>
+<script src="js/identity.js?v=16"></script>
+<script src="js/weather.js?v=16"></script>
+<script src="js/club-logos.js?v=16"></script>
+<script src="js/league-teams.js?v=16"></script>
+<script src="js/game-card.js?v=16"></script>
+<script src="js/pitch-smart.js?v=16"></script>
+<script src="js/tonight.js?v=16"></script>
+<script src="js/league-info.js?v=16"></script>
+<script src="js/calendar-export.js?v=16"></script>
+<script src="js/schedule.js?v=16"></script>
+<script src="js/practices.js?v=16"></script>
+<script src="js/roster.js?v=16"></script>
+<script src="js/gamechanger.js?v=16"></script>
+<script src="js/rules.js?v=16"></script>
+<script src="js/standings.js?v=16"></script>
+<script src="js/calendar-family.js?v=16"></script>
+<script src="js/archive.js?v=16"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -124,7 +129,11 @@
     await window.Schedule.ensureLoaded(TEAM_ID);
     const el = document.getElementById('tab-schedule');
     if (scheduleView.mode === 'list') {
-      window.Schedule.renderList(TEAM_ID, el, {
+      el.innerHTML = '<div id="tonightSlot"></div><div id="scheduleListSlot"></div>';
+      window.TonightGames.ensureLoaded().then(() => {
+        window.TonightGames.render(el.querySelector('#tonightSlot'), window.TeamConfig.current().macLeagueDivisionId);
+      });
+      window.Schedule.renderList(TEAM_ID, el.querySelector('#scheduleListSlot'), {
         canEdit: canEdit(),
         onOpen: id => { scheduleView = { mode: 'detail', id }; renderScheduleTab(); },
         onAdd: () => { scheduleView = { mode: 'edit', game: {} }; renderScheduleTab(); },
@@ -227,16 +236,21 @@
     else if (name === 'standings') window.Standings.render(document.getElementById('tab-standings'), window.TeamConfig.current().macLeagueDivisionId);
     else if (name === 'pitching') renderPitchingTab();
     else if (name === 'rules') window.Rules.ensureLoaded().then(() => window.Rules.render(document.getElementById('tab-rules')));
+    else if (name === 'league') window.LeagueInfo.ensureLoaded().then(() => window.LeagueInfo.render(document.getElementById('tab-league')));
     else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
     else if (name === 'archive') window.Archive.ensureLoaded().then(() => window.Archive.render(document.getElementById('tab-archive')));
   }
 
   // Called by auth.js once a code is accepted and identity is known.
-  window.onIdentityReady = function (teamId, role, identity) {
+  // ClubLogos has to be awaited before the first render, not just kicked
+  // off -- otherwise the Schedule tab's first paint after every fresh load
+  // races the fetch and every badge falls back to a plain letter until the
+  // tab is revisited (cache.find() returns null while cache is still null).
+  window.onIdentityReady = async function (teamId, role, identity) {
     TEAM_ID = teamId; ROLE = role; SESSION = identity;
     document.getElementById('whoamiLabel').textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Player/Family'}`;
     document.getElementById('appShell').classList.add('show');
-    window.ClubLogos.ensureLoaded();
+    await window.ClubLogos.ensureLoaded();
     renderTab('schedule');
   };
 })();
@@ -245,6 +259,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=14"></script>
+<script src="js/auth.js?v=16"></script>
 </body>
 </html>

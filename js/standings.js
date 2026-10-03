@@ -71,7 +71,7 @@
       const extraHeadersEnd = hasExtendedCols
         ? '<th class="numCell">RF</th><th class="numCell">RA</th><th class="numCell">DIFF</th>'
         : '';
-      const games = (division.todayGames || []).map(g => `<div class="detailRow">${escapeHtml(g)}</div>`).join('') || '<div class="emptyState">No games today.</div>';
+      const games = (division.todayGames || []).map(g => window.TonightGames.gameRowHtml(g)).join('') || '<div class="emptyState">No games today.</div>';
       containerEl.innerHTML = `
         <div class="helpText">Mirrored from <a href="https://www.macleague.org/division/${escapeHtml(divisionId)}" target="_blank" rel="noopener">macleague.org</a> — standings as of ${timeAgo(division.fetchedAt)}.</div>
         <div class="standingsTableWrap">
