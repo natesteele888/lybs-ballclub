@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=4">
+<link rel="stylesheet" href="css/styles.css?v=5">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -59,6 +59,7 @@
     <button class="tabBtn" data-tab="standings">Standings</button>
     <button class="tabBtn" data-tab="rules">Rules</button>
     <button class="tabBtn" data-tab="calendar">My Calendar</button>
+    <button class="tabBtn" data-tab="archive">History</button>
   </div>
 
   <div class="tabPanel active" id="tab-schedule"></div>
@@ -68,6 +69,7 @@
   <div class="tabPanel" id="tab-standings"></div>
   <div class="tabPanel" id="tab-rules"></div>
   <div class="tabPanel" id="tab-calendar"></div>
+  <div class="tabPanel" id="tab-archive"></div>
 </div>
 
 <script>const BUILD_V = '20261003a';</script>
@@ -80,20 +82,21 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=4"></script>
-<script src="js/team-registry.js?v=4"></script>
-<script src="js/cloud-auth.js?v=4"></script>
-<script src="js/team-config.js?v=4"></script>
-<script src="js/identity.js?v=4"></script>
-<script src="js/weather.js?v=4"></script>
-<script src="js/calendar-export.js?v=4"></script>
-<script src="js/schedule.js?v=4"></script>
-<script src="js/practices.js?v=4"></script>
-<script src="js/roster.js?v=4"></script>
-<script src="js/gamechanger.js?v=4"></script>
-<script src="js/rules.js?v=4"></script>
-<script src="js/standings.js?v=4"></script>
-<script src="js/calendar-family.js?v=4"></script>
+<script src="js/backend.js?v=5"></script>
+<script src="js/team-registry.js?v=5"></script>
+<script src="js/cloud-auth.js?v=5"></script>
+<script src="js/team-config.js?v=5"></script>
+<script src="js/identity.js?v=5"></script>
+<script src="js/weather.js?v=5"></script>
+<script src="js/calendar-export.js?v=5"></script>
+<script src="js/schedule.js?v=5"></script>
+<script src="js/practices.js?v=5"></script>
+<script src="js/roster.js?v=5"></script>
+<script src="js/gamechanger.js?v=5"></script>
+<script src="js/rules.js?v=5"></script>
+<script src="js/standings.js?v=5"></script>
+<script src="js/calendar-family.js?v=5"></script>
+<script src="js/archive.js?v=5"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -194,6 +197,7 @@
     else if (name === 'standings') window.Standings.render(document.getElementById('tab-standings'), window.TeamConfig.current().macLeagueDivisionId);
     else if (name === 'rules') window.Rules.ensureLoaded().then(() => window.Rules.render(document.getElementById('tab-rules')));
     else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
+    else if (name === 'archive') window.Archive.ensureLoaded().then(() => window.Archive.render(document.getElementById('tab-archive')));
   }
 
   // Called by auth.js once a code is accepted and identity is known.
@@ -209,6 +213,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=4"></script>
+<script src="js/auth.js?v=5"></script>
 </body>
 </html>

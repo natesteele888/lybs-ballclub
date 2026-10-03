@@ -1,0 +1,224 @@
+{
+  "source": "Schedule/scores from GameChanger public team pages (web.gc.com/teams/{id}), pulled 2026-10-04. Rosters from screenshots the coach sent of their own logged-in GameChanger session (rosters are gated behind login on every public page -- confirmed by the same generic placeholder names showing on multiple unrelated teams when logged out).",
+  "note": "Roster names are reduced to first name + last initial only, matching the privacy rule already used for the live Roster tab and the lybs-reporting dashboard (see that repo's CLAUDE.md). Full surnames from the source screenshots were never written to this file.",
+  "teams": [
+    {
+      "gcTeamId": "gtKEQZgp28Vd",
+      "name": "Lunenburg Majors A",
+      "division": "Majors A",
+      "note": "This is last season's Select team, under its prior name.",
+      "season": "Spring 2026",
+      "record": "5-8",
+      "staff": ["Derek M", "Paul T", "Nathan D", "Jami A"],
+      "roster": [
+        { "name": "Henry A", "number": "11" },
+        { "name": "Callen R", "number": "2" },
+        { "name": "Jacob M", "number": "3" },
+        { "name": "Mikey D", "number": "4" },
+        { "name": "Lucas T", "number": "5" },
+        { "name": "Jimmy M", "number": "6" },
+        { "name": "Bryce M", "number": "7" },
+        { "name": "Jason D", "number": "8" },
+        { "name": "Wes L", "number": "9" },
+        { "name": "Parker G", "number": "10" },
+        { "name": "Jude P", "number": "12" }
+      ],
+      "games": [
+        { "date": "2026-04-27", "opponent": "GD", "homeAway": "Home", "result": "L", "score": "3-7" },
+        { "date": "2026-04-29", "opponent": "12A Pepperell - Boyce", "homeAway": "Home", "result": "W", "score": "10-2" },
+        { "date": "2026-05-08", "opponent": "Bolton Majors A", "homeAway": "Away", "result": "L", "score": "0-7" },
+        { "date": "2026-05-13", "opponent": "Littleton Majors-A", "homeAway": "Home", "result": "W", "score": "5-1" },
+        { "date": "2026-05-15", "opponent": "Townsend Ashby", "homeAway": "Away", "result": "L", "score": "4-12" },
+        { "date": "2026-05-18", "opponent": "Maynard-Stowe", "homeAway": "Home", "result": "L", "score": "2-5" },
+        { "date": "2026-05-20", "opponent": "Ayer-Shirley Major 70s A", "homeAway": "Home", "result": "L", "score": "5-11" },
+        { "date": "2026-05-22", "opponent": "Groton Dunstable Majors A", "homeAway": "Away", "result": "W", "score": "9-3" },
+        { "date": "2026-05-27", "opponent": "12A Pepperell - Boyce", "homeAway": "Away", "result": "W", "score": "17-9" },
+        { "date": "2026-05-28", "opponent": "Bolton Majors A", "homeAway": "Away", "result": "L", "score": "4-13" },
+        { "date": "2026-06-01", "opponent": "Maynard-Stowe", "homeAway": "Home", "result": "W", "score": "9-5" },
+        { "date": "2026-06-05", "opponent": "Littleton Majors-A", "homeAway": "Away", "result": "L", "score": "7-8" },
+        { "date": "2026-06-09", "opponent": "Groton Dunstable Majors A", "homeAway": "Home", "result": "L", "score": "1-5" }
+      ]
+    },
+    {
+      "gcTeamId": "DQoI1a9YoXU2",
+      "name": "Lunenburg Majors Blue",
+      "division": "Majors B",
+      "season": "Spring 2026",
+      "record": "11-5",
+      "staff": ["Matthew G", "Nate S", "Andy C", "Jami A"],
+      "rosterPartial": true,
+      "rosterNote": "Screenshot was scrolled mid-list -- player #1 and possibly others are missing. Team guessed from staff surnames (Gilman/Steele/Anderson match) and overlap with the All-Star roster, not from a visible title -- please confirm this is really Majors Blue.",
+      "roster": [
+        { "name": "Desmond S", "number": "5" },
+        { "name": "Emmett B", "number": "2" },
+        { "name": "Thomas X", "number": "3" },
+        { "name": "Eddy T", "number": "4" },
+        { "name": "Henry G", "number": "6" },
+        { "name": "Leo C", "number": "7" },
+        { "name": "Tyler L", "number": "8" },
+        { "name": "Thomas M", "number": "9" },
+        { "name": "Alexavier D", "number": "10" },
+        { "name": "Lincoln A", "number": "11" },
+        { "name": "Jaxson P", "number": "12" }
+      ],
+      "games": [
+        { "date": "2026-04-26", "opponent": "TBD", "homeAway": "Home", "result": "L", "score": "7-13" },
+        { "date": "2026-04-27", "opponent": "GD 12U Cardinals", "homeAway": "Away", "result": "W", "score": "16-5" },
+        { "date": "2026-05-01", "opponent": "Pepperell", "homeAway": "Home", "result": "W", "score": "13-5" },
+        { "date": "2026-05-04", "opponent": "TAYBS Majors Gold", "homeAway": "Away", "result": "L", "score": "8-9" },
+        { "date": "2026-05-08", "opponent": "GD 12U Brewers", "homeAway": "Home", "result": "L", "score": "5-6" },
+        { "date": "2026-05-11", "opponent": "Ayer-Shirley Majors Panthers", "homeAway": "Home", "result": "W", "score": "17-1" },
+        { "date": "2026-05-15", "opponent": "Lunenburg Black Majors", "homeAway": "Away", "result": "W", "score": "12-10" },
+        { "date": "2026-05-20", "opponent": "Dodgers", "homeAway": "Away", "result": "L", "score": "8-15" },
+        { "date": "2026-05-22", "opponent": "GD 12U Cardinals", "homeAway": "Home", "result": "W", "score": "14-13" },
+        { "date": "2026-05-26", "opponent": "Pepperell", "homeAway": "Away", "result": "W", "score": "20-4" },
+        { "date": "2026-05-30", "opponent": "TAYBS Majors Gold", "homeAway": "Away", "result": "W", "score": "9-6" },
+        { "date": "2026-06-03", "opponent": "GD 12U Brewers", "homeAway": "Home", "result": "W", "score": "18-17" },
+        { "date": "2026-06-05", "opponent": "Lunenburg Black Majors", "homeAway": "Home", "result": "L", "score": "9-21" },
+        { "date": "2026-06-11", "opponent": "Dodgers", "homeAway": "Home", "result": "W", "score": "8-3" },
+        { "date": "2026-06-15", "opponent": "GD 12U Brewers", "homeAway": "Away", "result": "W", "score": "11-2" },
+        { "date": "2026-06-17", "opponent": "GD 12U Cardinals", "homeAway": "Home", "result": "W", "score": "13-12" },
+        { "date": "2026-06-19", "opponent": "Lancaster Majors Red", "homeAway": "Away", "result": "L", "score": "0-10" }
+      ]
+    },
+    {
+      "gcTeamId": "QMNalVPSiMrz",
+      "name": "Lunenburg Black Majors",
+      "division": "Majors B",
+      "season": "Spring 2026",
+      "record": "9-4",
+      "staff": ["Shane B", "Brian R", "Aaron W", "Tim S"],
+      "roster": [
+        { "name": "Grant D", "number": "1" },
+        { "name": "Alexander B", "number": "3" },
+        { "name": "Jacob W", "number": "6" },
+        { "name": "Nathaleigh C", "number": "8" },
+        { "name": "Wyatt B", "number": "10" },
+        { "name": "Troy S", "number": "12" },
+        { "name": "Bryce P" },
+        { "name": "Connor G" },
+        { "name": "Erik M" },
+        { "name": "Jasper B" },
+        { "name": "Logan M" },
+        { "name": "Michael C" },
+        { "name": "Timmy S" }
+      ],
+      "games": [
+        { "date": "2026-04-29", "opponent": "Ayer-Shirley Majors Panthers", "homeAway": "Away", "result": "W", "score": "16-0" },
+        { "date": "2026-05-01", "opponent": "Dodgers", "homeAway": "Away", "result": "W", "score": "13-9" },
+        { "date": "2026-05-04", "opponent": "GD 12U Cardinals", "homeAway": "Home", "result": "W", "score": "16-9" },
+        { "date": "2026-05-13", "opponent": "GD 12U Brewers", "homeAway": "Away", "result": "L", "score": "11-12" },
+        { "date": "2026-05-15", "opponent": "Lunenburg Majors Blue", "homeAway": "Home", "result": "L", "score": "10-12" },
+        { "date": "2026-05-18", "opponent": "TAYBS Majors Gold", "homeAway": "Home", "result": "L", "score": "5-12" },
+        { "date": "2026-05-22", "opponent": "Ayer-Shirley Majors Panthers", "homeAway": "Away", "result": "W", "score": "17-5" },
+        { "date": "2026-05-27", "opponent": "Dodgers", "homeAway": "Home", "result": "W", "score": "15-7" },
+        { "date": "2026-05-29", "opponent": "GD 12U Cardinals", "homeAway": "Home", "result": "W", "score": "11-1" },
+        { "date": "2026-06-02", "opponent": "12U Pepperell - Fisher", "homeAway": "Home", "result": "W", "score": "18-9" },
+        { "date": "2026-06-04", "opponent": "12U Pepperell - Fisher", "homeAway": "Away", "result": "W", "score": "14-3" },
+        { "date": "2026-06-05", "opponent": "Lunenburg Majors Blue", "homeAway": "Away", "result": "W", "score": "21-9" },
+        { "date": "2026-06-10", "opponent": "GD 12U Cardinals", "homeAway": "Home", "result": "L", "score": "9-12" }
+      ]
+    },
+    {
+      "gcTeamId": "fUf6qCjr7c9t",
+      "name": "Lunenburg Blueknights Minors (Blue)",
+      "division": "Minors",
+      "season": "Spring 2026",
+      "record": "4-7-2",
+      "staff": ["Matthew G", "Steve F", "Thomas W", "Tim A"],
+      "rosterPartial": true,
+      "rosterNote": "Screenshot was scrolled mid-list -- player #1 and several others (13 total expected, 8 captured) are missing. Team guessed from the Blueknights name match -- please confirm.",
+      "roster": [
+        { "name": "Lughy G", "number": "2" },
+        { "name": "Micheal W", "number": "3" },
+        { "name": "Jayson W", "number": "4" },
+        { "name": "Joel A", "number": "5" },
+        { "name": "Max K", "number": "6" },
+        { "name": "Tanner J", "number": "7" },
+        { "name": "Grant A", "number": "8" },
+        { "name": "Lincoln R", "number": "9" }
+      ],
+      "games": [
+        { "date": "2026-04-26", "opponent": "Lunenburg Minors (Black)", "homeAway": "Home", "result": "T", "score": "6-6" },
+        { "date": "2026-04-28", "opponent": "Minors Party Animals", "homeAway": "Away", "result": "W", "score": "9-4" },
+        { "date": "2026-05-02", "opponent": "TAYBS Black", "homeAway": "Home", "result": "W", "score": "9-5" },
+        { "date": "2026-05-07", "opponent": "Pepperell Pythons (Minors 1)", "homeAway": "Home", "result": "L", "score": "9-12" },
+        { "date": "2026-05-12", "opponent": "TAYBS Black", "homeAway": "Home", "result": "T", "score": "9-9" },
+        { "date": "2026-05-17", "opponent": "GD 10U Space Potatoes", "homeAway": "Home", "result": "W", "score": "13-5" },
+        { "date": "2026-05-19", "opponent": "Minors Party Animals", "homeAway": "Home", "result": "L", "score": "10-13" },
+        { "date": "2026-05-21", "opponent": "GD 10U Space Potatoes", "homeAway": "Home", "result": "L", "score": "7-12" },
+        { "date": "2026-05-26", "opponent": "Rockhounds", "homeAway": "Away", "result": "L", "score": "7-10" },
+        { "date": "2026-05-28", "opponent": "Pepperell Pythons (Minors 1)", "homeAway": "Away", "result": "L", "score": "8-9" },
+        { "date": "2026-06-01", "opponent": "Rockhounds", "homeAway": "Away", "result": "W", "score": "10-6" },
+        { "date": "2026-06-04", "opponent": "Minors Party Animals", "homeAway": "Away", "result": "T", "score": "13-13" },
+        { "date": "2026-06-06", "opponent": "TAYBS Black", "homeAway": "Away", "result": "L", "score": "4-14" },
+        { "date": "2026-06-08", "opponent": "Minors Party Animals", "homeAway": "Away", "result": "L", "score": "3-8" }
+      ]
+    },
+    {
+      "gcTeamId": null,
+      "name": "Lunenburg Minors (Black)",
+      "division": "Minors",
+      "season": "Spring 2026",
+      "record": null,
+      "scheduleNote": "Roster only for now -- the team ID given for this team (wEZFoSqnicqz) doesn't resolve on GameChanger. Needs a corrected team ID/link to pull the schedule and record, same as the other teams.",
+      "roster": [
+        { "name": "Nick R", "number": "2" },
+        { "name": "Connor K", "number": "3" },
+        { "name": "Desmond C", "number": "4" },
+        { "name": "Henry S", "number": "5" },
+        { "name": "Justin W", "number": "6" },
+        { "name": "Danny L", "number": "7" },
+        { "name": "James L", "number": "8" },
+        { "name": "Domonic E", "number": "9" },
+        { "name": "James D", "number": "10" },
+        { "name": "William G", "number": "11" },
+        { "name": "Cole R", "number": "12" },
+        { "name": "Elliot G", "number": "13" },
+        { "name": "Kruz L", "number": "14" }
+      ],
+      "games": []
+    },
+    {
+      "gcTeamId": "H7e3lvuJEkM8",
+      "name": "Montachusett 11U All-Stars",
+      "division": "All-Stars (11U)",
+      "season": "Summer 2026",
+      "record": "6-2",
+      "staff": ["Matthew G", "Paul D", "Jason M", "Tim S"],
+      "roster": [
+        { "name": "Desmond S", "number": "71" },
+        { "name": "Jacob M", "number": "1" },
+        { "name": "Timothy S", "number": "4" },
+        { "name": "Jacob W", "number": "6" },
+        { "name": "Henry G", "number": "7" },
+        { "name": "Jack R", "number": "10" },
+        { "name": "Lucas T", "number": "11" },
+        { "name": "James D", "number": "12" },
+        { "name": "Zachary H", "number": "16" },
+        { "name": "Benjamin M", "number": "22" },
+        { "name": "Davaniel T", "number": "25" }
+      ],
+      "games": [
+        { "date": "2026-06-24", "opponent": "North Middlesex 11u All Stars", "homeAway": "Home", "result": "W", "score": "3-1" },
+        { "date": "2026-06-25", "opponent": "NAYB All-stars 11U", "homeAway": "Home", "result": "W", "score": "9-2" },
+        { "date": "2026-06-26", "opponent": "11u North Central All Stars", "homeAway": "Away", "result": "W", "score": "13-10" },
+        { "date": "2026-06-27", "opponent": "NAYB All-stars 11U", "homeAway": "Home", "result": "W", "score": "2-1" },
+        { "date": "2026-07-10", "opponent": "11u North Central All Stars", "homeAway": "Away", "result": "W", "score": "5-1" },
+        { "date": "2026-07-11", "opponent": "Marlboro Panthers 11U", "homeAway": "Home", "result": "W", "score": "5-3" },
+        { "date": "2026-07-11", "opponent": "Sutton 11U", "homeAway": "Away", "result": "L", "score": "8-15" },
+        { "date": "2026-07-12", "opponent": "Greenfield Ducks 2026 11U", "homeAway": "Home", "result": "L", "score": "2-3" }
+      ]
+    }
+  ],
+  "pending": {
+    "minorsBlackSchedule": {
+      "status": "id_not_resolving",
+      "note": "Minors Black has a real roster now but no schedule/record -- the GameChanger team ID given for it (wEZFoSqnicqz) doesn't load. Needs a corrected ID."
+    },
+    "partialRosters": {
+      "status": "needs_confirmation",
+      "note": "Majors Blue and Minors Blue rosters are guessed-at team assignments from partial, scrolled screenshots -- please confirm those are the right teams, and send the missing players if you have them."
+    }
+  }
+}
