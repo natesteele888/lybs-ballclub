@@ -1,0 +1,17 @@
+{
+  "source": "https://www.macleague.org/ -- CLUBS nav dropdown + homepage partner logos",
+  "fetchedAt": "2026-10-04",
+  "note": "Hotlinked, not downloaded -- these stay as direct references to MAC League's own Crossbar-hosted URLs (crossbar.s3.amazonaws.com), never copied into this repo. Each is each town's own youth baseball/softball association badge, uploaded by that town for the league's own site; we're displaying them the same way macleague.org already does (team/opponent identification), not re-hosting or redistributing copies under our own domain. Matching against opponent name strings is fuzzy (schedules abbreviate inconsistently -- 'GD', 'TAYBS', 'Maynard-Stowe' all show up) -- see js/club-logos.js.",
+  "clubs": [
+    { "town": "Ayer Shirley", "keywords": ["ayer-shirley", "ayer shirley", "ayer"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/0c98ef4a-f000-4584-be66-e485ad40ff7d.png" },
+    { "town": "Bolton", "keywords": ["bolton"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/ffaababe-7a9d-4b4e-abb6-01695a966b8a.png" },
+    { "town": "Groton Dunstable", "keywords": ["groton dunstable", "groton-dunstable", " gd ", "gd ", " gd", "gd12u", "gd 12u", "gd10u", "gd 10u"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/2f0f11a8-3307-43fa-ae35-628cce5149b1.png" },
+    { "town": "Harvard", "keywords": ["harvard"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/a192556b-c82e-41e0-b084-fd14ed532f66.png" },
+    { "town": "Lancaster", "keywords": ["lancaster"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/dd2d79e3-a0bf-4240-aefc-4cfde7b041a9.png" },
+    { "town": "Littleton", "keywords": ["littleton"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/6876cb70-dead-4170-a2e0-32dfa98b61f7.png" },
+    { "town": "Lunenburg", "keywords": ["lunenburg", "blueknights", "blue knights"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/61fc8fa9-3691-486e-95de-f0ebc2fdafc6.png" },
+    { "town": "Maynard Stow", "keywords": ["maynard stow", "maynard-stow", "maynard-stowe", "maynard stowe"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/51759426-fd01-4c28-95af-23c26415a541.png" },
+    { "town": "Pepperell", "keywords": ["pepperell"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/e3ba6727-5eef-4ee1-8c78-125eb2799600.png" },
+    { "town": "Townsend Ashby", "keywords": ["townsend ashby", "townsend-ashby", "taybs"], "logoUrl": "https://crossbar.s3.amazonaws.com/organizations/585/uploads/9e00aa35-1cb5-41af-b4a1-557375355d73.png" }
+  ]
+}

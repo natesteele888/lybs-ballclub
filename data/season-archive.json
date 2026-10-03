@@ -156,12 +156,12 @@
       ]
     },
     {
-      "gcTeamId": null,
+      "gcTeamId": "wEZFoSqnIcqz",
       "name": "Lunenburg Minors (Black)",
       "division": "Minors",
       "season": "Spring 2026",
-      "record": null,
-      "scheduleNote": "Roster only for now -- the team ID given for this team (wEZFoSqnicqz) doesn't resolve on GameChanger. Needs a corrected team ID/link to pull the schedule and record, same as the other teams.",
+      "record": "6-7-1",
+      "staff": ["Sean G", "Troy K", "Jamie D"],
       "roster": [
         { "name": "Nick R", "number": "2" },
         { "name": "Connor K", "number": "3" },
@@ -177,7 +177,23 @@
         { "name": "Elliot G", "number": "13" },
         { "name": "Kruz L", "number": "14" }
       ],
-      "games": []
+      "games": [
+        { "date": "2026-04-26", "opponent": "Lunenburg Blueknights Minors (Blue)", "homeAway": "Away", "result": "T", "score": "6-6" },
+        { "date": "2026-04-28", "opponent": "TAYBS Minors Gold", "homeAway": "Home", "result": "W", "score": "9-8" },
+        { "date": "2026-04-30", "opponent": "GD Minors Disco Turkeys", "homeAway": "Home", "result": "L", "score": "6-12" },
+        { "date": "2026-05-05", "opponent": "Ayer-Shirley Minors Maroon", "homeAway": "Home", "result": "L", "score": "3-9" },
+        { "date": "2026-05-08", "opponent": "GD 10U Flying Squirrels", "homeAway": "Home", "result": "T", "score": "4-4" },
+        { "date": "2026-05-11", "opponent": "GD Minors Disco Turkeys", "homeAway": "Away", "result": "L", "score": "5-13" },
+        { "date": "2026-05-16", "opponent": "Pepperell Minors", "homeAway": "Home", "result": "W", "score": "14-8" },
+        { "date": "2026-05-19", "opponent": "TAYBS Minors Gold", "homeAway": "Away", "result": "L", "score": "6-10" },
+        { "date": "2026-05-21", "opponent": "GD 10U Flying Squirrels", "homeAway": "Away", "result": "W", "score": "15-10" },
+        { "date": "2026-05-26", "opponent": "Pepperell Minors", "homeAway": "Away", "result": "W", "score": "13-5" },
+        { "date": "2026-05-28", "opponent": "Ayer-Shirley Minors Maroon", "homeAway": "Home", "result": "L", "score": "8-17" },
+        { "date": "2026-06-02", "opponent": "GD Minors Disco Turkeys", "homeAway": "Away", "result": "W", "score": "5-4" },
+        { "date": "2026-06-05", "opponent": "TAYBS Minors Gold", "homeAway": "Away", "result": "L", "score": "4-9" },
+        { "date": "2026-06-08", "opponent": "GD 10U Flying Squirrels", "homeAway": "Home", "result": "W", "score": "7-5" },
+        { "date": "2026-06-10", "opponent": "GD Minors Disco Turkeys", "homeAway": "Away", "result": "L", "score": "6-7" }
+      ]
     },
     {
       "gcTeamId": "H7e3lvuJEkM8",
