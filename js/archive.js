@@ -20,10 +20,6 @@
     d.textContent = s || '';
     return d.innerHTML;
   }
-  function badgeFor(result, score) {
-    const cls = result === 'W' ? 'badgeW' : (result === 'L' ? 'badgeL' : 'badgeT');
-    return `<span class="badge ${cls}">${result} ${escapeHtml(score)}</span>`;
-  }
 
   window.Archive = {
     async ensureLoaded() {
@@ -55,15 +51,17 @@
       function renderGames(t) {
         if (t.scheduleNote) return `<div class="helpText">${escapeHtml(t.scheduleNote)}</div>`;
         if (!t.games || !t.games.length) return '<div class="emptyState">No games recorded.</div>';
-        const rows = t.games.map(g => `
-          <div class="listRow" style="cursor:default;">
-            <div class="listRowMain">
-              <div class="listRowTitle">${window.ClubLogos.badgeHtml(g.opponent, 18)}${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent)}</div>
-              <div class="listRowSub">${escapeHtml(g.date)}</div>
-            </div>
-            ${badgeFor(g.result, g.score)}
-          </div>`).join('');
-        return `<div class="listBody">${rows}</div>`;
+        return t.games.map(g => {
+          const [ourScore, theirScore] = (g.score || '').split('-').map(s => s.trim());
+          const club = window.ClubLogos.find(g.opponent);
+          return window.GameCard.resultHtml({
+            date: g.date, homeAway: g.homeAway,
+            ourName: t.name, ourScore: ourScore != null ? ourScore : '-',
+            theirName: g.opponent, theirScore: theirScore != null ? theirScore : '-',
+            theirLogoUrl: club ? club.logoUrl : null,
+            result: g.result,
+          });
+        }).join('');
       }
 
       function renderList() {
