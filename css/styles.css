@@ -611,6 +611,8 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   background: linear-gradient(160deg, var(--lybs-blue-bright), var(--lybs-blue-deep));
   font-family: var(--font-display); font-weight: 400; font-size: 15px; color: #fff;
 }
+.fieldRowLinks { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }
+.fieldRowLinks .btn { white-space: nowrap; min-width: 84px; text-align: center; }
 
 @media (min-width: 640px) {
   .tabPanel { padding: 28px 24px 60px; }

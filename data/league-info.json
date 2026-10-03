@@ -1,29 +1,170 @@
 {
   "source": "macleague.org -- About Us, Our Facilities, Important Dates, League Ages pages, fetched 2026-10-03.",
   "facilities": [
-    { "town": "Acton", "name": "Veterans Fields", "address": "655 Main St, Acton, MA 01720" },
-    { "town": "Ayer", "name": "Pirone Fields", "address": "17 School Street, Ayer, MA 01432" },
-    { "town": "Bolton", "name": "Capital & IL Fields", "address": "20 Wattaquadock Hill Road, Bolton, MA 01740" },
-    { "town": "Boxboro", "name": "Flerra Meadows", "address": "400 Stow Rd, Boxborough, MA 01719" },
-    { "town": "Boxboro", "name": "Liberty Fields", "address": "1100 Liberty Square Rd, Boxborough, MA 01719" },
-    { "town": "Groton", "name": "Cow Pond Fields", "address": "319 Cow Pond Brook Rd, Groton, MA 01450" },
-    { "town": "Harvard", "name": "Ryan Land Fields", "address": "71 Depot Road, Harvard, MA 01451" },
-    { "town": "Lancaster", "name": "Mill Street Field", "address": "400 Mill Street Extension, Lancaster, MA 01523" },
-    { "town": "Lancaster", "name": "Thayer Field", "address": "115 Packard St., Lancaster, MA 01523" },
-    { "town": "Littleton", "name": "Shaker & Cooper Fields", "address": "35 Shaker Lane, Littleton, MA" },
-    { "town": "Littleton", "name": "Shattuck Field", "address": "33 Shattuck St, Littleton, MA 01460" },
-    { "town": "Littleton", "name": "Whitcomb Field", "address": "57 Russell St, Littleton, MA 01460" },
-    { "town": "Lunenburg", "name": "Fitzgerald Field", "address": "690 Reservoir Rd, Lunenburg, MA 01462", "home": true },
-    { "town": "Lunenburg", "name": "McNally Park", "address": "260 Whalom Rd, Lunenburg, MA 01462", "home": true },
-    { "town": "Lunenburg", "name": "Powell Field", "address": "855 Massachusetts Ave, Lunenburg, MA 01462", "home": true },
-    { "town": "Maynard", "name": "DJ's Field", "address": "1 Tiger Drive, Maynard, MA" },
-    { "town": "Pepperell", "name": "Bartelson Fields", "address": "10 Jersey Street, Pepperell, MA" },
-    { "town": "Stow", "name": "Community Park Fields", "address": "60 Old Bolton Rd, Stow, MA 01775" },
-    { "town": "Shirley", "name": "Dale Prentiss Fields", "address": "39 Harvard Rd, Shirley, MA 01464" },
-    { "town": "Townsend", "name": "Craven Field", "address": "15 New Fitchburg Road, Townsend MA 01469" },
-    { "town": "Townsend", "name": "Spaulding Fields", "address": "311 Main St, Townsend, MA 01469" },
-    { "town": "Townsend", "name": "NM Baseball Field", "address": "19 Main St, Townsend, MA 01469" },
-    { "town": "Westford", "name": "Graniteville Fields", "address": "15 River Street, Westford, MA 01886" }
+    {
+      "town": "Acton",
+      "name": "Veterans Fields",
+      "address": "655 Main St, Acton, MA 01720",
+      "lat": 42.5025352,
+      "lng": -71.4177772
+    },
+    {
+      "town": "Ayer",
+      "name": "Pirone Fields",
+      "address": "17 School Street, Ayer, MA 01432",
+      "lat": 42.5560715,
+      "lng": -71.5840899
+    },
+    {
+      "town": "Bolton",
+      "name": "Capital & IL Fields",
+      "address": "20 Wattaquadock Hill Road, Bolton, MA 01740",
+      "lat": 42.4336192,
+      "lng": -71.6102011
+    },
+    {
+      "town": "Boxboro",
+      "name": "Flerra Meadows",
+      "address": "400 Stow Rd, Boxborough, MA 01719",
+      "lat": 42.4720615,
+      "lng": -71.5163857
+    },
+    {
+      "town": "Boxboro",
+      "name": "Liberty Fields",
+      "address": "1100 Liberty Square Rd, Boxborough, MA 01719",
+      "lat": 42.5062383,
+      "lng": -71.5076192
+    },
+    {
+      "town": "Groton",
+      "name": "Cow Pond Fields",
+      "address": "319 Cow Pond Brook Rd, Groton, MA 01450",
+      "lat": 42.6225091,
+      "lng": -71.5027016
+    },
+    {
+      "town": "Harvard",
+      "name": "Ryan Land Fields",
+      "address": "71 Depot Road, Harvard, MA 01451",
+      "lat": 42.5117821,
+      "lng": -71.5925737
+    },
+    {
+      "town": "Lancaster",
+      "name": "Mill Street Field",
+      "address": "400 Mill Street Extension, Lancaster, MA 01523",
+      "lat": 42.43554,
+      "lng": -71.66395
+    },
+    {
+      "town": "Lancaster",
+      "name": "Thayer Field",
+      "address": "115 Packard St., Lancaster, MA 01523",
+      "lat": 42.4565934,
+      "lng": -71.6698657
+    },
+    {
+      "town": "Littleton",
+      "name": "Shaker & Cooper Fields",
+      "address": "35 Shaker Lane, Littleton, MA",
+      "lat": 42.5305276,
+      "lng": -71.4579125
+    },
+    {
+      "town": "Littleton",
+      "name": "Shattuck Field",
+      "address": "33 Shattuck St, Littleton, MA 01460",
+      "lat": 42.542209,
+      "lng": -71.480597
+    },
+    {
+      "town": "Littleton",
+      "name": "Whitcomb Field",
+      "address": "57 Russell St, Littleton, MA 01460",
+      "lat": 42.5434403,
+      "lng": -71.4865873
+    },
+    {
+      "town": "Lunenburg",
+      "name": "Fitzgerald Field",
+      "address": "690 Reservoir Rd, Lunenburg, MA 01462",
+      "home": true,
+      "lat": 42.554832,
+      "lng": -71.6923313
+    },
+    {
+      "town": "Lunenburg",
+      "name": "McNally Park",
+      "address": "260 Whalom Rd, Lunenburg, MA 01462",
+      "home": true,
+      "lat": 42.5726447,
+      "lng": -71.753544
+    },
+    {
+      "town": "Lunenburg",
+      "name": "Powell Field",
+      "address": "855 Massachusetts Ave, Lunenburg, MA 01462",
+      "home": true,
+      "lat": 42.5874777,
+      "lng": -71.7686126
+    },
+    {
+      "town": "Maynard",
+      "name": "DJ's Field",
+      "address": "1 Tiger Drive, Maynard, MA",
+      "lat": 42.4212226,
+      "lng": -71.4526557
+    },
+    {
+      "town": "Pepperell",
+      "name": "Bartelson Fields",
+      "address": "10 Jersey Street, Pepperell, MA",
+      "lat": 42.6649389,
+      "lng": -71.5580241
+    },
+    {
+      "town": "Stow",
+      "name": "Community Park Fields",
+      "address": "60 Old Bolton Rd, Stow, MA 01775",
+      "lat": 42.4336795,
+      "lng": -71.5436567
+    },
+    {
+      "town": "Shirley",
+      "name": "Dale Prentiss Fields",
+      "address": "39 Harvard Rd, Shirley, MA 01464",
+      "lat": 42.5388367,
+      "lng": -71.6535229
+    },
+    {
+      "town": "Townsend",
+      "name": "Craven Field",
+      "address": "15 New Fitchburg Road, Townsend MA 01469",
+      "lat": 42.6754912,
+      "lng": -71.7453104
+    },
+    {
+      "town": "Townsend",
+      "name": "Spaulding Fields",
+      "address": "311 Main St, Townsend, MA 01469",
+      "lat": 42.669985,
+      "lng": -71.7150431
+    },
+    {
+      "town": "Townsend",
+      "name": "NM Baseball Field",
+      "address": "19 Main St, Townsend, MA 01469",
+      "lat": 42.6524306,
+      "lng": -71.6621745
+    },
+    {
+      "town": "Westford",
+      "name": "Graniteville Fields",
+      "address": "15 River Street, Westford, MA 01886",
+      "lat": 42.5945545,
+      "lng": -71.4593893
+    }
   ],
   "facilityRules": [
     "No smoking, vaping, drinking or drug use at any field.",
@@ -35,50 +176,174 @@
     "administratorEmail": "mac@taybs.org",
     "note": "Each town may be represented by multiple people; each town gets a single vote on league matters.",
     "officials": [
-      { "name": "Mikko Salokangas", "town": "Ayer-Shirley", "role": "Rep" },
-      { "name": "Jeremy Regan", "town": "Ayer-Shirley", "role": "Rep" },
-      { "name": "Dave Grubb", "town": "Ayer-Shirley", "role": "President" },
-      { "name": "Kara Tajima", "town": "Bolton", "role": "Rep" },
-      { "name": "Michael Coviello", "town": "Bolton", "role": "President" },
-      { "name": "Josh Pollock", "town": "Groton Dunstable", "role": "President" },
-      { "name": "James O'Leary", "town": "Harvard", "role": "President" },
-      { "name": "Adam Trussell", "town": "Lancaster", "role": "President" },
-      { "name": "Dave McManus", "town": "Littleton", "role": "President" },
-      { "name": "Nate DiPerri", "town": "Lunenburg", "role": "Rep" },
-      { "name": "TJ Loughlin", "town": "Lunenburg", "role": "President" },
-      { "name": "Adam Whelan", "town": "Maynard Stow", "role": "Rep" },
-      { "name": "Mike Grenier", "town": "Maynard Stow", "role": "President" },
-      { "name": "Chris Boyce", "town": "Pepperell", "role": "President" },
-      { "name": "Ben Marchant", "town": "Pepperell", "role": "Rep" },
-      { "name": "Keith Turgeon", "town": "Townsend Ashby", "role": "President" }
+      {
+        "name": "Mikko Salokangas",
+        "town": "Ayer-Shirley",
+        "role": "Rep"
+      },
+      {
+        "name": "Jeremy Regan",
+        "town": "Ayer-Shirley",
+        "role": "Rep"
+      },
+      {
+        "name": "Dave Grubb",
+        "town": "Ayer-Shirley",
+        "role": "President"
+      },
+      {
+        "name": "Kara Tajima",
+        "town": "Bolton",
+        "role": "Rep"
+      },
+      {
+        "name": "Michael Coviello",
+        "town": "Bolton",
+        "role": "President"
+      },
+      {
+        "name": "Josh Pollock",
+        "town": "Groton Dunstable",
+        "role": "President"
+      },
+      {
+        "name": "James O'Leary",
+        "town": "Harvard",
+        "role": "President"
+      },
+      {
+        "name": "Adam Trussell",
+        "town": "Lancaster",
+        "role": "President"
+      },
+      {
+        "name": "Dave McManus",
+        "town": "Littleton",
+        "role": "President"
+      },
+      {
+        "name": "Nate DiPerri",
+        "town": "Lunenburg",
+        "role": "Rep"
+      },
+      {
+        "name": "TJ Loughlin",
+        "town": "Lunenburg",
+        "role": "President"
+      },
+      {
+        "name": "Adam Whelan",
+        "town": "Maynard Stow",
+        "role": "Rep"
+      },
+      {
+        "name": "Mike Grenier",
+        "town": "Maynard Stow",
+        "role": "President"
+      },
+      {
+        "name": "Chris Boyce",
+        "town": "Pepperell",
+        "role": "President"
+      },
+      {
+        "name": "Ben Marchant",
+        "town": "Pepperell",
+        "role": "Rep"
+      },
+      {
+        "name": "Keith Turgeon",
+        "town": "Townsend Ashby",
+        "role": "President"
+      }
     ]
   },
   "leagueAges": {
-    "note": "Age cutoff date ranges MAC League uses to assign divisions. Softball's determination date is August 31st of the prior year, not the current year. Younger kids may move up without approval; moving an older kid down needs MAC, Babe Ruth, and insurance-carrier approval.",
     "2026": [
-      { "division": "T-Ball", "range": "5/1/2019 to 8/31/2022" },
-      { "division": "Baseball 8U Rookies", "range": "5/1/2017 to 4/30/2020" },
-      { "division": "Baseball 10U Minors", "range": "5/1/2015 to 4/30/2017" },
-      { "division": "Baseball 12U Majors", "range": "5/1/2013 to 4/30/2015" },
-      { "division": "Baseball 15/16U Juniors", "range": "5/1/2009 to 4/30/2013" },
-      { "division": "Baseball 18U Seniors", "range": "5/1/2007 to 4/30/2010" },
-      { "division": "Softball 8U Rookies", "range": "9/1/2016 to 8/31/2019" },
-      { "division": "Softball 10U Minors", "range": "9/1/2014 to 8/31/2016" },
-      { "division": "Softball 12U Majors", "range": "9/1/2012 to 8/31/2014" },
-      { "division": "Softball 16U Juniors", "range": "9/1/2008 to 8/31/2012" }
+      {
+        "division": "T-Ball",
+        "range": "5/1/2019 to 8/31/2022"
+      },
+      {
+        "division": "Baseball 8U Rookies",
+        "range": "5/1/2017 to 4/30/2020"
+      },
+      {
+        "division": "Baseball 10U Minors",
+        "range": "5/1/2015 to 4/30/2017"
+      },
+      {
+        "division": "Baseball 12U Majors",
+        "range": "5/1/2013 to 4/30/2015"
+      },
+      {
+        "division": "Baseball 15/16U Juniors",
+        "range": "5/1/2009 to 4/30/2013"
+      },
+      {
+        "division": "Baseball 18U Seniors",
+        "range": "5/1/2007 to 4/30/2010"
+      },
+      {
+        "division": "Softball 8U Rookies",
+        "range": "9/1/2016 to 8/31/2019"
+      },
+      {
+        "division": "Softball 10U Minors",
+        "range": "9/1/2014 to 8/31/2016"
+      },
+      {
+        "division": "Softball 12U Majors",
+        "range": "9/1/2012 to 8/31/2014"
+      },
+      {
+        "division": "Softball 16U Juniors",
+        "range": "9/1/2008 to 8/31/2012"
+      }
     ],
     "2027": [
-      { "division": "T-Ball", "range": "5/1/2020 to 8/31/2023" },
-      { "division": "Baseball 8U Rookies", "range": "5/1/2018 to 4/30/2021" },
-      { "division": "Baseball 10U Minors", "range": "5/1/2016 to 4/30/2018" },
-      { "division": "Baseball 12U Majors", "range": "5/1/2014 to 4/30/2016" },
-      { "division": "Baseball 15/16U Juniors", "range": "5/1/2010 to 4/30/2014" },
-      { "division": "Baseball 18U Seniors", "range": "5/1/2008 to 4/30/2011" },
-      { "division": "Softball 8U Rookies", "range": "9/1/2017 to 8/31/2020" },
-      { "division": "Softball 10U Minors", "range": "9/1/2015 to 8/31/2017" },
-      { "division": "Softball 12U Majors", "range": "9/1/2013 to 8/31/2015" },
-      { "division": "Softball 16U Juniors", "range": "9/1/2009 to 8/31/2013" }
-    ]
+      {
+        "division": "T-Ball",
+        "range": "5/1/2020 to 8/31/2023"
+      },
+      {
+        "division": "Baseball 8U Rookies",
+        "range": "5/1/2018 to 4/30/2021"
+      },
+      {
+        "division": "Baseball 10U Minors",
+        "range": "5/1/2016 to 4/30/2018"
+      },
+      {
+        "division": "Baseball 12U Majors",
+        "range": "5/1/2014 to 4/30/2016"
+      },
+      {
+        "division": "Baseball 15/16U Juniors",
+        "range": "5/1/2010 to 4/30/2014"
+      },
+      {
+        "division": "Baseball 18U Seniors",
+        "range": "5/1/2008 to 4/30/2011"
+      },
+      {
+        "division": "Softball 8U Rookies",
+        "range": "9/1/2017 to 8/31/2020"
+      },
+      {
+        "division": "Softball 10U Minors",
+        "range": "9/1/2015 to 8/31/2017"
+      },
+      {
+        "division": "Softball 12U Majors",
+        "range": "9/1/2013 to 8/31/2015"
+      },
+      {
+        "division": "Softball 16U Juniors",
+        "range": "9/1/2009 to 8/31/2013"
+      }
+    ],
+    "note": "Age cutoff date ranges MAC League uses to assign divisions. Softball's determination date is August 31st of the prior year, not the current year. Younger kids may move up without approval; moving an older kid down needs MAC, Babe Ruth, and insurance-carrier approval."
   },
   "seasons": [
     {
