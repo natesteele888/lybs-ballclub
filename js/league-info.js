@@ -22,6 +22,14 @@
   function mapUrl(address) {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   }
+  // Google's documented consumer Maps URL for opening Street View at a
+  // point -- no API key needed (that's only for embedding an image/pano
+  // inline). lat/lng come from a one-time geocode of each address, since
+  // this action needs coordinates, not a free-text address -- see
+  // scripts/geocode-facilities.mjs.
+  function streetViewUrl(lat, lng) {
+    return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
+  }
 
   window.LeagueInfo = {
     async ensureLoaded() {
@@ -39,6 +47,7 @@
 
       function fieldRow(f) {
         const badge = window.ClubLogos.badgeHtml(f.town, 32);
+        const hasCoords = f.lat != null && f.lng != null;
         return `
           <div class="listRow" style="cursor:default;">
             ${badge || '<div class="fieldBadgeFallback">' + escapeHtml((f.town || '?').trim().charAt(0).toUpperCase()) + '</div>'}
@@ -46,7 +55,10 @@
               <div class="listRowTitle">${escapeHtml(f.name)}</div>
               <div class="listRowSub">${escapeHtml(f.town)} &middot; ${escapeHtml(f.address)}</div>
             </div>
-            <a class="btn btnGhost btnSmall" href="${mapUrl(f.address)}" target="_blank" rel="noopener">Map</a>
+            <div class="fieldRowLinks">
+              <a class="btn btnGhost btnTiny" href="${mapUrl(f.address)}" target="_blank" rel="noopener">Map</a>
+              ${hasCoords ? `<a class="btn btnGhost btnTiny" href="${streetViewUrl(f.lat, f.lng)}" target="_blank" rel="noopener">Street View</a>` : ''}
+            </div>
           </div>`;
       }
 
