@@ -38,14 +38,9 @@
 
       function renderRoster(t) {
         if (!t.roster || !t.roster.length) return '<div class="emptyState">No roster yet.</div>';
-        const rows = t.roster.map(p => `
-          <div class="rosterRow">
-            <div class="rosterNum">${p.number ? '#' + escapeHtml(p.number) : ''}</div>
-            <div class="rosterName">${escapeHtml(p.name)}</div>
-          </div>`).join('');
         return `
           ${t.rosterPartial ? `<div class="helpText" style="color:#ffd45f;">${escapeHtml(t.rosterNote || 'Partial roster -- some players missing.')}</div>` : ''}
-          <div class="rosterBody">${rows}</div>`;
+          ${window.Roster.renderTable(t.roster, { canEdit: false })}`;
       }
 
       function renderGames(t) {

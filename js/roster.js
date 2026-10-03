@@ -1,10 +1,19 @@
 /* ============================================================
-   Roster -- name / number / position only, deliberately. No DOB,
-   no contact info, no address -- same privacy posture as the
+   Roster -- name / number / position / bats-throws, deliberately
+   nothing more. No DOB, no contact info, no address, no height or
+   weight, no birthplace -- same privacy posture as the
    lybs-reporting dashboard's registration data (see that repo's
    CLAUDE.md): this app never stores anything that would need to
    be scrubbed before the repo or database could be shown to
    anyone outside the team.
+
+   Table layout is modeled on ESPN/MLB.com roster pages (# / Name /
+   Pos / B-T, small avatar per row), minus the columns that don't
+   belong on a youth roster -- those sites show age, height, weight,
+   birthplace; none of that is appropriate here. The avatar is a
+   plain jersey-number badge, not a photo -- this app has no player
+   photo feature, deliberately, to avoid opening that privacy
+   question at all.
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> players[]
@@ -39,27 +48,40 @@
       await window.dbPut(window.teamPath(teamId, 'roster'), cache[teamId]);
     },
 
+    // Shared by the live (editable) roster and History's read-only archived
+    // rosters -- pass canEdit:false and no onEdit for a plain display table.
+    renderTable(players, opts) {
+      opts = opts || {};
+      const rows = players.map(p => `
+        <tr class="${opts.canEdit ? 'rosterTableEditable' : ''}" data-id="${escapeHtml(p.id || '')}">
+          <td class="rosterAvatarCell"><div class="rosterAvatar">${escapeHtml(p.number || '?')}</div></td>
+          <td class="rosterTableName">${escapeHtml(p.name || '')}</td>
+          <td>${escapeHtml(p.position || '—')}</td>
+          <td class="numCell">${escapeHtml(p.batsThrows || '—')}</td>
+        </tr>`).join('') || `<tr><td colspan="4"><div class="emptyState">No players yet.</div></td></tr>`;
+      return `
+        <div class="rosterTableWrap">
+          <table class="rosterTable">
+            <thead><tr><th></th><th>Name</th><th>Pos</th><th class="numCell">B/T</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    },
+
     render(teamId, containerEl, opts) {
       opts = opts || {};
       const players = window.Roster.getPlayers(teamId);
-      const rows = players.map(p => `
-        <div class="rosterRow" data-id="${escapeHtml(p.id)}">
-          <div class="rosterNum">#${escapeHtml(p.number || '')}</div>
-          <div class="rosterName">${escapeHtml(p.name || '')}</div>
-          <div class="rosterPos">${escapeHtml(p.position || '')}</div>
-          ${opts.canEdit ? `<button class="btn btnTiny editPlayerBtn" data-id="${escapeHtml(p.id)}">Edit</button>` : ''}
-        </div>`).join('') || '<div class="emptyState">No players added yet.</div>';
       containerEl.innerHTML = `
         <div class="sectionHeader">
           <div></div>
           ${opts.canEdit ? '<button class="btn btnSmall" id="addPlayerBtn">+ Add player</button>' : ''}
         </div>
-        <div class="rosterBody">${rows}</div>`;
+        ${window.Roster.renderTable(players, opts)}`;
       if (opts.canEdit) {
         const addBtn = containerEl.querySelector('#addPlayerBtn');
         if (addBtn) addBtn.addEventListener('click', () => opts.onAdd && opts.onAdd());
-        containerEl.querySelectorAll('.editPlayerBtn').forEach(btn => {
-          btn.addEventListener('click', e => { e.stopPropagation(); opts.onEdit && opts.onEdit(btn.dataset.id); });
+        containerEl.querySelectorAll('tr.rosterTableEditable').forEach(row => {
+          row.addEventListener('click', () => opts.onEdit && opts.onEdit(row.dataset.id));
         });
       }
     },
@@ -71,6 +93,7 @@
           <label>Name<input id="fName" value="${escapeHtml(player.name || '')}"></label>
           <label>Number<input id="fNumber" value="${escapeHtml(player.number || '')}"></label>
           <label>Position<input id="fPosition" value="${escapeHtml(player.position || '')}" placeholder="e.g. SS, 2B, P/OF"></label>
+          <label>Bats/Throws<input id="fBT" value="${escapeHtml(player.batsThrows || '')}" placeholder="e.g. R/R, L/L, S/R"></label>
           <div class="detailActions">
             <button class="btn" id="saveBtn">Save</button>
             <button class="btn btnGhost" id="cancelBtn">Cancel</button>
@@ -82,6 +105,7 @@
           name: containerEl.querySelector('#fName').value.trim(),
           number: containerEl.querySelector('#fNumber').value.trim(),
           position: containerEl.querySelector('#fPosition').value.trim(),
+          batsThrows: containerEl.querySelector('#fBT').value.trim(),
         });
         opts.onSave && opts.onSave(updated);
       });
