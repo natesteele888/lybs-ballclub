@@ -1,0 +1,136 @@
+:root {
+  --team-primary: #0a2f5c;
+  --team-secondary: #c8102e;
+  --bg: #0f1117;
+  --card: #171a23;
+  --border: #2a2e3a;
+  --text: #f0f1f4;
+  --text2: #9aa0ad;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.hide { display: none !important; }
+
+/* ---- Login / identity screens ---- */
+#loginScreen, #identityScreen {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, var(--team-primary), #05101f);
+}
+.loginContent {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 28px 24px; width: 90%; max-width: 360px; text-align: center;
+}
+.loginContent.shake { animation: shake 0.3s; }
+@keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
+.loginContent h1 { font-size: 20px; margin: 0 0 4px; }
+.loginContent p.sub { color: var(--text2); font-size: 13px; margin: 0 0 18px; }
+.loginContent input {
+  width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border);
+  background: #0c0e14; color: var(--text); font-size: 16px; margin-bottom: 10px; text-align: center;
+}
+.loginContent .btn { width: 100%; }
+#loginError, #identityError { color: #ff6b6b; font-size: 13px; min-height: 18px; margin-top: 6px; }
+
+/* ---- Buttons ---- */
+.btn {
+  background: var(--team-secondary); color: #fff; border: none; border-radius: 10px;
+  padding: 11px 16px; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btnGhost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btnDanger { background: #7a1f1f; }
+.btnSmall { padding: 7px 12px; font-size: 12px; }
+.btnTiny { padding: 4px 8px; font-size: 11px; border-radius: 6px; }
+
+/* ---- App shell ---- */
+#appShell { display: none; min-height: 100vh; flex-direction: column; }
+#appShell.show { display: flex; }
+.topBar {
+  background: var(--team-primary); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+}
+.topBar h1 { font-size: 16px; margin: 0; }
+.topBar .whoami { font-size: 12px; color: #d8dde6; }
+.tabBar {
+  display: flex; overflow-x: auto; background: var(--card); border-bottom: 1px solid var(--border);
+}
+.tabBtn {
+  flex: 0 0 auto; padding: 12px 14px; font-size: 13px; color: var(--text2); background: none; border: none;
+  border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap;
+}
+.tabBtn.active { color: var(--text); border-bottom-color: var(--team-secondary); font-weight: 700; }
+.tabPanel { display: none; padding: 16px; max-width: 720px; margin: 0 auto; width: 100%; }
+.tabPanel.active { display: block; }
+
+/* ---- Lists ---- */
+.sectionHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
+.recordLine { font-size: 13px; color: var(--text2); }
+.listBody, .rosterBody { display: flex; flex-direction: column; gap: 8px; }
+.listRow, .rosterRow {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer;
+}
+.rosterRow { cursor: default; }
+.listRowTitle { font-weight: 700; font-size: 14px; }
+.listRowSub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.rosterNum { font-weight: 800; color: var(--team-secondary); width: 36px; }
+.rosterName { flex: 1; font-weight: 600; }
+.rosterPos { color: var(--text2); font-size: 12px; }
+.emptyState { color: var(--text2); font-size: 13px; padding: 20px 10px; text-align: center; }
+.badge { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
+.badgeW { background: #163c23; color: #5fd989; }
+.badgeL { background: #3c1616; color: #ff8a8a; }
+.badgeT { background: #3c3416; color: #ffd45f; }
+.badgeTbd { background: #2a2e3a; color: var(--text2); }
+
+/* ---- Detail / forms ---- */
+.detailCard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.detailCard h3 { margin: 0 0 8px; }
+.detailRow { font-size: 14px; margin-bottom: 6px; }
+.detailRow a { color: #7fb3ff; }
+.detailActions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.detailCard label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 10px; }
+.detailCard input, .detailCard select, .detailCard textarea {
+  width: 100%; margin-top: 4px; padding: 9px 10px; border-radius: 8px; border: 1px solid var(--border);
+  background: #0c0e14; color: var(--text); font-size: 14px;
+}
+.weatherBox { display: flex; align-items: center; gap: 8px; background: #0c0e14; border-radius: 8px; padding: 8px 10px; margin: 10px 0; }
+.weatherIcon { font-size: 22px; }
+.lbSub { font-size: 11px; color: var(--text2); }
+
+/* ---- GameChanger ---- */
+.gcFrame { width: 100%; height: 420px; border: 0; border-radius: 8px; background: #fff; margin: 10px 0; }
+.gcAddForm { background: var(--card); border: 1px dashed var(--border); border-radius: 10px; padding: 12px; margin-top: 12px; }
+.gcAddForm textarea { width: 100%; font-family: ui-monospace, monospace; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: #0c0e14; color: var(--text); }
+.helpText { font-size: 12px; color: var(--text2); line-height: 1.5; margin: 8px 0; }
+.sectionLabel { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+.errorText { color: #ff6b6b; font-size: 12px; min-height: 16px; }
+
+/* ---- Rules ---- */
+.rulesSearchBar { display: flex; gap: 8px; margin-bottom: 14px; }
+.rulesSearchBar input { flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: #0c0e14; color: var(--text); font-size: 14px; }
+.rulesGroup { margin-bottom: 16px; }
+.rulesGroupHeader { font-weight: 700; font-size: 13px; color: var(--team-secondary); margin-bottom: 8px; }
+.ruleItem { display: flex; align-items: flex-start; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; }
+.ruleText { flex: 1; font-size: 13px; line-height: 1.5; }
+.ruleText mark { background: #ffd45f; color: #111; border-radius: 3px; padding: 0 2px; }
+.pinBtn { background: none; border: none; font-size: 18px; color: var(--text2); cursor: pointer; }
+.pinBtn.pinned { color: #ffd45f; }
+
+/* ---- Standings ---- */
+.standingsTable { width: 100%; border-collapse: collapse; font-size: 13px; }
+.standingsTable th, .standingsTable td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+.standingsUsRow { background: rgba(200,16,46,0.12); font-weight: 700; }
+
+/* ---- Family calendar ---- */
+.teamCheckList { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+.teamCheckRow { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+
+@media (min-width: 640px) {
+  .tabPanel { padding: 24px; }
+}

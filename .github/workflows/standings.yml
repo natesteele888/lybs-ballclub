@@ -1,0 +1,36 @@
+name: Mirror MAC League standings
+
+# Runs on a timer during the season (every 30 min, 8am-9pm ET) plus a manual
+# "Run workflow" button for an admin. Not on every push -- this is meant to
+# poll macleague.org occasionally, not hammer it. See
+# scripts/scrape-standings.mjs for why this has to be a scheduled job rather
+# than the browser fetching macleague.org directly.
+#
+# Secrets needed (repo Settings -> Secrets and variables -> Actions):
+#   FIREBASE_DB_URL     e.g. https://lybs-ballclub-default-rtdb.firebaseio.com
+#   FIREBASE_DB_SECRET  the Realtime Database's legacy secret (Firebase
+#                        console -> Project settings -> Service accounts ->
+#                        Database secrets) -- used only for this one write,
+#                        scoped by database rules to shared/macLeagueStandings.
+#
+# Division IDs to track: edit the `divisions` line below. Start with just
+# the Majors division (33696) that Select/Majors-A and Majors B play in;
+# add more as other LYBS teams (Minors, etc.) come on board.
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0,30 12-21 * * 1-6' # every 30 min, 8am-9pm ET (UTC-4), Mon-Sat
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Scrape and push standings
+        env:
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+        run: node scripts/scrape-standings.mjs 33696

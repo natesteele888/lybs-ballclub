@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LYBS Ballclub</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/styles.css?v=3">
+</head>
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="loginScreen">
+  <div class="loginContent">
+    <h1 data-team-name>LYBS Ballclub</h1>
+    <p class="sub">Enter your team or coach code</p>
+    <input id="loginCode" type="password" placeholder="Access code" autocomplete="off">
+    <button class="btn" id="loginBtn">Enter</button>
+    <div id="loginError"></div>
+  </div>
+</div>
+
+<!-- ===================== IDENTITY (name + PIN) ===================== -->
+<div id="identityScreen" class="hide">
+  <div class="loginContent">
+    <h1>Who's this?</h1>
+    <p class="sub">First time on this device: make up a 4-digit PIN. Type the same name + PIN again next time.</p>
+    <input id="identityName" placeholder="Your name" autocomplete="off">
+    <input id="identityPin" placeholder="4-digit PIN" inputmode="numeric" maxlength="4" autocomplete="off">
+    <button class="btn" id="identityBtn">Continue</button>
+    <div id="identityError"></div>
+  </div>
+</div>
+
+<!-- ===================== APP SHELL ===================== -->
+<div id="appShell">
+  <div class="topBar">
+    <h1 data-team-name>LYBS Ballclub</h1>
+    <div class="whoami" id="whoamiLabel"></div>
+  </div>
+  <div class="tabBar" id="tabBar">
+    <button class="tabBtn active" data-tab="schedule">Schedule</button>
+    <button class="tabBtn" data-tab="practices">Practices</button>
+    <button class="tabBtn" data-tab="roster">Roster</button>
+    <button class="tabBtn" data-tab="gamechanger">GameChanger</button>
+    <button class="tabBtn" data-tab="standings">Standings</button>
+    <button class="tabBtn" data-tab="rules">Rules</button>
+    <button class="tabBtn" data-tab="calendar">My Calendar</button>
+  </div>
+
+  <div class="tabPanel active" id="tab-schedule"></div>
+  <div class="tabPanel" id="tab-practices"></div>
+  <div class="tabPanel" id="tab-roster"></div>
+  <div class="tabPanel" id="tab-gamechanger"></div>
+  <div class="tabPanel" id="tab-standings"></div>
+  <div class="tabPanel" id="tab-rules"></div>
+  <div class="tabPanel" id="tab-calendar"></div>
+</div>
+
+<script>const BUILD_V = '20261003a';</script>
+<script src="js/backend.js?v=3"></script>
+<script src="js/team-registry.js?v=3"></script>
+<script src="js/cloud-auth.js?v=3"></script>
+<script src="js/team-config.js?v=3"></script>
+<script src="js/identity.js?v=3"></script>
+<script src="js/weather.js?v=3"></script>
+<script src="js/calendar-export.js?v=3"></script>
+<script src="js/schedule.js?v=3"></script>
+<script src="js/practices.js?v=3"></script>
+<script src="js/roster.js?v=3"></script>
+<script src="js/gamechanger.js?v=3"></script>
+<script src="js/rules.js?v=3"></script>
+<script src="js/standings.js?v=3"></script>
+<script src="js/calendar-family.js?v=3"></script>
+<script>
+(function () {
+  let TEAM_ID = null, ROLE = null, SESSION = null;
+
+  function canEdit() { return ROLE === 'coach'; }
+
+  // ---- Tab switching ----
+  document.querySelectorAll('.tabBtn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+  function switchTab(name) {
+    document.querySelectorAll('.tabBtn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    document.querySelectorAll('.tabPanel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+    renderTab(name);
+  }
+
+  // ---- Schedule tab (list / detail / edit) ----
+  let scheduleView = { mode: 'list' };
+  async function renderScheduleTab() {
+    await window.Schedule.ensureLoaded(TEAM_ID);
+    const el = document.getElementById('tab-schedule');
+    if (scheduleView.mode === 'list') {
+      window.Schedule.renderList(TEAM_ID, el, {
+        canEdit: canEdit(),
+        onOpen: id => { scheduleView = { mode: 'detail', id }; renderScheduleTab(); },
+        onAdd: () => { scheduleView = { mode: 'edit', game: {} }; renderScheduleTab(); },
+      });
+    } else if (scheduleView.mode === 'detail') {
+      const game = window.Schedule.getGames(TEAM_ID).find(g => g.id === scheduleView.id);
+      window.Schedule.renderDetail(TEAM_ID, game, el, {
+        canEdit: canEdit(),
+        onEdit: () => { scheduleView = { mode: 'edit', game }; renderScheduleTab(); },
+        onBack: () => { scheduleView = { mode: 'list' }; renderScheduleTab(); },
+      });
+    } else if (scheduleView.mode === 'edit') {
+      window.Schedule.renderDetail(TEAM_ID, scheduleView.game, el, {
+        editing: true,
+        onSave: async updated => { await window.Schedule.saveGame(TEAM_ID, updated); scheduleView = { mode: 'detail', id: updated.id }; renderScheduleTab(); },
+        onCancel: () => { scheduleView = scheduleView.game.id ? { mode: 'detail', id: scheduleView.game.id } : { mode: 'list' }; renderScheduleTab(); },
+        onDelete: async id => { if (confirm('Delete this game?')) { await window.Schedule.deleteGame(TEAM_ID, id); scheduleView = { mode: 'list' }; renderScheduleTab(); } },
+      });
+    }
+  }
+
+  // ---- Practices tab ----
+  let practicesView = { mode: 'list' };
+  async function renderPracticesTab() {
+    await window.Practices.ensureLoaded(TEAM_ID);
+    const el = document.getElementById('tab-practices');
+    if (practicesView.mode === 'list') {
+      window.Practices.renderList(TEAM_ID, el, {
+        canEdit: canEdit(),
+        onOpen: id => { practicesView = { mode: 'detail', id }; renderPracticesTab(); },
+        onAdd: () => { practicesView = { mode: 'edit', item: { type: 'practice' } }; renderPracticesTab(); },
+      });
+    } else if (practicesView.mode === 'detail') {
+      const item = window.Practices.getItems(TEAM_ID).find(p => p.id === practicesView.id);
+      window.Practices.renderDetail(TEAM_ID, item, el, {
+        canEdit: canEdit(),
+        onEdit: () => { practicesView = { mode: 'edit', item }; renderPracticesTab(); },
+        onBack: () => { practicesView = { mode: 'list' }; renderPracticesTab(); },
+      });
+    } else if (practicesView.mode === 'edit') {
+      window.Practices.renderDetail(TEAM_ID, practicesView.item, el, {
+        editing: true,
+        onSave: async updated => { await window.Practices.saveItem(TEAM_ID, updated); practicesView = { mode: 'detail', id: updated.id }; renderPracticesTab(); },
+        onCancel: () => { practicesView = practicesView.item.id ? { mode: 'detail', id: practicesView.item.id } : { mode: 'list' }; renderPracticesTab(); },
+        onDelete: async id => { if (confirm('Delete this practice?')) { await window.Practices.deleteItem(TEAM_ID, id); practicesView = { mode: 'list' }; renderPracticesTab(); } },
+      });
+    }
+  }
+
+  // ---- Roster tab ----
+  let rosterView = { mode: 'list' };
+  async function renderRosterTab() {
+    await window.Roster.ensureLoaded(TEAM_ID);
+    const el = document.getElementById('tab-roster');
+    if (rosterView.mode === 'list') {
+      window.Roster.render(TEAM_ID, el, {
+        canEdit: canEdit(),
+        onAdd: () => { rosterView = { mode: 'edit', player: {} }; renderRosterTab(); },
+        onEdit: id => { rosterView = { mode: 'edit', player: window.Roster.getPlayers(TEAM_ID).find(p => p.id === id) }; renderRosterTab(); },
+      });
+    } else {
+      window.Roster.renderForm(rosterView.player, el, {
+        onSave: async updated => { await window.Roster.savePlayer(TEAM_ID, updated); rosterView = { mode: 'list' }; renderRosterTab(); },
+        onCancel: () => { rosterView = { mode: 'list' }; renderRosterTab(); },
+        onDelete: async id => { if (confirm('Remove this player?')) { await window.Roster.deletePlayer(TEAM_ID, id); rosterView = { mode: 'list' }; renderRosterTab(); } },
+      });
+    }
+  }
+
+  function renderTab(name) {
+    if (name === 'schedule') renderScheduleTab();
+    else if (name === 'practices') renderPracticesTab();
+    else if (name === 'roster') renderRosterTab();
+    else if (name === 'gamechanger') window.GameChanger.render(TEAM_ID, document.getElementById('tab-gamechanger'), { canEdit: canEdit(), addedBy: SESSION.name });
+    else if (name === 'standings') window.Standings.render(document.getElementById('tab-standings'), window.TeamConfig.current().macLeagueDivisionId);
+    else if (name === 'rules') window.Rules.ensureLoaded().then(() => window.Rules.render(document.getElementById('tab-rules')));
+    else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
+  }
+
+  // Called by auth.js once a code is accepted and identity is known.
+  window.onIdentityReady = function (teamId, role, identity) {
+    TEAM_ID = teamId; ROLE = role; SESSION = identity;
+    document.getElementById('whoamiLabel').textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Player/Family'}`;
+    document.getElementById('appShell').classList.add('show');
+    renderTab('schedule');
+  };
+})();
+</script>
+<!-- auth.js loads last: it calls window.onIdentityReady (defined just above)
+     as soon as script execution starts, including synchronously-fast mock-
+     backend resume on a remembered session -- it must never run before that
+     callback exists. -->
+<script src="js/auth.js?v=3"></script>
+</body>
+</html>
