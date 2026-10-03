@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=17">
+<link rel="stylesheet" href="css/styles.css?v=18">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -88,29 +88,31 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=17"></script>
-<script src="js/team-registry.js?v=17"></script>
-<script src="js/cloud-auth.js?v=17"></script>
-<script src="js/team-config.js?v=17"></script>
-<script src="js/identity.js?v=17"></script>
-<script src="js/weather.js?v=17"></script>
-<script src="js/club-logos.js?v=17"></script>
-<script src="js/league-teams.js?v=17"></script>
-<script src="js/game-card.js?v=17"></script>
-<script src="js/pitch-smart.js?v=17"></script>
-<script src="js/tonight.js?v=17"></script>
-<script src="js/league-info.js?v=17"></script>
-<script src="js/calendar-export.js?v=17"></script>
-<script src="js/schedule.js?v=17"></script>
-<script src="js/practices.js?v=17"></script>
-<script src="js/roster.js?v=17"></script>
-<script src="js/drill-ath.js?v=17"></script>
-<script src="js/drill-pitching.js?v=17"></script>
-<script src="js/gamechanger.js?v=17"></script>
-<script src="js/rules.js?v=17"></script>
-<script src="js/standings.js?v=17"></script>
-<script src="js/calendar-family.js?v=17"></script>
-<script src="js/archive.js?v=17"></script>
+<script src="js/backend.js?v=18"></script>
+<script src="js/team-registry.js?v=18"></script>
+<script src="js/cloud-auth.js?v=18"></script>
+<script src="js/team-config.js?v=18"></script>
+<script src="js/identity.js?v=18"></script>
+<script src="js/weather.js?v=18"></script>
+<script src="js/club-logos.js?v=18"></script>
+<script src="js/league-teams.js?v=18"></script>
+<script src="js/game-card.js?v=18"></script>
+<script src="js/pitch-smart.js?v=18"></script>
+<script src="js/tonight.js?v=18"></script>
+<script src="js/league-info.js?v=18"></script>
+<script src="js/calendar-export.js?v=18"></script>
+<script src="js/schedule.js?v=18"></script>
+<script src="js/practices.js?v=18"></script>
+<script src="js/roster.js?v=18"></script>
+<script src="js/drill-ath.js?v=18"></script>
+<script src="js/drill-pitching.js?v=18"></script>
+<script src="js/depth-chart.js?v=18"></script>
+<script src="js/lineup-builder.js?v=18"></script>
+<script src="js/gamechanger.js?v=18"></script>
+<script src="js/rules.js?v=18"></script>
+<script src="js/standings.js?v=18"></script>
+<script src="js/calendar-family.js?v=18"></script>
+<script src="js/archive.js?v=18"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -232,22 +234,28 @@
     el.querySelector('#pcThisWeek').addEventListener('click', () => { pitchingWeekStart = null; renderPitchingTab(); });
   }
 
-  // ---- Coaching tab (Around the Horn + Pitch Chart drills, coach-only) ----
+  // ---- Coaching tab (drills + roster-planning tools, coach-only) ----
+  const COACHING_TOOLS = [
+    { id: 'ath', label: 'Around the Horn', module: () => window.DrillATH },
+    { id: 'pitching', label: 'Pitch Chart', module: () => window.DrillPitching },
+    { id: 'depth', label: 'Depth Chart', module: () => window.DepthChart },
+    { id: 'lineup', label: 'Lineups', module: () => window.LineupBuilder },
+  ];
   let coachingTool = 'ath';
   function renderCoachingTab() {
     const el = document.getElementById('tab-coaching');
     el.innerHTML = `
       <div class="coachingToggle">
-        <button class="btn ${coachingTool === 'ath' ? '' : 'btnGhost'}" id="coachToolAth">Around the Horn</button>
-        <button class="btn ${coachingTool === 'pitching' ? '' : 'btnGhost'}" id="coachToolPitch">Pitch Chart</button>
+        ${COACHING_TOOLS.map(t => `<button class="btn btnSmall ${coachingTool === t.id ? '' : 'btnGhost'}" data-tool="${t.id}">${t.label}</button>`).join('')}
       </div>
       <div id="coachToolSlot"></div>`;
-    el.querySelector('#coachToolAth').addEventListener('click', () => { coachingTool = 'ath'; renderCoachingTab(); });
-    el.querySelector('#coachToolPitch').addEventListener('click', () => { coachingTool = 'pitching'; renderCoachingTab(); });
+    el.querySelectorAll('[data-tool]').forEach(btn => {
+      btn.addEventListener('click', () => { coachingTool = btn.dataset.tool; renderCoachingTab(); });
+    });
     const slot = el.querySelector('#coachToolSlot');
     window.Roster.ensureLoaded(TEAM_ID).then(() => {
-      if (coachingTool === 'ath') window.DrillATH.render(slot, TEAM_ID);
-      else window.DrillPitching.render(slot, TEAM_ID);
+      const tool = COACHING_TOOLS.find(t => t.id === coachingTool);
+      tool.module().render(slot, TEAM_ID);
     });
   }
 
@@ -284,6 +292,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=17"></script>
+<script src="js/auth.js?v=18"></script>
 </body>
 </html>
