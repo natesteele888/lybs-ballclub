@@ -27,6 +27,7 @@
       document.documentElement.style.setProperty('--team-primary', current.colors.primary);
       document.documentElement.style.setProperty('--team-secondary', current.colors.secondary);
       document.querySelectorAll('[data-team-name]').forEach(el => { el.textContent = current.name; });
+      document.querySelectorAll('[data-team-short]').forEach(el => { el.textContent = current.shortName || current.name; });
       return current;
     },
     current() { return current; },

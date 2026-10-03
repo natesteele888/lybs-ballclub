@@ -12,6 +12,27 @@ No build step: open `index.html` (or run a static server) and it runs. Runs enti
 - **Rules search & save** -- MAC League's Majors/General/Playoff rules (`data/rules-seed.json`, pulled from `macleague.org/coaching-resources/...` on 2026-10-03), searchable, with a per-device "pin for quick reference."
 - **My Calendar** -- downloads an `.ics` file combining every team this device has logged into. Built from our own Schedule/Practices data, not synced from GameChanger (no feed exists to sync from).
 
+## Design
+
+Palette in `css/styles.css` is sampled directly from the real crest (`/Volumes/AutoNuvo_1/LYBS Assets/PNG/LYBS_Primary_Logo.png`), not eyeballed:
+
+| Token | Hex | Where it came from |
+|---|---|---|
+| `--lybs-blue` | `#2E52E8` | Knight's cape / wordmark highlight |
+| `--lybs-blue-deep` | `#1A2CBD` | Cape shadow |
+| `--lybs-navy` | `#090D32` | Used as the app's base background and the PWA icon fill |
+| `--lybs-silver` / `--lybs-steel` | `#B4BBBF` / `#7E8284` | Knight's armor |
+
+Fonts: **Anton** for headlines (team name, card titles), **Oswald** for nav/labels/buttons (condensed, uppercase, athletic), **Inter** for body copy -- loaded from Google Fonts in `css/styles.css`'s `@import`.
+
+Logo assets live in `assets/images/`, generated from the source files in `/Volumes/AutoNuvo_1/LYBS Assets/PNG/` (both are outside this repo -- that folder is the source-of-truth art, this repo only has the resized/optimized exports):
+- `lybs-primary.png` -- full crest, login hero
+- `lybs-icon.png` -- shield/helmet mark, identity screen + PWA icon source
+- `lybs-wordmark.png` -- horizontal lockup, top nav bar
+- `icon-192.png` / `icon-512.png` / `favicon-*.png` -- the icon mark composited onto a solid navy square (a transparent PNG looks broken as a home-screen icon)
+
+If the league's brand ever changes (new crest, different team joins with its own mark), regenerate these with Pillow rather than hand-exporting -- same crop/resize/composite steps work for any source logo.
+
 ## Local development
 
 Nothing to install. `window.FIREBASE_DB_URL` defaults to `'MOCK'` in `js/backend.js`, which routes every read/write through a localStorage-backed mock database instead of a real one -- the whole app is clickable today with no Firebase project.

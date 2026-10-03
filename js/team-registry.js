@@ -39,7 +39,7 @@ window.TEAM_REGISTRY = {
       name: 'Lunenburg Select (Majors A)',
       shortName: 'Select',
       sport: 'Baseball',
-      colors: { primary: '#0a2f5c', secondary: '#c8102e' },
+      colors: { primary: '#2E52E8', secondary: '#1A2CBD' }, // sampled from LYBS_Primary_Logo.png
       macLeagueDivisionId: '33696', // Majors -- https://www.macleague.org/division/33696
     },
   },

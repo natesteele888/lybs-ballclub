@@ -3,16 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>LYBS Ballclub</title>
+<meta name="theme-color" content="#090D32">
+<title>Lunenburg Blue Knights — Select</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="css/styles.css?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/images/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/images/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="css/styles.css?v=4">
 </head>
 <body>
+<div class="steelTexture"></div>
 
 <!-- ===================== LOGIN ===================== -->
 <div id="loginScreen">
+  <img class="loginCrest" src="assets/images/lybs-primary.png" alt="Lunenburg Blue Knights crest">
+  <div class="loginEyebrow">Lunenburg Youth Baseball &amp; Softball</div>
   <div class="loginContent">
-    <h1 data-team-name>LYBS Ballclub</h1>
+    <h1 data-team-name>Select</h1>
     <p class="sub">Enter your team or coach code</p>
     <input id="loginCode" type="password" placeholder="Access code" autocomplete="off">
     <button class="btn" id="loginBtn">Enter</button>
@@ -22,6 +31,7 @@
 
 <!-- ===================== IDENTITY (name + PIN) ===================== -->
 <div id="identityScreen" class="hide">
+  <img class="loginCrest" src="assets/images/lybs-icon.png" alt="" style="width:110px;">
   <div class="loginContent">
     <h1>Who's this?</h1>
     <p class="sub">First time on this device: make up a 4-digit PIN. Type the same name + PIN again next time.</p>
@@ -35,7 +45,10 @@
 <!-- ===================== APP SHELL ===================== -->
 <div id="appShell">
   <div class="topBar">
-    <h1 data-team-name>LYBS Ballclub</h1>
+    <div class="topBarBrand">
+      <img class="topBarLogo" src="assets/images/lybs-wordmark.png" alt="LYBS">
+      <h1 data-team-short>Select</h1>
+    </div>
     <div class="whoami" id="whoamiLabel"></div>
   </div>
   <div class="tabBar" id="tabBar">
@@ -58,20 +71,20 @@
 </div>
 
 <script>const BUILD_V = '20261003a';</script>
-<script src="js/backend.js?v=3"></script>
-<script src="js/team-registry.js?v=3"></script>
-<script src="js/cloud-auth.js?v=3"></script>
-<script src="js/team-config.js?v=3"></script>
-<script src="js/identity.js?v=3"></script>
-<script src="js/weather.js?v=3"></script>
-<script src="js/calendar-export.js?v=3"></script>
-<script src="js/schedule.js?v=3"></script>
-<script src="js/practices.js?v=3"></script>
-<script src="js/roster.js?v=3"></script>
-<script src="js/gamechanger.js?v=3"></script>
-<script src="js/rules.js?v=3"></script>
-<script src="js/standings.js?v=3"></script>
-<script src="js/calendar-family.js?v=3"></script>
+<script src="js/backend.js?v=4"></script>
+<script src="js/team-registry.js?v=4"></script>
+<script src="js/cloud-auth.js?v=4"></script>
+<script src="js/team-config.js?v=4"></script>
+<script src="js/identity.js?v=4"></script>
+<script src="js/weather.js?v=4"></script>
+<script src="js/calendar-export.js?v=4"></script>
+<script src="js/schedule.js?v=4"></script>
+<script src="js/practices.js?v=4"></script>
+<script src="js/roster.js?v=4"></script>
+<script src="js/gamechanger.js?v=4"></script>
+<script src="js/rules.js?v=4"></script>
+<script src="js/standings.js?v=4"></script>
+<script src="js/calendar-family.js?v=4"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -187,6 +200,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=3"></script>
+<script src="js/auth.js?v=4"></script>
 </body>
 </html>
