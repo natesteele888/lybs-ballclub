@@ -72,6 +72,7 @@ Status as of 2026-10-03 -- project `lybs-ballclub` exists under natesteele888@gm
 8b. **Pull a team's real roster from the league dashboard** once a season's draft is final there: `node scripts/sync-roster-from-dashboard.mjs 2026 Majors "Majors (A)" select` (requires `lybs-reporting` checked out as a sibling repo -- see that script's header for why this is a local file read, never a network fetch). Review `data/dashboard-roster-import.json`, then re-run with `FIREBASE_DB_URL`/`FIREBASE_DB_SECRET` set to push it live -- this **replaces** that team's roster, so check the staged file first.
 9. ~~Deploy to GitHub Pages~~ -- **done**, live at `natesteele888.github.io/lybs-ballclub`.
 10. **GameChanger widget**: once Select's GameChanger team page exists, a coach goes to `web.gc.com -> Tools -> Create Scoreboard Widget`, copies the snippet, and pastes it into the GameChanger tab (visible once signed in as a coach).
+11. **Street View field photos**: the League tab's field cards show an interactive Street View *link* with no setup needed, but the inline *photo* needs a Google Maps Platform key (Street View Static API, billed, free tier is generous for this volume). Console -> APIs & Services -> enable "Street View Static API" -> Credentials -> create an API key -> restrict it to HTTP referrer `natesteele888.github.io/lybs-ballclub/*` -> uncomment and set `window.GOOGLE_MAPS_API_KEY` in `index.html`. Until then, fields show a tap-through link instead of a broken image.
 
 ## Privacy
 
