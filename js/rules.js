@@ -79,7 +79,7 @@
       if (!Array.isArray(rules) || !rules.length) {
         // First-ever load: seed from the shipped file, then mirror it into
         // the database so it becomes the live, admin-editable copy.
-        const seed = await fetch('data/rules-seed.json').then(r => r.json()).catch(() => ({ rules: [] }));
+        const seed = await fetch('data/rules-seed.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => ({ rules: [] }));
         rules = seed.rules || [];
         await window.dbPut(window.sharedPath('rules'), rules);
       }
