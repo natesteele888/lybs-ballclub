@@ -1,4 +1,4 @@
-name: Mirror MAC League standings
+name: Mirror MAC League standings and Pitch Smart data
 
 # Runs on a timer during the season (every 30 min, 8am-9pm ET) plus a manual
 # "Run workflow" button for an admin. Not on every push -- this is meant to
@@ -11,11 +11,19 @@ name: Mirror MAC League standings
 #   FIREBASE_DB_SECRET  the Realtime Database's legacy secret (Firebase
 #                        console -> Project settings -> Service accounts ->
 #                        Database secrets) -- used only for this one write,
-#                        scoped by database rules to shared/macLeagueStandings.
+#                        scoped by database rules to shared/macLeagueStandings
+#                        and shared/pitchSmart.
 #
-# Division IDs to track: edit the `divisions` line below. Start with just
-# the Majors division (33696) that Select/Majors-A and Majors B play in;
-# add more as other LYBS teams (Minors, etc.) come on board.
+# Division IDs to track: edit both `run:` lines below. Start with just the
+# Majors division (33696) that Select/Majors-A and Majors B play in; add
+# more as other LYBS teams (Minors, etc.) come on board.
+#
+# Pitch Smart note: scrape-pitchsmart.mjs's parser is unverified as of
+# 2026-10-04 -- the league's Pitch Smart page has no data to check it
+# against until Spring pitch-count reporting starts (see that script's
+# header). It runs here anyway so the empty-state mirror stays current;
+# someone needs to look at its output once real data appears and finish
+# the parser if it's still just logging a warning.
 on:
   workflow_dispatch: {}
   schedule:
@@ -34,3 +42,8 @@ jobs:
           FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
           FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
         run: node scripts/scrape-standings.mjs 33696
+      - name: Scrape and push Pitch Smart data
+        env:
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+        run: node scripts/scrape-pitchsmart.mjs 33696

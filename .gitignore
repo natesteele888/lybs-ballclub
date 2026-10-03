@@ -6,3 +6,4 @@ node_modules/
 # its own schedule and pushes to Firebase; nothing in the app reads this file
 # directly, so committing it would just go stale in git.
 data/standings-cache.json
+data/pitchsmart-cache.json

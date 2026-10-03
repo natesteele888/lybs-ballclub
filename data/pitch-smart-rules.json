@@ -1,0 +1,35 @@
+{
+  "source": "MAC League division rules (data/rules-seed.json's majors-pitch-13/minors-pitch-4/jrsr-pitch-4 entries)",
+  "season": "2026",
+  "note": "Regular-season (Spring) daily max + rest-day tiers only. Playoff tables differ slightly (see rules-seed.json's playoff-pc-* entries) and aren't modeled here yet. Summer & Fall don't track pitch counts at all -- those seasons use a flat 3-innings-per-game cap instead (see majors-pitch-10/minors rules), so this feature is mainly useful once Spring games start.",
+  "divisions": {
+    "Majors": { "dailyMax": 85, "tiers": [
+      { "min": 1, "max": 20, "restDays": 0 },
+      { "min": 21, "max": 35, "restDays": 1 },
+      { "min": 36, "max": 50, "restDays": 2 },
+      { "min": 51, "max": 65, "restDays": 3 },
+      { "min": 66, "max": 999, "restDays": 4 }
+    ] },
+    "Minors": { "dailyMax": 75, "tiers": [
+      { "min": 1, "max": 20, "restDays": 0 },
+      { "min": 21, "max": 35, "restDays": 1 },
+      { "min": 36, "max": 50, "restDays": 2 },
+      { "min": 51, "max": 65, "restDays": 3 },
+      { "min": 66, "max": 999, "restDays": 4 }
+    ] },
+    "Juniors": { "dailyMax": 95, "tiers": [
+      { "min": 1, "max": 20, "restDays": 0 },
+      { "min": 21, "max": 35, "restDays": 1 },
+      { "min": 36, "max": 50, "restDays": 2 },
+      { "min": 51, "max": 65, "restDays": 3 },
+      { "min": 66, "max": 999, "restDays": 4 }
+    ] },
+    "Seniors": { "dailyMax": 105, "tiers": [
+      { "min": 1, "max": 30, "restDays": 0 },
+      { "min": 31, "max": 45, "restDays": 1 },
+      { "min": 46, "max": 60, "restDays": 2 },
+      { "min": 61, "max": 80, "restDays": 3 },
+      { "min": 81, "max": 999, "restDays": 4 }
+    ] }
+  }
+}
