@@ -7,7 +7,14 @@
    schedule at a time, so "is this us" never comes up).
 
    Game shape: {id, opponent, date, arriveTime, gameTime, homeAway,
-     location, ourScore, oppScore, notes, updatedAt}
+     location, ourScore, oppScore, notes, updatedAt,
+     pitchCounts: [{name, pitches}]}
+
+   pitchCounts feeds js/pitch-smart.js's eligibility calculator --
+   logged by the coach on each completed game's detail view; upcoming
+   games show a pitcher-availability preview there instead (computed
+   from this team's own logged counts, plus an opponent mirror when
+   one exists).
 
    Exposes:
      window.Schedule.ensureLoaded(teamId)   -- async, populates cache
@@ -29,6 +36,64 @@
   }
   function mapLink(address) {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || '')}`;
+  }
+
+  // Upcoming game (no score yet): pitcher-availability preview for both
+  // sides. Completed game: shows/logs our own pitch counts for that game --
+  // see js/pitch-smart.js for the eligibility math these feed into.
+  async function renderPitchingSlot(teamId, game, slotEl, opts) {
+    if (!slotEl) return;
+    const division = (window.TeamConfig.current().macLeagueDivisionName) || null;
+    await window.PitchSmart.ensureLoaded();
+    const played = game.ourScore != null && game.oppScore != null;
+
+    if (!played) {
+      const games = window.Schedule.getGames(teamId);
+      slotEl.innerHTML = `
+        <div class="sectionLabel">${escapeHtml(window.TeamConfig.current().shortName || 'Our team')}</div>
+        <div id="pitchOurSlot"></div>
+        <div class="sectionLabel" style="margin-top:12px;">${escapeHtml(game.opponent || 'Opponent')}</div>
+        <div id="pitchTheirSlot"></div>`;
+      window.PitchSmart.renderOurEligibility(slotEl.querySelector('#pitchOurSlot'), games, division, game.date);
+      window.PitchSmart.renderOpponentEligibility(slotEl.querySelector('#pitchTheirSlot'), game.opponent, division, game.date);
+      return;
+    }
+
+    function renderLogged() {
+      const logged = game.pitchCounts || [];
+      const rows = logged.map((pc, i) => `
+        <div class="listRow" style="cursor:default;">
+          <div class="listRowMain"><div class="listRowTitle">${escapeHtml(pc.name)}</div></div>
+          <span class="badge badgeTbd">${escapeHtml(String(pc.pitches))} pitches</span>
+          ${opts.canEdit ? `<button class="btn btnTiny" data-i="${i}" title="Remove">&times;</button>` : ''}
+        </div>`).join('') || '<div class="emptyState">No pitch counts logged for this game yet.</div>';
+      const form = opts.canEdit ? `
+        <div class="gcAddForm" style="margin-top:10px;">
+          <div class="sectionLabel">Log a pitcher</div>
+          <label>Pitcher name<input id="pcName" placeholder="First L"></label>
+          <label>Pitches thrown<input id="pcPitches" type="number" min="0"></label>
+          <button class="btn btnSmall" id="pcAddBtn">Add</button>
+        </div>` : '';
+      slotEl.innerHTML = `<div class="listBody">${rows}</div>${form}`;
+      slotEl.querySelectorAll('button[data-i]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const i = Number(btn.dataset.i);
+          game.pitchCounts = (game.pitchCounts || []).filter((_, idx) => idx !== i);
+          await window.Schedule.saveGame(teamId, game);
+          renderLogged();
+        });
+      });
+      const addBtn = slotEl.querySelector('#pcAddBtn');
+      if (addBtn) addBtn.addEventListener('click', async () => {
+        const name = slotEl.querySelector('#pcName').value.trim();
+        const pitches = Number(slotEl.querySelector('#pcPitches').value);
+        if (!name || !Number.isFinite(pitches)) return;
+        game.pitchCounts = (game.pitchCounts || []).concat([{ name, pitches }]);
+        await window.Schedule.saveGame(teamId, game);
+        renderLogged();
+      });
+    }
+    renderLogged();
   }
 
   window.Schedule = {
@@ -127,6 +192,8 @@
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}
             ${game.notes ? `<div class="detailRow">${escapeHtml(game.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
+            <div class="sectionLabel" style="margin-top:16px;">Pitching</div>
+            <div id="pitchingSlot"></div>
             <div class="detailActions">
               ${opts.canEdit ? '<button class="btn" id="editBtn">Edit</button>' : ''}
               <button class="btn btnGhost" id="icsBtn">Add to calendar</button>
@@ -135,6 +202,7 @@
           </div>`;
         const weatherSlot = containerEl.querySelector('#weatherSlot');
         if (weatherSlot && game.location && game.date) window.loadWeatherInto(weatherSlot, game.location, game.date, game.gameTime);
+        renderPitchingSlot(teamId, game, containerEl.querySelector('#pitchingSlot'), opts);
         const editBtn = containerEl.querySelector('#editBtn');
         if (editBtn) editBtn.addEventListener('click', () => opts.onEdit && opts.onEdit());
         containerEl.querySelector('#icsBtn').addEventListener('click', () => {

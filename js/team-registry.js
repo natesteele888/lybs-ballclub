@@ -41,6 +41,7 @@ window.TEAM_REGISTRY = {
       sport: 'Baseball',
       colors: { primary: '#2E52E8', secondary: '#1A2CBD' }, // sampled from LYBS_Primary_Logo.png
       macLeagueDivisionId: '33696', // Majors -- https://www.macleague.org/division/33696
+      macLeagueDivisionName: 'Majors', // matches a key in data/pitch-smart-rules.json and data/rules-seed.json's "division" tags
     },
   },
 };
