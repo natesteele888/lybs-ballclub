@@ -50,18 +50,36 @@
         return;
       }
       await window.ClubLogos.ensureLoaded();
+      const hasExtendedCols = (division.rows || []).some(r => r.gp != null);
       const rows = (division.rows || []).map(r => `
         <tr class="${r.isUs ? 'standingsUsRow' : ''}">
           <td><div class="standingsTeamCell">${window.ClubLogos.badgeHtml(r.team, 22)}${escapeHtml(r.team)}</div></td>
-          <td>${escapeHtml(r.pct)}</td>
+          ${hasExtendedCols ? `
+            <td class="numCell">${escapeHtml(r.gp ?? '')}</td>
+            <td class="numCell">${escapeHtml(r.w ?? '')}</td>
+            <td class="numCell">${escapeHtml(r.l ?? '')}</td>
+            <td class="numCell">${escapeHtml(r.t ?? '')}</td>` : ''}
+          <td class="numCell">${escapeHtml(r.pct)}</td>
+          ${hasExtendedCols ? `
+            <td class="numCell">${escapeHtml(r.rf ?? '')}</td>
+            <td class="numCell">${escapeHtml(r.ra ?? '')}</td>
+            <td class="numCell ${/^\+/.test(r.diff || '') ? 'diffPos' : (/^-/.test(r.diff || '') ? 'diffNeg' : '')}">${escapeHtml(r.diff ?? '')}</td>` : ''}
         </tr>`).join('');
+      const extraHeaders = hasExtendedCols
+        ? '<th class="numCell">GP</th><th class="numCell">W</th><th class="numCell">L</th><th class="numCell">T</th>'
+        : '';
+      const extraHeadersEnd = hasExtendedCols
+        ? '<th class="numCell">RF</th><th class="numCell">RA</th><th class="numCell">DIFF</th>'
+        : '';
       const games = (division.todayGames || []).map(g => `<div class="detailRow">${escapeHtml(g)}</div>`).join('') || '<div class="emptyState">No games today.</div>';
       containerEl.innerHTML = `
         <div class="helpText">Mirrored from <a href="https://www.macleague.org/division/${escapeHtml(divisionId)}" target="_blank" rel="noopener">macleague.org</a> — standings as of ${timeAgo(division.fetchedAt)}.</div>
-        <table class="standingsTable">
-          <thead><tr><th>Team</th><th>PCT</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+        <div class="standingsTableWrap">
+          <table class="standingsTable">
+            <thead><tr><th>Team</th>${extraHeaders}<th class="numCell">PCT</th>${extraHeadersEnd}</tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
         <div class="sectionLabel" style="margin-top:14px;">Today's games</div>
         ${games}`;
     },
