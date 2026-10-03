@@ -76,11 +76,22 @@
       const rec = window.Schedule.record(teamId);
       const recStr = rec.ties ? `${rec.wins}-${rec.losses}-${rec.ties}` : `${rec.wins}-${rec.losses}`;
       const today = new Date().toISOString().slice(0, 10);
+      const ourName = (window.TeamConfig.current().shortName) || (window.TeamConfig.current().name) || 'Us';
       const rows = games.map(g => {
         const played = g.ourScore != null && g.oppScore != null;
-        const badge = played
-          ? `<span class="badge ${g.ourScore > g.oppScore ? 'badgeW' : (g.ourScore < g.oppScore ? 'badgeL' : 'badgeT')}">${g.ourScore > g.oppScore ? 'W' : (g.ourScore < g.oppScore ? 'L' : 'T')} ${g.ourScore}-${g.oppScore}</span>`
-          : (g.date < today ? '<span class="badge badgeTbd">?</span>' : '');
+        if (played) {
+          const result = g.ourScore > g.oppScore ? 'W' : (g.ourScore < g.oppScore ? 'L' : 'T');
+          const club = window.ClubLogos.find(g.opponent);
+          const card = window.GameCard.resultHtml({
+            date: g.date, homeAway: g.homeAway,
+            ourName, ourScore: g.ourScore,
+            theirName: g.opponent || 'TBD', theirScore: g.oppScore,
+            theirLogoUrl: club ? club.logoUrl : null,
+            result,
+          });
+          return `<div class="gameResultCardWrap" data-id="${escapeHtml(g.id)}" style="cursor:pointer;">${card}</div>`;
+        }
+        const badge = g.date < today ? '<span class="badge badgeTbd">?</span>' : '';
         return `<div class="listRow" data-id="${escapeHtml(g.id)}">
           <div class="listRowMain">
             <div class="listRowTitle">${window.ClubLogos.badgeHtml(g.opponent, 18)}${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent || 'TBD')}</div>
@@ -95,7 +106,7 @@
           ${opts.canEdit ? '<button class="btn btnSmall" id="addGameBtn">+ Add game</button>' : ''}
         </div>
         <div class="listBody">${rows}</div>`;
-      containerEl.querySelectorAll('.listRow').forEach(row => {
+      containerEl.querySelectorAll('.listRow, .gameResultCardWrap').forEach(row => {
         row.addEventListener('click', () => opts.onOpen && opts.onOpen(row.dataset.id));
       });
       if (opts.canEdit) {

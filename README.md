@@ -13,6 +13,7 @@ No build step: open `index.html` (or run a static server) and it runs. Runs enti
 - **My Calendar** -- downloads an `.ics` file combining every team this device has logged into. Built from our own Schedule/Practices data, not synced from GameChanger (no feed exists to sync from).
 - **History** -- past-season archive (currently Spring/Summer 2026): schedule/scores pulled from each team's public GameChanger page, rosters supplied by the coach (GameChanger gates rosters behind login). Player names are reduced to first name + last initial before being written anywhere.
 - **Club badges** -- Standings, History, and the live Schedule tab fuzzy-match opponent names against MAC League's 10 towns (`data/mac-league-clubs.json`, `js/club-logos.js`) and show that town's badge. Hotlinked straight to `macleague.org`'s own hosted images (`crossbar.s3.amazonaws.com`) -- never downloaded or re-hosted here, same display purpose the league's own site already uses them for.
+- **Result cards** -- every completed game (all of History, plus any played game on the live Schedule tab) renders as a big two-logo result card -- our crest and the opponent's badge, huge score numbers, a colored W/L/T pill (`js/game-card.js`). Games without a score yet stay in the compact list row.
 
 ## Design
 
