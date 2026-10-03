@@ -290,14 +290,19 @@ a { color: var(--lybs-blue-bright); }
 .active.btnGhost { background: rgba(76,106,235,0.15); border-color: rgba(76,106,235,0.4); color: #AFC0FF; }
 
 /* ---- Standings ---- */
+.standingsTableWrap { overflow-x: auto; border-radius: 10px; }
 .standingsTable { width: 100%; border-collapse: collapse; font-size: 13px; overflow: hidden; border-radius: 10px; }
 .standingsTable thead th {
   font-family: var(--font-label); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--lybs-silver); text-align: left; padding: 10px 12px; background: rgba(46,82,232,0.12);
-  border-bottom: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border); white-space: nowrap;
 }
-.standingsTable td { padding: 10px 12px; border-bottom: 1px solid var(--card-border); }
+.standingsTable td { padding: 10px 12px; border-bottom: 1px solid var(--card-border); white-space: nowrap; }
+.standingsTable td:first-child { white-space: normal; }
 .standingsTable tbody tr:hover { background: rgba(255,255,255,0.03); }
+.standingsTable .numCell { text-align: center; font-variant-numeric: tabular-nums; }
+.standingsTable .diffPos { color: #5fd989; font-weight: 700; }
+.standingsTable .diffNeg { color: #ff8a8a; font-weight: 700; }
 .standingsUsRow {
   background: linear-gradient(90deg, rgba(46,82,232,0.22), rgba(46,82,232,0.05));
   font-weight: 700; border-left: 3px solid var(--lybs-blue-bright);
