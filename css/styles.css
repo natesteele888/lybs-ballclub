@@ -407,9 +407,9 @@ a { color: var(--lybs-blue-bright); }
   .standingsTable { font-size: 10.5px; }
   .standingsTable thead th { padding: 6px 4px; font-size: 8.5px; letter-spacing: 0.04em; }
   .standingsTable td { padding: 6px 4px; }
-  .standingsTeamCell { gap: 4px; }
-  .standingsTeamCell .clubBadge, .standingsTeamCell .fieldBadgeFallback { width: 16px !important; height: 16px !important; }
-  .standingsTable td:first-child { max-width: 78px; }
+  .standingsTeamCell { gap: 6px; }
+  .standingsTeamCell .clubBadge, .standingsTeamCell .fieldBadgeFallback { width: 24px !important; height: 24px !important; }
+  .standingsTable td:first-child { max-width: 82px; }
 }
 
 /* ---- MAC League club badges (hotlinked, see data/mac-league-clubs.json) ---- */
