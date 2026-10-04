@@ -84,22 +84,37 @@
           </div>`).join('');
       }
 
+      // Grouped by town (one header + badge per town) instead of one flat
+      // list repeating the same badge/town name on every row -- a league
+      // with ~10 member towns reads a lot faster as "who represents each
+      // town" than as 20-odd rows with no visual separation between them.
       function renderOfficials() {
-        const rows = cache.governance.officials.map(o => {
-          const badge = window.ClubLogos.badgeHtml(o.town, 36);
+        const officials = cache.governance.officials;
+        const byTown = {};
+        const townOrder = [];
+        officials.forEach(o => {
+          if (!byTown[o.town]) { byTown[o.town] = []; townOrder.push(o.town); }
+          byTown[o.town].push(o);
+        });
+        const groups = townOrder.map(town => {
+          const badge = window.ClubLogos.badgeHtml(town, 24);
+          const rows = byTown[town].map(o => `
+            <div class="listRow" style="cursor:default;">
+              <div class="listRowMain"><div class="listRowTitle">${escapeHtml(o.name)}</div></div>
+              <span class="badge" style="background:rgba(76,106,235,0.15);color:#AFC0FF;border:1px solid rgba(76,106,235,0.3);">${escapeHtml(o.role)}</span>
+            </div>`).join('');
           return `
-          <div class="listRow" style="cursor:default;">
-            ${badge || '<div class="fieldBadgeFallback" style="width:36px;height:36px;font-size:16px;">' + escapeHtml((o.town || '?').trim().charAt(0).toUpperCase()) + '</div>'}
-            <div class="listRowMain">
-              <div class="listRowTitle">${escapeHtml(o.name)}</div>
-              <div class="listRowSub">${escapeHtml(o.town)}</div>
-            </div>
-            <span class="badge" style="background:rgba(76,106,235,0.15);color:#AFC0FF;border:1px solid rgba(76,106,235,0.3);">${escapeHtml(o.role)}</span>
-          </div>`;
+            <div style="margin-bottom:16px;">
+              <div class="sectionLabel" style="display:flex;align-items:center;gap:8px;">
+                ${badge || `<div class="fieldBadgeFallback" style="width:24px;height:24px;font-size:11px;">${escapeHtml((town || '?').trim().charAt(0).toUpperCase())}</div>`}
+                ${escapeHtml(town)}
+              </div>
+              <div class="listBody" style="margin-top:6px;">${rows}</div>
+            </div>`;
         }).join('');
         return `
           <div class="helpText">League-wide questions: <a href="mailto:${escapeHtml(cache.governance.administratorEmail)}">${escapeHtml(cache.governance.administratorEmail)}</a>. ${escapeHtml(cache.governance.note)}</div>
-          <div class="listBody" style="margin-top:10px;">${rows}</div>`;
+          <div style="margin-top:10px;">${groups}</div>`;
       }
 
       // Links to macleague.org pages that aren't worth mirroring here --
