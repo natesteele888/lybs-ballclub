@@ -46,6 +46,18 @@
     async ensureLoaded() {
       if (cache) return cache;
       cache = await window.dbGet(window.sharedPath('macLeagueStandings'));
+      // Seed from a real one-time scrape (data/standings-seed.json, same
+      // shape scripts/scrape-standings.mjs writes) the first time any
+      // browser loads this with nothing mirrored yet -- otherwise a brand
+      // new visitor (no scheduled job has run against their database)
+      // sees "no league schedule mirrored yet" instead of real standings.
+      // Gets overwritten by the real scheduled job's output once that's
+      // wired up (see README "Go live") -- this is a real snapshot, just a
+      // point-in-time one, not fabricated data.
+      if (!cache || !cache.divisions || !Object.keys(cache.divisions).length) {
+        cache = await fetch('data/standings-seed.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => null);
+        if (cache) await window.dbPut(window.sharedPath('macLeagueStandings'), cache);
+      }
       return cache;
     },
 
