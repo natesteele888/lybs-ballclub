@@ -126,10 +126,11 @@
   // The actual daily-max + rest-day table, on full display -- the weekly
   // calendar below shows what it means for a given pitcher, but a coach
   // needs the raw numbers in front of them too, not just a computed
-  // eligible/resting badge.
-  function rulesCardHtml(division) {
+  // eligible/resting badge. A division picker lets a coach check another
+  // division's table for reference (a player moving up, a cross-division
+  // question) without it defaulting to anything but this team's own.
+  function rulesCardHtml(division, divisions) {
     const rules = rulesCache && rulesCache[division];
-    if (!rules) return '';
     const tierRow = (t) => {
       const range = t.max >= 999 ? `${t.min}+` : `${t.min}-${t.max}`;
       const rest = t.restDays === 0 ? 'No rest' : `${t.restDays} day${t.restDays > 1 ? 's' : ''} rest`;
@@ -139,11 +140,25 @@
           <span class="pcRuleRest">${escapeHtml(rest)}</span>
         </div>`;
     };
+    const picker = divisions.length > 1
+      ? `<select id="pcRulesDivision" class="pcRulesSelect">${divisions.map(d => `<option value="${escapeHtml(d)}" ${d === division ? 'selected' : ''}>${escapeHtml(d)}</option>`).join('')}</select>`
+      : `<div class="pcRulesSelect" style="cursor:default;">${escapeHtml(division)}</div>`;
+    if (!rules) {
+      return `
+        <div class="detailCard pcRulesCard">
+          <div class="sectionLabel" style="margin:0 0 4px;">Pitch Count Rules</div>
+          ${picker}
+          <div class="emptyState">No pitch-count table for this division.</div>
+        </div>`;
+    }
     return `
-      <div class="detailCard" style="margin-bottom:16px;">
-        <div class="sectionHeader" style="margin-bottom:12px;">
-          <h3 style="margin:0;">${escapeHtml(division)} Pitch Count Rules</h3>
-          <div class="pcStatTile" style="flex:0 0 auto;min-width:76px;padding:8px 14px;">
+      <div class="detailCard pcRulesCard">
+        <div class="pcRulesHeader">
+          <div>
+            <div class="sectionLabel" style="margin:0 0 4px;">Pitch Count Rules</div>
+            ${picker}
+          </div>
+          <div class="pcStatTile pcRulesMaxTile">
             <div class="pcStatValue">${escapeHtml(String(rules.dailyMax))}</div>
             <div class="pcStatLabel">Daily Max</div>
           </div>
@@ -158,10 +173,20 @@
     appearancesByPitcher,
 
     // Renders the full daily-max/rest-day table for a division -- call once
-    // ensureLoaded() has resolved. No-op (empty) if the division isn't in
-    // data/pitch-smart-rules.json.
-    renderRulesCard(containerEl, division) {
-      containerEl.innerHTML = rulesCardHtml(division);
+    // ensureLoaded() has resolved. Owns its own division picker (defaults to
+    // this team's own division, switchable to any other one in
+    // data/pitch-smart-rules.json purely for reference -- not remembered
+    // across visits, so it's never silently showing the wrong division).
+    renderRulesCard(containerEl, defaultDivision) {
+      const divisions = Object.keys(rulesCache || {});
+      if (!divisions.length) { containerEl.innerHTML = ''; return; }
+      let selected = divisions.includes(defaultDivision) ? defaultDivision : divisions[0];
+      function draw() {
+        containerEl.innerHTML = rulesCardHtml(selected, divisions);
+        const sel = containerEl.querySelector('#pcRulesDivision');
+        if (sel) sel.addEventListener('change', () => { selected = sel.value; draw(); });
+      }
+      draw();
     },
 
     // Renders our own roster's current eligibility, computed from this
