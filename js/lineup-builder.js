@@ -12,6 +12,13 @@
    Ayer-Shirley 6/15" or just "Default") and can duplicate a past
    one as a starting point rather than this owning game data that
    js/schedule.js already owns.
+
+   createFromOrder() is the one other entry point besides render() --
+   js/stats-import.js's "Save as new lineup" button hands it an
+   already-sorted array of roster players (its suggested batting
+   order, computed from an imported GameChanger stats file) and gets
+   back a normal editable lineup, named/dated so it's obvious where
+   it came from.
    ============================================================ */
 (function () {
   const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH', 'Bench'];
@@ -38,6 +45,22 @@
   }
 
   window.LineupBuilder = {
+    // order: [{playerId, name, ...stats}] -- only roster-matched rows,
+    // since a slot can only ever reference a real roster player.
+    async createFromOrder(teamId, order) {
+      await ensureLineups(teamId);
+      const today = new Date().toISOString().slice(0, 10);
+      const l = {
+        id: uid(),
+        name: `Suggested order -- ${today}`,
+        date: today,
+        slots: order.map(r => ({ playerId: r.playerId, name: r.name, position: POSITIONS[0] })),
+      };
+      lineups.unshift(l);
+      await saveLineups();
+      return l;
+    },
+
     async render(containerEl, teamId) {
       await ensureLineups(teamId);
       const roster = window.Roster.getPlayers(teamId);
