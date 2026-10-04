@@ -13,6 +13,13 @@
        existed are just treated as regular season),
      pitchCounts: [{name, pitches}]}
 
+   An upcoming game's detail view also links to the opponent's own
+   macleague.org team page when js/league-teams.js can resolve one --
+   that page is where MAC League already publishes a coach contact
+   for exactly this ("game is rained out, need to reach them"), so
+   this links out to it rather than scraping and storing any coach's
+   phone number or email in this app ourselves.
+
    pitchCounts feeds js/pitch-smart.js's eligibility calculator --
    logged by the coach on each completed game's detail view; upcoming
    games show a pitcher-availability preview there instead (computed
@@ -191,6 +198,8 @@
       opts = opts || {};
       const editing = !!opts.editing;
       if (!editing) {
+        const played = game.ourScore != null && game.oppScore != null;
+        const theirLinkUrl = window.LeagueTeams.teamUrl(game.opponent);
         containerEl.innerHTML = `
           <div class="detailCard">
             <h3>${window.ClubLogos.badgeHtml(game.opponent, 26)}${game.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(game.opponent || 'TBD')}
@@ -199,6 +208,7 @@
             </h3>
             <div class="detailRow">${escapeHtml(game.date || '')}${game.gameTime ? ' · ' + escapeHtml(game.gameTime) : ''}</div>
             ${game.location ? `<div class="detailRow">📍 <a href="${mapLink(game.location)}" target="_blank" rel="noopener">${escapeHtml(game.location)}</a></div>` : ''}
+            ${!played && theirLinkUrl ? `<div class="detailRow">☎️ <a href="${theirLinkUrl}" target="_blank" rel="noopener">${escapeHtml(game.opponent)}'s MAC League page</a> <span class="helpText" style="margin:0;display:inline;">&mdash; coach contact for weather/cancellation, straight from the league, not stored here</span></div>` : ''}
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}
             ${game.notes ? `<div class="detailRow">${escapeHtml(game.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
