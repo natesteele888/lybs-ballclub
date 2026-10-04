@@ -1,27 +1,36 @@
 /* ============================================================
-   "Tonight in the League" -- every game happening today in a
-   chosen MAC League division (not just ours), from the same
+   "Tonight in the League" -- every game happening today across
+   EVERY MAC League division at once, merged into one list sorted
+   by start time with a small league chip on each card (a division
+   filter is still there to narrow to just one), from the same
    shared/macLeagueStandings mirror js/standings.js reads (see
    scripts/scrape-standings.mjs's parseTodayGames). Lives at the
-   top of the Schedule tab (the app's home screen) with a division
-   toggle so a coach or parent can check Rookies/Minors/Majors
-   without leaving the app.
+   top of the Schedule tab (the app's home screen).
 
    Each team name links out to its own macleague.org team page
    (full season schedule, no login needed) -- NOT to GameChanger.
    GameChanger has no public directory to resolve an arbitrary
    opponent's page from just a name; the only GameChanger link this
-   app can make is to a team that's actually been configured here
-   with its own widget snippet (see js/gamechanger.js), which won't
-   be true for most of the ~30+ other teams across a division. The
-   league's own team page is the honest substitute: same "follow
-   along" purpose, resolvable for every team shown here since the
-   page itself gave us the id.
+   app can make is to our OWN configured team's widget (see
+   js/gamechanger.js), which won't be true for the other ~30+ teams
+   across a league. The league's own team page is the honest
+   substitute: same "follow along" purpose, resolvable for every
+   team shown here since the page itself gave us the id.
 
-   Also shared with js/standings.js's "Today's games" section on
-   the Standings tab -- gameRowHtml() is the one place that knows
-   how to draw a single game, so both views stay visually
-   consistent.
+   "Watch live on GameChanger" only appears on a card where this
+   app's own configured team (window.TeamConfig) is one of the two
+   teams -- it switches to this app's own GameChanger tab (opts.
+   onWatchLive), never an external link, since there's no per-game
+   GameChanger URL to link to even for our own team, only the
+   embedded widget. The match is a name check against this app's
+   own shortName ("Select"), which is enough while this app only
+   ever runs one team -- see team-registry.js's header for what a
+   second team would need instead.
+
+   gameRowHtml() (the compact side-by-side row, NOT the card layout
+   below) stays separately in use by js/standings.js's "Today's
+   games" section, which is already scoped to one division and
+   doesn't need a league chip.
    ============================================================ */
 (function () {
   let cache = null; // shared/macLeagueStandings contents
@@ -46,6 +55,60 @@
     return team.teamId
       ? `<a class="tonightTeam" href="https://www.macleague.org/team/${team.teamId}" target="_blank" rel="noopener" title="See ${escapeHtml(team.name)}'s full schedule on macleague.org">${inner}</a>`
       : `<span class="tonightTeam">${inner}</span>`;
+  }
+
+  // "2:00 PM" -> minutes since midnight, for a correct chronological sort
+  // across games pulled from every division (plain string sort gets 9:00
+  // AM vs 10:00 AM wrong).
+  function timeToMinutes(t) {
+    const m = String(t || '').match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (!m) return 9999;
+    let h = parseInt(m[1], 10);
+    const min = parseInt(m[2], 10);
+    const ampm = m[3].toUpperCase();
+    if (ampm === 'PM' && h !== 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+    return h * 60 + min;
+  }
+
+  function recordFor(divisionId, teamId) {
+    if (!teamId) return null;
+    const div = cache && cache.divisions && cache.divisions[divisionId];
+    const row = div && (div.rows || []).find(r => r.teamId === teamId);
+    if (!row || row.w == null) return null;
+    return `${row.w}-${row.l}${row.t && row.t !== '0' ? '-' + row.t : ''}`;
+  }
+
+  // Scoped to this app's one configured team -- see header comment.
+  function isOurTeam(name) {
+    const ours = (window.TeamConfig.current().shortName || '').trim().toLowerCase();
+    return !!ours && (name || '').toLowerCase().includes(ours);
+  }
+
+  function mergedCardHtml(game) {
+    if (typeof game === 'string') return `<div class="tonightMergedCard">${escapeHtml(game)}</div>`;
+    const [a, b] = game.teams || [];
+    const ourGame = (a && isOurTeam(a.name)) || (b && isOurTeam(b.name));
+    const teamLine = team => {
+      if (!team) return '<div class="tonightMergedTeam"><span class="tonightTeamName">TBD</span></div>';
+      const right = team.score != null ? escapeHtml(team.score) : (recordFor(game.divisionId, team.teamId) || '');
+      return `
+        <div class="tonightMergedTeam">
+          ${teamHtml(team)}
+          ${right ? `<span class="tonightMergedRight">${right}</span>` : ''}
+        </div>`;
+    };
+    return `
+      <div class="tonightMergedCard">
+        <div class="tonightMergedTop">
+          <span class="badge tonightLeagueChip">${escapeHtml(game.divisionName)}</span>
+          ${game.time ? `<span class="tonightMergedTime">${escapeHtml(game.time)}</span>` : ''}
+        </div>
+        ${teamLine(a)}
+        ${teamLine(b)}
+        ${game.location ? `<div class="tonightGameLocation">${escapeHtml(game.location)}</div>` : ''}
+        ${ourGame ? '<button class="btn btnGhost btnSmall tonightWatchBtn" data-watch="1">Watch live on GameChanger &rarr;</button>' : ''}
+      </div>`;
   }
 
   window.TonightGames = {
@@ -98,7 +161,12 @@
 
     // The homepage widget: division toggle (remembered per device) + that
     // division's games tonight.
-    render(containerEl, defaultDivisionId) {
+    // opts.onWatchLive() fires when a coach/parent taps "Watch live on
+    // GameChanger" on a card where this app's own team is playing --
+    // switches to this app's own GameChanger tab, see header comment for
+    // why that's the only honest version of that CTA.
+    render(containerEl, defaultDivisionId, opts) {
+      opts = opts || {};
       const divisions = window.TonightGames.availableDivisions();
       if (!divisions.length) {
         containerEl.innerHTML = `
@@ -109,28 +177,52 @@
         return;
       }
       let divisionId = (function () {
-        try { return localStorage.getItem(DIVISION_KEY) || ''; } catch (e) { return ''; }
+        try { return localStorage.getItem(DIVISION_KEY) || 'all'; } catch (e) { return 'all'; }
       })();
-      if (!divisions.some(d => d.id === divisionId)) divisionId = defaultDivisionId && divisions.some(d => d.id === defaultDivisionId) ? defaultDivisionId : divisions[0].id;
+      if (divisionId !== 'all' && !divisions.some(d => d.id === divisionId)) divisionId = 'all';
+
+      function mergedGames() {
+        const pool = divisionId === 'all' ? divisions : divisions.filter(d => d.id === divisionId);
+        const all = [];
+        pool.forEach(d => {
+          const div = cache.divisions[d.id];
+          ((div && div.todayGames) || []).forEach(g => {
+            all.push(typeof g === 'string' ? g : Object.assign({}, g, { divisionId: d.id, divisionName: d.name }));
+          });
+        });
+        return all.sort((x, y) => {
+          if (typeof x === 'string' || typeof y === 'string') return 0;
+          return timeToMinutes(x.time) - timeToMinutes(y.time);
+        });
+      }
 
       function renderGames() {
-        const division = cache.divisions[divisionId];
-        const games = (division && division.todayGames) || [];
+        const games = mergedGames();
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
         const list = games.length
-          ? games.map(g => window.TonightGames.gameRowHtml(g)).join('')
-          : '<div class="emptyState">No games tonight in this division.</div>';
+          ? games.map(mergedCardHtml).join('')
+          : `<div class="emptyState">No games today${divisionId === 'all' ? ' across any league' : ' in this division'}.</div>`;
         containerEl.innerHTML = `
           <div class="detailCard" style="margin-bottom:16px;">
             <div class="sectionHeader">
-              <div class="sectionLabel" style="margin:0;">Tonight in the League</div>
-              <select id="tonightDivisionSelect">${divisions.map(d => `<option value="${escapeHtml(d.id)}" ${d.id === divisionId ? 'selected' : ''}>${escapeHtml(d.name)}</option>`).join('')}</select>
+              <div>
+                <div class="sectionLabel" style="margin:0;">Tonight in the League</div>
+                <div class="helpText" style="margin:2px 0 0;">${escapeHtml(today)}</div>
+              </div>
+              <select id="tonightDivisionSelect">
+                <option value="all" ${divisionId === 'all' ? 'selected' : ''}>All Leagues</option>
+                ${divisions.map(d => `<option value="${escapeHtml(d.id)}" ${d.id === divisionId ? 'selected' : ''}>${escapeHtml(d.name)}</option>`).join('')}
+              </select>
             </div>
-            ${list}
+            <div class="tonightMergedList">${list}</div>
           </div>`;
         containerEl.querySelector('#tonightDivisionSelect').addEventListener('change', e => {
           divisionId = e.target.value;
           try { localStorage.setItem(DIVISION_KEY, divisionId); } catch (err) {}
           renderGames();
+        });
+        containerEl.querySelectorAll('[data-watch]').forEach(btn => {
+          btn.addEventListener('click', () => { if (opts.onWatchLive) opts.onWatchLive(); });
         });
       }
       renderGames();

@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=48">
+<link rel="stylesheet" href="css/styles.css?v=49">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -51,24 +51,16 @@
     </div>
     <div class="whoami" id="whoamiLabel"></div>
   </div>
-  <div class="tabNavWrap">
+  <!-- Mega-menu nav: a category bar (populated/wired by renderNav() below)
+       above a sub-tab row scoped to whichever category is active. Content
+       is entirely JS-driven -- see NAV_CATEGORIES/TAB_LABELS below. -->
+  <div class="navCatBar" id="navCatBar"></div>
+  <div class="tabNavWrap" id="tabNavWrap">
     <button class="tabBarToggle" id="tabBarToggle" type="button">
       <span id="tabBarToggleLabel">Schedule</span>
       <span class="tabBarChevron">&#9662;</span>
     </button>
-    <div class="tabBar" id="tabBar">
-      <button class="tabBtn active" data-tab="schedule">Schedule</button>
-      <button class="tabBtn" data-tab="practices">Practices</button>
-      <button class="tabBtn" data-tab="roster">Roster</button>
-      <button class="tabBtn" data-tab="gamechanger">GameChanger</button>
-      <button class="tabBtn" data-tab="standings">Standings</button>
-      <button class="tabBtn" data-tab="pitching">Pitching</button>
-      <button class="tabBtn" data-tab="rules">Rules</button>
-      <button class="tabBtn" data-tab="league">League</button>
-      <button class="tabBtn" data-tab="coaching" id="coachingTabBtn" style="display:none;">Coaching</button>
-      <button class="tabBtn" data-tab="calendar">My Calendar</button>
-      <button class="tabBtn" data-tab="archive">History</button>
-    </div>
+    <div class="tabBar" id="tabBar"></div>
   </div>
 
   <div class="tabPanel active" id="tab-schedule"></div>
@@ -93,7 +85,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004yj';</script>
+<script>window.BUILD_V = '20261004yk';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -103,47 +95,64 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=48"></script>
-<script src="js/team-registry.js?v=48"></script>
-<script src="js/cloud-auth.js?v=48"></script>
-<script src="js/team-config.js?v=48"></script>
-<script src="js/identity.js?v=48"></script>
-<script src="js/weather.js?v=48"></script>
-<script src="js/club-logos.js?v=48"></script>
-<script src="js/league-teams.js?v=48"></script>
-<script src="js/game-card.js?v=48"></script>
-<script src="js/pitch-smart.js?v=48"></script>
-<script src="js/tonight.js?v=48"></script>
-<script src="js/league-info.js?v=48"></script>
-<script src="js/calendar-export.js?v=48"></script>
-<script src="js/schedule.js?v=48"></script>
-<script src="js/practices.js?v=48"></script>
-<script src="js/roster.js?v=48"></script>
-<script src="js/drill-baserunning.js?v=48"></script>
-<script src="js/drill-ath.js?v=48"></script>
-<script src="js/drill-pitching.js?v=48"></script>
-<script src="js/depth-chart.js?v=48"></script>
-<script src="js/lineup-builder.js?v=48"></script>
-<script src="js/stats-import.js?v=48"></script>
-<script src="js/social-submit.js?v=48"></script>
-<script src="js/gamechanger.js?v=48"></script>
-<script src="js/rules.js?v=48"></script>
-<script src="js/standings.js?v=48"></script>
-<script src="js/calendar-family.js?v=48"></script>
-<script src="js/archive.js?v=48"></script>
-<script src="js/team-page.js?v=48"></script>
+<script src="js/backend.js?v=49"></script>
+<script src="js/team-registry.js?v=49"></script>
+<script src="js/cloud-auth.js?v=49"></script>
+<script src="js/team-config.js?v=49"></script>
+<script src="js/identity.js?v=49"></script>
+<script src="js/weather.js?v=49"></script>
+<script src="js/club-logos.js?v=49"></script>
+<script src="js/league-teams.js?v=49"></script>
+<script src="js/game-card.js?v=49"></script>
+<script src="js/pitch-smart.js?v=49"></script>
+<script src="js/tonight.js?v=49"></script>
+<script src="js/league-info.js?v=49"></script>
+<script src="js/calendar-export.js?v=49"></script>
+<script src="js/schedule.js?v=49"></script>
+<script src="js/practices.js?v=49"></script>
+<script src="js/roster.js?v=49"></script>
+<script src="js/drill-baserunning.js?v=49"></script>
+<script src="js/drill-ath.js?v=49"></script>
+<script src="js/drill-pitching.js?v=49"></script>
+<script src="js/depth-chart.js?v=49"></script>
+<script src="js/lineup-builder.js?v=49"></script>
+<script src="js/stats-import.js?v=49"></script>
+<script src="js/social-submit.js?v=49"></script>
+<script src="js/gamechanger.js?v=49"></script>
+<script src="js/rules.js?v=49"></script>
+<script src="js/standings.js?v=49"></script>
+<script src="js/calendar-family.js?v=49"></script>
+<script src="js/archive.js?v=49"></script>
+<script src="js/team-page.js?v=49"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
 
   function canEdit() { return ROLE === 'coach'; }
 
-  // ---- Tab switching ----
-  document.querySelectorAll('.tabBtn').forEach(btn => {
-    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-  });
-  // Mobile: the tab strip collapses behind a toggle button, and tapping it
-  // slides the full tab list down over the page instead of relying on an
+  // ---- Tab switching (mega-menu: a category bar + a sub-tab row scoped to
+  // whichever category is active) ----
+  const NAV_CATEGORIES = [
+    { id: 'roster', label: 'Roster', tabs: ['roster'] },
+    { id: 'gameday', label: 'Game Day', tabs: ['schedule', 'gamechanger', 'pitching'] },
+    { id: 'practice', label: 'Practice', tabs: ['practices', 'coaching'] },
+    { id: 'standings', label: 'Standings', tabs: ['standings', 'archive'] },
+    { id: 'league', label: 'League', tabs: ['league'] },
+    { id: 'resources', label: 'Resources', tabs: ['rules', 'calendar'] },
+  ];
+  const TAB_LABELS = {
+    schedule: 'Schedule', practices: 'Practices', calendar: 'My Calendar', gamechanger: 'GameChanger',
+    roster: 'Roster', standings: 'Standings', archive: 'History',
+    league: 'League', rules: 'Rules', pitching: 'Pitching', coaching: 'Coaching',
+  };
+  // Coaching stays coach-only -- same gate as before, just per-tab now
+  // instead of per-category, since it now shares the Practice category
+  // with Practices (visible to everyone).
+  const COACH_ONLY_TABS = new Set(['coaching']);
+  const navCatBar = document.getElementById('navCatBar');
+  const tabNavWrap = document.getElementById('tabNavWrap');
+  // Mobile: the sub-tab row collapses behind a toggle button, and tapping it
+  // slides that category's tabs down over the page instead of relying on an
   // undiscoverable horizontal scroll. Desktop never shows the toggle, so
   // this is a no-op there.
   const tabBarToggle = document.getElementById('tabBarToggle');
@@ -154,39 +163,39 @@
     tabBarToggle.classList.toggle('open', open);
   });
 
-  // Desktop: click-and-drag to scroll the tab strip horizontally when it's
+  // Desktop: click-and-drag to scroll either bar horizontally when it's
   // wider than the screen, same as a touch swipe already does on a real
   // touchscreen (that keeps working natively -- this only adds the mouse/
   // trackpad-click equivalent, which browsers don't give you for free on a
-  // horizontally-overflowing row).
-  (function enableDragScroll(el) {
+  // horizontally-overflowing row). Applied to both the category bar and the
+  // sub-tab bar since either can run long depending on role/category.
+  function enableDragScroll(el) {
     // Tracked at the window level, not via setPointerCapture -- capturing
     // the pointer to `el` retargets the click event it generates to `el`
-    // itself, so a tab button's own click listener never sees it even on
-    // an ordinary, un-dragged click. Plain window-level move/up avoids
-    // that entirely and still works fine if the cursor leaves the bar
-    // mid-drag.
+    // itself, so a button's own click listener never sees it even on an
+    // ordinary, un-dragged click. Plain window-level move/up avoids that
+    // entirely and still works fine if the cursor leaves the bar mid-drag.
     let down = false, dragged = false, startX = 0, startScroll = 0;
     el.addEventListener('pointerdown', e => {
       if (e.pointerType === 'touch') return; // native touch scroll already handles this
       down = true; dragged = false;
       startX = e.clientX; startScroll = el.scrollLeft;
       // NOT adding the 'dragging' class here, on pointerdown -- .dragging
-      // .tabBtn gets pointer-events:none below, and setting that before a
-      // plain click's matching pointerup/click even happens makes the
-      // browser's own hit-test for those events skip straight through the
-      // button to the bar underneath, so the click never reaches it. Only
-      // flip it once a real drag is confirmed (in pointermove, past the
-      // threshold), never for an ordinary stationary click.
+      // button children get pointer-events:none below, and setting that
+      // before a plain click's matching pointerup/click even happens makes
+      // the browser's own hit-test for those events skip straight through
+      // the button to the bar underneath, so the click never reaches it.
+      // Only flip it once a real drag is confirmed (in pointermove, past
+      // the threshold), never for an ordinary stationary click.
     });
     window.addEventListener('pointermove', e => {
       if (!down) return;
       const dx = e.clientX - startX;
       // Below the threshold, don't touch scrollLeft at all -- even a
-      // sub-pixel wobble during an otherwise-stationary click would
-      // nudge the strip and shift whichever button was under the
-      // pointer out from under it before pointerup/click fire, so the
-      // click lands on the bar's background instead of the button.
+      // sub-pixel wobble during an otherwise-stationary click would nudge
+      // the strip and shift whichever button was under the pointer out
+      // from under it before pointerup/click fire, so the click lands on
+      // the bar's background instead of the button.
       if (!dragged && Math.abs(dx) <= 4) return;
       dragged = true;
       el.classList.add('dragging');
@@ -196,20 +205,61 @@
     window.addEventListener('pointerup', endDrag);
     window.addEventListener('pointercancel', endDrag);
     // A drag that actually moved the strip shouldn't also fire whichever
-    // tab button happened to be under the cursor when it let go. Always
-    // clears `dragged`, not just when it was true, so one missed click
-    // can never leave every click after it suppressed.
+    // button happened to be under the cursor when it let go. Always clears
+    // `dragged`, not just when it was true, so one missed click can never
+    // leave every click after it suppressed.
     el.addEventListener('click', e => {
       if (dragged) { e.stopPropagation(); e.preventDefault(); }
       dragged = false;
     }, true);
-  })(tabBarEl);
+  }
+  enableDragScroll(navCatBar);
+  enableDragScroll(tabBarEl);
+
+  let activeCategory = 'gameday';
   let lastNavTab = 'schedule'; // the real nav tab to return to from a Team Page -- 'team' itself is never this
+
+  function categoryFor(tabName) {
+    const cat = NAV_CATEGORIES.find(c => c.tabs.includes(tabName));
+    return cat ? cat.id : activeCategory; // 'team' (the Team Page) belongs to no category -- keep whatever was active
+  }
+  function visibleTabsFor(cat) {
+    return cat.tabs.filter(t => !COACH_ONLY_TABS.has(t) || canEdit());
+  }
+  function renderNav(activeTabName) {
+    activeCategory = categoryFor(activeTabName);
+    navCatBar.innerHTML = NAV_CATEGORIES.map(c =>
+      `<button class="navCatBtn ${c.id === activeCategory ? 'active' : ''}" data-cat="${c.id}">${c.label}</button>`
+    ).join('');
+    navCatBar.querySelectorAll('[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = NAV_CATEGORIES.find(c => c.id === btn.dataset.cat);
+        switchTab(visibleTabsFor(cat)[0]);
+      });
+    });
+    const activeCat = NAV_CATEGORIES.find(c => c.id === activeCategory) || NAV_CATEGORIES[0];
+    const visTabs = visibleTabsFor(activeCat);
+    // A single-tab category (Roster, League) has nothing to pick between --
+    // the sub-row would just repeat the category pill right above it, so
+    // skip it rather than show a redundant one-button row.
+    if (visTabs.length <= 1) {
+      tabNavWrap.style.display = 'none';
+      tabBarEl.innerHTML = '';
+      return;
+    }
+    tabNavWrap.style.display = '';
+    tabBarEl.innerHTML = visTabs.map(t =>
+      `<button class="tabBtn ${t === activeTabName ? 'active' : ''}" data-tab="${t}">${TAB_LABELS[t]}</button>`
+    ).join('');
+    tabBarEl.querySelectorAll('[data-tab]').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+  }
+
   function switchTab(name) {
-    document.querySelectorAll('.tabBtn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    renderNav(name);
     document.querySelectorAll('.tabPanel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
-    const activeBtn = document.querySelector('.tabBtn[data-tab="' + name + '"]');
-    if (activeBtn) tabBarToggleLabel.textContent = activeBtn.textContent;
+    tabBarToggleLabel.textContent = TAB_LABELS[name] || name;
     tabBarEl.classList.remove('open');
     tabBarToggle.classList.remove('open');
     if (name !== 'team') lastNavTab = name;
@@ -243,7 +293,9 @@
     if (scheduleView.mode === 'list') {
       el.innerHTML = '<div id="tonightSlot"></div><div id="scheduleListSlot"></div>';
       window.TonightGames.ensureLoaded().then(() => {
-        window.TonightGames.render(el.querySelector('#tonightSlot'), window.TeamConfig.current().macLeagueDivisionId);
+        window.TonightGames.render(el.querySelector('#tonightSlot'), window.TeamConfig.current().macLeagueDivisionId, {
+          onWatchLive: () => switchTab('gamechanger'),
+        });
       });
       window.Schedule.renderList(TEAM_ID, el.querySelector('#scheduleListSlot'), {
         canEdit: canEdit(),
@@ -393,9 +445,8 @@
     TEAM_ID = teamId; ROLE = role; SESSION = identity;
     document.getElementById('whoamiLabel').textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Player/Family'}`;
     document.getElementById('appShell').classList.add('show');
-    document.getElementById('coachingTabBtn').style.display = role === 'coach' ? '' : 'none';
     await window.ClubLogos.ensureLoaded();
-    renderTab('schedule');
+    switchTab('schedule');
   };
 })();
 </script>
@@ -403,6 +454,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=48"></script>
+<script src="js/auth.js?v=49"></script>
 </body>
 </html>
