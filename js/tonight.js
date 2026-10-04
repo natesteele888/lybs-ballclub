@@ -1,11 +1,13 @@
 /* ============================================================
-   "Tonight in the League" -- every game happening today across
-   EVERY MAC League division at once, merged into one list sorted
-   by start time with a small league chip on each card (a division
-   filter is still there to narrow to just one), from the same
-   shared/macLeagueStandings mirror js/standings.js reads (see
-   scripts/scrape-standings.mjs's parseTodayGames). Lives at the
-   top of the Schedule tab (the app's home screen).
+   "Tonight in the League" -- every game happening today, grouped
+   into one section per MAC League division (Rookies/Minors/Majors),
+   each internally sorted by start time with a small league chip on
+   every card. With only a handful of divisions a dropdown filter
+   was more indirection than the data needs -- every division's
+   section is just always there, from the same shared/
+   macLeagueStandings mirror js/standings.js reads (see
+   scripts/scrape-standings.mjs's parseTodayGames). Mounted on the
+   Homepage tab.
 
    Each team name links out to its own macleague.org team page
    (full season schedule, no login needed) -- NOT to GameChanger.
@@ -35,7 +37,6 @@
 (function () {
   let cache = null; // shared/macLeagueStandings contents
   const DIVISION_NAMES = { '33694': 'Rookies', '33695': 'Minors', '33696': 'Majors' };
-  const DIVISION_KEY = 'lybsTonightDivision';
 
   function escapeHtml(s) {
     const d = document.createElement('div');
@@ -181,13 +182,17 @@
 
     mergedCardHtml,
 
-    // The homepage widget: division toggle (remembered per device) + that
-    // division's games tonight.
+    // The homepage widget: one labeled section per division, every
+    // division's games always shown -- no filter to toggle, nothing to
+    // remember per device (see header comment).
     // opts.onWatchLive() fires when a coach/parent taps "Watch live on
     // GameChanger" on a card where this app's own team is playing --
     // switches to this app's own GameChanger tab, see header comment for
     // why that's the only honest version of that CTA.
-    render(containerEl, defaultDivisionId, opts) {
+    // Second param is accepted but unused -- kept so an older call site
+    // passing a division id doesn't need updating; every division renders
+    // regardless.
+    render(containerEl, _unusedDivisionId, opts) {
       opts = opts || {};
       const divisions = window.TonightGames.availableDivisions();
       if (!divisions.length) {
@@ -198,45 +203,23 @@
           </div>`;
         return;
       }
-      let divisionId = (function () {
-        try { return localStorage.getItem(DIVISION_KEY) || 'all'; } catch (e) { return 'all'; }
-      })();
-      if (divisionId !== 'all' && !divisions.some(d => d.id === divisionId)) divisionId = 'all';
-
-      function mergedGames() {
-        return window.TonightGames.allTodayGames(divisionId === 'all' ? null : [divisionId]);
-      }
-
-      function renderGames() {
-        const games = mergedGames();
-        const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-        const list = games.length
-          ? games.map(mergedCardHtml).join('')
-          : `<div class="emptyState">No games today${divisionId === 'all' ? ' across any league' : ' in this division'}.</div>`;
-        containerEl.innerHTML = `
-          <div class="detailCard" style="margin-bottom:16px;">
-            <div class="sectionHeader">
-              <div>
-                <div class="sectionLabel" style="margin:0;">Tonight in the League</div>
-                <div class="helpText" style="margin:2px 0 0;">${escapeHtml(today)}</div>
-              </div>
-              <select id="tonightDivisionSelect">
-                <option value="all" ${divisionId === 'all' ? 'selected' : ''}>All Leagues</option>
-                ${divisions.map(d => `<option value="${escapeHtml(d.id)}" ${d.id === divisionId ? 'selected' : ''}>${escapeHtml(d.name)}</option>`).join('')}
-              </select>
-            </div>
-            <div class="tonightMergedList">${list}</div>
-          </div>`;
-        containerEl.querySelector('#tonightDivisionSelect').addEventListener('change', e => {
-          divisionId = e.target.value;
-          try { localStorage.setItem(DIVISION_KEY, divisionId); } catch (err) {}
-          renderGames();
-        });
-        containerEl.querySelectorAll('[data-watch]').forEach(btn => {
-          btn.addEventListener('click', () => { if (opts.onWatchLive) opts.onWatchLive(); });
-        });
-      }
-      renderGames();
+      const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+      const sections = divisions.map((d, i) => {
+        const games = window.TonightGames.allTodayGames([d.id]);
+        const list = games.length ? games.map(mergedCardHtml).join('') : '<div class="emptyState">No games today.</div>';
+        return `
+          <div class="sectionLabel" style="margin-top:${i === 0 ? '4' : '18'}px;">${escapeHtml(d.name)}</div>
+          <div class="tonightMergedList">${list}</div>`;
+      }).join('');
+      containerEl.innerHTML = `
+        <div class="detailCard" style="margin-bottom:16px;">
+          <div class="sectionLabel" style="margin:0;">Tonight in the League</div>
+          <div class="helpText" style="margin:2px 0 0;">${escapeHtml(today)}</div>
+          ${sections}
+        </div>`;
+      containerEl.querySelectorAll('[data-watch]').forEach(btn => {
+        btn.addEventListener('click', () => { if (opts.onWatchLive) opts.onWatchLive(); });
+      });
     },
   };
 })();

@@ -8,29 +8,30 @@
                        every division (name-matched against
                        shared/macLeagueStandings), not just ours.
    3. League Tonight -- the existing "Tonight in the League" widget
-                       (js/tonight.js), mounted here as-is: its own
-                       division picker already remembers the last
-                       division picked per device, which is what
-                       "favorite division" means in practice -- no
-                       separate favoriting control to keep in sync
-                       with it.
-   4. Upcoming      -- our next few games/practices after today.
-   5. Quick team card -- our record (from the league standings
-                       mirror when this team resolves there, our own
-                       tracked record otherwise), our own logo, and a
-                       link to our real macleague.org/Crossbar team
-                       page. No phone/email lives in this app for
-                       anyone, coaches included -- see roster.js and
-                       league-info.js's header comments for why; the
-                       league's own team page is where that actually
-                       belongs, same substitute used everywhere else
-                       in this app that touches a coach's contact
-                       info.
+                       (js/tonight.js), mounted here as-is: one section
+                       per division, always all shown (see that file's
+                       header -- there are only a few MAC League
+                       divisions, not enough to justify a filter).
+   4. Upcoming      -- our next few games/practices after today, this
+                       team only -- never another team's or another
+                       division's, unlike "Around Town"/"League
+                       Tonight" above.
+   5. Quick team card -- record, standings rank, and games left to play
+                       (from the league standings mirror when this team
+                       resolves there, our own tracked record/schedule
+                       otherwise), our own logo, and a link to our real
+                       macleague.org/Crossbar team page. No phone/email
+                       lives in this app for anyone, coaches included --
+                       see roster.js and league-info.js's header
+                       comments for why; the league's own team page is
+                       where that actually belongs, same substitute used
+                       everywhere else in this app that touches a
+                       coach's contact info.
 
-   "Around Town" and "League Tonight" are horizontally scrollable
-   strips (drag-and-swipe, same as the nav bars), not an auto-
-   animating marquee -- a real marquee looks broken with only 1-2
-   items and takes the choice of pace away from whoever's reading it.
+   "Around Town" is a horizontally scrollable strip (drag-and-swipe,
+   same as the nav bars), not an auto-animating marquee -- a real
+   marquee looks broken with only 1-2 items and takes the choice of
+   pace away from whoever's reading it.
    ============================================================ */
 (function () {
   function escapeHtml(s) {
@@ -43,6 +44,10 @@
     return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   }
   function todayStr() { return new Date().toISOString().slice(0, 10); }
+  function ordinal(n) {
+    const s = ['th', 'st', 'nd', 'rd'], v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
 
   // Same click-and-drag scroll as the nav bars (index.html keeps its own
   // copy too -- small enough, and these are deliberately self-contained
@@ -127,30 +132,53 @@
         ...practices.filter(p => p.date > today).map(p => ({ date: p.date, kind: 'practice', item: p })),
       ].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5);
 
-      // ---- 5. Quick team card -- league record when resolvable, our own
-      // tracked record otherwise; logo is always our own; Crossbar link
-      // only when the league mirror resolves this team. ----
+      // ---- 5. Quick team card -- league record/rank when resolvable, our
+      // own tracked record otherwise; games left comes from our own
+      // schedule (every game with no score in yet, played or not -- the
+      // league mirror's GP only counts league games, and a bye week or a
+      // rained-out game our own schedule already reflects is more honest
+      // than re-deriving it from someone else's games-played count); logo
+      // is always our own; Crossbar link only when the league mirror
+      // resolves this team. ----
       const cfg = window.TeamConfig.current();
       const leagueMatch = window.LeagueTeams.find(cfg.shortName || cfg.name);
-      let leagueRow = null;
+      let leagueRow = null, leagueRank = null, leagueTotal = null, leagueDivisionName = null;
       if (leagueMatch) {
         const standings = await window.dbGet(window.sharedPath('macLeagueStandings'));
         const division = standings && standings.divisions && standings.divisions[leagueMatch.divisionId];
-        leagueRow = division && (division.rows || []).find(r => r.teamId === leagueMatch.teamId);
+        const rows = (division && division.rows) || [];
+        const idx = rows.findIndex(r => r.teamId === leagueMatch.teamId);
+        if (idx !== -1) {
+          leagueRow = rows[idx];
+          leagueRank = idx + 1;
+          leagueTotal = rows.length;
+          leagueDivisionName = division.name || null;
+        }
       }
       const ownRecord = window.Schedule.record(teamId);
       const recordStr = leagueRow
         ? `${leagueRow.w ?? '-'}-${leagueRow.l ?? '-'}${leagueRow.t && leagueRow.t !== '0' ? '-' + leagueRow.t : ''}`
         : (ownRecord.ties ? `${ownRecord.wins}-${ownRecord.losses}-${ownRecord.ties}` : `${ownRecord.wins}-${ownRecord.losses}`);
+      const gamesRemaining = games.filter(g => g.ourScore == null || g.oppScore == null).length;
+
+      const statTiles = [
+        `<div class="pcStatTile"><div class="pcStatValue">${escapeHtml(recordStr)}</div><div class="pcStatLabel">${leagueRow ? 'League Record' : 'Record'}</div></div>`,
+      ];
+      if (leagueRank != null) {
+        statTiles.push(`<div class="pcStatTile"><div class="pcStatValue">${ordinal(leagueRank)}</div><div class="pcStatLabel">of ${leagueTotal}${leagueDivisionName ? ' &middot; ' + escapeHtml(leagueDivisionName) : ''}</div></div>`);
+      }
+      statTiles.push(`<div class="pcStatTile"><div class="pcStatValue">${gamesRemaining}</div><div class="pcStatLabel">Games Left</div></div>`);
 
       containerEl.innerHTML = `
         <div class="detailCard homeTeamCard">
-          <img class="homeTeamLogo" src="assets/images/lybs-icon.png" alt="">
-          <div class="homeTeamInfo">
-            <div class="listRowTitle" style="font-size:17px;">${escapeHtml(cfg.name || cfg.shortName)}</div>
-            <div class="recordLine"><b>${escapeHtml(recordStr)}</b>${leagueRow ? ' <span class="helpText" style="display:inline;margin:0;">(league record)</span>' : ''}</div>
+          <div class="homeTeamHeaderRow">
+            <img class="homeTeamLogo" src="assets/images/lybs-icon.png" alt="">
+            <div class="homeTeamInfo">
+              <div class="listRowTitle" style="font-size:17px;">${escapeHtml(cfg.name || cfg.shortName)}</div>
+            </div>
           </div>
-          ${leagueMatch ? `<a class="btn btnSmall" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
+          <div class="pcStatRow" style="margin:12px 0 0;">${statTiles.join('')}</div>
+          ${leagueMatch ? `<a class="btn btnSmall" style="width:100%;margin-top:4px;" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
         </div>
 
         <div class="sectionLabel" style="margin-top:18px;">Today</div>
