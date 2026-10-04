@@ -22,9 +22,13 @@
   // Percent coordinates on a 100x100 field panel, viewed from behind home
   // plate (the standard scorecard orientation) -- matches the SVG diamond
   // drawn in fieldSvg() below, which uses the same 0-100 viewBox.
+  // 2B and SS aren't drawn on the bag itself -- real fielders at both spots
+  // play off the base, shaded toward it (2B toward 1st, SS toward 3rd) and
+  // a step shallow, in the open grass between the infield dirt and the
+  // outfield. Everyone else sits on or near their actual spot.
   const COORDS = {
     P: { x: 50, y: 65 }, C: { x: 50, y: 90 },
-    '1B': { x: 78, y: 60 }, '2B': { x: 50, y: 38 }, '3B': { x: 22, y: 60 }, SS: { x: 34, y: 50 },
+    '1B': { x: 78, y: 60 }, '2B': { x: 64, y: 32 }, '3B': { x: 22, y: 60 }, SS: { x: 36, y: 32 },
     LF: { x: 14, y: 24 }, CF: { x: 50, y: 8 }, RF: { x: 86, y: 24 },
   };
 
