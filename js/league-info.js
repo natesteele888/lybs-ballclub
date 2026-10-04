@@ -19,6 +19,114 @@
     d.textContent = s || '';
     return d.innerHTML;
   }
+
+  // ---- Age eligibility chart: an overlapping-bars timeline (one bar per
+  // division, positioned by its real birth-date cutoff range) instead of
+  // the flat table's row-by-row list -- makes the actual overlap between
+  // adjacent divisions (a family's own read of "which bracket is my kid
+  // in") visible at a glance, the way the flat dates can't. ----
+  function parseAgeDate(s) {
+    const m = (s || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    return m ? new Date(Number(m[3]), Number(m[1]) - 1, Number(m[2])) : null;
+  }
+  function fmtAgeDate(d) {
+    return `${d.getMonth() + 1}/${d.getDate()}/${String(d.getFullYear()).slice(-2)}`;
+  }
+  function classifyDivision(name) {
+    if (/^t-ball/i.test(name)) return { sport: 'tball', label: name, color: '#E6B935' };
+    if (/^baseball\s+/i.test(name)) return { sport: 'baseball', label: name.replace(/^baseball\s+/i, ''), color: '#4C6AEB' };
+    if (/^softball\s+/i.test(name)) return { sport: 'softball', label: name.replace(/^softball\s+/i, ''), color: '#E8599E' };
+    return { sport: 'other', label: name, color: '#9AA3C2' };
+  }
+  // Greedy interval packing -- assigns each item (sorted by start) to the
+  // first sub-row whose last-placed item has already ended, opening a new
+  // sub-row only when every existing one is still occupied. Keeps bars that
+  // truly overlap (T-Ball starts before Rookies' range ends) from drawing
+  // on top of each other, without forcing every division onto its own row
+  // when most ranges are actually adjacent, not overlapping.
+  function packRows(items) {
+    const rowEnds = [];
+    const placed = items.map(item => {
+      let row = rowEnds.findIndex(end => end <= item.start.getTime());
+      if (row === -1) { row = rowEnds.length; rowEnds.push(item.end.getTime()); }
+      else rowEnds[row] = item.end.getTime();
+      return Object.assign({}, item, { row });
+    });
+    return { placed, rowCount: rowEnds.length };
+  }
+  function ageChartSvg(entries) {
+    const parsed = entries
+      .map(e => Object.assign({ range: e.range, division: e.division }, classifyDivision(e.division), (() => {
+        const [startStr, endStr] = (e.range || '').split(' to ');
+        return { start: parseAgeDate(startStr), end: parseAgeDate(endStr) };
+      })()))
+      .filter(e => e.start && e.end);
+    if (!parsed.length) return '';
+
+    const tracks = [
+      { title: 'Baseball & T-Ball', items: parsed.filter(e => e.sport === 'baseball' || e.sport === 'tball') },
+      { title: 'Softball', items: parsed.filter(e => e.sport === 'softball') },
+      { title: 'Other', items: parsed.filter(e => e.sport === 'other') },
+    ].filter(t => t.items.length);
+    tracks.forEach(t => t.items.sort((a, b) => a.start - b.start));
+
+    const allDates = parsed.reduce((acc, e) => acc.concat([e.start, e.end]), []);
+    const minYear = Math.min.apply(null, allDates.map(d => d.getFullYear()));
+    const maxYear = Math.max.apply(null, allDates.map(d => d.getFullYear())) + 1;
+    const axisStart = new Date(minYear, 0, 1).getTime();
+    const axisEnd = new Date(maxYear, 0, 1).getTime();
+
+    const PX_PER_YEAR = 72, MARGIN_L = 14, MARGIN_R = 14;
+    const chartWidth = (maxYear - minYear) * PX_PER_YEAR;
+    const svgWidth = chartWidth + MARGIN_L + MARGIN_R;
+    const xOf = date => MARGIN_L + ((date.getTime() - axisStart) / (axisEnd - axisStart)) * chartWidth;
+
+    const BAR_H = 42, ROW_GAP = 8, TRACK_GAP = 24, TRACK_LABEL_H = 20, TOP_PAD = 10, AXIS_H = 26;
+    let y = TOP_PAD;
+    const barsSvg = [];
+    tracks.forEach(track => {
+      const { placed, rowCount } = packRows(track.items);
+      barsSvg.push(`<text x="${MARGIN_L}" y="${y + 12}" class="ageChartTrackLabel">${escapeHtml(track.title)}</text>`);
+      y += TRACK_LABEL_H;
+      placed.forEach(item => {
+        const x1 = xOf(item.start), x2 = xOf(item.end);
+        const w = Math.max(2, x2 - x1);
+        const barY = y + item.row * (BAR_H + ROW_GAP);
+        barsSvg.push(`
+          <g>
+            <rect x="${x1}" y="${barY}" width="${w}" height="${BAR_H}" rx="10" fill="${item.color}" fill-opacity="0.22" stroke="${item.color}" stroke-width="1.5"></rect>
+            <text x="${x1 + 10}" y="${barY + 18}" class="ageChartBarLabel" fill="${item.color}">${escapeHtml(item.label)}</text>
+            <text x="${x1 + 10}" y="${barY + 33}" class="ageChartBarRange">${escapeHtml(fmtAgeDate(item.start))}&ndash;${escapeHtml(fmtAgeDate(item.end))}</text>
+          </g>`);
+      });
+      y += rowCount * BAR_H + (rowCount - 1) * ROW_GAP + TRACK_GAP;
+    });
+
+    const axisY = y - TRACK_GAP + 10;
+    const ticks = [];
+    for (let yr = minYear; yr <= maxYear; yr++) {
+      const x = xOf(new Date(yr, 0, 1));
+      ticks.push(`<line x1="${x}" y1="${TOP_PAD}" x2="${x}" y2="${axisY}" class="ageChartGrid"></line>`);
+      ticks.push(`<text x="${x}" y="${axisY + 17}" class="ageChartTick">${yr}</text>`);
+    }
+    const svgHeight = axisY + AXIS_H;
+
+    return `
+      <div class="ageChartLegend">
+        <span class="ageChartLegendItem"><span class="ageChartSwatch" style="background:#4C6AEB;"></span>Baseball</span>
+        <span class="ageChartLegendItem"><span class="ageChartSwatch" style="background:#E6B935;"></span>T-Ball</span>
+        <span class="ageChartLegendItem"><span class="ageChartSwatch" style="background:#E8599E;"></span>Softball</span>
+      </div>
+      <div class="ageChartWrap">
+        <svg class="ageChartSvg" viewBox="0 0 ${svgWidth} ${svgHeight}" width="${svgWidth}" height="${svgHeight}">
+          ${ticks.join('')}
+          <line x1="${MARGIN_L}" y1="${axisY}" x2="${svgWidth - MARGIN_R}" y2="${axisY}" class="ageChartAxisLine"></line>
+          ${barsSvg.join('')}
+        </svg>
+      </div>
+      <div class="helpText" style="margin-top:8px;">Birth date, left (older) to right (younger) &mdash; drag to scroll.</div>`;
+  }
+
   function mapUrl(address) {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   }
@@ -147,7 +255,8 @@
         const yr = cache.leagueAges['2026'];
         return `
           <div class="helpText">${escapeHtml(cache.leagueAges.note)}</div>
-          <div class="listBody" style="margin-top:10px;">
+          ${ageChartSvg(yr)}
+          <div class="listBody" style="margin-top:16px;">
             ${yr.map(a => `
               <div class="listRow" style="cursor:default;">
                 <div class="listRowMain"><div class="listRowTitle">${escapeHtml(a.division)}</div></div>
