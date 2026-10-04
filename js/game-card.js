@@ -11,12 +11,15 @@
    Minors-level opponents are fun team nicknames -- "Rockhounds",
    "Minors Party Animals" -- that don't map to any town).
 
-   When opts.theirLinkUrl is set (resolved via js/league-teams.js
-   against the mirrored MAC League standings), the opponent's logo
-   and name link out to that team's own macleague.org page -- full
-   season schedule, same "tap the opponent card to see their year"
-   pattern as the Bengals app. No resolvable match -> plain text,
-   same honest degrade as everywhere else this app links out.
+   The opponent's logo and name are tappable -- a data-team-nav
+   attribute, not a real link, so index.html's one delegated click
+   handler can route it to js/team-page.js's in-app profile for that
+   team (standings, their home fields, our own history against them,
+   pitch-count status, and a link out to their macleague.org page
+   for what only MAC League has) instead of jumping straight to an
+   external tab. Tapping the card anywhere else still opens this
+   game's own detail/event view -- the handler calls
+   stopPropagation() so one tap never fires both.
 
    opts.gameType ('regular' | 'playoff' | 'championship', default
    'regular') only shows a badge for the non-default cases -- a
@@ -43,16 +46,21 @@
   }
 
   // opts: { date, homeAway, ourName, ourScore, theirName, theirLogoUrl,
-  //   theirScore, result, theirLinkUrl, gameType }
+  //   theirScore, result, gameType }
   window.GameCard = {
     resultHtml(opts) {
       const pillClass = opts.result === 'W' ? 'badgeW' : (opts.result === 'L' ? 'badgeL' : 'badgeT');
       const ourLogo = `<img class="gameResultLogo" src="assets/images/lybs-icon.png" alt="${escapeHtml(opts.ourName)}" loading="lazy">`;
       const theirLogo = logoOrFallback(opts.theirName, opts.theirLogoUrl);
-      const theirTeamBlock = `${theirLogo}<div class="gameResultName">${escapeHtml(opts.theirName)}</div>`;
-      const theirTeamHtml = opts.theirLinkUrl
-        ? `<a class="gameResultTeam gameResultTeamLink" href="${opts.theirLinkUrl}" target="_blank" rel="noopener" title="See ${escapeHtml(opts.theirName)}'s full schedule on macleague.org">${theirTeamBlock}</a>`
-        : `<div class="gameResultTeam">${theirTeamBlock}</div>`;
+      // Mirrored from "our" side (logo then name, both left-aligned) so the
+      // card reads as two book-ended columns -- name right-aligned, logo
+      // pinned to the far right edge -- instead of both sides reading the
+      // same left-to-right direction, which left their logo stranded next
+      // to the score and their name trailing off toward the edge.
+      const theirTeamBlock = `<div class="gameResultName gameResultNameRight">${escapeHtml(opts.theirName)}</div>${theirLogo}`;
+      const theirTeamHtml = opts.theirName
+        ? `<div class="gameResultTeam gameResultTeamRight gameResultTeamLink" data-team-nav="${escapeHtml(opts.theirName)}" title="See ${escapeHtml(opts.theirName)}'s team page">${theirTeamBlock}</div>`
+        : `<div class="gameResultTeam gameResultTeamRight">${theirTeamBlock}</div>`;
       return `
         <div class="gameResultCard">
           <div class="gameResultTop">

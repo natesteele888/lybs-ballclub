@@ -36,6 +36,7 @@
 
     render(containerEl) {
       let expanded = null; // team name currently expanded (names are unique in this dataset)
+      let rosterOpen = null; // team name whose roster is expanded -- independent of `expanded`, hidden by default
 
       function renderRoster(t) {
         if (!t.roster || !t.roster.length) return '<div class="emptyState">No roster yet.</div>';
@@ -55,7 +56,6 @@
             ourName: t.name, ourScore: ourScore != null ? ourScore : '-',
             theirName: g.opponent, theirScore: theirScore != null ? theirScore : '-',
             theirLogoUrl: club ? club.logoUrl : null,
-            theirLinkUrl: window.LeagueTeams.teamUrl(g.opponent),
             result: g.result,
             gameType: g.gameType,
           });
@@ -66,22 +66,30 @@
         const teams = cache.teams || [];
         const cards = teams.map(t => {
           const isOpen = expanded === t.name;
+          const rosterCount = (t.roster || []).length;
           return `
             <div class="detailCard" style="margin-bottom:12px;">
-              <div class="archiveTeamHeader" data-id="${escapeHtml(t.name)}" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">
-                <div>
-                  <h3 style="margin-bottom:2px;">${escapeHtml(t.name)}</h3>
-                  <div class="listRowSub">${escapeHtml(t.division)} &middot; ${escapeHtml(t.season)}</div>
-                </div>
-                <div class="recordLine"><b>${escapeHtml(t.record || '—')}</b></div>
+              <div class="archiveTeamHeader" data-id="${escapeHtml(t.name)}" style="cursor:pointer;">
+                <h3 style="margin-bottom:2px;">${escapeHtml(t.name)}</h3>
+                <div class="listRowSub">${escapeHtml(t.division)} &middot; ${escapeHtml(t.season)}</div>
               </div>
               ${isOpen ? `
-                <div style="margin-top:14px;">
-                  <div class="sectionLabel">Roster</div>
-                  ${renderRoster(t)}
-                  <div class="sectionLabel" style="margin-top:14px;">Schedule</div>
-                  ${renderGames(t)}
-                </div>` : ''}
+                <div class="archiveSplitRow">
+                  <div class="archiveRecordCol">
+                    <div class="sectionLabel">Record</div>
+                    <div class="archiveRecordValue">${escapeHtml(t.record || '—')}</div>
+                  </div>
+                  <div class="archiveGamesCol">
+                    <div class="sectionLabel">Schedule</div>
+                    ${renderGames(t)}
+                  </div>
+                </div>
+                <div class="archiveRosterToggle" data-roster-id="${escapeHtml(t.name)}">
+                  <span class="sectionLabel" style="margin:0;">Roster${rosterCount ? ' (' + rosterCount + ')' : ''}</span>
+                  <span class="archiveRosterChevron">${rosterOpen === t.name ? '&minus;' : '+'}</span>
+                </div>
+                ${rosterOpen === t.name ? `<div style="margin-top:10px;">${renderRoster(t)}</div>` : ''}
+                ` : ''}
             </div>`;
         }).join('') || '<div class="emptyState">No archived seasons yet.</div>';
 
@@ -89,13 +97,21 @@
         const notes = Object.values(pending).map(p => p.note).filter(Boolean);
 
         containerEl.innerHTML = `
-          <div class="helpText">Past-season records -- schedule/scores from each team's public GameChanger page, rosters from the coach's own export. Tap a team to see its roster and full game-by-game schedule.</div>
+          <div class="helpText">Past-season records -- schedule/scores from each team's public GameChanger page, rosters from the coach's own export. Tap a team to see its record and game-by-game schedule; roster stays tucked away until you tap it.</div>
           ${cards}
           ${notes.length ? `<div class="helpText" style="margin-top:16px;">${notes.map(n => `&bull; ${escapeHtml(n)}`).join('<br>')}</div>` : ''}
         `;
         containerEl.querySelectorAll('.archiveTeamHeader').forEach(el => {
           el.addEventListener('click', () => {
             expanded = expanded === el.dataset.id ? null : el.dataset.id;
+            rosterOpen = null; // collapsing/switching teams always hides the roster again
+            renderList();
+          });
+        });
+        containerEl.querySelectorAll('.archiveRosterToggle').forEach(el => {
+          el.addEventListener('click', e => {
+            e.stopPropagation();
+            rosterOpen = rosterOpen === el.dataset.rosterId ? null : el.dataset.rosterId;
             renderList();
           });
         });

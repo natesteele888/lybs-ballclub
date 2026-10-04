@@ -163,7 +163,6 @@
             ourName, ourScore: g.ourScore,
             theirName: g.opponent || 'TBD', theirScore: g.oppScore,
             theirLogoUrl: club ? club.logoUrl : null,
-            theirLinkUrl: window.LeagueTeams.teamUrl(g.opponent),
             result, gameType: g.gameType,
           });
           return `<div class="gameResultCardWrap" data-id="${escapeHtml(g.id)}" style="cursor:pointer;">${card}</div>`;

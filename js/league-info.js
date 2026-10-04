@@ -102,6 +102,32 @@
           <div class="listBody" style="margin-top:10px;">${rows}</div>`;
       }
 
+      // Links to macleague.org pages that aren't worth mirroring here --
+      // either because rules.js already carries the full text (every other
+      // item in the site's own Resources menu: Operating Guidelines,
+      // Rookies/General/Minors/Majors/Junior & Senior/Playoff Rules, All
+      // Stars Information), or because the content is inherently a
+      // macleague.org/Crossbar function (accepting a team invite) that this
+      // app has nothing to add to. Link out rather than duplicate.
+      function renderResources() {
+        const links = [
+          { label: 'Coaches Meetings', desc: 'Dates and info for league coaches meetings.', url: 'https://www.macleague.org/coaching-resources/coaches-meetings/10779' },
+          { label: 'HowTo -- Accept Invite', desc: "Crossbar's own guide to accepting a team invite as a coach or player.", url: 'https://www.macleague.org/coaching-resources/howto-accept-invite/167551' },
+        ];
+        return `
+          <div class="helpText">Rules content (Majors, Minors, Rookies, Juniors &amp; Seniors, General, Playoff, All-Stars, Operating Guidelines) lives in full under the Rules tab. These two don't have an in-app equivalent, so they link straight to macleague.org.</div>
+          <div class="listBody" style="margin-top:10px;">
+            ${links.map(l => `
+              <a class="listRow" href="${l.url}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+                <div class="listRowMain">
+                  <div class="listRowTitle">${escapeHtml(l.label)}</div>
+                  <div class="listRowSub">${escapeHtml(l.desc)}</div>
+                </div>
+                <span style="color:var(--text2);">&rarr;</span>
+              </a>`).join('')}
+          </div>`;
+      }
+
       function renderAges() {
         const yr = cache.leagueAges['2026'];
         return `
@@ -120,6 +146,7 @@
         { id: 'dates', title: 'Important Dates', run: renderDates },
         { id: 'officials', title: 'League Officials', run: renderOfficials },
         { id: 'ages', title: 'League Ages (2026)', run: renderAges },
+        { id: 'resources', title: 'Resources', run: renderResources },
       ];
 
       function renderAll() {
