@@ -76,10 +76,15 @@
   function fieldSvg() {
     return `
       <svg class="depthFieldSvg" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M 6 18 Q 50 -4 94 18" />
-        <line x1="50" y1="92" x2="6" y2="18" />
-        <line x1="50" y1="92" x2="94" y2="18" />
-        <path d="M 50 92 L 78 60 L 50 38 L 22 60 Z" />
+        <path class="depthFieldLine" d="M 6 18 Q 50 -6 94 18" />
+        <path class="depthFieldLine" d="M 50 92 L 6 18" />
+        <path class="depthFieldLine" d="M 50 92 L 94 18" />
+        <path class="depthFieldLine" d="M 50 92 L 78 60 L 50 38 L 22 60 Z" />
+        <circle class="depthFieldDot" cx="78" cy="60" r="1.1" />
+        <circle class="depthFieldDot" cx="50" cy="38" r="1.1" />
+        <circle class="depthFieldDot" cx="22" cy="60" r="1.1" />
+        <circle class="depthFieldDot" cx="50" cy="65" r="1.5" />
+        <path class="depthFieldHome" d="M 47 87.5 L 53 87.5 L 53 90.5 L 50 93.5 L 47 90.5 Z" />
       </svg>`;
   }
 
