@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=23">
+<link rel="stylesheet" href="css/styles.css?v=24">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -84,7 +84,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004s';</script>
+<script>window.BUILD_V = '20261004t';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -93,46 +93,34 @@
   // manual step and the exact URL to paste in here afterward.
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
-
-  // Google Maps Platform key, Street View Static API only -- renders the
-  // field photos in the League tab (js/league-info.js). Unlike the free
-  // consumer Maps URLs used everywhere else in this app (Map/Street View
-  // *links*, no key needed), an inline *image* is the Static Street View
-  // API, a billed Google Maps Platform product -- it needs a real key, and
-  // that key must be restricted (Google Cloud Console -> Credentials ->
-  // this key -> "Set an application restriction" -> HTTP referrers ->
-  // natesteele888.github.io/lybs-ballclub/*) before it's safe to ship in a
-  // public repo, same as any client-side API key. Until set, fields show a
-  // "tap for the interactive view" link instead of a broken image request.
-  // window.GOOGLE_MAPS_API_KEY = 'PASTE_YOUR_KEY_HERE';
 </script>
-<script src="js/backend.js?v=23"></script>
-<script src="js/team-registry.js?v=23"></script>
-<script src="js/cloud-auth.js?v=23"></script>
-<script src="js/team-config.js?v=23"></script>
-<script src="js/identity.js?v=23"></script>
-<script src="js/weather.js?v=23"></script>
-<script src="js/club-logos.js?v=23"></script>
-<script src="js/league-teams.js?v=23"></script>
-<script src="js/game-card.js?v=23"></script>
-<script src="js/pitch-smart.js?v=23"></script>
-<script src="js/tonight.js?v=23"></script>
-<script src="js/league-info.js?v=23"></script>
-<script src="js/calendar-export.js?v=23"></script>
-<script src="js/schedule.js?v=23"></script>
-<script src="js/practices.js?v=23"></script>
-<script src="js/roster.js?v=23"></script>
-<script src="js/drill-baserunning.js?v=23"></script>
-<script src="js/drill-ath.js?v=23"></script>
-<script src="js/drill-pitching.js?v=23"></script>
-<script src="js/depth-chart.js?v=23"></script>
-<script src="js/lineup-builder.js?v=23"></script>
-<script src="js/social-submit.js?v=23"></script>
-<script src="js/gamechanger.js?v=23"></script>
-<script src="js/rules.js?v=23"></script>
-<script src="js/standings.js?v=23"></script>
-<script src="js/calendar-family.js?v=23"></script>
-<script src="js/archive.js?v=23"></script>
+<script src="js/backend.js?v=24"></script>
+<script src="js/team-registry.js?v=24"></script>
+<script src="js/cloud-auth.js?v=24"></script>
+<script src="js/team-config.js?v=24"></script>
+<script src="js/identity.js?v=24"></script>
+<script src="js/weather.js?v=24"></script>
+<script src="js/club-logos.js?v=24"></script>
+<script src="js/league-teams.js?v=24"></script>
+<script src="js/game-card.js?v=24"></script>
+<script src="js/pitch-smart.js?v=24"></script>
+<script src="js/tonight.js?v=24"></script>
+<script src="js/league-info.js?v=24"></script>
+<script src="js/calendar-export.js?v=24"></script>
+<script src="js/schedule.js?v=24"></script>
+<script src="js/practices.js?v=24"></script>
+<script src="js/roster.js?v=24"></script>
+<script src="js/drill-baserunning.js?v=24"></script>
+<script src="js/drill-ath.js?v=24"></script>
+<script src="js/drill-pitching.js?v=24"></script>
+<script src="js/depth-chart.js?v=24"></script>
+<script src="js/lineup-builder.js?v=24"></script>
+<script src="js/social-submit.js?v=24"></script>
+<script src="js/gamechanger.js?v=24"></script>
+<script src="js/rules.js?v=24"></script>
+<script src="js/standings.js?v=24"></script>
+<script src="js/calendar-family.js?v=24"></script>
+<script src="js/archive.js?v=24"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -314,6 +302,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=23"></script>
+<script src="js/auth.js?v=24"></script>
 </body>
 </html>

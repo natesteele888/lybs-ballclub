@@ -22,16 +22,11 @@
   function mapUrl(address) {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   }
-  // The free consumer Maps URL (no API key) opens an interactive pano, but
-  // only as a link -- an inline *image* needs the Street View Static API,
-  // which is a billed Google Maps Platform product requiring a real API key.
-  // window.GOOGLE_MAPS_API_KEY stays unset (see index.html, same pattern as
-  // FIREBASE_API_KEY) until that's set up -- see README.md "Go live".
+  // Google's documented consumer Maps URL for opening Street View at a
+  // point -- no API key needed. lat/lng come from a one-time geocode of
+  // each address -- see scripts/geocode-facilities.mjs.
   function streetViewUrl(lat, lng) {
     return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
-  }
-  function streetViewImgUrl(lat, lng) {
-    return `https://maps.googleapis.com/maps/api/streetview?size=640x300&fov=80&location=${lat},${lng}&key=${window.GOOGLE_MAPS_API_KEY}`;
   }
 
   window.LeagueInfo = {
@@ -51,27 +46,17 @@
       function fieldRow(f) {
         const badge = window.ClubLogos.badgeHtml(f.town, 44);
         const hasCoords = f.lat != null && f.lng != null;
-        const hasKey = !!window.GOOGLE_MAPS_API_KEY;
-        const streetView = hasCoords && hasKey
-          ? `<a class="fieldStreetView" href="${streetViewUrl(f.lat, f.lng)}" target="_blank" rel="noopener" title="Open interactive Street View">
-               <img class="fieldStreetViewImg" src="${streetViewImgUrl(f.lat, f.lng)}" alt="Street view of ${escapeHtml(f.name)}" loading="lazy">
-             </a>`
-          : hasCoords
-            ? `<a class="fieldStreetViewFallback" href="${streetViewUrl(f.lat, f.lng)}" target="_blank" rel="noopener">
-                 <span>📷 Street View photo needs a Google Maps API key &mdash; tap for the interactive view instead</span>
-               </a>`
-            : '';
         return `
-          <div class="fieldCard">
-            <div class="fieldCardHeader">
-              ${badge || '<div class="fieldBadgeFallback">' + escapeHtml((f.town || '?').trim().charAt(0).toUpperCase()) + '</div>'}
-              <div class="listRowMain">
-                <div class="listRowTitle">${escapeHtml(f.name)}</div>
-                <div class="listRowSub">${escapeHtml(f.town)} &middot; ${escapeHtml(f.address)}</div>
-              </div>
-              <a class="btn btnGhost btnTiny" href="${mapUrl(f.address)}" target="_blank" rel="noopener">Map</a>
+          <div class="listRow" style="cursor:default;">
+            ${badge || '<div class="fieldBadgeFallback">' + escapeHtml((f.town || '?').trim().charAt(0).toUpperCase()) + '</div>'}
+            <div class="listRowMain">
+              <div class="listRowTitle">${escapeHtml(f.name)}</div>
+              <div class="listRowSub">${escapeHtml(f.town)} &middot; ${escapeHtml(f.address)}</div>
             </div>
-            ${streetView}
+            <div class="fieldRowLinks">
+              <a class="btn btnGhost btnTiny" href="${mapUrl(f.address)}" target="_blank" rel="noopener">Map</a>
+              ${hasCoords ? `<a class="btn btnGhost btnTiny" href="${streetViewUrl(f.lat, f.lng)}" target="_blank" rel="noopener">Street View</a>` : ''}
+            </div>
           </div>`;
       }
 
