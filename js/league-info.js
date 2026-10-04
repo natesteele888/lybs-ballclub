@@ -251,10 +251,54 @@
           </div>`;
       }
 
+      // Birth date -> which 2026 division(s) it falls in, straight against
+      // the same ranges the chart/table above draw from (no separate age-
+      // math -- a birth date either lands inside a division's own [start,
+      // end] or it doesn't). Usually one match; can be two when divisions
+      // genuinely overlap (T-Ball/Rookies -- see ageChartSvg's packRows
+      // comment), so this shows every match rather than assuming one.
+      function eligibleDivisions(dob) {
+        return cache.leagueAges['2026']
+          .map(a => {
+            const [startStr, endStr] = (a.range || '').split(' to ');
+            const start = parseAgeDate(startStr), end = parseAgeDate(endStr);
+            return Object.assign({}, a, { start, end });
+          })
+          .filter(a => a.start && a.end && dob >= a.start && dob <= a.end);
+      }
+      function wireAgeEligibility(root) {
+        const input = root.querySelector('#ageEligInput');
+        const resultEl = root.querySelector('#ageEligResult');
+        if (!input) return;
+        input.addEventListener('change', () => {
+          if (!input.value) { resultEl.innerHTML = ''; return; }
+          const [y, m, d] = input.value.split('-').map(Number);
+          const matches = eligibleDivisions(new Date(y, m - 1, d));
+          resultEl.innerHTML = matches.length
+            ? `
+              <div class="listBody">
+                ${matches.map(m2 => `
+                  <div class="listRow" style="cursor:default;">
+                    <div class="listRowMain"><div class="listRowTitle">${escapeHtml(m2.division)}</div></div>
+                    <div class="listRowSub">${escapeHtml(m2.range)}</div>
+                  </div>`).join('')}
+              </div>
+              <a class="btn btnSmall" style="width:100%;margin-top:10px;" href="https://lunenburgybs.com" target="_blank" rel="noopener">Register on lunenburgybs.com</a>`
+            : '<div class="emptyState">No 2026 division matches that birth date.</div>';
+        });
+      }
+
       function renderAges() {
         const yr = cache.leagueAges['2026'];
         return `
           <div class="helpText">${escapeHtml(cache.leagueAges.note)}</div>
+          <div class="detailCard" style="margin-top:12px;">
+            <div class="sectionLabel" style="margin:0 0 8px;">Am I eligible?</div>
+            <label class="drillFieldLabel">Birth date
+              <input type="date" id="ageEligInput" class="drillFreeInput" style="margin-top:4px;">
+            </label>
+            <div id="ageEligResult" style="margin-top:10px;"></div>
+          </div>
           ${ageChartSvg(yr)}
           <div class="listBody" style="margin-top:16px;">
             ${yr.map(a => `
@@ -288,6 +332,7 @@
             renderAll();
           });
         });
+        if (current.id === 'ages') wireAgeEligibility(containerEl);
       }
       renderAll();
     },

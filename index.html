@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=58">
+<link rel="stylesheet" href="css/styles.css?v=59">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -49,7 +49,13 @@
       <img class="topBarLogo" src="assets/images/lybs-wordmark.png" alt="LYBS">
       <h1 data-team-short>Select</h1>
     </div>
-    <div class="whoami" id="whoamiLabel"></div>
+    <div class="topBarActions">
+      <!-- Coach-only -- toggled by onIdentityReady below. Opens
+           js/social-submit.js in the modal sheet at the bottom of body,
+           not a nav tab: a one-off action, not a place to browse to. -->
+      <button class="topBarShareBtn hide" id="topBarShareBtn" title="Share to Social">📸 Share</button>
+      <div class="whoami" id="whoamiLabel"></div>
+    </div>
   </div>
   <!-- Mega-menu nav: a category bar (populated/wired by renderNav() below)
        above a sub-tab row scoped to whichever category is active -- both
@@ -79,13 +85,26 @@
   <div class="tabPanel" id="tab-team"></div>
 </div>
 
+<!-- Share to Social -- a header CTA, not a nav tab (see topBarShareBtn
+     above): a coach fires it, fills it out, closes it, same one-off shape
+     as the action itself. -->
+<div class="appModalOverlay hide" id="shareModalOverlay">
+  <div class="appModalSheet">
+    <div class="appModalHeader">
+      <div class="appModalTitle">Share to Social</div>
+      <button class="appModalClose" id="shareModalClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="appModalBody" id="shareModalBody"></div>
+  </div>
+</div>
+
 <!-- Cache-busts the data/*.json fetches below (club-logos.js, league-info.js,
      archive.js, pitch-smart.js, rules.js) -- those aren't versioned per-file
      like the ?v= on each <script> tag, so without this a browser that already
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004yt';</script>
+<script>window.BUILD_V = '20261004yu';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -95,36 +114,36 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=58"></script>
-<script src="js/team-registry.js?v=58"></script>
-<script src="js/cloud-auth.js?v=58"></script>
-<script src="js/team-config.js?v=58"></script>
-<script src="js/identity.js?v=58"></script>
-<script src="js/weather.js?v=58"></script>
-<script src="js/club-logos.js?v=58"></script>
-<script src="js/league-teams.js?v=58"></script>
-<script src="js/game-card.js?v=58"></script>
-<script src="js/pitch-smart.js?v=58"></script>
-<script src="js/tonight.js?v=58"></script>
-<script src="js/homepage.js?v=58"></script>
-<script src="js/league-info.js?v=58"></script>
-<script src="js/calendar-export.js?v=58"></script>
-<script src="js/schedule.js?v=58"></script>
-<script src="js/practices.js?v=58"></script>
-<script src="js/roster.js?v=58"></script>
-<script src="js/drill-baserunning.js?v=58"></script>
-<script src="js/drill-ath.js?v=58"></script>
-<script src="js/drill-pitching.js?v=58"></script>
-<script src="js/depth-chart.js?v=58"></script>
-<script src="js/lineup-builder.js?v=58"></script>
-<script src="js/stats-import.js?v=58"></script>
-<script src="js/social-submit.js?v=58"></script>
-<script src="js/gamechanger.js?v=58"></script>
-<script src="js/rules.js?v=58"></script>
-<script src="js/standings.js?v=58"></script>
-<script src="js/calendar-family.js?v=58"></script>
-<script src="js/archive.js?v=58"></script>
-<script src="js/team-page.js?v=58"></script>
+<script src="js/backend.js?v=59"></script>
+<script src="js/team-registry.js?v=59"></script>
+<script src="js/cloud-auth.js?v=59"></script>
+<script src="js/team-config.js?v=59"></script>
+<script src="js/identity.js?v=59"></script>
+<script src="js/weather.js?v=59"></script>
+<script src="js/club-logos.js?v=59"></script>
+<script src="js/league-teams.js?v=59"></script>
+<script src="js/game-card.js?v=59"></script>
+<script src="js/pitch-smart.js?v=59"></script>
+<script src="js/tonight.js?v=59"></script>
+<script src="js/homepage.js?v=59"></script>
+<script src="js/league-info.js?v=59"></script>
+<script src="js/calendar-export.js?v=59"></script>
+<script src="js/schedule.js?v=59"></script>
+<script src="js/practices.js?v=59"></script>
+<script src="js/roster.js?v=59"></script>
+<script src="js/drill-baserunning.js?v=59"></script>
+<script src="js/drill-ath.js?v=59"></script>
+<script src="js/drill-pitching.js?v=59"></script>
+<script src="js/depth-chart.js?v=59"></script>
+<script src="js/lineup-builder.js?v=59"></script>
+<script src="js/stats-import.js?v=59"></script>
+<script src="js/social-submit.js?v=59"></script>
+<script src="js/gamechanger.js?v=59"></script>
+<script src="js/rules.js?v=59"></script>
+<script src="js/standings.js?v=59"></script>
+<script src="js/calendar-family.js?v=59"></script>
+<script src="js/archive.js?v=59"></script>
+<script src="js/team-page.js?v=59"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -282,6 +301,20 @@
     });
   }, true);
 
+  // ---- Share to Social (header CTA -> modal, see topBarShareBtn above) ----
+  function closeShareModal() {
+    document.getElementById('shareModalOverlay').classList.add('hide');
+    document.getElementById('shareModalBody').innerHTML = '';
+  }
+  document.getElementById('topBarShareBtn').addEventListener('click', () => {
+    document.getElementById('shareModalOverlay').classList.remove('hide');
+    window.SocialSubmit.render(document.getElementById('shareModalBody'), TEAM_ID);
+  });
+  document.getElementById('shareModalClose').addEventListener('click', closeShareModal);
+  document.getElementById('shareModalOverlay').addEventListener('click', e => {
+    if (e.target.id === 'shareModalOverlay') closeShareModal();
+  });
+
   // ---- Schedule tab (list / detail / edit) ----
   let scheduleView = { mode: 'list' };
   async function renderScheduleTab() {
@@ -390,13 +423,15 @@
   // Depth Chart and Lineups used to live in here too -- promoted to real
   // top-level tabs under the Roster category instead (see NAV_CATEGORIES),
   // since they're roster-planning tools a coach reaches for alongside the
-  // roster itself, not practice drills.
+  // roster itself, not practice drills. Share to Social moved out the same
+  // direction but further -- it's a one-off action, not something to browse
+  // to, so it's a header CTA (topBarShareBtn) opening a modal instead of
+  // living in here or as its own tab -- see that button's wiring below.
   const COACHING_TOOLS = [
     { id: 'baserunning', label: 'Base Running', module: () => window.DrillBaseRunning },
     { id: 'ath', label: 'Around the Horn', module: () => window.DrillATH },
     { id: 'pitching', label: 'Pitch Chart', module: () => window.DrillPitching },
     { id: 'stats', label: 'Stats Insights', module: () => window.StatsImport },
-    { id: 'social', label: 'Share to Social', module: () => window.SocialSubmit },
   ];
   let coachingTool = 'ath';
   function renderCoachingTab() {
@@ -449,6 +484,7 @@
   window.onIdentityReady = async function (teamId, role, identity) {
     TEAM_ID = teamId; ROLE = role; SESSION = identity;
     document.getElementById('whoamiLabel').textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Player/Family'}`;
+    document.getElementById('topBarShareBtn').classList.toggle('hide', !canEdit());
     document.getElementById('appShell').classList.add('show');
     await window.ClubLogos.ensureLoaded();
     switchTab('home');
@@ -459,6 +495,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=58"></script>
+<script src="js/auth.js?v=59"></script>
 </body>
 </html>
