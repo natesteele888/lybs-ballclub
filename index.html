@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=53">
+<link rel="stylesheet" href="css/styles.css?v=56">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -60,7 +60,8 @@
   <div class="navCatBar" id="navCatBar"></div>
   <div class="tabBar" id="tabBar"></div>
 
-  <div class="tabPanel active" id="tab-schedule"></div>
+  <div class="tabPanel active" id="tab-home"></div>
+  <div class="tabPanel" id="tab-schedule"></div>
   <div class="tabPanel" id="tab-practices"></div>
   <div class="tabPanel" id="tab-roster"></div>
   <div class="tabPanel" id="tab-gamechanger"></div>
@@ -84,7 +85,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004yo';</script>
+<script>window.BUILD_V = '20261004yr';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -94,35 +95,36 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=53"></script>
-<script src="js/team-registry.js?v=53"></script>
-<script src="js/cloud-auth.js?v=53"></script>
-<script src="js/team-config.js?v=53"></script>
-<script src="js/identity.js?v=53"></script>
-<script src="js/weather.js?v=53"></script>
-<script src="js/club-logos.js?v=53"></script>
-<script src="js/league-teams.js?v=53"></script>
-<script src="js/game-card.js?v=53"></script>
-<script src="js/pitch-smart.js?v=53"></script>
-<script src="js/tonight.js?v=53"></script>
-<script src="js/league-info.js?v=53"></script>
-<script src="js/calendar-export.js?v=53"></script>
-<script src="js/schedule.js?v=53"></script>
-<script src="js/practices.js?v=53"></script>
-<script src="js/roster.js?v=53"></script>
-<script src="js/drill-baserunning.js?v=53"></script>
-<script src="js/drill-ath.js?v=53"></script>
-<script src="js/drill-pitching.js?v=53"></script>
-<script src="js/depth-chart.js?v=53"></script>
-<script src="js/lineup-builder.js?v=53"></script>
-<script src="js/stats-import.js?v=53"></script>
-<script src="js/social-submit.js?v=53"></script>
-<script src="js/gamechanger.js?v=53"></script>
-<script src="js/rules.js?v=53"></script>
-<script src="js/standings.js?v=53"></script>
-<script src="js/calendar-family.js?v=53"></script>
-<script src="js/archive.js?v=53"></script>
-<script src="js/team-page.js?v=53"></script>
+<script src="js/backend.js?v=56"></script>
+<script src="js/team-registry.js?v=56"></script>
+<script src="js/cloud-auth.js?v=56"></script>
+<script src="js/team-config.js?v=56"></script>
+<script src="js/identity.js?v=56"></script>
+<script src="js/weather.js?v=56"></script>
+<script src="js/club-logos.js?v=56"></script>
+<script src="js/league-teams.js?v=56"></script>
+<script src="js/game-card.js?v=56"></script>
+<script src="js/pitch-smart.js?v=56"></script>
+<script src="js/tonight.js?v=56"></script>
+<script src="js/homepage.js?v=56"></script>
+<script src="js/league-info.js?v=56"></script>
+<script src="js/calendar-export.js?v=56"></script>
+<script src="js/schedule.js?v=56"></script>
+<script src="js/practices.js?v=56"></script>
+<script src="js/roster.js?v=56"></script>
+<script src="js/drill-baserunning.js?v=56"></script>
+<script src="js/drill-ath.js?v=56"></script>
+<script src="js/drill-pitching.js?v=56"></script>
+<script src="js/depth-chart.js?v=56"></script>
+<script src="js/lineup-builder.js?v=56"></script>
+<script src="js/stats-import.js?v=56"></script>
+<script src="js/social-submit.js?v=56"></script>
+<script src="js/gamechanger.js?v=56"></script>
+<script src="js/rules.js?v=56"></script>
+<script src="js/standings.js?v=56"></script>
+<script src="js/calendar-family.js?v=56"></script>
+<script src="js/archive.js?v=56"></script>
+<script src="js/team-page.js?v=56"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -132,6 +134,7 @@
   // ---- Tab switching (mega-menu: a category bar + a sub-tab row scoped to
   // whichever category is active) ----
   const NAV_CATEGORIES = [
+    { id: 'home', label: 'Home', tabs: ['home'] },
     { id: 'schedule', label: 'Schedule', tabs: ['schedule', 'practices', 'gamechanger'] },
     { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups'] },
     { id: 'standings', label: 'Standings', tabs: ['standings', 'archive'] },
@@ -140,6 +143,7 @@
     { id: 'resources', label: 'Resources', tabs: ['rules', 'calendar'] },
   ];
   const TAB_LABELS = {
+    home: 'Home',
     schedule: 'Schedule', practices: 'Practices', calendar: 'My Calendar', gamechanger: 'GameChanger',
     roster: 'Roster', standings: 'Standings', archive: 'History', depth: 'Depth Chart', lineups: 'Lineups',
     league: 'League', rules: 'Rules', pitching: 'Pitching', coaching: 'Coaching',
@@ -205,7 +209,7 @@
   enableDragScroll(navCatBar);
   enableDragScroll(tabBarEl);
 
-  let activeCategory = 'schedule';
+  let activeCategory = 'home';
   let lastNavTab = 'schedule'; // the real nav tab to return to from a Team Page -- 'team' itself is never this
 
   function categoryFor(tabName) {
@@ -284,12 +288,7 @@
     await window.Schedule.ensureLoaded(TEAM_ID);
     const el = document.getElementById('tab-schedule');
     if (scheduleView.mode === 'list') {
-      el.innerHTML = '<div id="tonightSlot"></div><div id="scheduleListSlot"></div>';
-      window.TonightGames.ensureLoaded().then(() => {
-        window.TonightGames.render(el.querySelector('#tonightSlot'), window.TeamConfig.current().macLeagueDivisionId, {
-          onWatchLive: () => switchTab('gamechanger'),
-        });
-      });
+      el.innerHTML = '<div id="scheduleListSlot"></div>';
       window.Schedule.renderList(TEAM_ID, el.querySelector('#scheduleListSlot'), {
         canEdit: canEdit(),
         onOpen: id => { scheduleView = { mode: 'detail', id }; renderScheduleTab(); },
@@ -426,7 +425,8 @@
   }
 
   function renderTab(name) {
-    if (name === 'schedule') renderScheduleTab();
+    if (name === 'home') window.Homepage.render(document.getElementById('tab-home'), TEAM_ID, { onWatchLive: () => switchTab('gamechanger') });
+    else if (name === 'schedule') renderScheduleTab();
     else if (name === 'practices') renderPracticesTab();
     else if (name === 'roster') renderRosterTab();
     else if (name === 'gamechanger') window.GameChanger.render(TEAM_ID, document.getElementById('tab-gamechanger'), { canEdit: canEdit(), addedBy: SESSION.name });
@@ -451,7 +451,7 @@
     document.getElementById('whoamiLabel').textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Player/Family'}`;
     document.getElementById('appShell').classList.add('show');
     await window.ClubLogos.ensureLoaded();
-    switchTab('schedule');
+    switchTab('home');
   };
 })();
 </script>
@@ -459,6 +459,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=53"></script>
+<script src="js/auth.js?v=56"></script>
 </body>
 </html>
