@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=49">
+<link rel="stylesheet" href="css/styles.css?v=50">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -52,16 +52,13 @@
     <div class="whoami" id="whoamiLabel"></div>
   </div>
   <!-- Mega-menu nav: a category bar (populated/wired by renderNav() below)
-       above a sub-tab row scoped to whichever category is active. Content
-       is entirely JS-driven -- see NAV_CATEGORIES/TAB_LABELS below. -->
+       above a sub-tab row scoped to whichever category is active -- both
+       are plain horizontal, drag/swipe-scrollable rows at every width (no
+       mobile dropdown: a category always opens on its first tab, and a
+       stacked/hidden sub-row would bury the 2nd+ options behind a tap).
+       Content is entirely JS-driven -- see NAV_CATEGORIES/TAB_LABELS below. -->
   <div class="navCatBar" id="navCatBar"></div>
-  <div class="tabNavWrap" id="tabNavWrap">
-    <button class="tabBarToggle" id="tabBarToggle" type="button">
-      <span id="tabBarToggleLabel">Schedule</span>
-      <span class="tabBarChevron">&#9662;</span>
-    </button>
-    <div class="tabBar" id="tabBar"></div>
-  </div>
+  <div class="tabBar" id="tabBar"></div>
 
   <div class="tabPanel active" id="tab-schedule"></div>
   <div class="tabPanel" id="tab-practices"></div>
@@ -85,7 +82,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004yk';</script>
+<script>window.BUILD_V = '20261004yl';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -95,35 +92,35 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=49"></script>
-<script src="js/team-registry.js?v=49"></script>
-<script src="js/cloud-auth.js?v=49"></script>
-<script src="js/team-config.js?v=49"></script>
-<script src="js/identity.js?v=49"></script>
-<script src="js/weather.js?v=49"></script>
-<script src="js/club-logos.js?v=49"></script>
-<script src="js/league-teams.js?v=49"></script>
-<script src="js/game-card.js?v=49"></script>
-<script src="js/pitch-smart.js?v=49"></script>
-<script src="js/tonight.js?v=49"></script>
-<script src="js/league-info.js?v=49"></script>
-<script src="js/calendar-export.js?v=49"></script>
-<script src="js/schedule.js?v=49"></script>
-<script src="js/practices.js?v=49"></script>
-<script src="js/roster.js?v=49"></script>
-<script src="js/drill-baserunning.js?v=49"></script>
-<script src="js/drill-ath.js?v=49"></script>
-<script src="js/drill-pitching.js?v=49"></script>
-<script src="js/depth-chart.js?v=49"></script>
-<script src="js/lineup-builder.js?v=49"></script>
-<script src="js/stats-import.js?v=49"></script>
-<script src="js/social-submit.js?v=49"></script>
-<script src="js/gamechanger.js?v=49"></script>
-<script src="js/rules.js?v=49"></script>
-<script src="js/standings.js?v=49"></script>
-<script src="js/calendar-family.js?v=49"></script>
-<script src="js/archive.js?v=49"></script>
-<script src="js/team-page.js?v=49"></script>
+<script src="js/backend.js?v=50"></script>
+<script src="js/team-registry.js?v=50"></script>
+<script src="js/cloud-auth.js?v=50"></script>
+<script src="js/team-config.js?v=50"></script>
+<script src="js/identity.js?v=50"></script>
+<script src="js/weather.js?v=50"></script>
+<script src="js/club-logos.js?v=50"></script>
+<script src="js/league-teams.js?v=50"></script>
+<script src="js/game-card.js?v=50"></script>
+<script src="js/pitch-smart.js?v=50"></script>
+<script src="js/tonight.js?v=50"></script>
+<script src="js/league-info.js?v=50"></script>
+<script src="js/calendar-export.js?v=50"></script>
+<script src="js/schedule.js?v=50"></script>
+<script src="js/practices.js?v=50"></script>
+<script src="js/roster.js?v=50"></script>
+<script src="js/drill-baserunning.js?v=50"></script>
+<script src="js/drill-ath.js?v=50"></script>
+<script src="js/drill-pitching.js?v=50"></script>
+<script src="js/depth-chart.js?v=50"></script>
+<script src="js/lineup-builder.js?v=50"></script>
+<script src="js/stats-import.js?v=50"></script>
+<script src="js/social-submit.js?v=50"></script>
+<script src="js/gamechanger.js?v=50"></script>
+<script src="js/rules.js?v=50"></script>
+<script src="js/standings.js?v=50"></script>
+<script src="js/calendar-family.js?v=50"></script>
+<script src="js/archive.js?v=50"></script>
+<script src="js/team-page.js?v=50"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -150,18 +147,7 @@
   // with Practices (visible to everyone).
   const COACH_ONLY_TABS = new Set(['coaching']);
   const navCatBar = document.getElementById('navCatBar');
-  const tabNavWrap = document.getElementById('tabNavWrap');
-  // Mobile: the sub-tab row collapses behind a toggle button, and tapping it
-  // slides that category's tabs down over the page instead of relying on an
-  // undiscoverable horizontal scroll. Desktop never shows the toggle, so
-  // this is a no-op there.
-  const tabBarToggle = document.getElementById('tabBarToggle');
-  const tabBarToggleLabel = document.getElementById('tabBarToggleLabel');
   const tabBarEl = document.getElementById('tabBar');
-  tabBarToggle.addEventListener('click', () => {
-    const open = tabBarEl.classList.toggle('open');
-    tabBarToggle.classList.toggle('open', open);
-  });
 
   // Desktop: click-and-drag to scroll either bar horizontally when it's
   // wider than the screen, same as a touch swipe already does on a real
@@ -243,11 +229,11 @@
     // the sub-row would just repeat the category pill right above it, so
     // skip it rather than show a redundant one-button row.
     if (visTabs.length <= 1) {
-      tabNavWrap.style.display = 'none';
+      tabBarEl.style.display = 'none';
       tabBarEl.innerHTML = '';
       return;
     }
-    tabNavWrap.style.display = '';
+    tabBarEl.style.display = '';
     tabBarEl.innerHTML = visTabs.map(t =>
       `<button class="tabBtn ${t === activeTabName ? 'active' : ''}" data-tab="${t}">${TAB_LABELS[t]}</button>`
     ).join('');
@@ -259,9 +245,6 @@
   function switchTab(name) {
     renderNav(name);
     document.querySelectorAll('.tabPanel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
-    tabBarToggleLabel.textContent = TAB_LABELS[name] || name;
-    tabBarEl.classList.remove('open');
-    tabBarToggle.classList.remove('open');
     if (name !== 'team') lastNavTab = name;
     renderTab(name);
   }
@@ -454,6 +437,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=49"></script>
+<script src="js/auth.js?v=50"></script>
 </body>
 </html>
