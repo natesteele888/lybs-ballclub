@@ -14,10 +14,10 @@
 
    *** DEV-ONLY PLACEHOLDER CODES ***
    The two hashes below are sha256("LunenburgSelect2026") and
-   sha256("SelectCoachFrontSeat") -- made up for local development
-   only. Before this goes live, generate real codes and swap these
-   out (see README.md "Go live" section for the one-line command),
-   and do the same any time a code needs to be rotated.
+   sha256("LYBS#2027!") -- made up for local development only.
+   Before this goes live, generate real codes and swap these out
+   (see README.md "Go live" section for the one-line command), and
+   do the same any time a code needs to be rotated.
 
    To add a second team (Majors B, Minors, ...): pick two new
    codes, hash them the same way, add two entries to codeHashes
@@ -29,7 +29,7 @@
 window.TEAM_REGISTRY = {
   codeHashes: {
     '8d62dce0f74603956a6a6103d85888008680e9e579182404a8fa21b29dd8496f': { teamId: 'select', role: 'player' },
-    'b2d705eaf8872023731ed13eb5fec4623f7f9fe89e30e34e58e1ce1d618b171b': { teamId: 'select', role: 'coach' },
+    '82dcd01057b33fcc3749042f7e21212ba01ed8c41b04cad4ecd362a87ba14280': { teamId: 'select', role: 'coach' },
   },
   // Bootstrap display defaults. Once teams/{teamId}/config exists in the
   // real database, team-config.js prefers that over this -- this is only

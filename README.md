@@ -42,7 +42,7 @@ Nothing to install. `window.FIREBASE_DB_URL` defaults to `'MOCK'` in `js/backend
 
 Dev login codes (see `js/team-registry.js` -- **placeholders, not for production**):
 - Player/family code: `LunenburgSelect2026`
-- Coach code: `SelectCoachFrontSeat`
+- Coach code: `LYBS#2027!`
 
 Serve the folder with any static server, e.g.:
 
