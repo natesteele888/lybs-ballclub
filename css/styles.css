@@ -167,6 +167,30 @@ a { color: var(--lybs-blue-bright); }
   font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
 }
 
+/* Mega-menu category row -- a handful of pill buttons above the sub-tab
+   row, so the main nav reads as "pick a category, then a tab in it"
+   instead of one flat strip of every tab in the app. Drag-scrolls (and
+   native touch-swipes) the same way .tabBar does if it ever runs wider
+   than the screen. */
+.navCatBar {
+  display: flex; gap: 8px; padding: 12px 16px; overflow-x: auto; scrollbar-width: none;
+  background: rgba(5,7,28,0.6); border-bottom: 1px solid var(--card-border); cursor: grab;
+}
+.navCatBar::-webkit-scrollbar { display: none; }
+.navCatBar.dragging { cursor: grabbing; user-select: none; }
+.navCatBar.dragging .navCatBtn { pointer-events: none; }
+.navCatBtn {
+  flex: 0 0 auto; padding: 9px 18px; border-radius: 20px; cursor: pointer;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); color: var(--text2);
+  font-family: var(--font-label); font-weight: 700; font-size: 12.5px; letter-spacing: 0.05em; text-transform: uppercase;
+  transition: all .15s;
+}
+.navCatBtn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+.navCatBtn.active {
+  background: linear-gradient(180deg, var(--lybs-blue-bright), var(--lybs-blue) 55%, var(--lybs-blue-deep));
+  border-color: transparent; color: #fff; box-shadow: 0 4px 14px rgba(46,82,232,0.35);
+}
+
 .tabBar {
   display: flex; overflow-x: auto; background: rgba(10,14,40,0.7); border-bottom: 1px solid var(--card-border);
   position: sticky; top: 55px; z-index: 40; backdrop-filter: blur(8px);
@@ -534,6 +558,25 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 }
 .tonightScore { font-weight: 700; color: var(--text); font-size: 14px; }
 .tonightGameLocation { font-size: 12px; color: var(--text2); }
+
+/* ---- Tonight widget: merged all-leagues card layout ---- */
+.tonightMergedList { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.tonightMergedCard {
+  background: var(--card); border: 1px solid var(--card-border); border-radius: 12px;
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;
+}
+.tonightMergedTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.tonightLeagueChip { background: rgba(76,106,235,0.15); color: #AFC0FF; border: 1px solid rgba(76,106,235,0.35); }
+.tonightMergedTime {
+  font-family: var(--font-label); font-size: 12px; font-weight: 700; color: var(--lybs-silver);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.tonightMergedTeam { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.tonightMergedRight {
+  font-family: var(--font-label); font-size: 13px; font-weight: 700; color: var(--text2);
+  flex: 0 0 auto; font-variant-numeric: tabular-nums;
+}
+.tonightWatchBtn { width: 100%; margin-top: 4px; }
 
 /* ---- Coaching drills (Around the Horn + Pitch Chart) ---- */
 .drillHero { text-align: center; padding: 10px 0 20px; }
