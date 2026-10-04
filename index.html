@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=34">
+<link rel="stylesheet" href="css/styles.css?v=36">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -93,7 +93,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004y5';</script>
+<script>window.BUILD_V = '20261004y7';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -103,34 +103,35 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=34"></script>
-<script src="js/team-registry.js?v=34"></script>
-<script src="js/cloud-auth.js?v=34"></script>
-<script src="js/team-config.js?v=34"></script>
-<script src="js/identity.js?v=34"></script>
-<script src="js/weather.js?v=34"></script>
-<script src="js/club-logos.js?v=34"></script>
-<script src="js/league-teams.js?v=34"></script>
-<script src="js/game-card.js?v=34"></script>
-<script src="js/pitch-smart.js?v=34"></script>
-<script src="js/tonight.js?v=34"></script>
-<script src="js/league-info.js?v=34"></script>
-<script src="js/calendar-export.js?v=34"></script>
-<script src="js/schedule.js?v=34"></script>
-<script src="js/practices.js?v=34"></script>
-<script src="js/roster.js?v=34"></script>
-<script src="js/drill-baserunning.js?v=34"></script>
-<script src="js/drill-ath.js?v=34"></script>
-<script src="js/drill-pitching.js?v=34"></script>
-<script src="js/depth-chart.js?v=34"></script>
-<script src="js/lineup-builder.js?v=34"></script>
-<script src="js/social-submit.js?v=34"></script>
-<script src="js/gamechanger.js?v=34"></script>
-<script src="js/rules.js?v=34"></script>
-<script src="js/standings.js?v=34"></script>
-<script src="js/calendar-family.js?v=34"></script>
-<script src="js/archive.js?v=34"></script>
-<script src="js/team-page.js?v=34"></script>
+<script src="js/backend.js?v=36"></script>
+<script src="js/team-registry.js?v=36"></script>
+<script src="js/cloud-auth.js?v=36"></script>
+<script src="js/team-config.js?v=36"></script>
+<script src="js/identity.js?v=36"></script>
+<script src="js/weather.js?v=36"></script>
+<script src="js/club-logos.js?v=36"></script>
+<script src="js/league-teams.js?v=36"></script>
+<script src="js/game-card.js?v=36"></script>
+<script src="js/pitch-smart.js?v=36"></script>
+<script src="js/tonight.js?v=36"></script>
+<script src="js/league-info.js?v=36"></script>
+<script src="js/calendar-export.js?v=36"></script>
+<script src="js/schedule.js?v=36"></script>
+<script src="js/practices.js?v=36"></script>
+<script src="js/roster.js?v=36"></script>
+<script src="js/drill-baserunning.js?v=36"></script>
+<script src="js/drill-ath.js?v=36"></script>
+<script src="js/drill-pitching.js?v=36"></script>
+<script src="js/depth-chart.js?v=36"></script>
+<script src="js/lineup-builder.js?v=36"></script>
+<script src="js/stats-import.js?v=36"></script>
+<script src="js/social-submit.js?v=36"></script>
+<script src="js/gamechanger.js?v=36"></script>
+<script src="js/rules.js?v=36"></script>
+<script src="js/standings.js?v=36"></script>
+<script src="js/calendar-family.js?v=36"></script>
+<script src="js/archive.js?v=36"></script>
+<script src="js/team-page.js?v=36"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -297,6 +298,7 @@
     { id: 'pitching', label: 'Pitch Chart', module: () => window.DrillPitching },
     { id: 'depth', label: 'Depth Chart', module: () => window.DepthChart },
     { id: 'lineup', label: 'Lineups', module: () => window.LineupBuilder },
+    { id: 'stats', label: 'Stats Insights', module: () => window.StatsImport },
     { id: 'social', label: 'Share to Social', module: () => window.SocialSubmit },
   ];
   let coachingTool = 'ath';
@@ -313,7 +315,7 @@
     const slot = el.querySelector('#coachToolSlot');
     Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID)]).then(() => {
       const tool = COACHING_TOOLS.find(t => t.id === coachingTool);
-      tool.module().render(slot, TEAM_ID);
+      tool.module().render(slot, TEAM_ID, { switchTool: id => { coachingTool = id; renderCoachingTab(); } });
     });
   }
 
@@ -350,6 +352,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=34"></script>
+<script src="js/auth.js?v=36"></script>
 </body>
 </html>

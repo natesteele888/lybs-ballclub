@@ -6,7 +6,7 @@
 // IMPORTANT: bump CACHE_NAME every time index.html/BUILD_V or css/styles.css's
 // ?v= gets bumped, or a phone that installed this weeks ago can keep falling
 // back to a stale shell indefinitely.
-const CACHE_NAME = 'lybs-ballclub-shell-20261004y5';
+const CACHE_NAME = 'lybs-ballclub-shell-20261004y7';
 const SHELL_FILES = [
   './index.html',
   './css/styles.css',

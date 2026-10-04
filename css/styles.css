@@ -625,6 +625,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .pcStatTile { flex: 1; min-width: 78px; text-align: center; padding: 12px 8px; background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; }
 .pcStatValue { font-family: var(--font-display); font-size: 26px; }
 .pcStatLabel { font-size: 9.5px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.siCardName { font-family: var(--font-label); font-weight: 700; font-size: 13px; color: #fff; }
 
 .coachingToggle { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; }
 .coachingToggle::-webkit-scrollbar { display: none; }
