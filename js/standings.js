@@ -39,7 +39,11 @@
   window.Standings = {
     async render(containerEl, divisionId) {
       containerEl.innerHTML = '<div class="emptyState">Loading…</div>';
-      const data = await window.dbGet(window.sharedPath('macLeagueStandings'));
+      // Routed through TonightGames.ensureLoaded() rather than a bare dbGet
+      // so this tab also gets the real first-visit seed that lives there
+      // (data/standings-seed.json) if nothing's mirrored yet -- same shared
+      // path, one seeding path instead of two copies of that logic.
+      const data = await window.TonightGames.ensureLoaded();
       const division = data && data.divisions && data.divisions[divisionId];
       if (!division) {
         containerEl.innerHTML = `

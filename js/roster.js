@@ -40,7 +40,19 @@
   window.Roster = {
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      const players = await window.dbGet(window.teamPath(teamId, 'roster'));
+      let players = await window.dbGet(window.teamPath(teamId, 'roster'));
+      // Seed Select's roster from the real current team (data/roster-seed.json,
+      // pulled from the dashboard -- see scripts/sync-roster-from-dashboard.mjs)
+      // the first time anyone's browser loads it with nothing there yet. Only
+      // for 'select' -- this file is that team's real roster, not a generic
+      // placeholder, so a future second team must never inherit it. Same
+      // "seed once, then it's the live editable copy" convention rules.js
+      // uses for shared/rules, just scoped to one team instead of shared/.
+      if ((!Array.isArray(players) || !players.length) && teamId === 'select') {
+        const seed = await fetch('data/roster-seed.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => ({ roster: [] }));
+        players = seed.roster || [];
+        await window.dbPut(window.teamPath(teamId, 'roster'), players);
+      }
       cache[teamId] = Array.isArray(players) ? players : [];
       return cache[teamId];
     },
