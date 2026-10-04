@@ -64,9 +64,15 @@
       const hasExtendedCols = (division.rows || []).some(r => r.gp != null);
       const ageMatch = ((division.rows || [])[0] || {}).team && (division.rows[0].team.match(/^(\d{1,2}u)\b/i));
       const ageLabel = ageMatch ? ageMatch[1].toUpperCase() : '';
+      // Every row but our own links to that team's in-app Team Page (same
+      // data-team-nav the opponent name/logo on a game card uses, routed by
+      // index.html's one delegated click handler) -- there's nothing useful
+      // to show for "our own team's page" here, so that row stays plain.
       const rows = (division.rows || []).map(r => `
         <tr class="${r.isUs ? 'standingsUsRow' : ''}">
-          <td><div class="standingsTeamCell">${window.ClubLogos.badgeHtml(r.team, 26)}${escapeHtml(stripAgePrefix(r.team))}</div></td>
+          <td>${r.isUs
+            ? `<div class="standingsTeamCell">${window.ClubLogos.badgeHtml(r.team, 26)}${escapeHtml(stripAgePrefix(r.team))}</div>`
+            : `<div class="standingsTeamCell standingsTeamLink" data-team-nav="${escapeHtml(stripAgePrefix(r.team))}">${window.ClubLogos.badgeHtml(r.team, 26)}${escapeHtml(stripAgePrefix(r.team))}</div>`}</td>
           ${hasExtendedCols ? `
             <td class="numCell">${escapeHtml(r.gp ?? '')}</td>
             <td class="numCell">${escapeHtml(r.w ?? '')}</td>

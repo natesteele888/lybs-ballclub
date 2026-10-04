@@ -159,6 +159,28 @@
         </div>`;
     },
 
+    // Every game today across the given division ids (default: every known
+    // division), merged and sorted by start time -- pulled out of render()
+    // so js/homepage.js can reuse the exact same merge logic for its own
+    // "around town" ticker instead of re-implementing it.
+    allTodayGames(divisionIds) {
+      const divisions = window.TonightGames.availableDivisions();
+      const pool = divisionIds ? divisions.filter(d => divisionIds.includes(d.id)) : divisions;
+      const all = [];
+      pool.forEach(d => {
+        const div = cache && cache.divisions && cache.divisions[d.id];
+        ((div && div.todayGames) || []).forEach(g => {
+          all.push(typeof g === 'string' ? g : Object.assign({}, g, { divisionId: d.id, divisionName: d.name }));
+        });
+      });
+      return all.sort((x, y) => {
+        if (typeof x === 'string' || typeof y === 'string') return 0;
+        return timeToMinutes(x.time) - timeToMinutes(y.time);
+      });
+    },
+
+    mergedCardHtml,
+
     // The homepage widget: division toggle (remembered per device) + that
     // division's games tonight.
     // opts.onWatchLive() fires when a coach/parent taps "Watch live on
@@ -182,18 +204,7 @@
       if (divisionId !== 'all' && !divisions.some(d => d.id === divisionId)) divisionId = 'all';
 
       function mergedGames() {
-        const pool = divisionId === 'all' ? divisions : divisions.filter(d => d.id === divisionId);
-        const all = [];
-        pool.forEach(d => {
-          const div = cache.divisions[d.id];
-          ((div && div.todayGames) || []).forEach(g => {
-            all.push(typeof g === 'string' ? g : Object.assign({}, g, { divisionId: d.id, divisionName: d.name }));
-          });
-        });
-        return all.sort((x, y) => {
-          if (typeof x === 'string' || typeof y === 'string') return 0;
-          return timeToMinutes(x.time) - timeToMinutes(y.time);
-        });
+        return window.TonightGames.allTodayGames(divisionId === 'all' ? null : [divisionId]);
       }
 
       function renderGames() {
