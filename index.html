@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=37">
+<link rel="stylesheet" href="css/styles.css?v=39">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -51,24 +51,18 @@
     </div>
     <div class="whoami" id="whoamiLabel"></div>
   </div>
-  <div class="tabNavWrap">
+  <!-- Mega-menu nav: a small set of categories (populated/wired by
+       renderNav() in the script below) above a sub-tab row scoped to
+       whichever category is active -- replaces one flat row of 11 tabs,
+       which had started running off the edge of the screen on both
+       desktop and mobile. -->
+  <div class="navCatBar" id="navCatBar"></div>
+  <div class="tabNavWrap" id="tabNavWrap">
     <button class="tabBarToggle" id="tabBarToggle" type="button">
       <span id="tabBarToggleLabel">Schedule</span>
       <span class="tabBarChevron">&#9662;</span>
     </button>
-    <div class="tabBar" id="tabBar">
-      <button class="tabBtn active" data-tab="schedule">Schedule</button>
-      <button class="tabBtn" data-tab="practices">Practices</button>
-      <button class="tabBtn" data-tab="roster">Roster</button>
-      <button class="tabBtn" data-tab="gamechanger">GameChanger</button>
-      <button class="tabBtn" data-tab="standings">Standings</button>
-      <button class="tabBtn" data-tab="pitching">Pitching</button>
-      <button class="tabBtn" data-tab="rules">Rules</button>
-      <button class="tabBtn" data-tab="league">League</button>
-      <button class="tabBtn" data-tab="coaching" id="coachingTabBtn" style="display:none;">Coaching</button>
-      <button class="tabBtn" data-tab="calendar">My Calendar</button>
-      <button class="tabBtn" data-tab="archive">History</button>
-    </div>
+    <div class="tabBar" id="tabBar"></div>
   </div>
 
   <div class="tabPanel active" id="tab-schedule"></div>
@@ -93,7 +87,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004y8';</script>
+<script>window.BUILD_V = '20261004ya';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -103,49 +97,61 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=37"></script>
-<script src="js/team-registry.js?v=37"></script>
-<script src="js/cloud-auth.js?v=37"></script>
-<script src="js/team-config.js?v=37"></script>
-<script src="js/identity.js?v=37"></script>
-<script src="js/weather.js?v=37"></script>
-<script src="js/club-logos.js?v=37"></script>
-<script src="js/league-teams.js?v=37"></script>
-<script src="js/game-card.js?v=37"></script>
-<script src="js/pitch-smart.js?v=37"></script>
-<script src="js/tonight.js?v=37"></script>
-<script src="js/league-info.js?v=37"></script>
-<script src="js/calendar-export.js?v=37"></script>
-<script src="js/schedule.js?v=37"></script>
-<script src="js/practices.js?v=37"></script>
-<script src="js/roster.js?v=37"></script>
-<script src="js/drill-baserunning.js?v=37"></script>
-<script src="js/drill-ath.js?v=37"></script>
-<script src="js/drill-pitching.js?v=37"></script>
-<script src="js/depth-chart.js?v=37"></script>
-<script src="js/lineup-builder.js?v=37"></script>
-<script src="js/stats-import.js?v=37"></script>
-<script src="js/social-submit.js?v=37"></script>
-<script src="js/gamechanger.js?v=37"></script>
-<script src="js/rules.js?v=37"></script>
-<script src="js/standings.js?v=37"></script>
-<script src="js/calendar-family.js?v=37"></script>
-<script src="js/archive.js?v=37"></script>
-<script src="js/team-page.js?v=37"></script>
+<script src="js/backend.js?v=39"></script>
+<script src="js/team-registry.js?v=39"></script>
+<script src="js/cloud-auth.js?v=39"></script>
+<script src="js/team-config.js?v=39"></script>
+<script src="js/identity.js?v=39"></script>
+<script src="js/weather.js?v=39"></script>
+<script src="js/club-logos.js?v=39"></script>
+<script src="js/league-teams.js?v=39"></script>
+<script src="js/game-card.js?v=39"></script>
+<script src="js/pitch-smart.js?v=39"></script>
+<script src="js/tonight.js?v=39"></script>
+<script src="js/league-info.js?v=39"></script>
+<script src="js/calendar-export.js?v=39"></script>
+<script src="js/schedule.js?v=39"></script>
+<script src="js/practices.js?v=39"></script>
+<script src="js/roster.js?v=39"></script>
+<script src="js/drill-baserunning.js?v=39"></script>
+<script src="js/drill-ath.js?v=39"></script>
+<script src="js/drill-pitching.js?v=39"></script>
+<script src="js/depth-chart.js?v=39"></script>
+<script src="js/lineup-builder.js?v=39"></script>
+<script src="js/stats-import.js?v=39"></script>
+<script src="js/social-submit.js?v=39"></script>
+<script src="js/gamechanger.js?v=39"></script>
+<script src="js/rules.js?v=39"></script>
+<script src="js/standings.js?v=39"></script>
+<script src="js/calendar-family.js?v=39"></script>
+<script src="js/archive.js?v=39"></script>
+<script src="js/team-page.js?v=39"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
 
   function canEdit() { return ROLE === 'coach'; }
 
-  // ---- Tab switching ----
-  document.querySelectorAll('.tabBtn').forEach(btn => {
-    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-  });
-  // Mobile: the tab strip collapses behind a toggle button, and tapping it
-  // slides the full tab list down over the page instead of relying on an
+  // ---- Tab switching (mega-menu: a category bar + a sub-tab row scoped to
+  // whichever category is active) ----
+  const NAV_CATEGORIES = [
+    { id: 'schedule', label: 'Schedule', tabs: ['schedule', 'practices', 'calendar', 'gamechanger'] },
+    { id: 'team', label: 'Team', tabs: ['roster', 'standings', 'archive'] },
+    { id: 'league', label: 'League', tabs: ['league', 'rules', 'pitching'] },
+    { id: 'coaching', label: 'Coaching', tabs: ['coaching'], coachOnly: true },
+  ];
+  const TAB_LABELS = {
+    schedule: 'Schedule', practices: 'Practices', calendar: 'My Calendar', gamechanger: 'GameChanger',
+    roster: 'Roster', standings: 'Standings', archive: 'History',
+    league: 'League', rules: 'Rules', pitching: 'Pitching',
+    coaching: 'Coaching',
+  };
+  const navCatBar = document.getElementById('navCatBar');
+  // Mobile: the sub-tab row collapses behind a toggle button, and tapping it
+  // slides that category's tabs down over the page instead of relying on an
   // undiscoverable horizontal scroll. Desktop never shows the toggle, so
-  // this is a no-op there.
+  // this is a no-op there. The category bar above it is short enough (3-4
+  // one or two-word labels) to stay a plain always-visible row on phones.
   const tabBarToggle = document.getElementById('tabBarToggle');
   const tabBarToggleLabel = document.getElementById('tabBarToggleLabel');
   const tabBarEl = document.getElementById('tabBar');
@@ -153,12 +159,48 @@
     const open = tabBarEl.classList.toggle('open');
     tabBarToggle.classList.toggle('open', open);
   });
+  let activeCategory = 'schedule';
   let lastNavTab = 'schedule'; // the real nav tab to return to from a Team Page -- 'team' itself is never this
+
+  function categoryFor(tabName) {
+    const cat = NAV_CATEGORIES.find(c => c.tabs.includes(tabName));
+    return cat ? cat.id : activeCategory; // 'team' (the Team Page) belongs to no category -- keep whatever was active
+  }
+  function renderNav(activeTabName) {
+    activeCategory = categoryFor(activeTabName);
+    const visibleCats = NAV_CATEGORIES.filter(c => !c.coachOnly || canEdit());
+    navCatBar.innerHTML = visibleCats.map(c =>
+      `<button class="navCatBtn ${c.id === activeCategory ? 'active' : ''}" data-cat="${c.id}">${c.label}</button>`
+    ).join('');
+    navCatBar.querySelectorAll('[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = NAV_CATEGORIES.find(c => c.id === btn.dataset.cat);
+        switchTab(cat.tabs[0]);
+      });
+    });
+    const activeCat = visibleCats.find(c => c.id === activeCategory) || visibleCats[0];
+    // A single-tab category (Coaching) has nothing to pick between -- the
+    // sub-row would just repeat the category pill right above it, so skip
+    // it rather than show a redundant one-button row.
+    const tabNavWrap = document.getElementById('tabNavWrap');
+    if (activeCat.tabs.length <= 1) {
+      tabNavWrap.style.display = 'none';
+      tabBarEl.innerHTML = '';
+      return;
+    }
+    tabNavWrap.style.display = '';
+    tabBarEl.innerHTML = activeCat.tabs.map(t =>
+      `<button class="tabBtn ${t === activeTabName ? 'active' : ''}" data-tab="${t}">${TAB_LABELS[t]}</button>`
+    ).join('');
+    tabBarEl.querySelectorAll('[data-tab]').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+  }
+
   function switchTab(name) {
-    document.querySelectorAll('.tabBtn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    renderNav(name);
     document.querySelectorAll('.tabPanel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
-    const activeBtn = document.querySelector('.tabBtn[data-tab="' + name + '"]');
-    if (activeBtn) tabBarToggleLabel.textContent = activeBtn.textContent;
+    tabBarToggleLabel.textContent = TAB_LABELS[name] || name;
     tabBarEl.classList.remove('open');
     tabBarToggle.classList.remove('open');
     if (name !== 'team') lastNavTab = name;
@@ -342,9 +384,8 @@
     TEAM_ID = teamId; ROLE = role; SESSION = identity;
     document.getElementById('whoamiLabel').textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Player/Family'}`;
     document.getElementById('appShell').classList.add('show');
-    document.getElementById('coachingTabBtn').style.display = role === 'coach' ? '' : 'none';
     await window.ClubLogos.ensureLoaded();
-    renderTab('schedule');
+    switchTab('schedule');
   };
 })();
 </script>
@@ -352,6 +393,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=37"></script>
+<script src="js/auth.js?v=39"></script>
 </body>
 </html>
