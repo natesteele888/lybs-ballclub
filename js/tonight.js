@@ -33,10 +33,16 @@
     d.textContent = s || '';
     return d.innerHTML;
   }
+  // Same redundant "12u "/"10u "/"8u " prefix js/standings.js strips --
+  // every team in a division carries it, and the division picker right
+  // above this list already says which division (hence bracket) it is.
+  function stripAgePrefix(name) {
+    return (name || '').replace(/^\d{1,2}u\s+/i, '');
+  }
   function teamHtml(team) {
     if (!team) return '<span class="tonightTeamName">TBD</span>';
     const logo = team.logoUrl ? `<img class="tonightTeamLogo" src="${team.logoUrl}" alt="" loading="lazy">` : '';
-    const inner = `${logo}<span class="tonightTeamName">${escapeHtml(team.name)}</span>`;
+    const inner = `${logo}<span class="tonightTeamName">${escapeHtml(stripAgePrefix(team.name))}</span>`;
     return team.teamId
       ? `<a class="tonightTeam" href="https://www.macleague.org/team/${team.teamId}" target="_blank" rel="noopener" title="See ${escapeHtml(team.name)}'s full schedule on macleague.org">${inner}</a>`
       : `<span class="tonightTeam">${inner}</span>`;
