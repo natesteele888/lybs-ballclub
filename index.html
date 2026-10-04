@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=37">
+<link rel="stylesheet" href="css/styles.css?v=44">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -93,7 +93,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004y8';</script>
+<script>window.BUILD_V = '20261004yf';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -103,35 +103,35 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=37"></script>
-<script src="js/team-registry.js?v=37"></script>
-<script src="js/cloud-auth.js?v=37"></script>
-<script src="js/team-config.js?v=37"></script>
-<script src="js/identity.js?v=37"></script>
-<script src="js/weather.js?v=37"></script>
-<script src="js/club-logos.js?v=37"></script>
-<script src="js/league-teams.js?v=37"></script>
-<script src="js/game-card.js?v=37"></script>
-<script src="js/pitch-smart.js?v=37"></script>
-<script src="js/tonight.js?v=37"></script>
-<script src="js/league-info.js?v=37"></script>
-<script src="js/calendar-export.js?v=37"></script>
-<script src="js/schedule.js?v=37"></script>
-<script src="js/practices.js?v=37"></script>
-<script src="js/roster.js?v=37"></script>
-<script src="js/drill-baserunning.js?v=37"></script>
-<script src="js/drill-ath.js?v=37"></script>
-<script src="js/drill-pitching.js?v=37"></script>
-<script src="js/depth-chart.js?v=37"></script>
-<script src="js/lineup-builder.js?v=37"></script>
-<script src="js/stats-import.js?v=37"></script>
-<script src="js/social-submit.js?v=37"></script>
-<script src="js/gamechanger.js?v=37"></script>
-<script src="js/rules.js?v=37"></script>
-<script src="js/standings.js?v=37"></script>
-<script src="js/calendar-family.js?v=37"></script>
-<script src="js/archive.js?v=37"></script>
-<script src="js/team-page.js?v=37"></script>
+<script src="js/backend.js?v=44"></script>
+<script src="js/team-registry.js?v=44"></script>
+<script src="js/cloud-auth.js?v=44"></script>
+<script src="js/team-config.js?v=44"></script>
+<script src="js/identity.js?v=44"></script>
+<script src="js/weather.js?v=44"></script>
+<script src="js/club-logos.js?v=44"></script>
+<script src="js/league-teams.js?v=44"></script>
+<script src="js/game-card.js?v=44"></script>
+<script src="js/pitch-smart.js?v=44"></script>
+<script src="js/tonight.js?v=44"></script>
+<script src="js/league-info.js?v=44"></script>
+<script src="js/calendar-export.js?v=44"></script>
+<script src="js/schedule.js?v=44"></script>
+<script src="js/practices.js?v=44"></script>
+<script src="js/roster.js?v=44"></script>
+<script src="js/drill-baserunning.js?v=44"></script>
+<script src="js/drill-ath.js?v=44"></script>
+<script src="js/drill-pitching.js?v=44"></script>
+<script src="js/depth-chart.js?v=44"></script>
+<script src="js/lineup-builder.js?v=44"></script>
+<script src="js/stats-import.js?v=44"></script>
+<script src="js/social-submit.js?v=44"></script>
+<script src="js/gamechanger.js?v=44"></script>
+<script src="js/rules.js?v=44"></script>
+<script src="js/standings.js?v=44"></script>
+<script src="js/calendar-family.js?v=44"></script>
+<script src="js/archive.js?v=44"></script>
+<script src="js/team-page.js?v=44"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -153,6 +153,57 @@
     const open = tabBarEl.classList.toggle('open');
     tabBarToggle.classList.toggle('open', open);
   });
+
+  // Desktop: click-and-drag to scroll the tab strip horizontally when it's
+  // wider than the screen, same as a touch swipe already does on a real
+  // touchscreen (that keeps working natively -- this only adds the mouse/
+  // trackpad-click equivalent, which browsers don't give you for free on a
+  // horizontally-overflowing row).
+  (function enableDragScroll(el) {
+    // Tracked at the window level, not via setPointerCapture -- capturing
+    // the pointer to `el` retargets the click event it generates to `el`
+    // itself, so a tab button's own click listener never sees it even on
+    // an ordinary, un-dragged click. Plain window-level move/up avoids
+    // that entirely and still works fine if the cursor leaves the bar
+    // mid-drag.
+    let down = false, dragged = false, startX = 0, startScroll = 0;
+    el.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'touch') return; // native touch scroll already handles this
+      down = true; dragged = false;
+      startX = e.clientX; startScroll = el.scrollLeft;
+      // NOT adding the 'dragging' class here, on pointerdown -- .dragging
+      // .tabBtn gets pointer-events:none below, and setting that before a
+      // plain click's matching pointerup/click even happens makes the
+      // browser's own hit-test for those events skip straight through the
+      // button to the bar underneath, so the click never reaches it. Only
+      // flip it once a real drag is confirmed (in pointermove, past the
+      // threshold), never for an ordinary stationary click.
+    });
+    window.addEventListener('pointermove', e => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      // Below the threshold, don't touch scrollLeft at all -- even a
+      // sub-pixel wobble during an otherwise-stationary click would
+      // nudge the strip and shift whichever button was under the
+      // pointer out from under it before pointerup/click fire, so the
+      // click lands on the bar's background instead of the button.
+      if (!dragged && Math.abs(dx) <= 4) return;
+      dragged = true;
+      el.classList.add('dragging');
+      el.scrollLeft = startScroll - dx;
+    });
+    function endDrag() { down = false; el.classList.remove('dragging'); }
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+    // A drag that actually moved the strip shouldn't also fire whichever
+    // tab button happened to be under the cursor when it let go. Always
+    // clears `dragged`, not just when it was true, so one missed click
+    // can never leave every click after it suppressed.
+    el.addEventListener('click', e => {
+      if (dragged) { e.stopPropagation(); e.preventDefault(); }
+      dragged = false;
+    }, true);
+  })(tabBarEl);
   let lastNavTab = 'schedule'; // the real nav tab to return to from a Team Page -- 'team' itself is never this
   function switchTab(name) {
     document.querySelectorAll('.tabBtn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
@@ -352,6 +403,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=37"></script>
+<script src="js/auth.js?v=44"></script>
 </body>
 </html>
