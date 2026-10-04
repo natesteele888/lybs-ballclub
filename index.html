@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=50">
+<link rel="stylesheet" href="css/styles.css?v=52">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -69,6 +69,8 @@
   <div class="tabPanel" id="tab-rules"></div>
   <div class="tabPanel" id="tab-league"></div>
   <div class="tabPanel" id="tab-coaching"></div>
+  <div class="tabPanel" id="tab-depth"></div>
+  <div class="tabPanel" id="tab-lineups"></div>
   <div class="tabPanel" id="tab-calendar"></div>
   <div class="tabPanel" id="tab-archive"></div>
   <!-- Not a nav tab -- reached only by tapping a team's logo/name on a game
@@ -82,7 +84,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004yl';</script>
+<script>window.BUILD_V = '20261004yn';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -92,35 +94,35 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=50"></script>
-<script src="js/team-registry.js?v=50"></script>
-<script src="js/cloud-auth.js?v=50"></script>
-<script src="js/team-config.js?v=50"></script>
-<script src="js/identity.js?v=50"></script>
-<script src="js/weather.js?v=50"></script>
-<script src="js/club-logos.js?v=50"></script>
-<script src="js/league-teams.js?v=50"></script>
-<script src="js/game-card.js?v=50"></script>
-<script src="js/pitch-smart.js?v=50"></script>
-<script src="js/tonight.js?v=50"></script>
-<script src="js/league-info.js?v=50"></script>
-<script src="js/calendar-export.js?v=50"></script>
-<script src="js/schedule.js?v=50"></script>
-<script src="js/practices.js?v=50"></script>
-<script src="js/roster.js?v=50"></script>
-<script src="js/drill-baserunning.js?v=50"></script>
-<script src="js/drill-ath.js?v=50"></script>
-<script src="js/drill-pitching.js?v=50"></script>
-<script src="js/depth-chart.js?v=50"></script>
-<script src="js/lineup-builder.js?v=50"></script>
-<script src="js/stats-import.js?v=50"></script>
-<script src="js/social-submit.js?v=50"></script>
-<script src="js/gamechanger.js?v=50"></script>
-<script src="js/rules.js?v=50"></script>
-<script src="js/standings.js?v=50"></script>
-<script src="js/calendar-family.js?v=50"></script>
-<script src="js/archive.js?v=50"></script>
-<script src="js/team-page.js?v=50"></script>
+<script src="js/backend.js?v=52"></script>
+<script src="js/team-registry.js?v=52"></script>
+<script src="js/cloud-auth.js?v=52"></script>
+<script src="js/team-config.js?v=52"></script>
+<script src="js/identity.js?v=52"></script>
+<script src="js/weather.js?v=52"></script>
+<script src="js/club-logos.js?v=52"></script>
+<script src="js/league-teams.js?v=52"></script>
+<script src="js/game-card.js?v=52"></script>
+<script src="js/pitch-smart.js?v=52"></script>
+<script src="js/tonight.js?v=52"></script>
+<script src="js/league-info.js?v=52"></script>
+<script src="js/calendar-export.js?v=52"></script>
+<script src="js/schedule.js?v=52"></script>
+<script src="js/practices.js?v=52"></script>
+<script src="js/roster.js?v=52"></script>
+<script src="js/drill-baserunning.js?v=52"></script>
+<script src="js/drill-ath.js?v=52"></script>
+<script src="js/drill-pitching.js?v=52"></script>
+<script src="js/depth-chart.js?v=52"></script>
+<script src="js/lineup-builder.js?v=52"></script>
+<script src="js/stats-import.js?v=52"></script>
+<script src="js/social-submit.js?v=52"></script>
+<script src="js/gamechanger.js?v=52"></script>
+<script src="js/rules.js?v=52"></script>
+<script src="js/standings.js?v=52"></script>
+<script src="js/calendar-family.js?v=52"></script>
+<script src="js/archive.js?v=52"></script>
+<script src="js/team-page.js?v=52"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -130,22 +132,23 @@
   // ---- Tab switching (mega-menu: a category bar + a sub-tab row scoped to
   // whichever category is active) ----
   const NAV_CATEGORIES = [
-    { id: 'roster', label: 'Roster', tabs: ['roster'] },
-    { id: 'gameday', label: 'Game Day', tabs: ['schedule', 'gamechanger', 'pitching'] },
-    { id: 'practice', label: 'Practice', tabs: ['practices', 'coaching'] },
+    { id: 'schedule', label: 'Schedule', tabs: ['schedule', 'practices', 'gamechanger'] },
+    { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups'] },
     { id: 'standings', label: 'Standings', tabs: ['standings', 'archive'] },
     { id: 'league', label: 'League', tabs: ['league'] },
+    { id: 'coaching', label: 'Coaching', tabs: ['coaching'] },
     { id: 'resources', label: 'Resources', tabs: ['rules', 'calendar'] },
   ];
   const TAB_LABELS = {
     schedule: 'Schedule', practices: 'Practices', calendar: 'My Calendar', gamechanger: 'GameChanger',
-    roster: 'Roster', standings: 'Standings', archive: 'History',
+    roster: 'Roster', standings: 'Standings', archive: 'History', depth: 'Depth Chart', lineups: 'Lineups',
     league: 'League', rules: 'Rules', pitching: 'Pitching', coaching: 'Coaching',
   };
-  // Coaching stays coach-only -- same gate as before, just per-tab now
-  // instead of per-category, since it now shares the Practice category
-  // with Practices (visible to everyone).
-  const COACH_ONLY_TABS = new Set(['coaching']);
+  // Depth Chart and Lineups are roster-*editing* tools (no read-only mode
+  // of their own), same access level they had nested inside the coach-only
+  // Coaching tab before -- gating them individually here keeps that intact
+  // now that they're top-level tabs a non-coach would otherwise also see.
+  const COACH_ONLY_TABS = new Set(['coaching', 'depth', 'lineups']);
   const navCatBar = document.getElementById('navCatBar');
   const tabBarEl = document.getElementById('tabBar');
 
@@ -202,7 +205,7 @@
   enableDragScroll(navCatBar);
   enableDragScroll(tabBarEl);
 
-  let activeCategory = 'gameday';
+  let activeCategory = 'schedule';
   let lastNavTab = 'schedule'; // the real nav tab to return to from a Team Page -- 'team' itself is never this
 
   function categoryFor(tabName) {
@@ -212,9 +215,16 @@
   function visibleTabsFor(cat) {
     return cat.tabs.filter(t => !COACH_ONLY_TABS.has(t) || canEdit());
   }
+  // A category with zero visible tabs for this role (Coaching, for a
+  // non-coach) shouldn't show a pill at all -- not just skip its sub-row.
+  function visibleCategories() {
+    return NAV_CATEGORIES.filter(c => visibleTabsFor(c).length > 0);
+  }
   function renderNav(activeTabName) {
     activeCategory = categoryFor(activeTabName);
-    navCatBar.innerHTML = NAV_CATEGORIES.map(c =>
+    const visibleCats = visibleCategories();
+    if (!visibleCats.some(c => c.id === activeCategory)) activeCategory = visibleCats[0].id;
+    navCatBar.innerHTML = visibleCats.map(c =>
       `<button class="navCatBtn ${c.id === activeCategory ? 'active' : ''}" data-cat="${c.id}">${c.label}</button>`
     ).join('');
     navCatBar.querySelectorAll('[data-cat]').forEach(btn => {
@@ -223,7 +233,7 @@
         switchTab(visibleTabsFor(cat)[0]);
       });
     });
-    const activeCat = NAV_CATEGORIES.find(c => c.id === activeCategory) || NAV_CATEGORIES[0];
+    const activeCat = visibleCats.find(c => c.id === activeCategory) || visibleCats[0];
     const visTabs = visibleTabsFor(activeCat);
     // A single-tab category (Roster, League) has nothing to pick between --
     // the sub-row would just repeat the category pill right above it, so
@@ -377,13 +387,15 @@
     el.querySelector('#pcThisWeek').addEventListener('click', () => { pitchingWeekStart = null; renderPitchingTab(); });
   }
 
-  // ---- Coaching tab (drills + roster-planning tools, coach-only) ----
+  // ---- Coaching tab (practice drills + roster-planning extras, coach-only)
+  // Depth Chart and Lineups used to live in here too -- promoted to real
+  // top-level tabs under the Roster category instead (see NAV_CATEGORIES),
+  // since they're roster-planning tools a coach reaches for alongside the
+  // roster itself, not practice drills.
   const COACHING_TOOLS = [
     { id: 'baserunning', label: 'Base Running', module: () => window.DrillBaseRunning },
     { id: 'ath', label: 'Around the Horn', module: () => window.DrillATH },
     { id: 'pitching', label: 'Pitch Chart', module: () => window.DrillPitching },
-    { id: 'depth', label: 'Depth Chart', module: () => window.DepthChart },
-    { id: 'lineup', label: 'Lineups', module: () => window.LineupBuilder },
     { id: 'stats', label: 'Stats Insights', module: () => window.StatsImport },
     { id: 'social', label: 'Share to Social', module: () => window.SocialSubmit },
   ];
@@ -401,7 +413,15 @@
     const slot = el.querySelector('#coachToolSlot');
     Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID)]).then(() => {
       const tool = COACHING_TOOLS.find(t => t.id === coachingTool);
-      tool.module().render(slot, TEAM_ID, { switchTool: id => { coachingTool = id; renderCoachingTab(); } });
+      // Stats Insights' "Save as new lineup" asks for 'lineups' -- that's a
+      // top-level tab now, not one of this picker's own tools, so fall
+      // through to the outer switchTab() for anything not found in here.
+      tool.module().render(slot, TEAM_ID, {
+        switchTool: id => {
+          if (COACHING_TOOLS.some(t => t.id === id)) { coachingTool = id; renderCoachingTab(); }
+          else switchTab(id);
+        },
+      });
     });
   }
 
@@ -415,6 +435,8 @@
     else if (name === 'rules') window.Rules.ensureLoaded().then(() => window.Rules.render(document.getElementById('tab-rules')));
     else if (name === 'league') window.LeagueInfo.ensureLoaded().then(() => window.LeagueInfo.render(document.getElementById('tab-league')));
     else if (name === 'coaching') renderCoachingTab();
+    else if (name === 'depth') Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID)]).then(() => window.DepthChart.render(document.getElementById('tab-depth'), TEAM_ID));
+    else if (name === 'lineups') Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID)]).then(() => window.LineupBuilder.render(document.getElementById('tab-lineups'), TEAM_ID));
     else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
     else if (name === 'archive') window.Archive.ensureLoaded().then(() => window.Archive.render(document.getElementById('tab-archive')));
   }
@@ -437,6 +459,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=50"></script>
+<script src="js/auth.js?v=52"></script>
 </body>
 </html>

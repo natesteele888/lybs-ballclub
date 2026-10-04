@@ -208,6 +208,16 @@ a { color: var(--lybs-blue-bright); }
 .tabBtn:hover { color: var(--text2); }
 .tabBtn.active { color: #fff; border-bottom-color: var(--lybs-blue-bright); text-shadow: 0 0 18px rgba(76,106,235,0.6); }
 
+/* League Info's 5 sections (Fields, Dates, Officials, Ages, Resources) --
+   same pill-row look as the real sub-tab bar above (reuses .tabBtn), just
+   not sticky/fixed-position like that one is, since this lives inside a
+   single tabPanel's own scrolling content instead of the page chrome. */
+.leagueSectionTabs {
+  display: flex; overflow-x: auto; gap: 0; scrollbar-width: none;
+  border-bottom: 1px solid var(--card-border); margin: 10px 0 16px;
+}
+.leagueSectionTabs::-webkit-scrollbar { display: none; }
+
 .tabPanel { display: none; padding: 20px 16px 60px; max-width: 760px; margin: 0 auto; width: 100%; position: relative; z-index: 1; }
 .tabPanel.active { display: block; animation: panelIn .25s ease both; }
 @keyframes panelIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
