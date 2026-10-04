@@ -218,6 +218,23 @@ a { color: var(--lybs-blue-bright); }
 }
 .leagueSectionTabs::-webkit-scrollbar { display: none; }
 
+/* Age eligibility chart (League tab -> League Ages) -- an SVG timeline
+   generated from data/league-info.json's leagueAges ranges, wide enough
+   that it needs horizontal scroll on a phone (native touch scroll, same
+   as any overflow-x:auto -- no click-drag needed here since this is
+   reference content, not primary nav). */
+.ageChartLegend { display: flex; gap: 16px; flex-wrap: wrap; margin: 10px 0 2px; }
+.ageChartLegendItem { display: flex; align-items: center; gap: 6px; font-family: var(--font-label); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text2); }
+.ageChartSwatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.ageChartWrap { overflow-x: auto; margin: 8px -2px 0; padding-bottom: 4px; scrollbar-width: thin; }
+.ageChartSvg { display: block; }
+.ageChartTrackLabel { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--text2); }
+.ageChartBarLabel { font-family: var(--font-label); font-size: 12.5px; font-weight: 600; }
+.ageChartBarRange { font-family: var(--font-body); font-size: 10.5px; fill: var(--text2); }
+.ageChartGrid { stroke: rgba(180,187,191,0.12); stroke-width: 1; }
+.ageChartAxisLine { stroke: rgba(180,187,191,0.25); stroke-width: 1.5; }
+.ageChartTick { font-family: var(--font-body); font-size: 10px; fill: var(--text3); text-anchor: middle; }
+
 .tabPanel { display: none; padding: 20px 16px 60px; max-width: 760px; margin: 0 auto; width: 100%; position: relative; z-index: 1; }
 .tabPanel.active { display: block; animation: panelIn .25s ease both; }
 @keyframes panelIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
