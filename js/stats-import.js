@@ -319,7 +319,7 @@
           saveLineupBtn.addEventListener('click', async () => {
             const matched = order.filter(r => r.playerId);
             await window.LineupBuilder.createFromOrder(teamId, matched);
-            if (opts.switchTool) opts.switchTool('lineup');
+            if (opts.switchTool) opts.switchTool('lineups');
           });
         }
       }

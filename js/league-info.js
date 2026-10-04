@@ -150,20 +150,17 @@
       ];
 
       function renderAll() {
+        const current = sections.find(s => s.id === expanded) || sections[0];
         containerEl.innerHTML = `
           <div class="helpText">Mirrored from macleague.org -- field addresses, league dates, officials, and age cutoffs in one place.</div>
-          ${sections.map(s => `
-            <div class="detailCard" style="margin-bottom:12px;">
-              <div class="leagueInfoHeader" data-id="${s.id}" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                <h3 style="margin:0;">${escapeHtml(s.title)}</h3>
-                <span style="color:var(--text2);font-size:20px;line-height:1;">${expanded === s.id ? '&minus;' : '+'}</span>
-              </div>
-              ${expanded === s.id ? `<div style="margin-top:14px;">${s.run()}</div>` : ''}
-            </div>`).join('')}
-          <div class="helpText" style="margin-top:4px;">${escapeHtml(cache.source)}</div>`;
-        containerEl.querySelectorAll('.leagueInfoHeader').forEach(el => {
+          <div class="leagueSectionTabs">
+            ${sections.map(s => `<button class="tabBtn ${s.id === current.id ? 'active' : ''}" data-id="${s.id}">${escapeHtml(s.title)}</button>`).join('')}
+          </div>
+          <div class="detailCard">${current.run()}</div>
+          <div class="helpText" style="margin-top:12px;">${escapeHtml(cache.source)}</div>`;
+        containerEl.querySelectorAll('.leagueSectionTabs [data-id]').forEach(el => {
           el.addEventListener('click', () => {
-            expanded = expanded === el.dataset.id ? null : el.dataset.id;
+            expanded = el.dataset.id;
             renderAll();
           });
         });
