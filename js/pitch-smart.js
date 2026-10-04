@@ -123,10 +123,46 @@
       </div>`;
   }
 
+  // The actual daily-max + rest-day table, on full display -- the weekly
+  // calendar below shows what it means for a given pitcher, but a coach
+  // needs the raw numbers in front of them too, not just a computed
+  // eligible/resting badge.
+  function rulesCardHtml(division) {
+    const rules = rulesCache && rulesCache[division];
+    if (!rules) return '';
+    const tierRow = (t) => {
+      const range = t.max >= 999 ? `${t.min}+` : `${t.min}-${t.max}`;
+      const rest = t.restDays === 0 ? 'No rest' : `${t.restDays} day${t.restDays > 1 ? 's' : ''} rest`;
+      return `
+        <div class="pcRuleRow">
+          <span class="pcRuleRange">${escapeHtml(range)}</span>
+          <span class="pcRuleRest">${escapeHtml(rest)}</span>
+        </div>`;
+    };
+    return `
+      <div class="detailCard" style="margin-bottom:16px;">
+        <div class="sectionHeader" style="margin-bottom:12px;">
+          <h3 style="margin:0;">${escapeHtml(division)} Pitch Count Rules</h3>
+          <div class="pcStatTile" style="flex:0 0 auto;min-width:76px;padding:8px 14px;">
+            <div class="pcStatValue">${escapeHtml(String(rules.dailyMax))}</div>
+            <div class="pcStatLabel">Daily Max</div>
+          </div>
+        </div>
+        <div class="pcRulesList">${rules.tiers.map(tierRow).join('')}</div>
+      </div>`;
+  }
+
   window.PitchSmart = {
     ensureLoaded,
     computeStatus,
     appearancesByPitcher,
+
+    // Renders the full daily-max/rest-day table for a division -- call once
+    // ensureLoaded() has resolved. No-op (empty) if the division isn't in
+    // data/pitch-smart-rules.json.
+    renderRulesCard(containerEl, division) {
+      containerEl.innerHTML = rulesCardHtml(division);
+    },
 
     // Renders our own roster's current eligibility, computed from this
     // team's own logged pitchCounts across teams/{teamId}/schedule.
