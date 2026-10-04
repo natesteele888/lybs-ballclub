@@ -85,14 +85,18 @@
       }
 
       function renderOfficials() {
-        const rows = cache.governance.officials.map(o => `
+        const rows = cache.governance.officials.map(o => {
+          const badge = window.ClubLogos.badgeHtml(o.town, 36);
+          return `
           <div class="listRow" style="cursor:default;">
+            ${badge || '<div class="fieldBadgeFallback" style="width:36px;height:36px;font-size:16px;">' + escapeHtml((o.town || '?').trim().charAt(0).toUpperCase()) + '</div>'}
             <div class="listRowMain">
               <div class="listRowTitle">${escapeHtml(o.name)}</div>
               <div class="listRowSub">${escapeHtml(o.town)}</div>
             </div>
             <span class="badge" style="background:rgba(76,106,235,0.15);color:#AFC0FF;border:1px solid rgba(76,106,235,0.3);">${escapeHtml(o.role)}</span>
-          </div>`).join('');
+          </div>`;
+        }).join('');
         return `
           <div class="helpText">League-wide questions: <a href="mailto:${escapeHtml(cache.governance.administratorEmail)}">${escapeHtml(cache.governance.administratorEmail)}</a>. ${escapeHtml(cache.governance.note)}</div>
           <div class="listBody" style="margin-top:10px;">${rows}</div>`;
