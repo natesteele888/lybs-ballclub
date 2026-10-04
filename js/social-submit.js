@@ -8,11 +8,13 @@
       this team's own real Schedule data, not free-typed -- the
       "tied in with the schedule" half of this feature. Team name
       and division come from TeamConfig, not typed either.
-   2. This tool only renders inside the already-authenticated
-      Coaching tab, so there's no need for the source form's
-      "goes into the same pending queue as a stranger's submission,
-      a coach clears it like anything else" caution -- a submission
-      from here already came from a signed-in coach.
+   2. This tool only renders inside the coach-only header CTA's modal
+      (topBarShareBtn in index.html, toggled by onIdentityReady --
+      not a nav tab, since filing a post is a one-off action, not
+      somewhere to browse to), so there's no need for the source
+      form's "goes into the same pending queue as a stranger's
+      submission, a coach clears it like anything else" caution --
+      a submission from here already came from a signed-in coach.
 
    Submits to the SAME Apps Script endpoint and FORM_TOKEN as that
    form (see apps-script/Code.gs in lybs-reporting), so once that
