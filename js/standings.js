@@ -27,6 +27,13 @@
     d.textContent = s || '';
     return d.innerHTML;
   }
+  // macleague.org's own team names repeat the division's age bracket on
+  // every single row ("12u Groton Dunstable", "12u Bolton Green", ...) --
+  // redundant once that bracket is named once at the top of the page, and
+  // it's the main reason team names were crowding out the other columns.
+  function stripAgePrefix(name) {
+    return (name || '').replace(/^\d{1,2}u\s+/i, '');
+  }
   function timeAgo(iso) {
     if (!iso) return 'never';
     const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -55,9 +62,11 @@
       }
       await window.ClubLogos.ensureLoaded();
       const hasExtendedCols = (division.rows || []).some(r => r.gp != null);
+      const ageMatch = ((division.rows || [])[0] || {}).team && (division.rows[0].team.match(/^(\d{1,2}u)\b/i));
+      const ageLabel = ageMatch ? ageMatch[1].toUpperCase() : '';
       const rows = (division.rows || []).map(r => `
         <tr class="${r.isUs ? 'standingsUsRow' : ''}">
-          <td><div class="standingsTeamCell">${window.ClubLogos.badgeHtml(r.team, 22)}${escapeHtml(r.team)}</div></td>
+          <td><div class="standingsTeamCell">${window.ClubLogos.badgeHtml(r.team, 26)}${escapeHtml(stripAgePrefix(r.team))}</div></td>
           ${hasExtendedCols ? `
             <td class="numCell">${escapeHtml(r.gp ?? '')}</td>
             <td class="numCell">${escapeHtml(r.w ?? '')}</td>
@@ -77,6 +86,7 @@
         : '';
       const games = (division.todayGames || []).map(g => window.TonightGames.gameRowHtml(g)).join('') || '<div class="emptyState">No games today.</div>';
       containerEl.innerHTML = `
+        <div class="sectionLabel" style="margin-bottom:6px;">${escapeHtml(ageLabel ? ageLabel + ' ' : '')}${escapeHtml(division.name || '')} Standings</div>
         <div class="helpText">Mirrored from <a href="https://www.macleague.org/division/${escapeHtml(divisionId)}" target="_blank" rel="noopener">macleague.org</a> — standings as of ${timeAgo(division.fetchedAt)}.</div>
         <div class="standingsTableWrap">
           <table class="standingsTable">
