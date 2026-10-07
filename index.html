@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=60">
+<link rel="stylesheet" href="css/styles.css?v=61">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -104,7 +104,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004yv';</script>
+<script>window.BUILD_V = '20261004yw';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -114,36 +114,37 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=60"></script>
-<script src="js/team-registry.js?v=60"></script>
-<script src="js/cloud-auth.js?v=60"></script>
-<script src="js/team-config.js?v=60"></script>
-<script src="js/identity.js?v=60"></script>
-<script src="js/weather.js?v=60"></script>
-<script src="js/club-logos.js?v=60"></script>
-<script src="js/league-teams.js?v=60"></script>
-<script src="js/game-card.js?v=60"></script>
-<script src="js/pitch-smart.js?v=60"></script>
-<script src="js/tonight.js?v=60"></script>
-<script src="js/homepage.js?v=60"></script>
-<script src="js/league-info.js?v=60"></script>
-<script src="js/calendar-export.js?v=60"></script>
-<script src="js/schedule.js?v=60"></script>
-<script src="js/practices.js?v=60"></script>
-<script src="js/roster.js?v=60"></script>
-<script src="js/drill-baserunning.js?v=60"></script>
-<script src="js/drill-ath.js?v=60"></script>
-<script src="js/drill-pitching.js?v=60"></script>
-<script src="js/depth-chart.js?v=60"></script>
-<script src="js/lineup-builder.js?v=60"></script>
-<script src="js/stats-import.js?v=60"></script>
-<script src="js/social-submit.js?v=60"></script>
-<script src="js/gamechanger.js?v=60"></script>
-<script src="js/rules.js?v=60"></script>
-<script src="js/standings.js?v=60"></script>
-<script src="js/calendar-family.js?v=60"></script>
-<script src="js/archive.js?v=60"></script>
-<script src="js/team-page.js?v=60"></script>
+<script src="js/backend.js?v=61"></script>
+<script src="js/team-registry.js?v=61"></script>
+<script src="js/cloud-auth.js?v=61"></script>
+<script src="js/team-config.js?v=61"></script>
+<script src="js/identity.js?v=61"></script>
+<script src="js/weather.js?v=61"></script>
+<script src="js/club-logos.js?v=61"></script>
+<script src="js/league-teams.js?v=61"></script>
+<script src="js/game-card.js?v=61"></script>
+<script src="js/pitch-smart.js?v=61"></script>
+<script src="js/tonight.js?v=61"></script>
+<script src="js/homepage.js?v=61"></script>
+<script src="js/league-info.js?v=61"></script>
+<script src="js/calendar-export.js?v=61"></script>
+<script src="js/schedule.js?v=61"></script>
+<script src="js/practices.js?v=61"></script>
+<script src="js/calendar-view.js?v=61"></script>
+<script src="js/roster.js?v=61"></script>
+<script src="js/drill-baserunning.js?v=61"></script>
+<script src="js/drill-ath.js?v=61"></script>
+<script src="js/drill-pitching.js?v=61"></script>
+<script src="js/depth-chart.js?v=61"></script>
+<script src="js/lineup-builder.js?v=61"></script>
+<script src="js/stats-import.js?v=61"></script>
+<script src="js/social-submit.js?v=61"></script>
+<script src="js/gamechanger.js?v=61"></script>
+<script src="js/rules.js?v=61"></script>
+<script src="js/standings.js?v=61"></script>
+<script src="js/calendar-family.js?v=61"></script>
+<script src="js/archive.js?v=61"></script>
+<script src="js/team-page.js?v=61"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -316,30 +317,71 @@
   });
 
   // ---- Schedule tab (list / detail / edit) ----
+  // scheduleView.mode: 'list' | 'detail' | 'edit'. 'detail'/'edit' also carry
+  // kind: 'game' | 'practice' -- the calendar view (month/week) can open
+  // either, not just games, so this tab's detail/edit branches have to be
+  // kind-aware instead of always assuming window.Schedule.
   let scheduleView = { mode: 'list' };
+  // Which of List/Month/Week the 'list' mode shows -- separate from
+  // scheduleView itself since it's only meaningful in that one mode, and
+  // resetting it every time a game/practice is opened and closed would be
+  // annoying (a coach checking a few games off the month grid shouldn't
+  // land back on the list each time).
+  let scheduleListMode = 'list';
+  function renderScheduleViewToggle(el) {
+    el.innerHTML = `
+      <div class="leagueSectionTabs">
+        <button class="tabBtn ${scheduleListMode === 'list' ? 'active' : ''}" data-m="list">List</button>
+        <button class="tabBtn ${scheduleListMode === 'month' ? 'active' : ''}" data-m="month">Month</button>
+        <button class="tabBtn ${scheduleListMode === 'week' ? 'active' : ''}" data-m="week">Week</button>
+      </div>`;
+    el.querySelectorAll('[data-m]').forEach(btn => {
+      btn.addEventListener('click', () => { scheduleListMode = btn.dataset.m; renderScheduleTab(); });
+    });
+  }
   async function renderScheduleTab() {
-    await window.Schedule.ensureLoaded(TEAM_ID);
+    await Promise.all([window.Schedule.ensureLoaded(TEAM_ID), window.Practices.ensureLoaded(TEAM_ID)]);
     const el = document.getElementById('tab-schedule');
     if (scheduleView.mode === 'list') {
-      el.innerHTML = '<div id="scheduleListSlot"></div>';
-      window.Schedule.renderList(TEAM_ID, el.querySelector('#scheduleListSlot'), {
-        canEdit: canEdit(),
-        onOpen: id => { scheduleView = { mode: 'detail', id }; renderScheduleTab(); },
-        onAdd: () => { scheduleView = { mode: 'edit', game: {} }; renderScheduleTab(); },
-      });
+      if (scheduleListMode === 'list') {
+        el.innerHTML = '<div id="scheduleViewToggle"></div><div id="scheduleListSlot"></div>';
+        window.Schedule.renderList(TEAM_ID, el.querySelector('#scheduleListSlot'), {
+          canEdit: canEdit(),
+          onOpen: id => { scheduleView = { mode: 'detail', kind: 'game', id }; renderScheduleTab(); },
+          onAdd: () => { scheduleView = { mode: 'edit', kind: 'game', item: {} }; renderScheduleTab(); },
+        });
+      } else {
+        el.innerHTML = '<div id="scheduleViewToggle"></div><div id="calSlot"></div>';
+        window.CalendarView.render(el.querySelector('#calSlot'), TEAM_ID, {
+          mode: scheduleListMode,
+          canEdit: canEdit(),
+          onOpenGame: id => { scheduleView = { mode: 'detail', kind: 'game', id }; renderScheduleTab(); },
+          onOpenPractice: id => { scheduleView = { mode: 'detail', kind: 'practice', id }; renderScheduleTab(); },
+          onAddGame: date => { scheduleView = { mode: 'edit', kind: 'game', item: { date } }; renderScheduleTab(); },
+          onAddPractice: date => { scheduleView = { mode: 'edit', kind: 'practice', item: { type: 'practice', date } }; renderScheduleTab(); },
+        });
+      }
+      renderScheduleViewToggle(el.querySelector('#scheduleViewToggle'));
     } else if (scheduleView.mode === 'detail') {
-      const game = window.Schedule.getGames(TEAM_ID).find(g => g.id === scheduleView.id);
-      window.Schedule.renderDetail(TEAM_ID, game, el, {
+      const Mod = scheduleView.kind === 'practice' ? window.Practices : window.Schedule;
+      const item = scheduleView.kind === 'practice'
+        ? window.Practices.getItems(TEAM_ID).find(p => p.id === scheduleView.id)
+        : window.Schedule.getGames(TEAM_ID).find(g => g.id === scheduleView.id);
+      Mod.renderDetail(TEAM_ID, item, el, {
         canEdit: canEdit(),
-        onEdit: () => { scheduleView = { mode: 'edit', game }; renderScheduleTab(); },
+        onEdit: () => { scheduleView = { mode: 'edit', kind: scheduleView.kind, item }; renderScheduleTab(); },
         onBack: () => { scheduleView = { mode: 'list' }; renderScheduleTab(); },
       });
     } else if (scheduleView.mode === 'edit') {
-      window.Schedule.renderDetail(TEAM_ID, scheduleView.game, el, {
+      const kind = scheduleView.kind;
+      const Mod = kind === 'practice' ? window.Practices : window.Schedule;
+      const saveFn = kind === 'practice' ? Mod.saveItem : Mod.saveGame;
+      const deleteFn = kind === 'practice' ? Mod.deleteItem : Mod.deleteGame;
+      Mod.renderDetail(TEAM_ID, scheduleView.item, el, {
         editing: true,
-        onSave: async updated => { await window.Schedule.saveGame(TEAM_ID, updated); scheduleView = { mode: 'detail', id: updated.id }; renderScheduleTab(); },
-        onCancel: () => { scheduleView = scheduleView.game.id ? { mode: 'detail', id: scheduleView.game.id } : { mode: 'list' }; renderScheduleTab(); },
-        onDelete: async id => { if (confirm('Delete this game?')) { await window.Schedule.deleteGame(TEAM_ID, id); scheduleView = { mode: 'list' }; renderScheduleTab(); } },
+        onSave: async updated => { await saveFn(TEAM_ID, updated); scheduleView = { mode: 'detail', kind, id: updated.id }; renderScheduleTab(); },
+        onCancel: () => { scheduleView = scheduleView.item.id ? { mode: 'detail', kind, id: scheduleView.item.id } : { mode: 'list' }; renderScheduleTab(); },
+        onDelete: async id => { if (confirm('Delete this?')) { await deleteFn(TEAM_ID, id); scheduleView = { mode: 'list' }; renderScheduleTab(); } },
       });
     }
   }
@@ -495,6 +537,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=60"></script>
+<script src="js/auth.js?v=61"></script>
 </body>
 </html>
