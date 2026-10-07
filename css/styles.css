@@ -877,3 +877,10 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   .calCellNum { font-size: 11px; }
   .calHeaderLabel { font-size: 12px; }
 }
+
+/* Standings -> Seeding (js/standings.js renderSeeding) */
+.seedNum {
+  flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: rgba(76,106,235,0.16); border: 1px solid rgba(76,106,235,0.35); color: #AFC0FF;
+  font-family: var(--font-label); font-size: 12px; font-weight: 700;
+}

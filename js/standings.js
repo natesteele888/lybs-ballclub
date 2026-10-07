@@ -103,5 +103,44 @@
         <div class="sectionLabel" style="margin-top:14px;">Today's games</div>
         ${games}`;
     },
+
+    // "Standings-implied seeding" -- the current standings order, numbered,
+    // nothing more. Deliberately NOT a bracket: MAC League doesn't publish
+    // how many teams qualify or how a bracket gets built for this division,
+    // so inventing matchups (1v8, 2v7, ...) would be presenting a guess as
+    // the league's actual playoff format. This is exactly the main
+    // standings table's row order, just re-framed around "where does my
+    // team stand for seeding" instead of the full W-L-T/RF/RA table.
+    async renderSeeding(containerEl, divisionId) {
+      containerEl.innerHTML = '<div class="emptyState">Loading…</div>';
+      const data = await window.TonightGames.ensureLoaded();
+      const division = data && data.divisions && data.divisions[divisionId];
+      if (!division) {
+        containerEl.innerHTML = `
+          <div class="emptyState">
+            No standings mirrored yet for this division.<br>
+            <span class="helpText">Run <code>node scripts/scrape-standings.mjs</code> (or let the scheduled GitHub Action do it once the season starts) to populate this.</span>
+          </div>`;
+        return;
+      }
+      await window.ClubLogos.ensureLoaded();
+      const rows = (division.rows || []).map((r, i) => {
+        const record = r.w != null ? `${r.w}-${r.l}${r.t && r.t !== '0' ? '-' + r.t : ''}` : null;
+        return `
+          <div class="listRow ${r.isUs ? 'standingsUsRow' : ''}" style="cursor:${r.isUs ? 'default' : 'pointer'};" ${r.isUs ? '' : `data-team-nav="${escapeHtml(stripAgePrefix(r.team))}"`}>
+            <div class="seedNum">${i + 1}</div>
+            ${window.ClubLogos.badgeHtml(r.team, 26)}
+            <div class="listRowMain">
+              <div class="listRowTitle">${escapeHtml(stripAgePrefix(r.team))}</div>
+              ${record ? `<div class="listRowSub">${escapeHtml(record)}</div>` : ''}
+            </div>
+            <span class="badge badgeTbd">${escapeHtml(r.pct ?? '')}</span>
+          </div>`;
+      }).join('') || '<div class="emptyState">No teams mirrored for this division yet.</div>';
+      containerEl.innerHTML = `
+        <div class="sectionLabel" style="margin-bottom:6px;">${escapeHtml(division.name || '')} Seeding</div>
+        <div class="helpText">Numbered by today's standings order, best record first. MAC League hasn't published a playoff qualification count or bracket format for this division, so this is where each team stands right now -- not an official bracket.</div>
+        <div class="listBody" style="margin-top:10px;">${rows}</div>`;
+    },
   };
 })();

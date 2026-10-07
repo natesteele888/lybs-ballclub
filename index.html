@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=61">
+<link rel="stylesheet" href="css/styles.css?v=62">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -72,6 +72,7 @@
   <div class="tabPanel" id="tab-roster"></div>
   <div class="tabPanel" id="tab-gamechanger"></div>
   <div class="tabPanel" id="tab-standings"></div>
+  <div class="tabPanel" id="tab-seeding"></div>
   <div class="tabPanel" id="tab-pitching"></div>
   <div class="tabPanel" id="tab-rules"></div>
   <div class="tabPanel" id="tab-league"></div>
@@ -104,7 +105,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004yw';</script>
+<script>window.BUILD_V = '20261004yx';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -114,37 +115,37 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/backend.js?v=61"></script>
-<script src="js/team-registry.js?v=61"></script>
-<script src="js/cloud-auth.js?v=61"></script>
-<script src="js/team-config.js?v=61"></script>
-<script src="js/identity.js?v=61"></script>
-<script src="js/weather.js?v=61"></script>
-<script src="js/club-logos.js?v=61"></script>
-<script src="js/league-teams.js?v=61"></script>
-<script src="js/game-card.js?v=61"></script>
-<script src="js/pitch-smart.js?v=61"></script>
-<script src="js/tonight.js?v=61"></script>
-<script src="js/homepage.js?v=61"></script>
-<script src="js/league-info.js?v=61"></script>
-<script src="js/calendar-export.js?v=61"></script>
-<script src="js/schedule.js?v=61"></script>
-<script src="js/practices.js?v=61"></script>
-<script src="js/calendar-view.js?v=61"></script>
-<script src="js/roster.js?v=61"></script>
-<script src="js/drill-baserunning.js?v=61"></script>
-<script src="js/drill-ath.js?v=61"></script>
-<script src="js/drill-pitching.js?v=61"></script>
-<script src="js/depth-chart.js?v=61"></script>
-<script src="js/lineup-builder.js?v=61"></script>
-<script src="js/stats-import.js?v=61"></script>
-<script src="js/social-submit.js?v=61"></script>
-<script src="js/gamechanger.js?v=61"></script>
-<script src="js/rules.js?v=61"></script>
-<script src="js/standings.js?v=61"></script>
-<script src="js/calendar-family.js?v=61"></script>
-<script src="js/archive.js?v=61"></script>
-<script src="js/team-page.js?v=61"></script>
+<script src="js/backend.js?v=62"></script>
+<script src="js/team-registry.js?v=62"></script>
+<script src="js/cloud-auth.js?v=62"></script>
+<script src="js/team-config.js?v=62"></script>
+<script src="js/identity.js?v=62"></script>
+<script src="js/weather.js?v=62"></script>
+<script src="js/club-logos.js?v=62"></script>
+<script src="js/league-teams.js?v=62"></script>
+<script src="js/game-card.js?v=62"></script>
+<script src="js/pitch-smart.js?v=62"></script>
+<script src="js/tonight.js?v=62"></script>
+<script src="js/homepage.js?v=62"></script>
+<script src="js/league-info.js?v=62"></script>
+<script src="js/calendar-export.js?v=62"></script>
+<script src="js/schedule.js?v=62"></script>
+<script src="js/practices.js?v=62"></script>
+<script src="js/calendar-view.js?v=62"></script>
+<script src="js/roster.js?v=62"></script>
+<script src="js/drill-baserunning.js?v=62"></script>
+<script src="js/drill-ath.js?v=62"></script>
+<script src="js/drill-pitching.js?v=62"></script>
+<script src="js/depth-chart.js?v=62"></script>
+<script src="js/lineup-builder.js?v=62"></script>
+<script src="js/stats-import.js?v=62"></script>
+<script src="js/social-submit.js?v=62"></script>
+<script src="js/gamechanger.js?v=62"></script>
+<script src="js/rules.js?v=62"></script>
+<script src="js/standings.js?v=62"></script>
+<script src="js/calendar-family.js?v=62"></script>
+<script src="js/archive.js?v=62"></script>
+<script src="js/team-page.js?v=62"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -157,7 +158,7 @@
     { id: 'home', label: 'Home', tabs: ['home'] },
     { id: 'schedule', label: 'Schedule', tabs: ['schedule', 'practices', 'gamechanger'] },
     { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups'] },
-    { id: 'standings', label: 'Standings', tabs: ['standings', 'archive'] },
+    { id: 'standings', label: 'Standings', tabs: ['standings', 'seeding', 'archive'] },
     { id: 'league', label: 'League', tabs: ['league'] },
     { id: 'coaching', label: 'Coaching', tabs: ['coaching'] },
     { id: 'resources', label: 'Resources', tabs: ['rules', 'calendar'] },
@@ -165,7 +166,7 @@
   const TAB_LABELS = {
     home: 'Home',
     schedule: 'Schedule', practices: 'Practices', calendar: 'My Calendar', gamechanger: 'GameChanger',
-    roster: 'Roster', standings: 'Standings', archive: 'History', depth: 'Depth Chart', lineups: 'Lineups',
+    roster: 'Roster', standings: 'Standings', seeding: 'Seeding', archive: 'History', depth: 'Depth Chart', lineups: 'Lineups',
     league: 'League', rules: 'Rules', pitching: 'Pitching', coaching: 'Coaching',
   };
   // Depth Chart and Lineups are roster-*editing* tools (no read-only mode
@@ -508,6 +509,7 @@
     else if (name === 'roster') renderRosterTab();
     else if (name === 'gamechanger') window.GameChanger.render(TEAM_ID, document.getElementById('tab-gamechanger'), { canEdit: canEdit(), addedBy: SESSION.name });
     else if (name === 'standings') window.Standings.render(document.getElementById('tab-standings'), window.TeamConfig.current().macLeagueDivisionId);
+    else if (name === 'seeding') window.Standings.renderSeeding(document.getElementById('tab-seeding'), window.TeamConfig.current().macLeagueDivisionId);
     else if (name === 'pitching') renderPitchingTab();
     else if (name === 'rules') window.Rules.ensureLoaded().then(() => window.Rules.render(document.getElementById('tab-rules')));
     else if (name === 'league') window.LeagueInfo.ensureLoaded().then(() => window.LeagueInfo.render(document.getElementById('tab-league')));
@@ -537,6 +539,6 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=61"></script>
+<script src="js/auth.js?v=62"></script>
 </body>
 </html>
