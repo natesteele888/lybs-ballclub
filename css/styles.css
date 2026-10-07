@@ -878,6 +878,16 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   .calHeaderLabel { font-size: 12px; }
 }
 
+/* Global error toast -- see index.html's unhandledrejection listener */
+.errorToast {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  background: #2A1010; border: 1px solid rgba(214,69,69,0.5); color: #ffb3b3;
+  padding: 12px 18px; border-radius: 10px; font-size: 13px; z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4); max-width: 90vw; text-align: center;
+  animation: toastIn .2s ease;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
 /* Standings -> Seeding (js/standings.js renderSeeding) */
 .seedNum {
   flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
