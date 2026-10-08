@@ -201,7 +201,7 @@
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}
             ${game.notes ? `<div class="detailRow">${escapeHtml(game.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
-            ${!played ? rsvpHtml(game, opts.viewerName) : ''}
+            ${!played ? rsvpHtml(game, opts.viewerName, opts.canEdit) : ''}
             <div class="sectionLabel" style="margin-top:16px;">Pitching</div>
             <div id="pitchingSlot"></div>
             <div class="detailActions">
@@ -253,7 +253,7 @@
               ${game.id && opts.onDelete ? '<button class="btn btnDanger" id="deleteBtn">Delete</button>' : ''}
             </div>
           </div>`;
-        containerEl.querySelector('#saveBtn').addEventListener('click', () => {
+        containerEl.querySelector('#saveBtn').addEventListener('click', btnEvt => {
           const updated = Object.assign({}, game, {
             opponent: containerEl.querySelector('#fOpponent').value.trim(),
             homeAway: containerEl.querySelector('#fHomeAway').value,
@@ -267,7 +267,7 @@
           const opp = containerEl.querySelector('#fOppScore').value;
           updated.ourScore = our === '' ? null : Number(our);
           updated.oppScore = opp === '' ? null : Number(opp);
-          opts.onSave && opts.onSave(updated);
+          if (opts.onSave) withBusyButton(btnEvt.target, 'Saving...', () => opts.onSave(updated));
         });
         containerEl.querySelector('#cancelBtn').addEventListener('click', () => opts.onCancel && opts.onCancel());
         const deleteBtn = containerEl.querySelector('#deleteBtn');

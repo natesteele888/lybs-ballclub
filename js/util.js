@@ -52,6 +52,23 @@
   // homepage.js each build by hand, repeated 4 and 3 times respectively.
   // Callers still escape their own value/label before passing them in --
   // same as before, just no longer retyping the two wrapping divs each time.
+  // Disables btn and swaps its label for busyLabel while fn() is in flight,
+  // restoring both after -- so a tap on a slow/flaky sideline connection
+  // reads as "working" instead of looking like it didn't register (and a
+  // second tap can't fire the save/delete twice). Safe to call even when
+  // the caller's own completion handler replaces btn's whole container,
+  // since the restore in `finally` just runs against an already-discarded
+  // node at that point.
+  window.withBusyButton = function withBusyButton(btn, busyLabel, fn) {
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = busyLabel;
+    return Promise.resolve(fn()).finally(() => {
+      btn.disabled = false;
+      btn.textContent = original;
+    });
+  };
+
   window.statTileHtml = function statTileHtml(value, label) {
     return `<div class="pcStatTile"><div class="pcStatValue">${value}</div><div class="pcStatLabel">${label}</div></div>`;
   };
@@ -62,12 +79,14 @@
   // no separate collection to keep in sync. viewerName is this device's
   // identity.js name -- without one (shouldn't happen past the identity
   // screen, but defensive) rsvpHtml still shows the headcount, just no
-  // buttons of one's own to highlight.
-  window.rsvpHtml = function rsvpHtml(item, viewerName) {
+  // buttons of one's own to highlight. canEdit (coach) also gets the actual
+  // names, not just the count -- a parent only needs "how many", a coach
+  // planning who's at the plate needs "who".
+  window.rsvpHtml = function rsvpHtml(item, viewerName, canEdit) {
     const rsvps = item.rsvps || {};
-    const values = Object.values(rsvps);
-    const inCount = values.filter(v => v === 'in').length;
-    const outCount = values.filter(v => v === 'out').length;
+    const names = Object.keys(rsvps);
+    const inNames = names.filter(n => rsvps[n] === 'in');
+    const outNames = names.filter(n => rsvps[n] === 'out');
     const mine = viewerName ? rsvps[viewerName] : null;
     return `
       <div class="sectionLabel" style="margin-top:16px;">RSVP</div>
@@ -76,7 +95,12 @@
           <button class="btn btnSmall ${mine === 'in' ? '' : 'btnGhost'}" data-rsvp="in">I'm in</button>
           <button class="btn btnSmall ${mine === 'out' ? '' : 'btnGhost'}" data-rsvp="out">Can't make it</button>
         </div>` : ''}
-      <div class="helpText" style="margin-top:6px;">${inCount} in &middot; ${outCount} out</div>`;
+      ${canEdit ? `
+        <div class="helpText" style="margin-top:6px;">
+          <b>${inNames.length} in:</b> ${inNames.map(escapeHtml).join(', ') || '&mdash;'}<br>
+          <b>${outNames.length} out:</b> ${outNames.map(escapeHtml).join(', ') || '&mdash;'}
+        </div>` : `
+        <div class="helpText" style="margin-top:6px;">${inNames.length} in &middot; ${outNames.length} out</div>`}`;
   };
   // saveFn(item) persists it (window.Schedule.saveGame/Practices.saveItem,
   // already bound to teamId by the caller); onDone re-renders the detail
