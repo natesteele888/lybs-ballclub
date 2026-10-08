@@ -201,6 +201,7 @@
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}
             ${game.notes ? `<div class="detailRow">${escapeHtml(game.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
+            ${!played ? rsvpHtml(game, opts.viewerName) : ''}
             <div class="sectionLabel" style="margin-top:16px;">Pitching</div>
             <div id="pitchingSlot"></div>
             <div class="detailActions">
@@ -212,6 +213,7 @@
         const weatherSlot = containerEl.querySelector('#weatherSlot');
         if (weatherSlot && game.location && game.date) window.loadWeatherInto(weatherSlot, game.location, game.date, game.gameTime);
         renderPitchingSlot(teamId, game, containerEl.querySelector('#pitchingSlot'), opts);
+        if (!played) wireRsvp(containerEl, game, opts.viewerName, updated => window.Schedule.saveGame(teamId, updated), opts.onRsvpChange);
         const editBtn = containerEl.querySelector('#editBtn');
         if (editBtn) editBtn.addEventListener('click', () => opts.onEdit && opts.onEdit());
         containerEl.querySelector('#icsBtn').addEventListener('click', () => {
