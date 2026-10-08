@@ -46,6 +46,13 @@
       cache[teamId] = list.filter(a => a.id !== id);
       await window.dbPut(window.teamPath(teamId, 'announcements'), cache[teamId]);
     },
+    async editItem(teamId, id, text) {
+      const list = cache[teamId] || [];
+      const item = list.find(a => a.id === id);
+      if (!item) return;
+      item.text = text.trim();
+      await window.dbPut(window.teamPath(teamId, 'announcements'), list);
+    },
 
     // Mounted directly into a slot on Home -- not a nav tab, same
     // reasoning as topBarShareBtn's modal: there's nowhere else a coach
@@ -61,7 +68,11 @@
                 <div class="listRowTitle" style="font-weight:500;">${escapeHtml(a.text)}</div>
                 <div class="listRowSub">${escapeHtml(a.authorName || 'Coach')} &middot; ${escapeHtml(fmtWhen(a.createdAt))}</div>
               </div>
-              ${opts.canEdit ? `<button class="btn btnTiny" data-del="${escapeHtml(a.id)}" title="Remove">&times;</button>` : ''}
+              ${opts.canEdit ? `
+                <div style="display:flex;gap:6px;flex:0 0 auto;">
+                  <button class="btn btnTiny btnGhost" data-edit="${escapeHtml(a.id)}" title="Edit">&#9998;</button>
+                  <button class="btn btnTiny" data-del="${escapeHtml(a.id)}" title="Remove">&times;</button>
+                </div>` : ''}
             </div>`).join('')}</div>` : ''}
           ${opts.canEdit ? `
             <div class="calAddRow" style="margin-top:${items.length ? '10px' : '0'};">
@@ -70,7 +81,19 @@
             </div>` : ''}`;
         containerEl.querySelectorAll('[data-del]').forEach(btn => {
           btn.addEventListener('click', async () => {
+            if (!confirm('Remove this announcement?')) return;
             await window.Announcements.deleteItem(teamId, btn.dataset.del);
+            refresh();
+          });
+        });
+        containerEl.querySelectorAll('[data-edit]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = btn.dataset.edit;
+            const current = window.Announcements.getItems(teamId).find(a => a.id === id);
+            if (!current) return;
+            const text = prompt('Edit announcement:', current.text);
+            if (!text || !text.trim()) return;
+            await window.Announcements.editItem(teamId, id, text);
             refresh();
           });
         });
