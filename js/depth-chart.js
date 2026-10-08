@@ -32,12 +32,6 @@
     LF: { x: 14, y: 24 }, CF: { x: 50, y: 8 }, RF: { x: 86, y: 24 },
   };
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-
   let TEAM_ID = null;
   let chart = null; // cached {position: [{id,name}]}
 

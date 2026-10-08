@@ -19,15 +19,8 @@
    indirection month mode uses.
    ============================================================ */
 (function () {
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   function pad2(n) { return String(n).padStart(2, '0'); }
   function toIso(y, m, d) { return `${y}-${pad2(m + 1)}-${pad2(d)}`; }
-  function todayIso() { return new Date().toISOString().slice(0, 10); }
-  const TYPE_LABEL = { practice: 'Practice', cage: 'Batting Cage', film: 'Film / Walkthrough' };
 
   function itemsByDate(games, practices) {
     const map = {};

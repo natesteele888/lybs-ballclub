@@ -28,11 +28,6 @@
    the standings job already captures.
    ============================================================ */
 (function () {
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   function fmtDate(iso) {
     if (!iso) return '';
     return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -40,10 +35,6 @@
   // Same redundant "12u "/"10u "/"8u " prefix js/standings.js strips --
   // every team in a division carries it, and the division is already named
   // alongside this (leagueMatch.team is shown right next to the town).
-  function stripAgePrefix(name) {
-    return (name || '').replace(/^\d{1,2}u\s+/i, '');
-  }
-
   window.TeamPage = {
     async render(containerEl, teamId, opponentName, opts) {
       opts = opts || {};

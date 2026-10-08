@@ -17,11 +17,6 @@
 (function () {
   const GOLD = '#f5a623', GREEN = '#10b981', RED = '#ef4444';
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   function fmt(ms) {
     const s = ms / 1000;
     const m = Math.floor(s / 60);

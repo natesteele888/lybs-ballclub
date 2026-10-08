@@ -103,12 +103,6 @@
     return byPitcher;
   }
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-
   function statusHtml(name, status) {
     const cls = status.eligible ? 'badgeW' : 'badgeL';
     const label = status.eligible ? 'Eligible' : `Out until ${status.eligibleOn}`;

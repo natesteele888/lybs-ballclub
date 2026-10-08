@@ -23,11 +23,6 @@
     { id: 'homehome', label: 'Around the Bases' },
   ];
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   function fmt(ms) {
     const s = ms / 1000;
     const m = Math.floor(s / 60);
@@ -35,7 +30,6 @@
     return m ? m + ':' + sec.padStart(5, '0') : sec + 's';
   }
   function fmtShort(ms) { return (ms / 1000).toFixed(2) + 's'; }
-  function uid() { return 'br' + Date.now() + Math.random().toString(36).slice(2, 7); }
 
   function confetti(duration) {
     duration = duration || 2600;
@@ -220,7 +214,7 @@
         containerEl.querySelector('#brRedo')?.addEventListener('click', () => { ST.elapsedMs = 0; ST.state = 'idle'; refresh(); });
         containerEl.querySelector('#brAccept')?.addEventListener('click', async () => {
           const prevDrillBest = drillBest(ST.drillType);
-          runs.push({ id: uid(), playerId: ST.playerId, name: ST.playerName, drillType: ST.drillType, timeMs: ST.elapsedMs, date: new Date().toISOString().slice(0, 10) });
+          runs.push({ id: uid('br'), playerId: ST.playerId, name: ST.playerName, drillType: ST.drillType, timeMs: ST.elapsedMs, date: new Date().toISOString().slice(0, 10) });
           await saveRuns();
           ST.newRecord = prevDrillBest === null || ST.elapsedMs < prevDrillBest;
           ST.state = 'accepted'; ST.elapsedMs = 0;

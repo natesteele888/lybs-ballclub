@@ -60,11 +60,6 @@
     setPins(pins);
     return pins;
   }
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   function highlight(text, query) {
     if (!query) return escapeHtml(text);
     const idx = text.toLowerCase().indexOf(query.toLowerCase());

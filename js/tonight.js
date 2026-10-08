@@ -38,17 +38,9 @@
   let cache = null; // shared/macLeagueStandings contents
   const DIVISION_NAMES = { '33694': 'Rookies', '33695': 'Minors', '33696': 'Majors' };
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   // Same redundant "12u "/"10u "/"8u " prefix js/standings.js strips --
   // every team in a division carries it, and the division picker right
   // above this list already says which division (hence bracket) it is.
-  function stripAgePrefix(name) {
-    return (name || '').replace(/^\d{1,2}u\s+/i, '');
-  }
   function teamHtml(team) {
     if (!team) return '<span class="tonightTeamName">TBD</span>';
     const logo = team.logoUrl ? `<img class="tonightTeamLogo" src="${team.logoUrl}" alt="" loading="lazy">` : '';

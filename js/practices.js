@@ -7,13 +7,6 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> items[]
-  function uid() { return 'p' + Date.now() + Math.random().toString(36).slice(2, 7); }
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-  const TYPE_LABEL = { practice: 'Practice', cage: 'Batting Cage', film: 'Film / Walkthrough' };
 
   window.Practices = {
     async ensureLoaded(teamId) {
@@ -29,7 +22,7 @@
       const list = cache[teamId] || (cache[teamId] = []);
       item.updatedAt = new Date().toISOString();
       const idx = list.findIndex(p => p.id === item.id);
-      if (idx === -1) { item.id = item.id || uid(); list.push(item); }
+      if (idx === -1) { item.id = item.id || uid('p'); list.push(item); }
       else list[idx] = item;
       await window.dbPut(window.teamPath(teamId, 'practices'), list);
       return item;
