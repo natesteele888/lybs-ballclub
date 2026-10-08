@@ -17,6 +17,16 @@
    ASL Bengals app) rather than the full Firebase JS SDK, to stay a
    no-build-step static site.
 
+   IMPORTANT: mock mode enforces none of database.rules.json -- every
+   dbGet/dbPut below silently succeeds against localStorage regardless
+   of what the rules say, so a missing or wrong rule for a new
+   teamPath()/sharedPath() key is invisible until real Firebase is
+   wired up (this already happened once: six features' worth of new
+   paths shipped with no matching .write rule, discovered only by
+   diffing this file's call sites against database.rules.json by
+   hand). Adding a new key here means adding a matching rule there in
+   the SAME change, not as a follow-up.
+
    Exposes:
      window.FIREBASE_DB_URL     -- set this to your real RTDB URL
        (e.g. 'https://lybs-ballclub-default-rtdb.firebaseio.com')
