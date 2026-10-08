@@ -78,7 +78,10 @@
       }
 
       function slotRow(slot, i, total) {
-        const playerOpts = roster.map(p => `<option value="${escapeHtml(p.id)}" ${slot.playerId === p.id ? 'selected' : ''}>${escapeHtml(p.name)}</option>`).join('');
+        const matched = slot.playerId && roster.some(p => p.id === slot.playerId);
+        const removedOpt = slot.playerId && !matched
+          ? `<option value="${escapeHtml(slot.playerId)}" selected>${escapeHtml(slot.name || 'Unknown')} (removed)</option>` : '';
+        const playerOpts = removedOpt + roster.map(p => `<option value="${escapeHtml(p.id)}" ${slot.playerId === p.id ? 'selected' : ''}>${escapeHtml(p.name)}</option>`).join('');
         const posOpts = POSITIONS.map(p => `<option value="${p}" ${slot.position === p ? 'selected' : ''}>${p}</option>`).join('');
         return `
           <div class="lineupSlot">
