@@ -52,6 +52,7 @@
 
     async render(teamId, containerEl, opts) {
       opts = opts || {};
+      if (!containerEl.innerHTML) containerEl.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
       const record = await window.GameChanger.load(teamId);
       const widgetHtml = record && record.snippet
         ? `<iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"

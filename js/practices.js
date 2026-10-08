@@ -69,7 +69,7 @@
             ${item.location ? `<div class="detailRow">📍 ${escapeHtml(item.location)}</div>` : ''}
             ${item.notes ? `<div class="detailRow">${escapeHtml(item.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
-            ${item.date >= todayIso() ? rsvpHtml(item, opts.viewerName) : ''}
+            ${item.date >= todayIso() ? rsvpHtml(item, opts.viewerName, opts.canEdit) : ''}
             <div class="detailActions">
               ${opts.canEdit ? '<button class="btn" id="editBtn">Edit</button>' : ''}
               <button class="btn btnGhost" id="icsBtn">Add to calendar</button>
@@ -109,7 +109,7 @@
               ${item.id && opts.onDelete ? '<button class="btn btnDanger" id="deleteBtn">Delete</button>' : ''}
             </div>
           </div>`;
-        containerEl.querySelector('#saveBtn').addEventListener('click', () => {
+        containerEl.querySelector('#saveBtn').addEventListener('click', btnEvt => {
           const updated = Object.assign({}, item, {
             type: containerEl.querySelector('#fType').value,
             date: containerEl.querySelector('#fDate').value,
@@ -117,7 +117,7 @@
             location: containerEl.querySelector('#fLocation').value.trim(),
             notes: containerEl.querySelector('#fNotes').value.trim(),
           });
-          opts.onSave && opts.onSave(updated);
+          if (opts.onSave) withBusyButton(btnEvt.target, 'Saving...', () => opts.onSave(updated));
         });
         containerEl.querySelector('#cancelBtn').addEventListener('click', () => opts.onCancel && opts.onCancel());
         const deleteBtn = containerEl.querySelector('#deleteBtn');

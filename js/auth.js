@@ -130,4 +130,15 @@
   }
   identityBtnEl.addEventListener('click', submitIdentity);
   identityPinEl.addEventListener('keydown', e => { if (e.key === 'Enter') submitIdentity(); });
+
+  // Wired to a tap on #whoamiLabel (see index.html's onIdentityReady) --
+  // clears this device's remembered identity/session for the team and
+  // reloads back to the login screen, so a coach/parent handing off a
+  // shared device (or a player moving up a team) can start clean.
+  window.logOutOfApp = function (teamId) {
+    if (window.Identity && teamId) window.Identity.clear(teamId);
+    if (window.signOutOfGate) window.signOutOfGate();
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    location.reload();
+  };
 })();

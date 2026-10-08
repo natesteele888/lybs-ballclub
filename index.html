@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="assets/images/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=72">
+<link rel="stylesheet" href="css/styles.css?v=73">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -106,7 +106,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script>window.BUILD_V = '20261004zh';</script>
+<script>window.BUILD_V = '20261008a';</script>
 <script>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -116,40 +116,40 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script src="js/util.js?v=72"></script>
-<script src="js/backend.js?v=72"></script>
-<script src="js/team-registry.js?v=72"></script>
-<script src="js/cloud-auth.js?v=72"></script>
-<script src="js/team-config.js?v=72"></script>
-<script src="js/identity.js?v=72"></script>
-<script src="js/weather.js?v=72"></script>
-<script src="js/club-logos.js?v=72"></script>
-<script src="js/league-teams.js?v=72"></script>
-<script src="js/game-card.js?v=72"></script>
-<script src="js/pitch-smart.js?v=72"></script>
-<script src="js/tonight.js?v=72"></script>
-<script src="js/announcements.js?v=72"></script>
-<script src="js/homepage.js?v=72"></script>
-<script src="js/league-info.js?v=72"></script>
-<script src="js/calendar-export.js?v=72"></script>
-<script src="js/schedule.js?v=72"></script>
-<script src="js/practices.js?v=72"></script>
-<script src="js/calendar-view.js?v=72"></script>
-<script src="js/roster.js?v=72"></script>
-<script src="js/drill-baserunning.js?v=72"></script>
-<script src="js/drill-ath.js?v=72"></script>
-<script src="js/drill-pitching.js?v=72"></script>
-<script src="js/depth-chart.js?v=72"></script>
-<script src="js/lineup-builder.js?v=72"></script>
-<script src="js/duty.js?v=72"></script>
-<script src="js/stats-import.js?v=72"></script>
-<script src="js/social-submit.js?v=72"></script>
-<script src="js/gamechanger.js?v=72"></script>
-<script src="js/rules.js?v=72"></script>
-<script src="js/standings.js?v=72"></script>
-<script src="js/calendar-family.js?v=72"></script>
-<script src="js/archive.js?v=72"></script>
-<script src="js/team-page.js?v=72"></script>
+<script src="js/util.js?v=73"></script>
+<script src="js/backend.js?v=73"></script>
+<script src="js/team-registry.js?v=73"></script>
+<script src="js/cloud-auth.js?v=73"></script>
+<script src="js/team-config.js?v=73"></script>
+<script src="js/identity.js?v=73"></script>
+<script src="js/weather.js?v=73"></script>
+<script src="js/club-logos.js?v=73"></script>
+<script src="js/league-teams.js?v=73"></script>
+<script src="js/game-card.js?v=73"></script>
+<script src="js/pitch-smart.js?v=73"></script>
+<script src="js/tonight.js?v=73"></script>
+<script src="js/announcements.js?v=73"></script>
+<script src="js/homepage.js?v=73"></script>
+<script src="js/league-info.js?v=73"></script>
+<script src="js/calendar-export.js?v=73"></script>
+<script src="js/schedule.js?v=73"></script>
+<script src="js/practices.js?v=73"></script>
+<script src="js/calendar-view.js?v=73"></script>
+<script src="js/roster.js?v=73"></script>
+<script src="js/drill-baserunning.js?v=73"></script>
+<script src="js/drill-ath.js?v=73"></script>
+<script src="js/drill-pitching.js?v=73"></script>
+<script src="js/depth-chart.js?v=73"></script>
+<script src="js/lineup-builder.js?v=73"></script>
+<script src="js/duty.js?v=73"></script>
+<script src="js/stats-import.js?v=73"></script>
+<script src="js/social-submit.js?v=73"></script>
+<script src="js/gamechanger.js?v=73"></script>
+<script src="js/rules.js?v=73"></script>
+<script src="js/standings.js?v=73"></script>
+<script src="js/calendar-family.js?v=73"></script>
+<script src="js/archive.js?v=73"></script>
+<script src="js/team-page.js?v=73"></script>
 <script>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -370,8 +370,9 @@
     });
   }
   async function renderScheduleTab() {
-    await Promise.all([window.Schedule.ensureLoaded(TEAM_ID), window.Practices.ensureLoaded(TEAM_ID)]);
     const el = document.getElementById('tab-schedule');
+    if (!el.innerHTML) el.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
+    await Promise.all([window.Schedule.ensureLoaded(TEAM_ID), window.Practices.ensureLoaded(TEAM_ID)]);
     if (scheduleView.mode === 'list') {
       if (scheduleListMode === 'list') {
         el.innerHTML = '<div id="scheduleViewToggle"></div><div id="scheduleListSlot"></div>';
@@ -421,8 +422,9 @@
   // ---- Practices tab ----
   let practicesView = { mode: 'list' };
   async function renderPracticesTab() {
-    await window.Practices.ensureLoaded(TEAM_ID);
     const el = document.getElementById('tab-practices');
+    if (!el.innerHTML) el.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
+    await window.Practices.ensureLoaded(TEAM_ID);
     if (practicesView.mode === 'list') {
       window.Practices.renderList(TEAM_ID, el, {
         canEdit: canEdit(),
@@ -451,8 +453,9 @@
   // ---- Roster tab ----
   let rosterView = { mode: 'list' };
   async function renderRosterTab() {
-    await window.Roster.ensureLoaded(TEAM_ID);
     const el = document.getElementById('tab-roster');
+    if (!el.innerHTML) el.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
+    await window.Roster.ensureLoaded(TEAM_ID);
     if (rosterView.mode === 'list') {
       window.Roster.render(TEAM_ID, el, {
         canEdit: canEdit(),
@@ -471,9 +474,10 @@
   // ---- Pitching tab (weekly calendar) ----
   let pitchingWeekStart = null; // 'YYYY-MM-DD', Monday; null = current week
   async function renderPitchingTab() {
+    const el = document.getElementById('tab-pitching');
+    if (!el.innerHTML) el.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
     await window.Schedule.ensureLoaded(TEAM_ID);
     await window.PitchSmart.ensureLoaded();
-    const el = document.getElementById('tab-pitching');
     const games = window.Schedule.getGames(TEAM_ID);
     const division = window.TeamConfig.current().macLeagueDivisionName || null;
     const start = pitchingWeekStart || window.PitchSmart.startOfWeek(new Date().toISOString().slice(0, 10));
@@ -535,6 +539,17 @@
     });
   }
 
+  // Shared by renderTab's ensureLoaded().then(...) branches below -- those
+  // tabs otherwise leave the panel showing nothing (or stale content from
+  // the last visit) for the gap between switching tabs and the data/render
+  // actually landing. Guarded on already-empty so revisiting a tab whose
+  // data is already cached doesn't flash "Loading" over real content.
+  function loadingEl(id) {
+    const el = document.getElementById(id);
+    if (!el.innerHTML) el.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
+    return el;
+  }
+
   function renderTab(name) {
     if (name === 'home') window.Homepage.render(document.getElementById('tab-home'), TEAM_ID, { onWatchLive: () => switchTab('gamechanger'), canEdit: canEdit(), authorName: SESSION.name });
     else if (name === 'schedule') renderScheduleTab();
@@ -544,14 +559,14 @@
     else if (name === 'standings') window.Standings.render(document.getElementById('tab-standings'), window.TeamConfig.current().macLeagueDivisionId);
     else if (name === 'seeding') window.Standings.renderSeeding(document.getElementById('tab-seeding'), window.TeamConfig.current().macLeagueDivisionId);
     else if (name === 'pitching') renderPitchingTab();
-    else if (name === 'rules') window.Rules.ensureLoaded().then(() => window.Rules.render(document.getElementById('tab-rules')));
-    else if (name === 'league') window.LeagueInfo.ensureLoaded().then(() => window.LeagueInfo.render(document.getElementById('tab-league')));
+    else if (name === 'rules') { const el = loadingEl('tab-rules'); window.Rules.ensureLoaded().then(() => window.Rules.render(el)); }
+    else if (name === 'league') { const el = loadingEl('tab-league'); window.LeagueInfo.ensureLoaded().then(() => window.LeagueInfo.render(el)); }
     else if (name === 'coaching') renderCoachingTab();
-    else if (name === 'depth') Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID)]).then(() => window.DepthChart.render(document.getElementById('tab-depth'), TEAM_ID));
-    else if (name === 'lineups') Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID)]).then(() => window.LineupBuilder.render(document.getElementById('tab-lineups'), TEAM_ID));
-    else if (name === 'duty') Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID), window.Duty.ensureLoaded(TEAM_ID)]).then(() => window.Duty.render(document.getElementById('tab-duty'), TEAM_ID, window.Roster.getPlayers(TEAM_ID), window.Schedule.getGames(TEAM_ID), { canEdit: canEdit() }));
+    else if (name === 'depth') { const el = loadingEl('tab-depth'); Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID)]).then(() => window.DepthChart.render(el, TEAM_ID)); }
+    else if (name === 'lineups') { const el = loadingEl('tab-lineups'); Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID)]).then(() => window.LineupBuilder.render(el, TEAM_ID)); }
+    else if (name === 'duty') { const el = loadingEl('tab-duty'); Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID), window.Duty.ensureLoaded(TEAM_ID)]).then(() => window.Duty.render(el, TEAM_ID, window.Roster.getPlayers(TEAM_ID), window.Schedule.getGames(TEAM_ID), { canEdit: canEdit() })); }
     else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
-    else if (name === 'archive') window.Archive.ensureLoaded().then(() => window.Archive.render(document.getElementById('tab-archive')));
+    else if (name === 'archive') { const el = loadingEl('tab-archive'); window.Archive.ensureLoaded().then(() => window.Archive.render(el)); }
   }
 
   // Called by auth.js once a code is accepted and identity is known.
@@ -561,7 +576,14 @@
   // tab is revisited (cache.find() returns null while cache is still null).
   window.onIdentityReady = async function (teamId, role, identity) {
     TEAM_ID = teamId; ROLE = role; SESSION = identity;
-    document.getElementById('whoamiLabel').textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Player/Family'}`;
+    const whoamiEl = document.getElementById('whoamiLabel');
+    whoamiEl.textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Player/Family'}`;
+    whoamiEl.title = 'Tap to log out of this device';
+    whoamiEl.onclick = () => {
+      if (confirm(`Log out ${identity.name} from this device? You'll need the team code to sign back in.`)) {
+        window.logOutOfApp(teamId);
+      }
+    };
     document.getElementById('topBarShareBtn').classList.toggle('hide', !canEdit());
     document.getElementById('appShell').classList.add('show');
     await window.ClubLogos.ensureLoaded();
@@ -573,7 +595,7 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script src="js/auth.js?v=72"></script>
+<script src="js/auth.js?v=73"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.

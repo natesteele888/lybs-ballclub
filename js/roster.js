@@ -118,14 +118,14 @@
             ${player.id && opts.onDelete ? '<button class="btn btnDanger" id="deleteBtn">Delete</button>' : ''}
           </div>
         </div>`;
-      containerEl.querySelector('#saveBtn').addEventListener('click', () => {
+      containerEl.querySelector('#saveBtn').addEventListener('click', btnEvt => {
         const updated = Object.assign({}, player, {
           name: containerEl.querySelector('#fName').value.trim(),
           number: containerEl.querySelector('#fNumber').value.trim(),
           position: containerEl.querySelector('#fPosition').value.trim(),
           batsThrows: containerEl.querySelector('#fBT').value.trim(),
         });
-        opts.onSave && opts.onSave(updated);
+        if (opts.onSave) withBusyButton(btnEvt.target, 'Saving...', () => opts.onSave(updated));
       });
       containerEl.querySelector('#cancelBtn').addEventListener('click', () => opts.onCancel && opts.onCancel());
       const deleteBtn = containerEl.querySelector('#deleteBtn');
