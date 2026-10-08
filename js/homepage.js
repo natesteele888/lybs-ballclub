@@ -1,9 +1,22 @@
 /* ============================================================
-   Homepage -- the app's landing tab. Five sections, each pulling
+   Homepage -- the app's landing tab. Seven sections, each pulling
    from data this app already has or already mirrors, nothing new:
 
+   0. Announcements -- a coach-only note (js/announcements.js),
+                       shown first since it's the one thing on this
+                       page meant to be time-sensitive ("practice
+                       moved to 6pm"). Hidden entirely for a non-
+                       coach when there's nothing posted, rather than
+                       showing an empty section with nothing to read.
    1. Today        -- our own games/practices scheduled for today
                        (teams/{teamId}/schedule + practices).
+   1.5 Who Can Pitch Today -- only on a day we have a game, the exact
+                       same js/pitch-smart.js eligibility list already
+                       shown on a game's own detail page, surfaced here
+                       so a coach doesn't have to go find that game
+                       first just to check who's available -- no new
+                       computation, just a second mount point for a
+                       component that already existed.
    2. Around Town   -- every Lunenburg team's games today, across
                        every division (name-matched against
                        shared/macLeagueStandings), not just ours.
@@ -104,6 +117,8 @@
         window.TonightGames.ensureLoaded(),
         window.LeagueTeams.ensureLoaded(),
         window.ClubLogos.ensureLoaded(),
+        window.Announcements.ensureLoaded(teamId),
+        window.PitchSmart.ensureLoaded(),
       ]);
 
       const today = todayStr();
@@ -174,10 +189,18 @@
           ${leagueMatch ? `<a class="btn btnSmall" style="width:100%;margin-top:4px;" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
         </div>
 
+        ${(window.Announcements.getItems(teamId).length || opts.canEdit) ? `
+          <div class="sectionLabel" style="margin-top:18px;">Announcements</div>
+          <div id="homeAnnSlot"></div>` : ''}
+
         <div class="sectionLabel" style="margin-top:18px;">Today</div>
         ${todayItems.length
           ? `<div class="listBody">${todayItems.map(x => todayItemHtml(x.kind, x.item)).join('')}</div>`
           : '<div class="emptyState">Nothing on the calendar for us today.</div>'}
+
+        ${todayGames.length ? `
+          <div class="sectionLabel" style="margin-top:18px;">Who Can Pitch Today</div>
+          <div id="homePitchSlot"></div>` : ''}
 
         ${aroundTown.length ? `
           <div class="sectionLabel" style="margin-top:18px;">Around Town</div>
@@ -200,6 +223,12 @@
 
       const tickerTown = containerEl.querySelector('#homeTickerTown');
       if (tickerTown) enableDragScroll(tickerTown);
+
+      const annSlot = containerEl.querySelector('#homeAnnSlot');
+      if (annSlot) window.Announcements.render(annSlot, teamId, { canEdit: opts.canEdit, authorName: opts.authorName });
+
+      const pitchSlot = containerEl.querySelector('#homePitchSlot');
+      if (pitchSlot) window.PitchSmart.renderOurEligibility(pitchSlot, games, cfg.macLeagueDivisionName || null, today);
 
       window.TonightGames.render(containerEl.querySelector('#homeLeagueSlot'), cfg.macLeagueDivisionId, {
         onWatchLive: opts.onWatchLive,
