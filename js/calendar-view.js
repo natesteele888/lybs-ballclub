@@ -125,9 +125,9 @@
         const dayEntries = selectedDate ? (byDate[selectedDate] || []) : [];
         containerEl.innerHTML = `
           <div class="calHeader">
-            <button class="btn btnGhost btnSmall" id="calPrev" aria-label="Previous month">&larr;</button>
+            <button class="btn btnGhost btnSmall calNavBtn" id="calPrev" aria-label="Previous month">&larr;</button>
             <div class="calHeaderLabel">${escapeHtml(anchor.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }))}</div>
-            <button class="btn btnGhost btnSmall" id="calNext" aria-label="Next month">&rarr;</button>
+            <button class="btn btnGhost btnSmall calNavBtn" id="calNext" aria-label="Next month">&rarr;</button>
           </div>
           <div class="calWeekdays">${['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(w => `<div>${w}</div>`).join('')}</div>
           <div class="calGrid">${cells.join('')}</div>
@@ -168,9 +168,9 @@
         const rangeLabel = `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} &ndash; ${end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
         containerEl.innerHTML = `
           <div class="calHeader">
-            <button class="btn btnGhost btnSmall" id="calPrev" aria-label="Previous week">&larr;</button>
+            <button class="btn btnGhost btnSmall calNavBtn" id="calPrev" aria-label="Previous week">&larr;</button>
             <div class="calHeaderLabel">${rangeLabel}</div>
-            <button class="btn btnGhost btnSmall" id="calNext" aria-label="Next week">&rarr;</button>
+            <button class="btn btnGhost btnSmall calNavBtn" id="calNext" aria-label="Next week">&rarr;</button>
           </div>
           <div class="calWeekList">${days.join('')}</div>`;
         containerEl.querySelector('#calPrev').addEventListener('click', () => {
