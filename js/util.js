@@ -55,4 +55,41 @@
   window.statTileHtml = function statTileHtml(value, label) {
     return `<div class="pcStatTile"><div class="pcStatValue">${value}</div><div class="pcStatLabel">${label}</div></div>`;
   };
+
+  // RSVP -- shared by schedule.js and practices.js's detail views, since
+  // a game and a practice both just need "who's coming" attached the same
+  // way: rides along on the item itself (item.rsvps = {name: 'in'|'out'}),
+  // no separate collection to keep in sync. viewerName is this device's
+  // identity.js name -- without one (shouldn't happen past the identity
+  // screen, but defensive) rsvpHtml still shows the headcount, just no
+  // buttons of one's own to highlight.
+  window.rsvpHtml = function rsvpHtml(item, viewerName) {
+    const rsvps = item.rsvps || {};
+    const values = Object.values(rsvps);
+    const inCount = values.filter(v => v === 'in').length;
+    const outCount = values.filter(v => v === 'out').length;
+    const mine = viewerName ? rsvps[viewerName] : null;
+    return `
+      <div class="sectionLabel" style="margin-top:16px;">RSVP</div>
+      ${viewerName ? `
+        <div class="rsvpRow">
+          <button class="btn btnSmall ${mine === 'in' ? '' : 'btnGhost'}" data-rsvp="in">I'm in</button>
+          <button class="btn btnSmall ${mine === 'out' ? '' : 'btnGhost'}" data-rsvp="out">Can't make it</button>
+        </div>` : ''}
+      <div class="helpText" style="margin-top:6px;">${inCount} in &middot; ${outCount} out</div>`;
+  };
+  // saveFn(item) persists it (window.Schedule.saveGame/Practices.saveItem,
+  // already bound to teamId by the caller); onDone re-renders the detail
+  // view so the new highlight/headcount show immediately.
+  window.wireRsvp = function wireRsvp(containerEl, item, viewerName, saveFn, onDone) {
+    if (!viewerName) return;
+    containerEl.querySelectorAll('[data-rsvp]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        item.rsvps = item.rsvps || {};
+        item.rsvps[viewerName] = btn.dataset.rsvp;
+        await saveFn(item);
+        if (onDone) onDone();
+      });
+    });
+  };
 })();

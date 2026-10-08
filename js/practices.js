@@ -69,6 +69,7 @@
             ${item.location ? `<div class="detailRow">📍 ${escapeHtml(item.location)}</div>` : ''}
             ${item.notes ? `<div class="detailRow">${escapeHtml(item.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
+            ${item.date >= todayIso() ? rsvpHtml(item, opts.viewerName) : ''}
             <div class="detailActions">
               ${opts.canEdit ? '<button class="btn" id="editBtn">Edit</button>' : ''}
               <button class="btn btnGhost" id="icsBtn">Add to calendar</button>
@@ -77,6 +78,7 @@
           </div>`;
         const weatherSlot = containerEl.querySelector('#weatherSlot');
         if (weatherSlot && item.location && item.date) window.loadWeatherInto(weatherSlot, item.location, item.date, item.time);
+        if (item.date >= todayIso()) wireRsvp(containerEl, item, opts.viewerName, updated => window.Practices.saveItem(teamId, updated), opts.onRsvpChange);
         const editBtn = containerEl.querySelector('#editBtn');
         if (editBtn) editBtn.addEventListener('click', () => opts.onEdit && opts.onEdit());
         containerEl.querySelector('#icsBtn').addEventListener('click', () => {

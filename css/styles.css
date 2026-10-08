@@ -853,6 +853,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .calDotGame { background: var(--lybs-blue-bright); }
 .calDotPractice { background: #E6B935; }
 .calDayPanel { margin-top: 14px; }
+.rsvpRow { display: flex; gap: 8px; margin-top: 6px; }
 .calAddRow { display: flex; gap: 8px; margin-top: 10px; }
 .calWeekList { display: flex; flex-direction: column; gap: 10px; }
 .calWeekDay { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; }
