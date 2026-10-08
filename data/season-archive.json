@@ -1,6 +1,6 @@
 {
-  "source": "Schedule/scores from GameChanger public team pages (web.gc.com/teams/{id}), pulled 2026-10-04. Rosters from screenshots the coach sent of their own logged-in GameChanger session (rosters are gated behind login on every public page -- confirmed by the same generic placeholder names showing on multiple unrelated teams when logged out).",
-  "note": "Roster names are reduced to first name + last initial only, matching the privacy rule already used for the live Roster tab and the lybs-reporting dashboard (see that repo's CLAUDE.md). Full surnames from the source screenshots were never written to this file.",
+  "source": "Schedule/scores from GameChanger public team pages (web.gc.com/teams/{id}), pulled 2026-10-04.",
+  "note": "Deliberately scores/records only -- no rosters or coaching staff. This file is committed to a public repo, and even a first-name-plus-last-initial roster is still a list of real kids' names that doesn't need to sit in git history for a past season nobody's actively managing.",
   "teams": [
     {
       "gcTeamId": "gtKEQZgp28Vd",
@@ -9,12 +9,6 @@
       "note": "This is last season's Select team, under its prior name.",
       "season": "Spring 2026",
       "record": "5-8",
-      "staff": [
-        "Derek M",
-        "Paul T",
-        "Nathan D",
-        "Jami A"
-      ],
       "games": [
         {
           "date": "2026-04-27",
@@ -115,14 +109,6 @@
       "division": "Majors B",
       "season": "Spring 2026",
       "record": "11-5",
-      "staff": [
-        "Matthew G",
-        "Nate S",
-        "Andy C",
-        "Jami A"
-      ],
-      "rosterPartial": true,
-      "rosterNote": "Screenshot was scrolled mid-list -- player #1 and possibly others are missing. Team guessed from staff surnames (Gilman/Steele/Anderson match) and overlap with the All-Star roster, not from a visible title -- please confirm this is really Majors Blue.",
       "games": [
         {
           "date": "2026-04-26",
@@ -251,12 +237,6 @@
       "division": "Majors B",
       "season": "Spring 2026",
       "record": "9-4",
-      "staff": [
-        "Shane B",
-        "Brian R",
-        "Aaron W",
-        "Tim S"
-      ],
       "games": [
         {
           "date": "2026-04-29",
@@ -357,14 +337,6 @@
       "division": "Minors",
       "season": "Spring 2026",
       "record": "4-7-2",
-      "staff": [
-        "Matthew G",
-        "Steve F",
-        "Thomas W",
-        "Tim A"
-      ],
-      "rosterPartial": true,
-      "rosterNote": "Screenshot was scrolled mid-list -- player #1 and several others (13 total expected, 8 captured) are missing. Team guessed from the Blueknights name match -- please confirm.",
       "games": [
         {
           "date": "2026-04-26",
@@ -472,11 +444,6 @@
       "division": "Minors",
       "season": "Spring 2026",
       "record": "6-7-1",
-      "staff": [
-        "Sean G",
-        "Troy K",
-        "Jamie D"
-      ],
       "games": [
         {
           "date": "2026-04-26",
@@ -591,12 +558,6 @@
       "division": "All-Stars (11U)",
       "season": "Summer 2026",
       "record": "6-2",
-      "staff": [
-        "Matthew G",
-        "Paul D",
-        "Jason M",
-        "Tim S"
-      ],
       "games": [
         {
           "date": "2026-06-24",
@@ -656,11 +617,5 @@
         }
       ]
     }
-  ],
-  "pending": {
-    "partialRosters": {
-      "status": "needs_confirmation",
-      "note": "Majors Blue and Minors Blue rosters are guessed-at team assignments from partial, scrolled screenshots -- please confirm those are the right teams, and send the missing players if you have them."
-    }
-  }
+  ]
 }

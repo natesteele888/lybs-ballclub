@@ -810,11 +810,6 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .archiveRecordCol { flex: 0 0 auto; }
 .archiveGamesCol { flex: 1 1 auto; min-width: 0; }
 .archiveRecordValue { font-family: var(--font-display); font-weight: 400; font-size: 30px; color: #fff; }
-.archiveRosterToggle {
-  display: flex; align-items: center; justify-content: space-between; cursor: pointer;
-  margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--card-border);
-}
-.archiveRosterChevron { color: var(--text2); font-size: 18px; line-height: 1; }
 
 @media (min-width: 640px) {
   .tabPanel { padding: 28px 24px 60px; }
