@@ -47,4 +47,12 @@
   // reads the same whether it's listed from practices.js, the Schedule
   // tab's calendar view, the homepage, or a family's combined .ics export.
   window.TYPE_LABEL = { practice: 'Practice', cage: 'Batting Cage', film: 'Film / Walkthrough' };
+
+  // The small value/label tile (.pcStatRow > .pcStatTile) team-page.js and
+  // homepage.js each build by hand, repeated 4 and 3 times respectively.
+  // Callers still escape their own value/label before passing them in --
+  // same as before, just no longer retyping the two wrapping divs each time.
+  window.statTileHtml = function statTileHtml(value, label) {
+    return `<div class="pcStatTile"><div class="pcStatValue">${value}</div><div class="pcStatLabel">${label}</div></div>`;
+  };
 })();

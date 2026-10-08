@@ -155,12 +155,12 @@
       const gamesRemaining = games.filter(g => g.ourScore == null || g.oppScore == null).length;
 
       const statTiles = [
-        `<div class="pcStatTile"><div class="pcStatValue">${escapeHtml(recordStr)}</div><div class="pcStatLabel">${leagueRow ? 'League Record' : 'Record'}</div></div>`,
+        statTileHtml(escapeHtml(recordStr), leagueRow ? 'League Record' : 'Record'),
       ];
       if (leagueRank != null) {
-        statTiles.push(`<div class="pcStatTile"><div class="pcStatValue">${ordinal(leagueRank)}</div><div class="pcStatLabel">of ${leagueTotal}${leagueDivisionName ? ' &middot; ' + escapeHtml(leagueDivisionName) : ''}</div></div>`);
+        statTiles.push(statTileHtml(ordinal(leagueRank), `of ${leagueTotal}${leagueDivisionName ? ' &middot; ' + escapeHtml(leagueDivisionName) : ''}`));
       }
-      statTiles.push(`<div class="pcStatTile"><div class="pcStatValue">${gamesRemaining}</div><div class="pcStatLabel">Games Left</div></div>`);
+      statTiles.push(statTileHtml(gamesRemaining, 'Games Left'));
 
       containerEl.innerHTML = `
         <div class="detailCard homeTeamCard">

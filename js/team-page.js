@@ -89,10 +89,10 @@
           </div>
           ${standingsRow ? `
             <div class="pcStatRow" style="margin-top:14px;">
-              <div class="pcStatTile"><div class="pcStatValue">${escapeHtml(standingsRow.w ?? '-')}-${escapeHtml(standingsRow.l ?? '-')}${standingsRow.t && standingsRow.t !== '0' ? '-' + escapeHtml(standingsRow.t) : ''}</div><div class="pcStatLabel">Record</div></div>
-              <div class="pcStatTile"><div class="pcStatValue">${escapeHtml(standingsRow.pct ?? '-')}</div><div class="pcStatLabel">PCT</div></div>
-              <div class="pcStatTile"><div class="pcStatValue">${escapeHtml(standingsRow.rf ?? '-')}</div><div class="pcStatLabel">Runs For</div></div>
-              <div class="pcStatTile"><div class="pcStatValue">${escapeHtml(standingsRow.ra ?? '-')}</div><div class="pcStatLabel">Runs Against</div></div>
+              ${statTileHtml(`${escapeHtml(standingsRow.w ?? '-')}-${escapeHtml(standingsRow.l ?? '-')}${standingsRow.t && standingsRow.t !== '0' ? '-' + escapeHtml(standingsRow.t) : ''}`, 'Record')}
+              ${statTileHtml(escapeHtml(standingsRow.pct ?? '-'), 'PCT')}
+              ${statTileHtml(escapeHtml(standingsRow.rf ?? '-'), 'Runs For')}
+              ${statTileHtml(escapeHtml(standingsRow.ra ?? '-'), 'Runs Against')}
             </div>` : `<div class="helpText" style="margin-top:10px;">No current standings mirrored for this team.</div>`}
           ${leagueMatch ? `<a class="btn" style="width:100%;margin-top:14px;" href="${window.LeagueTeams.teamUrl(opponentName)}" target="_blank" rel="noopener">Full schedule, roster &amp; coach contact on macleague.org</a>` : ''}
         </div>
