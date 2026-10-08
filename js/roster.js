@@ -30,13 +30,6 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> players[]
-  function uid() { return 'r' + Date.now() + Math.random().toString(36).slice(2, 7); }
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-
   window.Roster = {
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
@@ -62,7 +55,7 @@
     async savePlayer(teamId, player) {
       const list = cache[teamId] || (cache[teamId] = []);
       const idx = list.findIndex(p => p.id === player.id);
-      if (idx === -1) { player.id = player.id || uid(); list.push(player); }
+      if (idx === -1) { player.id = player.id || uid('r'); list.push(player); }
       else list[idx] = player;
       await window.dbPut(window.teamPath(teamId, 'roster'), list);
       return player;

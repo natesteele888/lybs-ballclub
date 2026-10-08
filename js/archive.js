@@ -15,12 +15,6 @@
 (function () {
   let cache = null; // {teams:[...], pending:{...}}
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-
   window.Archive = {
     async ensureLoaded() {
       if (cache) return cache;

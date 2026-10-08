@@ -34,12 +34,6 @@
    record rather than overwriting each other.
    ============================================================ */
 (function () {
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-
   // ---- CSV parsing -- hand-rolled, no build step / CDN dependency.
   // Handles quoted fields (commas and escaped "" inside quotes). ----
   function parseCSV(text) {

@@ -27,12 +27,6 @@
    matter more.
    ============================================================ */
 (function () {
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-
   function logoOrFallback(name, logoUrl) {
     if (logoUrl) return `<img class="gameResultLogo" src="${logoUrl}" alt="${escapeHtml(name)}" loading="lazy">`;
     const letter = (name || '?').trim().charAt(0).toUpperCase() || '?';

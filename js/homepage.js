@@ -34,16 +34,10 @@
    pace away from whoever's reading it.
    ============================================================ */
 (function () {
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   function fmtDate(iso) {
     if (!iso) return '';
     return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   }
-  function todayStr() { return new Date().toISOString().slice(0, 10); }
   function ordinal(n) {
     const s = ['th', 'st', 'nd', 'rd'], v = n % 100;
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
@@ -89,7 +83,6 @@
           ${played ? `<span class="badge ${item.ourScore > item.oppScore ? 'badgeW' : item.ourScore < item.oppScore ? 'badgeL' : 'badgeT'}">${item.ourScore}-${item.oppScore}</span>` : '<span class="badge badgeTbd">Game</span>'}
         </div>`;
     }
-    const TYPE_LABEL = { practice: 'Practice', cage: 'Batting Cage', film: 'Film / Walkthrough' };
     return `
       <div class="listRow" style="cursor:default;">
         <div class="listRowMain">
@@ -199,7 +192,7 @@
           ? `<div class="listBody">${upcoming.map(x => `
               <div class="listRow" style="cursor:default;">
                 <div class="listRowMain">
-                  <div class="listRowTitle">${x.kind === 'game' ? (x.item.homeAway === 'Away' ? '@' : 'vs') + ' ' + escapeHtml(x.item.opponent || 'TBD') : escapeHtml({ practice: 'Practice', cage: 'Batting Cage', film: 'Film / Walkthrough' }[x.item.type] || 'Practice')}</div>
+                  <div class="listRowTitle">${x.kind === 'game' ? (x.item.homeAway === 'Away' ? '@' : 'vs') + ' ' + escapeHtml(x.item.opponent || 'TBD') : escapeHtml(TYPE_LABEL[x.item.type] || 'Practice')}</div>
                   <div class="listRowSub">${escapeHtml(fmtDate(x.date))}</div>
                 </div>
               </div>`).join('')}</div>`

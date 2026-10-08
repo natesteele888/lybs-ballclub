@@ -36,11 +36,6 @@
   // step (lybs-reporting's apps-script/Code.gs header, step 4-5) is done.
   const ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_URL';
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   function sid() { return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10); }
 
   function tags(division) {

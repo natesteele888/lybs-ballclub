@@ -40,7 +40,7 @@
     }));
     const practiceEvents = practices.map(p => ({
       uid: p.id,
-      title: `${config.shortName} ${p.type === 'practice' ? 'Practice' : (p.type === 'cage' ? 'Batting Cage' : 'Film/Walkthrough')}`,
+      title: `${config.shortName} ${TYPE_LABEL[p.type] || 'Practice'}`,
       date: p.date, time: p.time, location: p.location, description: p.notes,
     }));
     return { teamId, teamName: config.name, events: [...gameEvents, ...practiceEvents] };

@@ -23,13 +23,6 @@
 (function () {
   const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH', 'Bench'];
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-  function uid() { return 'lu' + Date.now() + Math.random().toString(36).slice(2, 7); }
-
   let TEAM_ID = null;
   let lineups = null; // cached array
 
@@ -51,7 +44,7 @@
       await ensureLineups(teamId);
       const today = new Date().toISOString().slice(0, 10);
       const l = {
-        id: uid(),
+        id: uid('lu'),
         name: `Suggested order -- ${today}`,
         date: today,
         slots: order.map(r => ({ playerId: r.playerId, name: r.name, position: POSITIONS[0] })),
@@ -128,7 +121,7 @@
         if (view.mode === 'list') {
           containerEl.innerHTML = listHtml();
           containerEl.querySelector('#luNew').addEventListener('click', () => {
-            const l = { id: uid(), name: '', date: new Date().toISOString().slice(0, 10), slots: [] };
+            const l = { id: uid('lu'), name: '', date: new Date().toISOString().slice(0, 10), slots: [] };
             lineups.unshift(l);
             view = { mode: 'edit', id: l.id };
             refresh();

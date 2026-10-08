@@ -22,18 +22,10 @@
    public page, not a real API.
    ============================================================ */
 (function () {
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   // macleague.org's own team names repeat the division's age bracket on
   // every single row ("12u Groton Dunstable", "12u Bolton Green", ...) --
   // redundant once that bracket is named once at the top of the page, and
   // it's the main reason team names were crowding out the other columns.
-  function stripAgePrefix(name) {
-    return (name || '').replace(/^\d{1,2}u\s+/i, '');
-  }
   function timeAgo(iso) {
     if (!iso) return 'never';
     const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);

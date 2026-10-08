@@ -22,12 +22,6 @@
    own servers, but it cannot reach this page's session/storage.
    ============================================================ */
 (function () {
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-
   function validateSnippet(html) {
     const s = (html || '').trim();
     if (!s) return 'Paste the widget code from GameChanger first.';

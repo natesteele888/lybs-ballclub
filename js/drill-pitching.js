@@ -26,11 +26,6 @@
   ];
   const ZONES = ['0-0', '0-1', '0-2', '1-0', '1-1', '1-2', '2-0', '2-1', '2-2'];
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
   function strikeRate(pitches) {
     if (!pitches.length) return 0;
     return Math.round(pitches.filter(p => p.zone !== 'ball').length / pitches.length * 100);

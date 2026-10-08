@@ -14,12 +14,6 @@
 (function () {
   let cache = null; // league-info.json contents
 
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-
   // ---- Age eligibility chart: an overlapping-bars timeline (one bar per
   // division, positioned by its real birth-date cutoff range) instead of
   // the flat table's row-by-row list -- makes the actual overlap between
@@ -127,9 +121,6 @@
       <div class="helpText" style="margin-top:8px;">Birth date, left (older) to right (younger) &mdash; drag to scroll.</div>`;
   }
 
-  function mapUrl(address) {
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-  }
   // Google's documented consumer Maps URL for opening Street View at a
   // point -- no API key needed. lat/lng come from a one-time geocode of
   // each address -- see scripts/geocode-facilities.mjs.

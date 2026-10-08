@@ -38,16 +38,6 @@
 (function () {
   const cache = {}; // teamId -> games[]
 
-  function uid() { return 'g' + Date.now() + Math.random().toString(36).slice(2, 7); }
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-  function mapLink(address) {
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || '')}`;
-  }
-
   // Upcoming game (no score yet): pitcher-availability preview for both
   // sides. Completed game: shows/logs our own pitch counts for that game --
   // see js/pitch-smart.js for the eligibility math these feed into.
@@ -122,7 +112,7 @@
       game.updatedAt = new Date().toISOString();
       const idx = list.findIndex(g => g.id === game.id);
       if (idx === -1) {
-        game.id = game.id || uid();
+        game.id = game.id || uid('g');
         list.push(game);
       } else {
         list[idx] = game;

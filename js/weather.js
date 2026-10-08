@@ -65,12 +65,6 @@
   function weatherLabel(code) {
     return WEATHER_LABELS[code] || ['🌡️', 'Weather'];
   }
-  function escapeHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s || '';
-    return d.innerHTML;
-  }
-
   // Tries each city candidate's geocode in order (see buildCityCandidates
   // above) and stops at the first one Open-Meteo actually recognizes.
   function geocodeCandidate(name) {
