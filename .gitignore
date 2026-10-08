@@ -8,3 +8,9 @@ node_modules/
 data/standings-cache.json
 data/pitchsmart-cache.json
 data/dashboard-roster-import.json
+
+# Real kids' names, even reduced to first name + last initial, don't belong
+# in this (public) repo's git history. js/roster.js no longer reads this
+# file at all -- it's listed here only so a locally-regenerated copy for
+# testing is never accidentally staged.
+data/roster-seed.json

@@ -33,19 +33,15 @@
   window.Roster = {
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      let players = await window.dbGet(window.teamPath(teamId, 'roster'));
-      // Seed Select's roster from the real current team (data/roster-seed.json,
-      // pulled from the dashboard -- see scripts/sync-roster-from-dashboard.mjs)
-      // the first time anyone's browser loads it with nothing there yet. Only
-      // for 'select' -- this file is that team's real roster, not a generic
-      // placeholder, so a future second team must never inherit it. Same
-      // "seed once, then it's the live editable copy" convention rules.js
-      // uses for shared/rules, just scoped to one team instead of shared/.
-      if ((!Array.isArray(players) || !players.length) && teamId === 'select') {
-        const seed = await fetch('data/roster-seed.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => ({ roster: [] }));
-        players = seed.roster || [];
-        await window.dbPut(window.teamPath(teamId, 'roster'), players);
-      }
+      const players = await window.dbGet(window.teamPath(teamId, 'roster'));
+      // Deliberately no committed seed file here (unlike standings/rules/
+      // schedule, which seed from league-public data). A roster is real
+      // kids' names -- even reduced to first name + last initial, that
+      // shouldn't sit in this repo's (public) git history. The real roster
+      // only ever exists in Firebase, written by a coach through this tab
+      // or pushed by scripts/sync-roster-from-dashboard.mjs (which stages
+      // to a gitignored file for review, never a committed one). A fresh
+      // team with nothing in Firebase yet just starts with an empty roster.
       cache[teamId] = Array.isArray(players) ? players : [];
       return cache[teamId];
     },
