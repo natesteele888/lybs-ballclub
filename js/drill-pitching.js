@@ -31,25 +31,23 @@
     return Math.round(pitches.filter(p => p.zone !== 'ball').length / pitches.length * 100);
   }
 
-  let TEAM_ID = null;
-  let sessions = null; // cached array, loaded once per team
+  const cache = {}; // teamId -> sessions[]
 
   const PC = { state: 'setup', pitches: [], pitcher: null, targetCount: 0, pendingPitch: null };
 
   async function ensureSessions(teamId) {
-    if (sessions && TEAM_ID === teamId) return sessions;
-    TEAM_ID = teamId;
+    if (cache[teamId]) return cache[teamId];
     const data = await window.dbGet(window.teamPath(teamId, 'drills/pitchSessions'));
-    sessions = Array.isArray(data) ? data : [];
-    return sessions;
+    cache[teamId] = Array.isArray(data) ? data : [];
+    return cache[teamId];
   }
-  async function saveSessions() {
-    await window.dbPut(window.teamPath(TEAM_ID, 'drills/pitchSessions'), sessions);
+  async function saveSessions(teamId) {
+    await window.dbPut(window.teamPath(teamId, 'drills/pitchSessions'), cache[teamId]);
   }
 
   window.DrillPitching = {
     async render(containerEl, teamId) {
-      await ensureSessions(teamId);
+      const sessions = await ensureSessions(teamId);
       const roster = window.Roster.getPlayers(teamId);
 
       function refresh() {
@@ -211,7 +209,7 @@
           btn.addEventListener('click', async () => {
             if (!confirm('Delete this pitch count session?')) return;
             sessions.splice(Number(btn.dataset.del), 1);
-            await saveSessions();
+            await saveSessions(teamId);
             refresh();
           });
         });
@@ -261,7 +259,7 @@
             avgSpeed: withSpeed.length ? Math.round(withSpeed.reduce((s, p) => s + p.speed, 0) / withSpeed.length) : null,
             topSpeed: withSpeed.length ? Math.max(...withSpeed.map(p => p.speed)) : null, maxStreak,
           });
-          await saveSessions();
+          await saveSessions(teamId);
           btnEvt.target.textContent = '✓ Saved!';
           btnEvt.target.disabled = true;
         });

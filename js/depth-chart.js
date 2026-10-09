@@ -34,19 +34,18 @@
     LF: { x: 26, y: 22 }, CF: { x: 50, y: 12 }, RF: { x: 75, y: 22 },
   };
 
-  let TEAM_ID = null;
-  let chart = null; // cached {position: [{id,name}]}
+  const cache = {}; // teamId -> {position: [{id,name}]}
 
   async function ensureChart(teamId) {
-    if (chart && TEAM_ID === teamId) return chart;
-    TEAM_ID = teamId;
+    if (cache[teamId]) return cache[teamId];
     const data = await window.dbGet(window.teamPath(teamId, 'depthChart'));
-    chart = {};
+    const chart = {};
     POSITIONS.forEach(p => { chart[p] = (data && Array.isArray(data[p])) ? data[p] : []; });
+    cache[teamId] = chart;
     return chart;
   }
-  async function saveChart() {
-    await window.dbPut(window.teamPath(TEAM_ID, 'depthChart'), chart);
+  async function saveChart(teamId) {
+    await window.dbPut(window.teamPath(teamId, 'depthChart'), cache[teamId]);
   }
 
   // A kid can only start one spot at a time -- if whoever now sits at
@@ -54,7 +53,7 @@
   // that other starting spot entirely (they're still free to be a 2nd/3rd
   // string option anywhere else on the roster). Returns the position they
   // got pulled from, or null.
-  function enforceStarterExclusivity(position) {
+  function enforceStarterExclusivity(chart, position) {
     const starter = chart[position][0];
     if (!starter) return null;
     let movedFrom = null;
@@ -107,7 +106,7 @@
     // viewBox/COORDS percentage system either way.
     fieldSvg,
     async render(containerEl, teamId) {
-      await ensureChart(teamId);
+      const chart = await ensureChart(teamId);
       const roster = window.Roster.getPlayers(teamId);
       let selected = null; // position currently expanded for editing
       let banner = null; // {name, from, to} -- shown once, right after a starter gets bumped
@@ -185,10 +184,10 @@
             const i = Number(btn.dataset.up);
             [list[i - 1], list[i]] = [list[i], list[i - 1]];
             if (i - 1 === 0) {
-              const movedFrom = enforceStarterExclusivity(selected);
+              const movedFrom = enforceStarterExclusivity(chart, selected);
               if (movedFrom) banner = { name: list[0].name, from: movedFrom, to: selected };
             }
-            await saveChart(); refresh();
+            await saveChart(teamId); refresh();
           });
         });
         containerEl.querySelectorAll('[data-down]').forEach(btn => {
@@ -196,13 +195,13 @@
             const list = chart[selected];
             const i = Number(btn.dataset.down);
             [list[i + 1], list[i]] = [list[i], list[i + 1]];
-            await saveChart(); refresh();
+            await saveChart(teamId); refresh();
           });
         });
         containerEl.querySelectorAll('[data-remove]').forEach(btn => {
           btn.addEventListener('click', async () => {
             chart[selected].splice(Number(btn.dataset.remove), 1);
-            await saveChart(); refresh();
+            await saveChart(teamId); refresh();
           });
         });
         containerEl.querySelectorAll('[data-add]').forEach(btn => {
@@ -211,10 +210,10 @@
             const wasEmpty = list.length === 0;
             list.push({ id: btn.dataset.add, name: btn.dataset.name });
             if (wasEmpty) {
-              const movedFrom = enforceStarterExclusivity(selected);
+              const movedFrom = enforceStarterExclusivity(chart, selected);
               if (movedFrom) banner = { name: btn.dataset.name, from: movedFrom, to: selected };
             }
-            await saveChart(); refresh();
+            await saveChart(teamId); refresh();
           });
         });
       }

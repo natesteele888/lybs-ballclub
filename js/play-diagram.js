@@ -18,23 +18,25 @@
    content, same category, same gate.
    ============================================================ */
 (function () {
-  let TEAM_ID = null;
-  let diagrams = null; // cached array
+  const cache = {}; // teamId -> diagrams[]
 
   async function ensureDiagrams(teamId) {
-    if (diagrams && TEAM_ID === teamId) return diagrams;
-    TEAM_ID = teamId;
+    if (cache[teamId]) return cache[teamId];
     const data = await window.dbGet(window.teamPath(teamId, 'playDiagrams'));
-    diagrams = Array.isArray(data) ? data : [];
-    return diagrams;
+    cache[teamId] = Array.isArray(data) ? data : [];
+    return cache[teamId];
   }
-  async function saveDiagrams() {
-    await window.dbPut(window.teamPath(TEAM_ID, 'playDiagrams'), diagrams);
+  // Takes the current array explicitly, rather than reading it back out of
+  // cache, because the list gets reassigned (not just mutated) on delete --
+  // see the #pdDelete handler below. Updates the cache to match.
+  async function saveDiagrams(teamId, diagrams) {
+    cache[teamId] = diagrams;
+    await window.dbPut(window.teamPath(teamId, 'playDiagrams'), diagrams);
   }
 
   window.PlayDiagram = {
     async render(containerEl, teamId) {
-      await ensureDiagrams(teamId);
+      let diagrams = await ensureDiagrams(teamId);
       let view = { mode: 'list' };
 
       function listHtml() {
@@ -106,7 +108,7 @@
           containerEl.querySelector('#pdBack').addEventListener('click', async () => {
             d.title = containerEl.querySelector('#pdTitle').value.trim();
             d.note = containerEl.querySelector('#pdNote').value.trim();
-            await saveDiagrams();
+            await saveDiagrams(teamId, diagrams);
             view = { mode: 'list' }; refresh();
           });
           containerEl.querySelector('#pdTitle').addEventListener('change', e => { d.title = e.target.value.trim(); });
@@ -121,7 +123,7 @@
             const label = prompt('Label for this spot (e.g. "Cutoff man"):');
             if (!label || !label.trim()) return;
             d.markers.push({ id: uid('mk'), x, y, label: label.trim() });
-            await saveDiagrams();
+            await saveDiagrams(teamId, diagrams);
             refresh();
           });
           containerEl.querySelectorAll('[data-marker]').forEach(btn => {
@@ -131,7 +133,7 @@
               if (i === -1) return;
               if (!confirm(`Remove "${d.markers[i].label}"?`)) return;
               d.markers.splice(i, 1);
-              await saveDiagrams();
+              await saveDiagrams(teamId, diagrams);
               refresh();
             });
           });
@@ -139,14 +141,14 @@
           containerEl.querySelector('#pdSave').addEventListener('click', async btnEvt => {
             d.title = containerEl.querySelector('#pdTitle').value.trim();
             d.note = containerEl.querySelector('#pdNote').value.trim();
-            await withBusyButton(btnEvt.target, 'Saving...', saveDiagrams);
+            await withBusyButton(btnEvt.target, 'Saving...', () => saveDiagrams(teamId, diagrams));
             btnEvt.target.textContent = '✓ Saved!';
             setTimeout(() => refresh(), 500);
           });
           containerEl.querySelector('#pdDelete').addEventListener('click', async () => {
             if (!confirm('Delete this play diagram?')) return;
             diagrams = diagrams.filter(x => x.id !== d.id);
-            await saveDiagrams();
+            await saveDiagrams(teamId, diagrams);
             view = { mode: 'list' }; refresh();
           });
         }

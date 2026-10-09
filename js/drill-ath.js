@@ -66,24 +66,22 @@
     setTimeout(() => { div.classList.remove('show'); setTimeout(() => div.remove(), 400); }, 2400);
   }
 
-  let TEAM_ID = null;
-  let leaderboard = null; // cached array, loaded once per team
+  const cache = {}; // teamId -> leaderboard[]
   const ST = {
     state: 'setup', startTs: 0, elapsedMs: 0, raf: null,
     groups: [], current: 0, sessionBestMs: null, newRecord: false,
   };
 
   async function ensureLeaderboard(teamId) {
-    if (leaderboard && TEAM_ID === teamId) return leaderboard;
-    TEAM_ID = teamId;
+    if (cache[teamId]) return cache[teamId];
     const data = await window.dbGet(window.teamPath(teamId, 'drills/athLeaderboard'));
-    leaderboard = Array.isArray(data) ? data : [];
-    return leaderboard;
+    cache[teamId] = Array.isArray(data) ? data : [];
+    return cache[teamId];
   }
-  async function saveLeaderboard() {
-    await window.dbPut(window.teamPath(TEAM_ID, 'drills/athLeaderboard'), leaderboard);
+  async function saveLeaderboard(teamId) {
+    await window.dbPut(window.teamPath(teamId, 'drills/athLeaderboard'), cache[teamId]);
   }
-  function addResult(groupName, timeMs, playerNames) {
+  function addResult(leaderboard, groupName, timeMs, playerNames) {
     leaderboard.unshift({ id: Date.now() + Math.random(), groupName, timeMs, players: playerNames, date: new Date().toISOString().slice(0, 10) });
     leaderboard.sort((a, b) => a.timeMs - b.timeMs);
     if (leaderboard.length > 100) leaderboard.length = 100;
@@ -100,7 +98,7 @@
 
   window.DrillATH = {
     async render(containerEl, teamId) {
-      await ensureLeaderboard(teamId);
+      const leaderboard = await ensureLeaderboard(teamId);
       const roster = window.Roster.getPlayers(teamId);
 
       function refresh() {
@@ -315,8 +313,8 @@
         });
         containerEl.querySelector('#athPost')?.addEventListener('click', async btnEvt => {
           const date = new Date().toISOString().slice(0, 10);
-          ST.groups.filter(g => g.bestMs).forEach(g => addResult(g.name, g.bestMs, g.players.map(p => p.name)));
-          await saveLeaderboard();
+          ST.groups.filter(g => g.bestMs).forEach(g => addResult(leaderboard, g.name, g.bestMs, g.players.map(p => p.name)));
+          await saveLeaderboard(teamId);
           btnEvt.target.textContent = '✓ Posted!';
           btnEvt.target.disabled = true;
         });

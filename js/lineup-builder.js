@@ -23,25 +23,27 @@
 (function () {
   const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH', 'Bench'];
 
-  let TEAM_ID = null;
-  let lineups = null; // cached array
+  const cache = {}; // teamId -> lineups[]
 
   async function ensureLineups(teamId) {
-    if (lineups && TEAM_ID === teamId) return lineups;
-    TEAM_ID = teamId;
+    if (cache[teamId]) return cache[teamId];
     const data = await window.dbGet(window.teamPath(teamId, 'lineups'));
-    lineups = Array.isArray(data) ? data : [];
-    return lineups;
+    cache[teamId] = Array.isArray(data) ? data : [];
+    return cache[teamId];
   }
-  async function saveLineups() {
-    await window.dbPut(window.teamPath(TEAM_ID, 'lineups'), lineups);
+  // Takes the current array explicitly, rather than reading it back out of
+  // cache, because the list gets reassigned (not just mutated) on delete --
+  // see the #luDelete handler below. Updates the cache to match.
+  async function saveLineups(teamId, lineups) {
+    cache[teamId] = lineups;
+    await window.dbPut(window.teamPath(teamId, 'lineups'), lineups);
   }
 
   window.LineupBuilder = {
     // order: [{playerId, name, ...stats}] -- only roster-matched rows,
     // since a slot can only ever reference a real roster player.
     async createFromOrder(teamId, order) {
-      await ensureLineups(teamId);
+      const lineups = await ensureLineups(teamId);
       const today = new Date().toISOString().slice(0, 10);
       const l = {
         id: uid('lu'),
@@ -50,12 +52,12 @@
         slots: order.map(r => ({ playerId: r.playerId, name: r.name, position: POSITIONS[0] })),
       };
       lineups.unshift(l);
-      await saveLineups();
+      await saveLineups(teamId, lineups);
       return l;
     },
 
     async render(containerEl, teamId) {
-      await ensureLineups(teamId);
+      let lineups = await ensureLineups(teamId);
       const roster = window.Roster.getPlayers(teamId);
       let view = { mode: 'list' };
 
@@ -150,7 +152,7 @@
           containerEl.querySelector('#luBack').addEventListener('click', async () => {
             l.name = containerEl.querySelector('#luName').value.trim();
             l.date = containerEl.querySelector('#luDate').value;
-            await saveLineups();
+            await saveLineups(teamId, lineups);
             view = { mode: 'list' }; refresh();
           });
           containerEl.querySelector('#luName').addEventListener('change', e => { l.name = e.target.value.trim(); });
@@ -190,7 +192,7 @@
           containerEl.querySelector('#luSave').addEventListener('click', async btnEvt => {
             l.name = containerEl.querySelector('#luName').value.trim();
             l.date = containerEl.querySelector('#luDate').value;
-            await saveLineups();
+            await saveLineups(teamId, lineups);
             btnEvt.target.textContent = '✓ Saved!';
             setTimeout(() => refresh(), 500);
           });
@@ -218,7 +220,7 @@
           containerEl.querySelector('#luDelete').addEventListener('click', async () => {
             if (!confirm('Delete this lineup?')) return;
             lineups = lineups.filter(x => x.id !== l.id);
-            await saveLineups();
+            await saveLineups(teamId, lineups);
             view = { mode: 'list' }; refresh();
           });
         }
