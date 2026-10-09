@@ -12,10 +12,12 @@
        'regular' when unset -- old games saved before this field
        existed are just treated as regular season),
      pitchCounts: [{name, pitches}],
-     rsvps: {name: 'in'|'out'}, driving: {name: seatsOpenForTeammates}}
+     rsvps: {name: 'in'|'out'}, driving: {name: seatsOpenForTeammates},
+     gameBall: {playerId, name} | null}
 
    driving (see js/util.js's carpoolHtml/wireCarpool) only ever renders
    for an upcoming Away game -- a home game doesn't need a ride.
+   gameBall is the mirror case: only ever renders once a game is played.
 
    An upcoming game's detail view also links to the opponent's own
    macleague.org team page when js/league-teams.js can resolve one --
@@ -41,6 +43,43 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> games[]
+
+  // Game Ball -- a completed-game-only highlight (game.gameBall =
+  // {playerId, name} or null), same "attached to the item" shape as rsvps/
+  // driving. Coach picks it from the roster opts.roster carries in (see
+  // index.html's renderScheduleTab, which now loads Roster alongside
+  // Schedule/Practices for exactly this); everyone sees who got it, same
+  // visibility rule as the RSVP headcount -- a highlight only the coach
+  // could see wouldn't be much of one.
+  function gameBallHtml(game, opts) {
+    const roster = opts.roster || [];
+    return `
+      <div class="sectionLabel" style="margin-top:16px;">Game Ball</div>
+      ${game.gameBall ? `
+        <div class="detailRow">&#11088; ${escapeHtml(game.gameBall.name)}</div>
+        ${opts.canEdit ? '<button class="btn btnGhost btnTiny" id="gbClear" style="margin-top:6px;">Clear</button>' : ''}
+        ` : (opts.canEdit ? `
+        ${roster.length ? `
+          <div class="drillChipRow">
+            ${roster.map(p => `<button class="drillChip" data-gameball="${escapeHtml(p.id)}" data-name="${escapeHtml(p.name)}">${escapeHtml(p.name)}</button>`).join('')}
+          </div>` : '<div class="emptyState">Add players to the roster first.</div>'}
+        ` : '<div class="emptyState">No game ball given yet.</div>')}`;
+  }
+  function wireGameBall(containerEl, teamId, game, opts) {
+    containerEl.querySelectorAll('[data-gameball]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const updated = Object.assign({}, game, { gameBall: { playerId: btn.dataset.gameball, name: btn.dataset.name } });
+        await window.Schedule.saveGame(teamId, updated);
+        if (opts.onItemChange) opts.onItemChange();
+      });
+    });
+    const clearBtn = containerEl.querySelector('#gbClear');
+    if (clearBtn) clearBtn.addEventListener('click', async () => {
+      const updated = Object.assign({}, game, { gameBall: null });
+      await window.Schedule.saveGame(teamId, updated);
+      if (opts.onItemChange) opts.onItemChange();
+    });
+  }
 
   // Upcoming game (no score yet): pitcher-availability preview for both
   // sides. Completed game: shows/logs our own pitch counts for that game --
@@ -207,6 +246,7 @@
             <div id="weatherSlot"></div>
             ${!played ? rsvpHtml(game, opts.viewerName, opts.canEdit) : ''}
             ${!played && game.homeAway === 'Away' ? carpoolHtml(game, opts.viewerName) : ''}
+            ${played ? gameBallHtml(game, opts) : ''}
             <div class="sectionLabel" style="margin-top:16px;">Pitching</div>
             <div id="pitchingSlot"></div>
             <div class="detailActions">
@@ -218,8 +258,9 @@
         const weatherSlot = containerEl.querySelector('#weatherSlot');
         if (weatherSlot && game.location && game.date) window.loadWeatherInto(weatherSlot, game.location, game.date, game.gameTime);
         renderPitchingSlot(teamId, game, containerEl.querySelector('#pitchingSlot'), opts);
-        if (!played) wireRsvp(containerEl, game, opts.viewerName, updated => window.Schedule.saveGame(teamId, updated), opts.onRsvpChange);
-        if (!played && game.homeAway === 'Away') wireCarpool(containerEl, game, opts.viewerName, updated => window.Schedule.saveGame(teamId, updated), opts.onRsvpChange);
+        if (!played) wireRsvp(containerEl, game, opts.viewerName, updated => window.Schedule.saveGame(teamId, updated), opts.onItemChange);
+        if (!played && game.homeAway === 'Away') wireCarpool(containerEl, game, opts.viewerName, updated => window.Schedule.saveGame(teamId, updated), opts.onItemChange);
+        if (played) wireGameBall(containerEl, teamId, game, opts);
         const editBtn = containerEl.querySelector('#editBtn');
         if (editBtn) editBtn.addEventListener('click', () => opts.onEdit && opts.onEdit());
         containerEl.querySelector('#icsBtn').addEventListener('click', () => {
