@@ -99,6 +99,15 @@
           </div>`;
       }
 
+      // Plain-text batting order for texting/pasting elsewhere -- only
+      // slots with a player actually picked, same "don't show a blank
+      // name" rule the roster/position dropdowns already follow.
+      function shareText(l) {
+        const lines = l.slots.filter(s => s.name).map((s, i) => `${i + 1}. ${s.name}${s.position ? ' - ' + s.position : ''}`);
+        const header = [l.name || 'Lineup', l.date || ''].filter(Boolean).join(' -- ');
+        return [header, ...lines].join('\n');
+      }
+
       function editHtml(l) {
         return `
           <div class="sectionHeader">
@@ -116,8 +125,10 @@
           <button class="btn btnGhost" id="luAddSlot" style="width:100%;margin-top:10px;">+ Add batter</button>
           <div class="sectionHeader" style="margin-top:16px;">
             <button class="btn" id="luSave">Save lineup</button>
+            <button class="btn btnGhost" id="luShare">Share</button>
             <button class="btn btnDanger" id="luDelete">Delete</button>
-          </div>`;
+          </div>
+          <div class="helpText" id="luShareMsg" style="min-height:16px;"></div>`;
       }
 
       function refresh() {
@@ -182,6 +193,27 @@
             await saveLineups();
             btnEvt.target.textContent = '✓ Saved!';
             setTimeout(() => refresh(), 500);
+          });
+          containerEl.querySelector('#luShare').addEventListener('click', async () => {
+            const text = shareText(l);
+            const msg = containerEl.querySelector('#luShareMsg');
+            const say = (t, good) => { msg.textContent = t; msg.style.color = good ? '#5fd989' : '#ff8a8a'; };
+            if (navigator.share) {
+              try { await navigator.share({ title: l.name || 'Lineup', text }); return; }
+              catch (e) { if (e.name === 'AbortError') return; /* fall through to copy */ }
+            }
+            try {
+              if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); say('Lineup copied.', true); return; }
+            } catch (e) { /* fall through */ }
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.cssText = 'position:fixed;top:0;left:-9999px;';
+            document.body.appendChild(ta);
+            ta.focus(); ta.select();
+            let ok = false;
+            try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+            ta.remove();
+            say(ok ? 'Lineup copied.' : 'Could not copy automatically -- select and copy manually.', ok);
           });
           containerEl.querySelector('#luDelete').addEventListener('click', async () => {
             if (!confirm('Delete this lineup?')) return;
