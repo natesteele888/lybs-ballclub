@@ -24,7 +24,6 @@
   const errorEl = document.getElementById('loginError');
   const identityScreenEl = document.getElementById('identityScreen');
   const identityNameEl = document.getElementById('identityName');
-  const identityPinEl = document.getElementById('identityPin');
   const identityBtnEl = document.getElementById('identityBtn');
   const identityErrorEl = document.getElementById('identityError');
 
@@ -120,16 +119,14 @@
 
   function submitIdentity() {
     const name = identityNameEl.value.trim();
-    const pin = identityPinEl.value.trim();
     if (!name) { identityErrorEl.textContent = 'Enter your name.'; return; }
-    if (!/^\d{4}$/.test(pin)) { identityErrorEl.textContent = 'PIN must be exactly 4 digits.'; return; }
     const { teamId, role } = pendingTeamRole;
-    const identity = window.Identity.setSession(teamId, role, name, pin);
+    const identity = window.Identity.setSession(teamId, role, name);
     identityScreenEl.classList.add('hide');
     window.onIdentityReady && window.onIdentityReady(teamId, role, identity);
   }
   identityBtnEl.addEventListener('click', submitIdentity);
-  identityPinEl.addEventListener('keydown', e => { if (e.key === 'Enter') submitIdentity(); });
+  identityNameEl.addEventListener('keydown', e => { if (e.key === 'Enter') submitIdentity(); });
 
   // Wired to a tap on #whoamiLabel (see index.html's onIdentityReady) --
   // clears this device's remembered identity/session for the team and
