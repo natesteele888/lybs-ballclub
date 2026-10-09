@@ -98,7 +98,10 @@
             <div class="listRowTitle">${item.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(item.opponent || 'TBD')}</div>
             <div class="listRowSub">${escapeHtml(item.gameTime || '')}${item.location ? ' &middot; ' + escapeHtml(item.location) : ''}</div>
           </div>
-          ${played ? `<span class="badge ${item.ourScore > item.oppScore ? 'badgeW' : item.ourScore < item.oppScore ? 'badgeL' : 'badgeT'}">${item.ourScore}-${item.oppScore}</span>` : '<span class="badge badgeTbd">Game</span>'}
+          ${played ? `<span class="badge ${item.ourScore > item.oppScore ? 'badgeW' : item.ourScore < item.oppScore ? 'badgeL' : 'badgeT'}">${item.ourScore}-${item.oppScore}</span>`
+            : item.status === 'postponed' ? '<span class="badge badgeTbd">Postponed</span>'
+            : item.status === 'cancelled' ? '<span class="badge badgeTbd">Cancelled</span>'
+            : '<span class="badge badgeTbd">Game</span>'}
         </div>`;
     }
     return `
@@ -172,7 +175,9 @@
       const recordStr = leagueRow
         ? `${leagueRow.w ?? '-'}-${leagueRow.l ?? '-'}${leagueRow.t && leagueRow.t !== '0' ? '-' + leagueRow.t : ''}`
         : (ownRecord.ties ? `${ownRecord.wins}-${ownRecord.losses}-${ownRecord.ties}` : `${ownRecord.wins}-${ownRecord.losses}`);
-      const gamesRemaining = games.filter(g => g.ourScore == null || g.oppScore == null).length;
+      // Postponed still counts -- it's owed, just TBD on date. Cancelled
+      // doesn't -- see js/schedule.js's status field.
+      const gamesRemaining = games.filter(g => (g.ourScore == null || g.oppScore == null) && g.status !== 'cancelled').length;
 
       // Tallied from game.gameBall across this season's games -- no
       // separate storage, just counting what schedule.js already has.
