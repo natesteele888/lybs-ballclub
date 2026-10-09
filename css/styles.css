@@ -118,7 +118,13 @@ a { color: var(--lybs-blue-bright); }
   box-shadow: 0 0 0 3px var(--glow);
 }
 .loginContent .btn { width: 100%; }
-#loginError, #identityError { color: #FF6B6B; font-size: 13px; min-height: 18px; margin-top: 8px; font-family: var(--font-body); }
+#loginError, #identityError, #googleSignInError { color: #FF6B6B; font-size: 13px; min-height: 18px; margin-top: 8px; font-family: var(--font-body); }
+.loginDivider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 18px 0 14px; color: var(--text2); font-size: 12px;
+  font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.08em;
+}
+.loginDivider::before, .loginDivider::after { content: ''; flex: 1; height: 1px; background: var(--card-border); }
 
 /* ---- Buttons ---- */
 .btn {
@@ -616,7 +622,6 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 
 /* ---- Coaching drills (Around the Horn + Pitch Chart) ---- */
 .drillHero { text-align: center; padding: 10px 0 20px; }
-.drillHeroIcon { font-size: 30px; margin-bottom: 4px; }
 .drillHeroTitle { font-family: var(--font-display); font-size: 24px; letter-spacing: 0.02em; color: #F0C84B; }
 .drillHeroSub { font-size: 12.5px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
 .drillCard {
@@ -793,7 +798,6 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   background: var(--card); cursor: pointer; margin-top: 8px;
 }
 .ssDropHas { border-style: solid; border-color: #5fd989; }
-.ssDropIcon { font-size: 34px; line-height: 1; }
 .ssDropTitle { font-weight: 700; margin-top: 8px; font-size: 14px; }
 .ssPostCard { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; }
 .ssPostWho { display: flex; align-items: center; gap: 10px; }

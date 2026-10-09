@@ -20,7 +20,7 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=100">
+<link rel="stylesheet" href="css/styles.css?v=102">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -35,6 +35,12 @@
     <input id="loginCode" type="password" placeholder="Access code" autocomplete="off">
     <button class="btn" id="loginBtn">Enter</button>
     <div id="loginError"></div>
+    <div class="loginDivider"><span>or</span></div>
+    <!-- Additive, not a replacement -- the code above keeps working for
+         anyone who has it. This is for a coach or a specifically-invited
+         parent with a real per-person grant (js/access-control.js). -->
+    <button class="btn btnGhost" id="googleSignInBtn">Sign in with Google</button>
+    <div id="googleSignInError"></div>
   </div>
 </div>
 
@@ -61,7 +67,7 @@
       <!-- Coach-only -- toggled by onIdentityReady below. Opens
            js/social-submit.js in the modal sheet at the bottom of body,
            not a nav tab: a one-off action, not a place to browse to. -->
-      <button class="topBarShareBtn hide" id="topBarShareBtn" title="Share to Social">📸 Share</button>
+      <button class="topBarShareBtn hide" id="topBarShareBtn" title="Share to Social">Share</button>
       <div class="whoami" id="whoamiLabel"></div>
     </div>
   </div>
@@ -92,6 +98,7 @@
   <div class="tabPanel" id="tab-signup"></div>
   <div class="tabPanel" id="tab-awards"></div>
   <div class="tabPanel" id="tab-equipment"></div>
+  <div class="tabPanel" id="tab-access"></div>
   <div class="tabPanel" id="tab-calendar"></div>
   <div class="tabPanel" id="tab-archive"></div>
   <!-- Not a nav tab -- reached only by tapping a team's logo/name on a game
@@ -118,7 +125,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261009p';</script>
+<script defer>window.BUILD_V = '20261009r';</script>
 <script defer>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -127,47 +134,63 @@
   // manual step and the exact URL to paste in here afterward.
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
+  // Used only by js/google-auth.js (Firebase Auth's own SDK) -- the default
+  // <projectId>.firebaseapp.com domain every Firebase project gets automatically.
+  // Signing in from natesteele888.github.io also needs that origin added under
+  // Authentication -> Settings -> Authorized domains in the console -- see
+  // README.md "Go live".
+  window.FIREBASE_AUTH_DOMAIN = 'lybs-ballclub.firebaseapp.com';
 </script>
-<script defer src="js/util.js?v=100"></script>
-<script defer src="js/backend.js?v=100"></script>
-<script defer src="js/team-registry.js?v=100"></script>
-<script defer src="js/cloud-auth.js?v=100"></script>
-<script defer src="js/team-config.js?v=100"></script>
-<script defer src="js/identity.js?v=100"></script>
-<script defer src="js/weather.js?v=100"></script>
-<script defer src="js/club-logos.js?v=100"></script>
-<script defer src="js/league-teams.js?v=100"></script>
-<script defer src="js/game-card.js?v=100"></script>
-<script defer src="js/pitch-smart.js?v=100"></script>
-<script defer src="js/tonight.js?v=100"></script>
-<script defer src="js/announcements.js?v=100"></script>
-<script defer src="js/homepage.js?v=100"></script>
-<script defer src="js/league-info.js?v=100"></script>
-<script defer src="js/calendar-export.js?v=100"></script>
-<script defer src="js/schedule.js?v=100"></script>
-<script defer src="js/practices.js?v=100"></script>
-<script defer src="js/calendar-view.js?v=100"></script>
-<script defer src="js/roster.js?v=100"></script>
-<script defer src="js/drill-baserunning.js?v=100"></script>
-<script defer src="js/drill-ath.js?v=100"></script>
-<script defer src="js/drill-pitching.js?v=100"></script>
-<script defer src="js/depth-chart.js?v=100"></script>
-<script defer src="js/lineup-builder.js?v=100"></script>
-<script defer src="js/duty.js?v=100"></script>
-<script defer src="js/signup.js?v=100"></script>
-<script defer src="js/awards.js?v=100"></script>
-<script defer src="js/equipment.js?v=100"></script>
-<script defer src="js/coach-notes.js?v=100"></script>
-<script defer src="js/practice-plan.js?v=100"></script>
-<script defer src="js/play-diagram.js?v=100"></script>
-<script defer src="js/stats-import.js?v=100"></script>
-<script defer src="js/social-submit.js?v=100"></script>
-<script defer src="js/gamechanger.js?v=100"></script>
-<script defer src="js/rules.js?v=100"></script>
-<script defer src="js/standings.js?v=100"></script>
-<script defer src="js/calendar-family.js?v=100"></script>
-<script defer src="js/archive.js?v=100"></script>
-<script defer src="js/team-page.js?v=100"></script>
+<!-- Firebase's compat build, not the modular SDK -- a classic script like
+     every other file here, not an ES module. Only used for Google Sign-In
+     (js/google-auth.js); Realtime Database access still goes through
+     js/backend.js's plain REST calls, unrelated to this SDK. Pinned to a
+     specific version (not "latest") so a future Firebase release can't
+     silently change behavior underneath this app -- bump deliberately. -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-app-compat.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-auth-compat.min.js"></script>
+<script defer src="js/util.js?v=102"></script>
+<script defer src="js/backend.js?v=102"></script>
+<script defer src="js/team-registry.js?v=102"></script>
+<script defer src="js/cloud-auth.js?v=102"></script>
+<script defer src="js/google-auth.js?v=102"></script>
+<script defer src="js/team-config.js?v=102"></script>
+<script defer src="js/identity.js?v=102"></script>
+<script defer src="js/weather.js?v=102"></script>
+<script defer src="js/club-logos.js?v=102"></script>
+<script defer src="js/league-teams.js?v=102"></script>
+<script defer src="js/game-card.js?v=102"></script>
+<script defer src="js/pitch-smart.js?v=102"></script>
+<script defer src="js/tonight.js?v=102"></script>
+<script defer src="js/announcements.js?v=102"></script>
+<script defer src="js/homepage.js?v=102"></script>
+<script defer src="js/league-info.js?v=102"></script>
+<script defer src="js/calendar-export.js?v=102"></script>
+<script defer src="js/schedule.js?v=102"></script>
+<script defer src="js/practices.js?v=102"></script>
+<script defer src="js/calendar-view.js?v=102"></script>
+<script defer src="js/roster.js?v=102"></script>
+<script defer src="js/drill-baserunning.js?v=102"></script>
+<script defer src="js/drill-ath.js?v=102"></script>
+<script defer src="js/drill-pitching.js?v=102"></script>
+<script defer src="js/depth-chart.js?v=102"></script>
+<script defer src="js/lineup-builder.js?v=102"></script>
+<script defer src="js/duty.js?v=102"></script>
+<script defer src="js/signup.js?v=102"></script>
+<script defer src="js/awards.js?v=102"></script>
+<script defer src="js/equipment.js?v=102"></script>
+<script defer src="js/team-access.js?v=102"></script>
+<script defer src="js/coach-notes.js?v=102"></script>
+<script defer src="js/practice-plan.js?v=102"></script>
+<script defer src="js/play-diagram.js?v=102"></script>
+<script defer src="js/stats-import.js?v=102"></script>
+<script defer src="js/social-submit.js?v=102"></script>
+<script defer src="js/gamechanger.js?v=102"></script>
+<script defer src="js/rules.js?v=102"></script>
+<script defer src="js/standings.js?v=102"></script>
+<script defer src="js/calendar-family.js?v=102"></script>
+<script defer src="js/archive.js?v=102"></script>
+<script defer src="js/team-page.js?v=102"></script>
 <script defer>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -204,7 +227,7 @@
   const NAV_CATEGORIES = [
     { id: 'home', label: 'Home', tabs: ['home'] },
     { id: 'schedule', label: 'Schedule', tabs: ['schedule', 'practices', 'gamechanger'] },
-    { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups', 'duty', 'signup', 'awards', 'equipment'] },
+    { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups', 'duty', 'signup', 'awards', 'equipment', 'access'] },
     { id: 'standings', label: 'Standings', tabs: ['standings', 'seeding', 'stats', 'archive'] },
     { id: 'league', label: 'League', tabs: ['league'] },
     { id: 'coaching', label: 'Coaching', tabs: ['coaching'] },
@@ -213,14 +236,14 @@
   const TAB_LABELS = {
     home: 'Home',
     schedule: 'Schedule', practices: 'Practices', calendar: 'My Calendar', gamechanger: 'GameChanger',
-    roster: 'Roster', standings: 'Standings', seeding: 'Seeding', stats: 'Stats', archive: 'History', depth: 'Depth Chart', lineups: 'Lineups', duty: 'Snack Duty', signup: 'Sign-Up', awards: 'Awards', equipment: 'Equipment',
+    roster: 'Roster', standings: 'Standings', seeding: 'Seeding', stats: 'Stats', archive: 'History', depth: 'Depth Chart', lineups: 'Lineups', duty: 'Snack Duty', signup: 'Sign-Up', awards: 'Awards', equipment: 'Equipment', access: 'Team Access',
     league: 'League', rules: 'Rules', pitching: 'Pitching', coaching: 'Coaching',
   };
   // Depth Chart and Lineups are roster-*editing* tools (no read-only mode
   // of their own), same access level they had nested inside the coach-only
   // Coaching tab before -- gating them individually here keeps that intact
   // now that they're top-level tabs a non-coach would otherwise also see.
-  const COACH_ONLY_TABS = new Set(['coaching', 'depth', 'lineups']);
+  const COACH_ONLY_TABS = new Set(['coaching', 'depth', 'lineups', 'access']);
   const navCatBar = document.getElementById('navCatBar');
   const tabBarEl = document.getElementById('tabBar');
 
@@ -599,6 +622,7 @@
     else if (name === 'signup') { const el = loadingEl('tab-signup'); window.SignUp.ensureLoaded(TEAM_ID).then(() => window.SignUp.render(el, TEAM_ID, { canEdit: canEdit(), viewerName: SESSION.name })); }
     else if (name === 'awards') { const el = loadingEl('tab-awards'); Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Awards.ensureLoaded(TEAM_ID)]).then(() => window.Awards.render(el, TEAM_ID, { canEdit: canEdit(), roster: window.Roster.getPlayers(TEAM_ID) })); }
     else if (name === 'equipment') { const el = loadingEl('tab-equipment'); window.Equipment.ensureLoaded(TEAM_ID).then(() => window.Equipment.render(el, TEAM_ID, { canEdit: canEdit(), viewerName: SESSION.name })); }
+    else if (name === 'access') { const el = loadingEl('tab-access'); window.TeamAccess.render(el, TEAM_ID, { inviterName: SESSION.name }); }
     else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
     else if (name === 'archive') { const el = loadingEl('tab-archive'); window.Archive.ensureLoaded().then(() => window.Archive.render(el)); }
   }
@@ -611,7 +635,7 @@
   window.onIdentityReady = async function (teamId, role, identity) {
     TEAM_ID = teamId; ROLE = role; SESSION = identity;
     const whoamiEl = document.getElementById('whoamiLabel');
-    whoamiEl.textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Player/Family'}`;
+    whoamiEl.textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Parent'}`;
     whoamiEl.title = 'Tap to log out of this device';
     whoamiEl.onclick = () => {
       if (confirm(`Log out ${identity.name} from this device? You'll need the team code to sign back in.`)) {
@@ -629,7 +653,15 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script defer src="js/auth.js?v=100"></script>
+<script defer src="js/auth.js?v=102"></script>
+<!-- access-control.js also calls window.onIdentityReady, but only from
+     inside an async googleAuth.onReady() callback, never at top-level
+     script-execution time -- so unlike auth.js it doesn't strictly need to
+     load last, just after onIdentityReady is defined and after
+     google-auth.js. Placed next to auth.js anyway since the two play the
+     same role (driving entry into the app) for their respective sign-in
+     paths. -->
+<script defer src="js/access-control.js?v=102"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.

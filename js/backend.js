@@ -44,6 +44,25 @@
        real read privacy has to live outside the teams/ tree entirely,
        with its own top-level rule -- see database.rules.json's
        "coachPrivate" entry.
+     window.accessPath(teamId, uid)       -> 'access/{teamId}/{uid}' --
+       "coach" | "parent", keyed by the signed-in Google account's stable
+       uid rather than teams/{teamId} itself, so a real per-person grant
+       (js/access-control.js) can coexist with the shared code-gate
+       accounts above without the two models needing to agree on shape.
+     window.boardMemberPath(uid)          -> 'boardMembers/{uid}' -- true
+       for a board-wide grant, same uid-keyed idea, not scoped to any team.
+     window.personPath(uid)               -> 'people/{uid}' -- {name, email},
+       written once at first Google sign-in so an access-list UI has a
+       name to show instead of a raw uid.
+     window.invitePath(emailKey, teamIdOrBoard)       -> 'invites/{emailKey}/{teamIdOrBoard}'
+     window.inviteByTeamPath(teamIdOrBoard, emailKey) -> 'invitesByTeam/{teamIdOrBoard}/{emailKey}'
+       Same pending-invite record, stored at both paths (RTDB has no
+       reverse-index query, same reason coachPrivate above is its own
+       top-level tree) -- by-email so a freshly-signed-in person can look
+       up "what's pending for me," by-team so a coach/board panel can look
+       up "what's pending for my team." emailKey is the invitee's email,
+       lowercased and with '.' replaced by ',' (RTDB keys can't contain
+       '.') -- see js/access-control.js's emailKey().
      window.dbGet(path)             -- async, resolves to the JSON
        value at that path (or null).
      window.dbPut(path, value)      -- async, writes the whole
@@ -68,6 +87,25 @@
   };
   window.coachPrivatePath = function (teamId, key) {
     return `coachPrivate/${teamId}/${key}`;
+  };
+  // uid is optional -- omit it to get the whole team's {uid: role} map
+  // (js/team-access.js's "who has access" list), rather than one entry.
+  window.accessPath = function (teamId, uid) {
+    return uid ? `access/${teamId}/${uid}` : `access/${teamId}`;
+  };
+  window.boardMemberPath = function (uid) {
+    return `boardMembers/${uid}`;
+  };
+  window.personPath = function (uid) {
+    return `people/${uid}`;
+  };
+  window.invitePath = function (emailKey, teamIdOrBoard) {
+    return `invites/${emailKey}/${teamIdOrBoard}`;
+  };
+  // emailKey is optional -- omit it to get the whole team's pending-invite
+  // map (js/team-access.js's "pending invites" list), rather than one entry.
+  window.inviteByTeamPath = function (teamIdOrBoard, emailKey) {
+    return emailKey ? `invitesByTeam/${teamIdOrBoard}/${emailKey}` : `invitesByTeam/${teamIdOrBoard}`;
   };
 
   // ---- Mock store -------------------------------------------------------
@@ -98,7 +136,14 @@
       if (typeof cur[p] !== 'object' || cur[p] === null) cur[p] = {};
       cur = cur[p];
     }
-    cur[parts[parts.length - 1]] = value;
+    const lastKey = parts[parts.length - 1];
+    // Real RTDB deletes the node when you PUT null, so Object.keys() on the
+    // parent no longer lists it -- matters for anything keyed by a dynamic
+    // id (e.g. access/{teamId}/{uid}, invites/{emailKey}/{teamId}), where
+    // the deleted key being merely set to null, not removed, would leave it
+    // showing up in a parent-level read/list forever.
+    if (value === null || value === undefined) delete cur[lastKey];
+    else cur[lastKey] = value;
   }
 
   // ---- Real mode ----------------------------------------------------------

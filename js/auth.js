@@ -135,6 +135,7 @@
   window.logOutOfApp = function (teamId) {
     if (window.Identity && teamId) window.Identity.clear(teamId);
     if (window.signOutOfGate) window.signOutOfGate();
+    if (window.__activeAuthMode === 'google' && window.googleAuth) window.googleAuth.signOut();
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
     location.reload();
   };

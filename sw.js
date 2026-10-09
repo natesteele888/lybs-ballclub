@@ -17,11 +17,12 @@
 // zone at the field didn't just show stale data -- it broke outright: the
 // shell loaded but every tab's own module was missing, since only
 // index.html/styles.css/manifest.json were ever cached.
-const CACHE_NAME = 'lybs-ballclub-shell-20261009p';
+const CACHE_NAME = 'lybs-ballclub-shell-20261009r';
 const SHELL_FILES = [
   './index.html',
   './css/styles.css',
   './manifest.json',
+  './js/access-control.js',
   './js/announcements.js',
   './js/archive.js',
   './js/auth.js',
@@ -41,6 +42,7 @@ const SHELL_FILES = [
   './js/equipment.js',
   './js/game-card.js',
   './js/gamechanger.js',
+  './js/google-auth.js',
   './js/homepage.js',
   './js/identity.js',
   './js/league-info.js',
@@ -57,6 +59,7 @@ const SHELL_FILES = [
   './js/social-submit.js',
   './js/standings.js',
   './js/stats-import.js',
+  './js/team-access.js',
   './js/team-config.js',
   './js/team-page.js',
   './js/team-registry.js',
