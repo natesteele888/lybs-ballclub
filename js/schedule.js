@@ -11,6 +11,11 @@
      gameType ('regular' | 'playoff' | 'championship', default
        'regular' when unset -- old games saved before this field
        existed are just treated as regular season),
+     status ('postponed' | 'cancelled', default unset/scheduled --
+       same "absent means normal" convention as gameType. Coach sets
+       this by hand and clears it by hand too once a postponed game's
+       date is edited to the makeup date -- no auto-detection, same
+       as every other manual field here),
      pitchCounts: [{name, pitches}],
      rsvps: {name: 'in'|'out'}, driving: {name: seatsOpenForTeammates},
      gameBall: {playerId, name} | null}
@@ -200,15 +205,17 @@
           });
           return `<div class="gameResultCardWrap" data-id="${escapeHtml(g.id)}" style="cursor:pointer;">${card}</div>`;
         }
-        const tbdBadge = g.date < today ? '<span class="badge badgeTbd">?</span>' : '';
+        const statusBadge = g.status === 'postponed' ? '<span class="badge badgeTbd">Postponed</span>'
+          : g.status === 'cancelled' ? '<span class="badge badgeTbd">Cancelled</span>' : '';
+        const tbdBadge = !statusBadge && g.date < today ? '<span class="badge badgeTbd">?</span>' : '';
         const typeBadge = g.gameType === 'playoff' ? '<span class="badge gameTypeBadge gameTypePlayoff">Playoff</span>'
           : g.gameType === 'championship' ? '<span class="badge gameTypeBadge gameTypeChampionship">Championship</span>' : '';
-        return `<div class="listRow" data-id="${escapeHtml(g.id)}">
+        return `<div class="listRow" data-id="${escapeHtml(g.id)}" style="${g.status === 'cancelled' ? 'opacity:0.55;' : ''}">
           <div class="listRowMain">
             <div class="listRowTitle">${window.ClubLogos.badgeHtml(g.opponent, 18)}${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent || 'TBD')} ${typeBadge}</div>
             <div class="listRowSub">${escapeHtml(g.date || '')}${g.gameTime ? ' · ' + escapeHtml(g.gameTime) : ''}${g.location ? ' · ' + escapeHtml(g.location) : ''}</div>
           </div>
-          ${tbdBadge}
+          ${statusBadge}${tbdBadge}
         </div>`;
       }).join('') || '<div class="emptyState">No games yet. Add the first one below.</div>';
       containerEl.innerHTML = `
@@ -239,13 +246,15 @@
               ${game.gameType === 'championship' ? '<span class="badge gameTypeBadge gameTypeChampionship">Championship</span>' : ''}
             </h3>
             <div class="detailRow">${escapeHtml(game.date || '')}${game.gameTime ? ' · ' + escapeHtml(game.gameTime) : ''}</div>
+            ${game.status === 'postponed' ? '<div class="detailRow" style="color:#F0C84B;"><b>&#9888; Postponed</b> &mdash; edit the date once a makeup is set.</div>' : ''}
+            ${game.status === 'cancelled' ? '<div class="detailRow" style="color:#ff8a8a;"><b>&#10060; Cancelled</b></div>' : ''}
             ${game.location ? `<div class="detailRow">📍 <a href="${mapLink(game.location)}" target="_blank" rel="noopener">${escapeHtml(game.location)}</a></div>` : ''}
             ${!played && theirLinkUrl ? `<div class="detailRow">☎️ <a href="${theirLinkUrl}" target="_blank" rel="noopener">${escapeHtml(game.opponent)}'s MAC League page</a> <span class="helpText" style="margin:0;display:inline;">&mdash; coach contact for weather/cancellation, straight from the league, not stored here</span></div>` : ''}
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}
             ${game.notes ? `<div class="detailRow">${escapeHtml(game.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
-            ${!played ? rsvpHtml(game, opts.viewerName, opts.canEdit) : ''}
-            ${!played && game.homeAway === 'Away' ? carpoolHtml(game, opts.viewerName) : ''}
+            ${!played && game.status !== 'cancelled' ? rsvpHtml(game, opts.viewerName, opts.canEdit) : ''}
+            ${!played && game.status !== 'cancelled' && game.homeAway === 'Away' ? carpoolHtml(game, opts.viewerName) : ''}
             ${played ? gameBallHtml(game, opts) : ''}
             <div class="sectionLabel" style="margin-top:16px;">Pitching</div>
             <div id="pitchingSlot"></div>
@@ -288,6 +297,13 @@
                 <option value="championship" ${game.gameType === 'championship' ? 'selected' : ''}>Championship</option>
               </select>
             </label>
+            <label>Status
+              <select id="fStatus">
+                <option value="" ${!game.status ? 'selected' : ''}>Scheduled</option>
+                <option value="postponed" ${game.status === 'postponed' ? 'selected' : ''}>Postponed</option>
+                <option value="cancelled" ${game.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+              </select>
+            </label>
             <label>Date<input type="date" id="fDate" value="${escapeHtml(game.date || '')}"></label>
             <label>Game time<input type="time" id="fGameTime" value="${escapeHtml(game.gameTime || '')}"></label>
             <label>Location / address<input id="fLocation" value="${escapeHtml(game.location || '')}"></label>
@@ -305,6 +321,7 @@
             opponent: containerEl.querySelector('#fOpponent').value.trim(),
             homeAway: containerEl.querySelector('#fHomeAway').value,
             gameType: containerEl.querySelector('#fGameType').value,
+            status: containerEl.querySelector('#fStatus').value || undefined,
             date: containerEl.querySelector('#fDate').value,
             gameTime: containerEl.querySelector('#fGameTime').value,
             location: containerEl.querySelector('#fLocation').value.trim(),
