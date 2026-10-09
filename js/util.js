@@ -73,6 +73,32 @@
     return `<div class="pcStatTile"><div class="pcStatValue">${value}</div><div class="pcStatLabel">${label}</div></div>`;
   };
 
+  // withBusyButton above covers a save still in flight; this covers one
+  // that came back FAILED -- every dbGet/dbPut in js/backend.js calls this
+  // on a network/HTTP error so a tap on a dead sideline connection reads
+  // as "didn't save, try again" instead of silently doing nothing. A
+  // button's own busy/disabled state already resets itself via
+  // withBusyButton's `finally` regardless of outcome -- this is just the
+  // one piece neither that nor a bare `await dbPut(...)` was telling
+  // anyone: whether it actually worked.
+  window.showToast = function showToast(message, kind) {
+    let host = document.getElementById('toastHost');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'toastHost';
+      document.body.appendChild(host);
+    }
+    const el = document.createElement('div');
+    el.className = `toast ${kind === 'info' ? 'toastInfo' : 'toastError'}`;
+    el.textContent = message;
+    host.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('toastShow'));
+    setTimeout(() => {
+      el.classList.remove('toastShow');
+      setTimeout(() => el.remove(), 300);
+    }, 4000);
+  };
+
   // RSVP -- shared by schedule.js and practices.js's detail views, since
   // a game and a practice both just need "who's coming" attached the same
   // way: rides along on the item itself (item.rsvps = {name: 'in'|'out'}),
