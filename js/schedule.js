@@ -61,7 +61,7 @@
     return `
       <div class="sectionLabel" style="margin-top:16px;">Game Ball</div>
       ${game.gameBall ? `
-        <div class="detailRow"><span class="gameBallStar">&#11088;</span> ${escapeHtml(game.gameBall.name)}</div>
+        <div class="detailRow"><span class="popReveal">&#11088;</span> ${escapeHtml(game.gameBall.name)}</div>
         ${opts.canEdit ? '<button class="btn btnGhost btnTiny" id="gbClear" style="margin-top:6px;">Clear</button>' : ''}
         ` : (opts.canEdit ? `
         ${roster.length ? `

@@ -929,15 +929,16 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   pointer-events: none;
 }
 
-/* Game Ball reveal (js/schedule.js's gameBallHtml) -- a one-shot pop + glow
-   the moment a game ball renders (first view after being given, or anyone
-   opening that completed game afterward), not a perpetual pulse. */
-.gameBallStar {
+/* Pop + glow reveal for a one-shot recognition emoji -- Game Ball's star
+   (js/schedule.js, js/homepage.js) and Awards' trophy (js/awards.js).
+   Plays once per render (first view after being given, or anyone opening
+   that detail afterward), not a perpetual pulse. */
+.popReveal {
   display: inline-block;
-  animation: gameBallPop .5s cubic-bezier(.17,.89,.32,1.49) both;
+  animation: popReveal .5s cubic-bezier(.17,.89,.32,1.49) both;
   filter: drop-shadow(0 0 6px rgba(240,200,75,0.8));
 }
-@keyframes gameBallPop {
+@keyframes popReveal {
   0% { transform: scale(0.3) rotate(-15deg); opacity: 0; }
   60% { transform: scale(1.15) rotate(5deg); opacity: 1; }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
