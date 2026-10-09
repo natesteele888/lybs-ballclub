@@ -55,18 +55,11 @@
               <div class="archiveTeamHeader" data-id="${escapeHtml(t.name)}" style="cursor:pointer;">
                 <h3 style="margin-bottom:2px;">${escapeHtml(t.name)}</h3>
                 <div class="listRowSub">${escapeHtml(t.division)} &middot; ${escapeHtml(t.season)}</div>
+                <div class="recordLine" style="margin-top:4px;">Record: <b>${escapeHtml(t.record || '—')}</b></div>
               </div>
               ${isOpen ? `
-                <div class="archiveSplitRow">
-                  <div class="archiveRecordCol">
-                    <div class="sectionLabel">Record</div>
-                    <div class="archiveRecordValue">${escapeHtml(t.record || '—')}</div>
-                  </div>
-                  <div class="archiveGamesCol">
-                    <div class="sectionLabel">Schedule</div>
-                    ${renderGames(t)}
-                  </div>
-                </div>
+                <div class="sectionLabel" style="margin-top:14px;">Schedule</div>
+                ${renderGames(t)}
                 ` : ''}
             </div>`;
         }).join('') || '<div class="emptyState">No archived seasons yet.</div>';
