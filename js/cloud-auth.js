@@ -128,6 +128,17 @@
 
   window.getFirebaseIdToken = async function () {
     if (window.__isMockBackend && window.__isMockBackend()) return 'mock-token';
+    // Only when js/access-control.js's enter() actually used a Google
+    // session to get into the app -- not just whenever one happens to
+    // exist. A device can hold a lingering gate session AND a persisted
+    // Google session at once; whichever one actually won the entry race
+    // (see access-control.js's loginScreen-hidden guard) is the one every
+    // dbGet/dbPut has to keep using for the rest of the page's life, or
+    // every call would silently carry the other identity's token while
+    // the UI still shows the one that actually won.
+    if (window.__activeAuthMode === 'google' && window.googleAuth && window.googleAuth.hasSession()) {
+      return window.googleAuth.getIdToken();
+    }
     if (cached && cached.expiresAt - SAFETY_MARGIN_MS > Date.now()) return cached.idToken;
     if (!inFlight) {
       inFlight = (async () => {
