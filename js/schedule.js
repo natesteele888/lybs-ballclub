@@ -11,7 +11,11 @@
      gameType ('regular' | 'playoff' | 'championship', default
        'regular' when unset -- old games saved before this field
        existed are just treated as regular season),
-     pitchCounts: [{name, pitches}]}
+     pitchCounts: [{name, pitches}],
+     rsvps: {name: 'in'|'out'}, driving: {name: seatsOpenForTeammates}}
+
+   driving (see js/util.js's carpoolHtml/wireCarpool) only ever renders
+   for an upcoming Away game -- a home game doesn't need a ride.
 
    An upcoming game's detail view also links to the opponent's own
    macleague.org team page when js/league-teams.js can resolve one --
@@ -202,6 +206,7 @@
             ${game.notes ? `<div class="detailRow">${escapeHtml(game.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
             ${!played ? rsvpHtml(game, opts.viewerName, opts.canEdit) : ''}
+            ${!played && game.homeAway === 'Away' ? carpoolHtml(game, opts.viewerName) : ''}
             <div class="sectionLabel" style="margin-top:16px;">Pitching</div>
             <div id="pitchingSlot"></div>
             <div class="detailActions">
@@ -214,6 +219,7 @@
         if (weatherSlot && game.location && game.date) window.loadWeatherInto(weatherSlot, game.location, game.date, game.gameTime);
         renderPitchingSlot(teamId, game, containerEl.querySelector('#pitchingSlot'), opts);
         if (!played) wireRsvp(containerEl, game, opts.viewerName, updated => window.Schedule.saveGame(teamId, updated), opts.onRsvpChange);
+        if (!played && game.homeAway === 'Away') wireCarpool(containerEl, game, opts.viewerName, updated => window.Schedule.saveGame(teamId, updated), opts.onRsvpChange);
         const editBtn = containerEl.querySelector('#editBtn');
         if (editBtn) editBtn.addEventListener('click', () => opts.onEdit && opts.onEdit());
         containerEl.querySelector('#icsBtn').addEventListener('click', () => {

@@ -116,4 +116,44 @@
       });
     });
   };
+
+  // Carpool -- schedule.js only, away games only (see there): rides along
+  // on the game itself (item.driving = {name: seatsOpenForTeammates}), same
+  // "attached to the item, no separate collection" shape as rsvps above.
+  // Only offered to someone who's already RSVP'd in -- can't offer a ride
+  // to a game you're not going to. No address/phone exchanged here or
+  // anywhere else in this app; this just says who to go coordinate with,
+  // the same boundary the opponent's MAC League page link already draws.
+  window.carpoolHtml = function carpoolHtml(item, viewerName) {
+    const driving = item.driving || {};
+    const names = Object.keys(driving);
+    const mine = viewerName ? driving[viewerName] : null;
+    const amIIn = !!(viewerName && item.rsvps && item.rsvps[viewerName] === 'in');
+    return `
+      <div class="sectionLabel" style="margin-top:16px;">Carpool</div>
+      ${amIIn ? `
+        <div class="helpText" style="margin:0 0 6px;">Can you drive? Open seats for teammates:</div>
+        <div class="rsvpRow" style="flex-wrap:wrap;">
+          <button class="btn btnTiny ${!mine ? '' : 'btnGhost'}" data-drive="0">Not driving</button>
+          <button class="btn btnTiny ${mine === 1 ? '' : 'btnGhost'}" data-drive="1">1 seat</button>
+          <button class="btn btnTiny ${mine === 2 ? '' : 'btnGhost'}" data-drive="2">2 seats</button>
+          <button class="btn btnTiny ${mine === 3 ? '' : 'btnGhost'}" data-drive="3">3 seats</button>
+          <button class="btn btnTiny ${mine >= 4 ? '' : 'btnGhost'}" data-drive="4">4+ seats</button>
+        </div>` : ''}
+      <div class="helpText" style="margin-top:6px;">
+        ${names.length ? `&#128663; ${names.map(n => `${escapeHtml(n)} (${driving[n]} seat${driving[n] === 1 ? '' : 's'})`).join(' &middot; ')}` : "No one's offered to drive yet."}
+      </div>`;
+  };
+  window.wireCarpool = function wireCarpool(containerEl, item, viewerName, saveFn, onDone) {
+    if (!viewerName) return;
+    containerEl.querySelectorAll('[data-drive]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const seats = Number(btn.dataset.drive);
+        item.driving = item.driving || {};
+        if (seats > 0) item.driving[viewerName] = seats; else delete item.driving[viewerName];
+        await saveFn(item);
+        if (onDone) onDone();
+      });
+    });
+  };
 })();
