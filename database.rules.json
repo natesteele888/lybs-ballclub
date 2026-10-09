@@ -21,7 +21,8 @@
         "signups": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal'))" },
         "awards": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" },
         "equipment": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal'))" },
-        "pitcherDepth": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" }
+        "pitcherDepth": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" },
+        "practicePlans": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" }
       }
     },
 
