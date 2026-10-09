@@ -4,8 +4,9 @@
    LYBS_Secondary_Logo.png (scripts/sample-colors, run once during
    design) so every blue/navy/steel tone on screen actually matches
    the crest, not an approximation of it.
+   Fonts (Anton/Oswald/Inter) load via a <link> in index.html's <head>,
+   not an @import here -- see that file's comment for why.
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   /* -- Brand, sampled from the logo files -- */
