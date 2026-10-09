@@ -19,7 +19,13 @@
                        informational sections, and only shows up at
                        all when something's actually still open.
    1. Today        -- our own games/practices scheduled for today
-                       (teams/{teamId}/schedule + practices).
+                       (teams/{teamId}/schedule + practices), plus an
+                       "nobody has the gear bag" nag (teams/{teamId}/
+                       equipment) right under it -- but only computed
+                       and only shown on a day it'd actually matter,
+                       same gate as Who Can Pitch Today below rather
+                       than a standing warning that's noise on an off
+                       day.
    1.5 Who Can Pitch Today -- only on a day we have a game, the exact
                        same js/pitch-smart.js eligibility list already
                        shown on a game's own detail page, surfaced here
@@ -216,6 +222,15 @@
       const openSignupItems = (Array.isArray(signupsData) ? signupsData : [])
         .flatMap(s => (s.items || []).filter(i => !i.claimedBy).map(i => ({ name: i.name, sheetTitle: s.title })));
 
+      // Equipment nobody's holding, checked only when it'd actually matter
+      // today -- a standing "nobody has the bag" nag on an off day is just
+      // noise, same reasoning Who Can Pitch Today already gates on todayGames.
+      let uncheckedEquipment = [];
+      if (todayItems.length) {
+        const equipmentData = await window.dbGet(window.teamPath(teamId, 'equipment'));
+        uncheckedEquipment = (Array.isArray(equipmentData) ? equipmentData : []).filter(e => !e.holderName);
+      }
+
       const statTiles = [
         statTileHtml(escapeHtml(recordStr), leagueRow ? 'League Record' : 'Record'),
       ];
@@ -255,6 +270,9 @@
         ${todayItems.length
           ? `<div class="listBody">${todayItems.map(x => todayItemHtml(x.kind, x.item)).join('')}</div>`
           : '<div class="emptyState">Nothing on the calendar for us today.</div>'}
+        ${uncheckedEquipment.length
+          ? `<div class="helpText" style="color:#F0C84B;margin-top:6px;">&#9888; Nobody has: ${uncheckedEquipment.map(e => escapeHtml(e.name)).join(', ')}</div>`
+          : ''}
 
         ${todayGames.length ? `
           <div class="sectionLabel" style="margin-top:18px;">Who Can Pitch Today</div>
