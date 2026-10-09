@@ -325,7 +325,7 @@ a { color: var(--lybs-blue-bright); }
    th (and so every column in the row) to fit one long name on one line --
    the parent th's nowrap is for the day/date label, not this. */
 .pcGameTag {
-  font-size: 9px; font-weight: 700; color: var(--lybs-blue-bright); text-transform: none; letter-spacing: 0; margin-top: 2px;
+  font-size: 10px; font-weight: 700; color: var(--lybs-blue-bright); text-transform: none; letter-spacing: 0; margin-top: 2px;
   max-width: 68px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: auto; margin-right: auto;
 }
 .pitchCalendar td {
@@ -362,7 +362,7 @@ a { color: var(--lybs-blue-bright); }
   border: 1px solid var(--card-border);
 }
 .pcTierRange { font-family: var(--font-display); font-weight: 400; font-size: 15px; color: #fff; letter-spacing: 0.01em; }
-.pcTierRest { font-size: 9.5px; color: var(--text2); font-family: var(--font-label); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+.pcTierRest { font-size: 10.5px; color: var(--text2); font-family: var(--font-label); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
 
 .emptyState { color: var(--text2); font-size: 13px; padding: 30px 10px; text-align: center; line-height: 1.6; }
 .badge {
@@ -472,8 +472,8 @@ a { color: var(--lybs-blue-bright); }
    -- tightened up on narrow phones so most/all of it fits without the
    horizontal scroll a casual visitor won't think to try. */
 @media (max-width: 480px) {
-  .standingsTable { font-size: 10.5px; }
-  .standingsTable thead th { padding: 6px 4px; font-size: 8.5px; letter-spacing: 0.04em; }
+  .standingsTable { font-size: 11px; }
+  .standingsTable thead th { padding: 6px 4px; font-size: 9.5px; letter-spacing: 0.04em; }
   .standingsTable td { padding: 6px 4px; }
   .standingsTeamCell { gap: 6px; }
   .standingsTeamCell .clubBadge, .standingsTeamCell .fieldBadgeFallback { width: 24px !important; height: 24px !important; }
@@ -718,7 +718,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .pcStatRow { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
 .pcStatTile { flex: 1; min-width: 78px; text-align: center; padding: 12px 8px; background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; }
 .pcStatValue { font-family: var(--font-display); font-size: 26px; }
-.pcStatLabel { font-size: 9.5px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.pcStatLabel { font-size: 10.5px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
 .siCardName { font-family: var(--font-label); font-weight: 700; font-size: 13px; color: #fff; }
 .pcPitcherRank {
   display: inline-block; font-family: var(--font-label); font-weight: 700; font-size: 11px;
