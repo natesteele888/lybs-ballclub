@@ -351,14 +351,18 @@ a { color: var(--lybs-blue-bright); }
 }
 .pcRulesMaxTile { flex: 0 0 auto; min-width: 60px; padding: 6px 12px; }
 .pcRulesMaxTile .pcStatValue { font-size: 19px; }
-.pcRulesList { display: flex; flex-direction: column; gap: 5px; }
-.pcRuleRow {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 7px 12px; border-radius: 8px; background: rgba(255,255,255,0.03);
+/* Small cards in a wrapping row instead of five full-width rows -- same
+   information, a fraction of the vertical space, so the eligibility panel
+   above (the actual point of this tab) isn't pushed below the fold by a
+   reference table. */
+.pcRulesList { display: flex; flex-wrap: wrap; gap: 6px; }
+.pcTierCard {
+  flex: 1 1 72px; min-width: 72px; text-align: center;
+  padding: 8px 6px; border-radius: 8px; background: rgba(255,255,255,0.03);
   border: 1px solid var(--card-border);
 }
-.pcRuleRange { font-family: var(--font-display); font-weight: 400; font-size: 15px; color: #fff; letter-spacing: 0.01em; }
-.pcRuleRest { font-size: 10.5px; color: var(--text2); font-family: var(--font-label); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.pcTierRange { font-family: var(--font-display); font-weight: 400; font-size: 15px; color: #fff; letter-spacing: 0.01em; }
+.pcTierRest { font-size: 9.5px; color: var(--text2); font-family: var(--font-label); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
 
 .emptyState { color: var(--text2); font-size: 13px; padding: 30px 10px; text-align: center; line-height: 1.6; }
 .badge {

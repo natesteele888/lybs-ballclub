@@ -76,5 +76,15 @@
     return row ? `https://www.macleague.org/team/${row.teamId}` : null;
   }
 
-  window.LeagueTeams = { ensureLoaded, find, teamUrl };
+  // Every team's display name in one division, sorted -- js/pitch-smart.js's
+  // eligibility filter uses this to list who else is in our own division,
+  // since the daily-max/rest-day table (and so eligibility itself) is
+  // division-specific; a cross-division team wouldn't even use the same
+  // rules. Call after ensureLoaded().
+  function teamsInDivision(divisionId) {
+    if (!cache || !divisionId) return [];
+    return cache.filter(r => r.divisionId === divisionId).map(r => r.team).sort();
+  }
+
+  window.LeagueTeams = { ensureLoaded, find, teamUrl, teamsInDivision };
 })();
