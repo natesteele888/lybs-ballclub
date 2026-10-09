@@ -78,7 +78,7 @@
           </div>`;
         const weatherSlot = containerEl.querySelector('#weatherSlot');
         if (weatherSlot && item.location && item.date) window.loadWeatherInto(weatherSlot, item.location, item.date, item.time);
-        if (item.date >= todayIso()) wireRsvp(containerEl, item, opts.viewerName, updated => window.Practices.saveItem(teamId, updated), opts.onRsvpChange);
+        if (item.date >= todayIso()) wireRsvp(containerEl, item, opts.viewerName, updated => window.Practices.saveItem(teamId, updated), opts.onItemChange);
         const editBtn = containerEl.querySelector('#editBtn');
         if (editBtn) editBtn.addEventListener('click', () => opts.onEdit && opts.onEdit());
         containerEl.querySelector('#icsBtn').addEventListener('click', () => {
