@@ -743,6 +743,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .depthFieldLine { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 1.1; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .depthFieldDot { fill: rgba(255,255,255,0.6); }
 .depthFieldHome { fill: rgba(255,255,255,0.55); }
+.depthFieldFaint { fill: rgba(255,255,255,0.3); }
 .depthPosCard {
   position: absolute; transform: translate(-50%, -50%);
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
