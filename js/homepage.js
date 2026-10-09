@@ -29,10 +29,15 @@
                        team only -- never another team's or another
                        division's, unlike "Around Town"/"League
                        Tonight" above.
-   5. Quick team card -- record, standings rank, and games left to play
+   5. Quick team card -- record, standings rank, games left to play
                        (from the league standings mirror when this team
                        resolves there, our own tracked record/schedule
-                       otherwise), our own logo, and a link to our real
+                       otherwise), and this season's Game Ball leader
+                       when at least one has been given out (see
+                       js/schedule.js's gameBallHtml) -- a count, not a
+                       whole section, so a running tally doesn't add
+                       its own scroll-length to an already-long page.
+                       Plus our own logo and a link to our real
                        macleague.org/Crossbar team page. No phone/email
                        lives in this app for anyone, coaches included --
                        see roster.js and league-info.js's header
@@ -169,6 +174,14 @@
         : (ownRecord.ties ? `${ownRecord.wins}-${ownRecord.losses}-${ownRecord.ties}` : `${ownRecord.wins}-${ownRecord.losses}`);
       const gamesRemaining = games.filter(g => g.ourScore == null || g.oppScore == null).length;
 
+      // Tallied from game.gameBall across this season's games -- no
+      // separate storage, just counting what schedule.js already has.
+      // Ties go to whoever comes first in games[] (earliest awarded),
+      // not worth a "co-leaders" display for one glanceable stat tile.
+      const gameBallCounts = {};
+      games.forEach(g => { if (g.gameBall && g.gameBall.name) gameBallCounts[g.gameBall.name] = (gameBallCounts[g.gameBall.name] || 0) + 1; });
+      const gameBallLeader = Object.keys(gameBallCounts).sort((a, b) => gameBallCounts[b] - gameBallCounts[a])[0] || null;
+
       const statTiles = [
         statTileHtml(escapeHtml(recordStr), leagueRow ? 'League Record' : 'Record'),
       ];
@@ -176,6 +189,9 @@
         statTiles.push(statTileHtml(ordinal(leagueRank), `of ${leagueTotal}${leagueDivisionName ? ' &middot; ' + escapeHtml(leagueDivisionName) : ''}`));
       }
       statTiles.push(statTileHtml(gamesRemaining, 'Games Left'));
+      if (gameBallLeader) {
+        statTiles.push(statTileHtml(gameBallCounts[gameBallLeader], `&#11088; ${escapeHtml(gameBallLeader)}`));
+      }
 
       containerEl.innerHTML = `
         <div class="detailCard homeTeamCard">
