@@ -1,6 +1,9 @@
 /* ============================================================
-   Homepage -- the app's landing tab. Seven sections, each pulling
-   from data this app already has or already mirrors, nothing new:
+   Homepage -- the app's landing tab. Pulls from data this app
+   already has or already mirrors, nothing new -- this file's own
+   job is surfacing it here so it isn't only discoverable by already
+   knowing which of Roster's eight sub-tabs or Coaching's five tools
+   to go dig through.
 
    0. Announcements -- a coach-only note (js/announcements.js),
                        shown first since it's the one thing on this
@@ -8,6 +11,13 @@
                        moved to 6pm"). Hidden entirely for a non-
                        coach when there's nothing posted, rather than
                        showing an empty section with nothing to read.
+   0.5 Needs a Volunteer -- unclaimed Sign-Up Sheet items
+                       (teams/{teamId}/signups), the one thing on this
+                       whole page that's a direct ask of whoever's
+                       reading it rather than just information -- so
+                       it sits with Announcements, above the purely
+                       informational sections, and only shows up at
+                       all when something's actually still open.
    1. Today        -- our own games/practices scheduled for today
                        (teams/{teamId}/schedule + practices).
    1.5 Who Can Pitch Today -- only on a day we have a game, the exact
@@ -32,11 +42,16 @@
    5. Quick team card -- record, standings rank, games left to play
                        (from the league standings mirror when this team
                        resolves there, our own tracked record/schedule
-                       otherwise), and this season's Game Ball leader
-                       when at least one has been given out (see
-                       js/schedule.js's gameBallHtml) -- a count, not a
-                       whole section, so a running tally doesn't add
-                       its own scroll-length to an already-long page.
+                       otherwise), this season's Game Ball leader when
+                       at least one has been given out (see
+                       js/schedule.js's gameBallHtml), and a running
+                       count of Awards given (teams/{teamId}/awards) --
+                       each a stat tile, not its own whole section, so
+                       a running tally doesn't add its own scroll-
+                       length to an already-long page. Awards doesn't
+                       try to name a "leader" the way Game Ball does --
+                       every category's normally won by someone
+                       different, so there's no one name that fits.
                        Plus our own logo and a link to our real
                        macleague.org/Crossbar team page. No phone/email
                        lives in this app for anyone, coaches included --
@@ -187,6 +202,20 @@
       games.forEach(g => { if (g.gameBall && g.gameBall.name) gameBallCounts[g.gameBall.name] = (gameBallCounts[g.gameBall.name] || 0) + 1; });
       const gameBallLeader = Object.keys(gameBallCounts).sort((a, b) => gameBallCounts[b] - gameBallCounts[a])[0] || null;
 
+      // Awards given this season -- a count, not a "leader" the way Game
+      // Ball has one, since every category is normally won by someone
+      // different (there's no single name to put next to it the same way).
+      const awardsData = await window.dbGet(window.teamPath(teamId, 'awards'));
+      const awardsGiven = (Array.isArray(awardsData) ? awardsData : []).filter(a => a.playerName).length;
+
+      // Sign-Up items nobody's claimed yet -- the one thing on this whole
+      // page that's a direct ask of whoever's reading it, not just
+      // information, so it gets its own section instead of folding into a
+      // stat tile the way Awards/Game Ball do.
+      const signupsData = await window.dbGet(window.teamPath(teamId, 'signups'));
+      const openSignupItems = (Array.isArray(signupsData) ? signupsData : [])
+        .flatMap(s => (s.items || []).filter(i => !i.claimedBy).map(i => ({ name: i.name, sheetTitle: s.title })));
+
       const statTiles = [
         statTileHtml(escapeHtml(recordStr), leagueRow ? 'League Record' : 'Record'),
       ];
@@ -196,6 +225,9 @@
       statTiles.push(statTileHtml(gamesRemaining, 'Games Left'));
       if (gameBallLeader) {
         statTiles.push(statTileHtml(gameBallCounts[gameBallLeader], `<span class="popReveal">&#11088;</span> ${escapeHtml(gameBallLeader)}`));
+      }
+      if (awardsGiven) {
+        statTiles.push(statTileHtml(awardsGiven, '&#127942; Awards Given'));
       }
 
       containerEl.innerHTML = `
@@ -213,6 +245,11 @@
         ${(window.Announcements.getItems(teamId).length || opts.canEdit) ? `
           <div class="sectionLabel" style="margin-top:18px;">Announcements</div>
           <div id="homeAnnSlot"></div>` : ''}
+
+        ${openSignupItems.length ? `
+          <div class="sectionLabel" style="margin-top:18px;">Needs a Volunteer</div>
+          <div class="helpText">${openSignupItems.length} item${openSignupItems.length === 1 ? '' : 's'} still open: ${openSignupItems.slice(0, 4).map(i => escapeHtml(i.name)).join(', ')}${openSignupItems.length > 4 ? ', &hellip;' : ''}</div>
+          <button class="btn btnSmall" id="homeViewSignups" style="width:100%;margin-top:8px;">Open Sign-Up Sheets</button>` : ''}
 
         <div class="sectionLabel" style="margin-top:18px;">Today</div>
         ${todayItems.length
@@ -247,6 +284,9 @@
 
       const annSlot = containerEl.querySelector('#homeAnnSlot');
       if (annSlot) window.Announcements.render(annSlot, teamId, { canEdit: opts.canEdit, authorName: opts.authorName });
+
+      const viewSignupsBtn = containerEl.querySelector('#homeViewSignups');
+      if (viewSignupsBtn) viewSignupsBtn.addEventListener('click', () => opts.onViewSignups && opts.onViewSignups());
 
       const pitchSlot = containerEl.querySelector('#homePitchSlot');
       if (pitchSlot) window.PitchSmart.renderOurEligibility(pitchSlot, games, cfg.macLeagueDivisionName || null, today, teamId);
