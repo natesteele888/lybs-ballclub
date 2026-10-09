@@ -234,7 +234,18 @@
           ? [['ip', 'IP'], ['era', 'ERA'], ['so', 'SO'], ['bb', 'BB'], ['h', 'H'], ['er', 'ER']]
           : [['avg', 'AVG'], ['obp', 'OBP'], ['slg', 'SLG'], ['ops', 'OPS'], ['ab', 'AB'], ['h', 'H'], ['hr', 'HR'], ['rbi', 'RBI'], ['sb', 'SB']];
         const present = cols.filter(([k]) => rows.some(r => r[k] != null));
-        const fmt = (k, v) => v == null ? '-' : (typeof v === 'number' && !Number.isInteger(v) ? v.toFixed(3) : v);
+        // ip keeps GameChanger's own innings-pitched notation (12.1, not
+        // 12.100 -- the digit after the dot is outs, not a decimal), era
+        // gets the standard 2-decimal convention (2.25, not 2.250) -- both
+        // would otherwise fall into the 3-decimal AVG/OBP/SLG/OPS treatment
+        // below, which is wrong for either and inconsistent with the
+        // 2-decimal ERA already shown in the insight card above this table.
+        const fmt = (k, v) => {
+          if (v == null) return '-';
+          if (k === 'ip') return v.toFixed(1);
+          if (k === 'era') return v.toFixed(2);
+          return typeof v === 'number' && !Number.isInteger(v) ? v.toFixed(3) : v;
+        };
         const sorted = rows.slice().sort((a, b) => kind === 'pitching' ? (a.era ?? 99) - (b.era ?? 99) : (b.ops ?? b.avg ?? 0) - (a.ops ?? a.avg ?? 0));
         return `
           <div class="standingsTableWrap" style="margin-top:10px;">
