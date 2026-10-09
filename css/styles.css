@@ -806,22 +806,10 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 
 /* ---- Archive/History expanded team card ---- */
 .archiveTeamHeader { cursor: pointer; margin-bottom: 2px; }
-.archiveSplitRow { display: flex; flex-direction: column; gap: 16px; margin-top: 14px; }
-.archiveRecordCol { flex: 0 0 auto; }
-.archiveGamesCol { flex: 1 1 auto; min-width: 0; }
-.archiveRecordValue { font-family: var(--font-display); font-weight: 400; font-size: 30px; color: #fff; }
 
 @media (min-width: 640px) {
   .tabPanel { padding: 28px 24px 60px; }
   .loginCrest { width: 180px; }
-
-  /* Record gets its own 25% column on the right, games take the 75% on the
-     left -- row-reverse keeps the record column first in DOM order (so it
-     still reads record-then-games when stacked on mobile) while visually
-     flipping it to the right on wider screens. */
-  .archiveSplitRow { flex-direction: row-reverse; align-items: flex-start; }
-  .archiveRecordCol { flex: 0 0 25%; max-width: 25%; }
-  .archiveGamesCol { flex: 1 1 75%; }
 }
 
 /* Reclaims width for team names on narrow phones -- the fixed-size score/
