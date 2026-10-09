@@ -19,17 +19,19 @@
    ============================================================ */
 (function () {
   const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF'];
-  // Percent coordinates on a 100x100 field panel, viewed from behind home
-  // plate (the standard scorecard orientation) -- matches the SVG diamond
-  // drawn in fieldSvg() below, which uses the same 0-100 viewBox.
-  // 2B and SS aren't drawn on the bag itself -- real fielders at both spots
-  // play off the base, shaded toward it (2B toward 1st, SS toward 3rd) and
-  // a step shallow, in the open grass between the infield dirt and the
-  // outfield. Everyone else sits on or near their actual spot.
+  // Percent coordinates over fieldSvg()'s viewBox below, viewed from behind
+  // home plate (the standard scorecard orientation). Derived directly from
+  // that artwork's own geometry (mound center, base markers, home plate,
+  // and the outfield fence arc), not estimated -- P/1B/3B sit on their real
+  // markers, C sits just behind the plate shape, and the outfield three are
+  // pulled slightly in from the fence line so their cards don't overlap it.
+  // 2B and SS aren't on the bag itself -- real fielders at both spots play
+  // off the base, shaded toward it (2B toward 1st, SS toward 3rd), in the
+  // open grass between the infield dirt and the outfield.
   const COORDS = {
-    P: { x: 50, y: 65 }, C: { x: 50, y: 90 },
-    '1B': { x: 78, y: 60 }, '2B': { x: 64, y: 32 }, '3B': { x: 22, y: 60 }, SS: { x: 36, y: 32 },
-    LF: { x: 14, y: 24 }, CF: { x: 50, y: 8 }, RF: { x: 86, y: 24 },
+    P: { x: 50, y: 61 }, C: { x: 50, y: 87 },
+    '1B': { x: 66, y: 61 }, '2B': { x: 63, y: 40 }, '3B': { x: 35, y: 61 }, SS: { x: 37, y: 40 },
+    LF: { x: 26, y: 22 }, CF: { x: 50, y: 12 }, RF: { x: 75, y: 22 },
   };
 
   let TEAM_ID = null;
@@ -67,18 +69,24 @@
     return movedFrom;
   }
 
+  // Traced from the coach's own field diagram (outer fence, infield grass
+  // line, infield dirt line, mound, bases, plate) -- raw coordinates from
+  // that artwork, just cropped to a tight viewBox around the drawn content.
+  // Each boundary is a filled ring in the source file (gives it a clean
+  // line look without an actual stroke); only the outer edge of each ring
+  // is kept here and drawn as a real stroke instead, since the ring itself
+  // is far too thin to matter at this size.
   function fieldSvg() {
     return `
-      <svg class="depthFieldSvg" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path class="depthFieldLine" d="M 6 18 Q 50 -6 94 18" />
-        <path class="depthFieldLine" d="M 50 92 L 6 18" />
-        <path class="depthFieldLine" d="M 50 92 L 94 18" />
-        <path class="depthFieldLine" d="M 50 92 L 78 60 L 50 38 L 22 60 Z" />
-        <circle class="depthFieldDot" cx="78" cy="60" r="1.1" />
-        <circle class="depthFieldDot" cx="50" cy="38" r="1.1" />
-        <circle class="depthFieldDot" cx="22" cy="60" r="1.1" />
-        <circle class="depthFieldDot" cx="50" cy="65" r="1.5" />
-        <path class="depthFieldHome" d="M 47 87.5 L 53 87.5 L 53 90.5 L 50 93.5 L 47 90.5 Z" />
+      <svg class="depthFieldSvg" viewBox="136.5 262.4 397.6 333.5" preserveAspectRatio="none">
+        <path class="depthFieldLine" d="M523.8,406c0-.3-10.2-33.8-38.1-66.8-25.8-30.5-72.5-66.8-148.6-66.8s-123.8,36.4-150.4,66.9c-28.8,33-39.8,66.6-39.9,66.9l-.3,1.1,158.6,158.6,17.3,16.1c8.6,5.5,19.6,5.2,27.9-.6l17.1-17.1,155.9-156.4.8-.8-.3-1.1Z" />
+        <path class="depthFieldLine" d="M450.7,437.4l-.2-.6c0-.2-6.2-20.5-23.1-40.5-15.6-18.5-43.9-40.5-90.1-40.5s-75,22-91.1,40.5c-17.5,20-24.1,40.3-24.2,40.5l-.2.7,96.1,96.1c-.8,2.2-1.3,4.7-1.3,7.2,0,11.3,9.2,20.4,20.4,20.4s20.4-9.2,20.4-20.4-.6-5.7-1.7-8.2l94.5-94.8.5-.5Z" />
+        <path class="depthFieldLine" d="M394.3,466.5c0-4.3,1.7-8.2,4.6-11.1.2-.2.5-.5.7-.7l-.9-.9-48.9-48.9-.9-.9c-.2.3-.4.5-.7.8-2.9,3.2-7.1,5.2-11.7,5.2s-8-1.7-10.9-4.3c-.2-.2-.5-.5-.7-.7l-.9.9-48.2,48.2-.9.9c.2.2.5.5.7.7,2.7,2.8,4.3,6.7,4.3,10.9s-1.5,7.7-4.1,10.5c-.2.2-.4.5-.7.7l.9.9,47.6,47.6,1.1,1.1c.3-.2.5-.4.8-.6,3.2-2.5,7.3-4,11.7-4s8.5,1.5,11.7,4.1c.3.2.5.4.8.6l1.1-1.1,47.4-47.4.9-.9c-.2-.2-.5-.5-.7-.7-2.6-2.8-4.3-6.6-4.3-10.8Z" />
+        <circle class="depthFieldLine" cx="337.2" cy="466.5" r="13.5" />
+        <rect class="depthFieldDot" x="264.6" y="463.7" width="5.5" height="5.5" transform="translate(408.2 -52.4) rotate(45)" />
+        <rect class="depthFieldDot" x="403.6" y="463.7" width="5.5" height="5.5" transform="translate(448.9 -150.7) rotate(45)" />
+        <rect class="depthFieldDot" x="334.4" y="393.9" width="5.5" height="5.5" transform="translate(379.2 -122.2) rotate(45)" />
+        <polygon class="depthFieldHome" points="341.1 533.4 333.2 533.4 333.2 537.6 333.3 537.6 333.2 537.7 337.2 541.6 341.1 537.7 341.1 537.6 341.1 537.6 341.1 533.4" />
       </svg>`;
   }
 

@@ -735,7 +735,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .depthRowActions { display: flex; gap: 10px; flex: 0 0 auto; }
 
 .depthField {
-  position: relative; width: 100%; max-width: 400px; margin: 0 auto; aspect-ratio: 1 / 0.74;
+  position: relative; width: 100%; max-width: 400px; margin: 0 auto; aspect-ratio: 1 / 0.84;
   background: linear-gradient(160deg, rgba(20,28,64,0.6), rgba(8,11,32,0.85));
   border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden;
 }
@@ -746,24 +746,24 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .depthPosCard {
   position: absolute; transform: translate(-50%, -50%);
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-  width: 50px; min-height: 36px; padding: 3px 2px; border-radius: 8px;
+  width: 52px; min-height: 38px; padding: 3px 2px; border-radius: 8px;
   background: rgba(10,14,40,0.9); border: 1.5px solid var(--card-border);
   cursor: pointer; transition: border-color .15s, background .15s; overflow: hidden;
 }
 .depthPosCard:hover { border-color: rgba(76,106,235,0.5); }
 .depthPosCardActive { border-color: var(--lybs-blue-bright); background: rgba(46,82,232,0.25); box-shadow: 0 0 14px rgba(46,82,232,0.45); z-index: 2; }
 .depthPosLabel {
-  font-family: var(--font-label); font-weight: 700; font-size: 8px; letter-spacing: 0.04em;
+  font-family: var(--font-label); font-weight: 700; font-size: 9px; letter-spacing: 0.04em;
   color: var(--lybs-silver); text-transform: uppercase; line-height: 1;
 }
-.depthPosStarter { font-family: var(--font-label); font-weight: 700; font-size: 9.5px; color: #fff; line-height: 1.1; margin-top: 1px; }
-.depthPosEmpty { font-size: 9px; color: var(--text3); margin-top: 1px; }
-.depthPosBench { font-size: 7px; color: var(--text2); margin-top: 1px; line-height: 1.1; }
+.depthPosStarter { font-family: var(--font-label); font-weight: 700; font-size: 10.5px; color: #fff; line-height: 1.15; margin-top: 1px; }
+.depthPosEmpty { font-size: 10px; color: var(--text3); margin-top: 1px; }
+.depthPosBench { font-size: 8px; color: var(--text2); margin-top: 1px; line-height: 1.15; }
 @media (max-width: 420px) {
-  .depthPosCard { width: 46px; min-height: 38px; padding: 2px 1px; }
-  .depthPosLabel { font-size: 7px; }
-  .depthPosStarter { font-size: 8.5px; }
-  .depthPosBench { font-size: 6px; }
+  .depthPosCard { width: 46px; min-height: 40px; padding: 2px 1px; }
+  .depthPosLabel { font-size: 8px; }
+  .depthPosStarter { font-size: 9.5px; }
+  .depthPosBench { font-size: 7px; }
 }
 
 /* ---- Lineup builder ---- */
@@ -928,21 +928,6 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
   pointer-events: none;
 }
-
-/* Primary buttons -- a light sweep while hovered/pressed, not looping.
-   border-radius on the pseudo-element approximates the button's own
-   rounding since overflow:hidden on .btn itself would also clip its
-   existing box-shadow glow. */
-.btn:not(.btnGhost):not(.btnDanger) { position: relative; isolation: isolate; }
-.btn:not(.btnGhost):not(.btnDanger)::after {
-  content: ''; position: absolute; inset: 0; border-radius: inherit;
-  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.3) 50%, transparent 65%);
-  transform: translateX(-130%);
-  transition: transform .5s ease;
-  pointer-events: none; z-index: 1;
-}
-.btn:not(.btnGhost):not(.btnDanger):hover::after,
-.btn:not(.btnGhost):not(.btnDanger):active::after { transform: translateX(130%); }
 
 /* Game Ball reveal (js/schedule.js's gameBallHtml) -- a one-shot pop + glow
    the moment a game ball renders (first view after being given, or anyone
