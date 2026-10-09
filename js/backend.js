@@ -106,16 +106,28 @@
     return `${window.FIREBASE_DB_URL}/${path}.json`;
   }
 
+  // Both below surface a network/HTTP failure with window.showToast (see
+  // js/util.js) before rethrowing -- a tap on a dead sideline connection
+  // used to just silently do nothing (withBusyButton's own `finally`
+  // still clears the busy state regardless of outcome, so that alone
+  // reads identically to success). Rethrowing keeps every try/catch a
+  // caller already has working exactly as before; this only adds the
+  // one thing nothing was doing, telling the person it didn't work.
   window.dbGet = async function (path) {
     if (isMock()) {
       const db = loadMockDb();
       return getAtPath(db, path);
     }
-    const url = await window.firebaseAuthed(restUrl(path));
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`dbGet ${path} failed: HTTP ${res.status}`);
-    const data = await res.json();
-    return data === undefined ? null : data;
+    try {
+      const url = await window.firebaseAuthed(restUrl(path));
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`dbGet ${path} failed: HTTP ${res.status}`);
+      const data = await res.json();
+      return data === undefined ? null : data;
+    } catch (e) {
+      window.showToast("Couldn't load the latest data -- check your connection.");
+      throw e;
+    }
   };
 
   window.dbPut = async function (path, value) {
@@ -125,14 +137,19 @@
       saveMockDb(db);
       return value;
     }
-    const url = await window.firebaseAuthed(restUrl(path));
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(value),
-    });
-    if (!res.ok) throw new Error(`dbPut ${path} failed: HTTP ${res.status}`);
-    return value;
+    try {
+      const url = await window.firebaseAuthed(restUrl(path));
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(value),
+      });
+      if (!res.ok) throw new Error(`dbPut ${path} failed: HTTP ${res.status}`);
+      return value;
+    } catch (e) {
+      window.showToast("Couldn't save -- check your connection and try again.");
+      throw e;
+    }
   };
 
   window.__isMockBackend = isMock;
