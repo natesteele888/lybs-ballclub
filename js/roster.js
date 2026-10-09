@@ -100,6 +100,9 @@
       }
     },
 
+    // opts.teamId is only used to mount Coach's Notes below the form (see
+    // js/coach-notes.js) -- optional, and skipped entirely for a brand-new
+    // player (no id yet to attach notes to).
     renderForm(player, containerEl, opts) {
       opts = opts || {};
       containerEl.innerHTML = `
@@ -113,7 +116,8 @@
             <button class="btn btnGhost" id="cancelBtn">Cancel</button>
             ${player.id && opts.onDelete ? '<button class="btn btnDanger" id="deleteBtn">Delete</button>' : ''}
           </div>
-        </div>`;
+        </div>
+        ${player.id && opts.teamId ? '<div id="rfNotesSlot"></div>' : ''}`;
       containerEl.querySelector('#saveBtn').addEventListener('click', btnEvt => {
         const updated = Object.assign({}, player, {
           name: containerEl.querySelector('#fName').value.trim(),
@@ -126,6 +130,8 @@
       containerEl.querySelector('#cancelBtn').addEventListener('click', () => opts.onCancel && opts.onCancel());
       const deleteBtn = containerEl.querySelector('#deleteBtn');
       if (deleteBtn) deleteBtn.addEventListener('click', () => opts.onDelete(player.id));
+      const notesSlot = containerEl.querySelector('#rfNotesSlot');
+      if (notesSlot) window.CoachNotes.render(notesSlot, opts.teamId, player.id);
     },
   };
 })();

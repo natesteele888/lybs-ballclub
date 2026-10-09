@@ -249,7 +249,7 @@
       if (annSlot) window.Announcements.render(annSlot, teamId, { canEdit: opts.canEdit, authorName: opts.authorName });
 
       const pitchSlot = containerEl.querySelector('#homePitchSlot');
-      if (pitchSlot) window.PitchSmart.renderOurEligibility(pitchSlot, games, cfg.macLeagueDivisionName || null, today);
+      if (pitchSlot) window.PitchSmart.renderOurEligibility(pitchSlot, games, cfg.macLeagueDivisionName || null, today, teamId);
 
       window.TonightGames.render(containerEl.querySelector('#homeLeagueSlot'), cfg.macLeagueDivisionId, {
         onWatchLive: opts.onWatchLive,
