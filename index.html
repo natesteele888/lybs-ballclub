@@ -20,7 +20,7 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=98">
+<link rel="stylesheet" href="css/styles.css?v=99">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -38,14 +38,13 @@
   </div>
 </div>
 
-<!-- ===================== IDENTITY (name + PIN) ===================== -->
+<!-- ===================== IDENTITY (name) ===================== -->
 <div id="identityScreen" class="hide">
   <img class="loginCrest" src="assets/images/lybs-icon.png" alt="" style="width:110px;">
   <div class="loginContent">
     <h1>Who's this?</h1>
-    <p class="sub">First time on this device: make up a 4-digit PIN. Type the same name + PIN again next time.</p>
+    <p class="sub">First time on this device -- this is the name others will see on RSVPs, sign-ups, and more. This device will remember it next time.</p>
     <input id="identityName" placeholder="Your name" autocomplete="off">
-    <input id="identityPin" placeholder="4-digit PIN" inputmode="numeric" maxlength="4" autocomplete="off">
     <button class="btn" id="identityBtn">Continue</button>
     <div id="identityError"></div>
   </div>
@@ -119,7 +118,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261009n';</script>
+<script defer>window.BUILD_V = '20261009o';</script>
 <script defer>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -129,46 +128,46 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script defer src="js/util.js?v=98"></script>
-<script defer src="js/backend.js?v=98"></script>
-<script defer src="js/team-registry.js?v=98"></script>
-<script defer src="js/cloud-auth.js?v=98"></script>
-<script defer src="js/team-config.js?v=98"></script>
-<script defer src="js/identity.js?v=98"></script>
-<script defer src="js/weather.js?v=98"></script>
-<script defer src="js/club-logos.js?v=98"></script>
-<script defer src="js/league-teams.js?v=98"></script>
-<script defer src="js/game-card.js?v=98"></script>
-<script defer src="js/pitch-smart.js?v=98"></script>
-<script defer src="js/tonight.js?v=98"></script>
-<script defer src="js/announcements.js?v=98"></script>
-<script defer src="js/homepage.js?v=98"></script>
-<script defer src="js/league-info.js?v=98"></script>
-<script defer src="js/calendar-export.js?v=98"></script>
-<script defer src="js/schedule.js?v=98"></script>
-<script defer src="js/practices.js?v=98"></script>
-<script defer src="js/calendar-view.js?v=98"></script>
-<script defer src="js/roster.js?v=98"></script>
-<script defer src="js/drill-baserunning.js?v=98"></script>
-<script defer src="js/drill-ath.js?v=98"></script>
-<script defer src="js/drill-pitching.js?v=98"></script>
-<script defer src="js/depth-chart.js?v=98"></script>
-<script defer src="js/lineup-builder.js?v=98"></script>
-<script defer src="js/duty.js?v=98"></script>
-<script defer src="js/signup.js?v=98"></script>
-<script defer src="js/awards.js?v=98"></script>
-<script defer src="js/equipment.js?v=98"></script>
-<script defer src="js/coach-notes.js?v=98"></script>
-<script defer src="js/practice-plan.js?v=98"></script>
-<script defer src="js/play-diagram.js?v=98"></script>
-<script defer src="js/stats-import.js?v=98"></script>
-<script defer src="js/social-submit.js?v=98"></script>
-<script defer src="js/gamechanger.js?v=98"></script>
-<script defer src="js/rules.js?v=98"></script>
-<script defer src="js/standings.js?v=98"></script>
-<script defer src="js/calendar-family.js?v=98"></script>
-<script defer src="js/archive.js?v=98"></script>
-<script defer src="js/team-page.js?v=98"></script>
+<script defer src="js/util.js?v=99"></script>
+<script defer src="js/backend.js?v=99"></script>
+<script defer src="js/team-registry.js?v=99"></script>
+<script defer src="js/cloud-auth.js?v=99"></script>
+<script defer src="js/team-config.js?v=99"></script>
+<script defer src="js/identity.js?v=99"></script>
+<script defer src="js/weather.js?v=99"></script>
+<script defer src="js/club-logos.js?v=99"></script>
+<script defer src="js/league-teams.js?v=99"></script>
+<script defer src="js/game-card.js?v=99"></script>
+<script defer src="js/pitch-smart.js?v=99"></script>
+<script defer src="js/tonight.js?v=99"></script>
+<script defer src="js/announcements.js?v=99"></script>
+<script defer src="js/homepage.js?v=99"></script>
+<script defer src="js/league-info.js?v=99"></script>
+<script defer src="js/calendar-export.js?v=99"></script>
+<script defer src="js/schedule.js?v=99"></script>
+<script defer src="js/practices.js?v=99"></script>
+<script defer src="js/calendar-view.js?v=99"></script>
+<script defer src="js/roster.js?v=99"></script>
+<script defer src="js/drill-baserunning.js?v=99"></script>
+<script defer src="js/drill-ath.js?v=99"></script>
+<script defer src="js/drill-pitching.js?v=99"></script>
+<script defer src="js/depth-chart.js?v=99"></script>
+<script defer src="js/lineup-builder.js?v=99"></script>
+<script defer src="js/duty.js?v=99"></script>
+<script defer src="js/signup.js?v=99"></script>
+<script defer src="js/awards.js?v=99"></script>
+<script defer src="js/equipment.js?v=99"></script>
+<script defer src="js/coach-notes.js?v=99"></script>
+<script defer src="js/practice-plan.js?v=99"></script>
+<script defer src="js/play-diagram.js?v=99"></script>
+<script defer src="js/stats-import.js?v=99"></script>
+<script defer src="js/social-submit.js?v=99"></script>
+<script defer src="js/gamechanger.js?v=99"></script>
+<script defer src="js/rules.js?v=99"></script>
+<script defer src="js/standings.js?v=99"></script>
+<script defer src="js/calendar-family.js?v=99"></script>
+<script defer src="js/archive.js?v=99"></script>
+<script defer src="js/team-page.js?v=99"></script>
 <script defer>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -630,7 +629,7 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script defer src="js/auth.js?v=98"></script>
+<script defer src="js/auth.js?v=99"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.
