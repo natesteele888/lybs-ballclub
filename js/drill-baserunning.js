@@ -71,24 +71,22 @@
     setTimeout(() => { div.classList.remove('show'); setTimeout(() => div.remove(), 400); }, 2400);
   }
 
-  let TEAM_ID = null;
-  let runs = null; // cached array
+  const cache = {}; // teamId -> runs[]
 
   async function ensureRuns(teamId) {
-    if (runs && TEAM_ID === teamId) return runs;
-    TEAM_ID = teamId;
+    if (cache[teamId]) return cache[teamId];
     const data = await window.dbGet(window.teamPath(teamId, 'drills/baseRunningRuns'));
-    runs = Array.isArray(data) ? data : [];
-    return runs;
+    cache[teamId] = Array.isArray(data) ? data : [];
+    return cache[teamId];
   }
-  async function saveRuns() {
-    await window.dbPut(window.teamPath(TEAM_ID, 'drills/baseRunningRuns'), runs);
+  async function saveRuns(teamId) {
+    await window.dbPut(window.teamPath(teamId, 'drills/baseRunningRuns'), cache[teamId]);
   }
-  function bestFor(playerId, drillType) {
+  function bestFor(runs, playerId, drillType) {
     const mine = runs.filter(r => r.playerId === playerId && r.drillType === drillType);
     return mine.length ? Math.min(...mine.map(r => r.timeMs)) : null;
   }
-  function drillBest(drillType) {
+  function drillBest(runs, drillType) {
     const times = runs.filter(r => r.drillType === drillType).map(r => r.timeMs);
     return times.length ? Math.min(...times) : null;
   }
@@ -97,7 +95,7 @@
 
   window.DrillBaseRunning = {
     async render(containerEl, teamId) {
-      await ensureRuns(teamId);
+      const runs = await ensureRuns(teamId);
       const roster = window.Roster.getPlayers(teamId);
 
       function refresh() {
@@ -149,7 +147,7 @@
         const timeStr = ST.elapsedMs ? fmt(ST.elapsedMs) : '0.00s';
         const timeClass = s === 'running' ? 'athTimeRun' : s === 'stopped' ? 'athTimeStop' : s === 'accepted' ? 'athTimeAccept' : '';
         const drillLabel = DRILLS.find(d => d.id === ST.drillType).label;
-        const personalBest = bestFor(ST.playerId, ST.drillType);
+        const personalBest = bestFor(runs, ST.playerId, ST.drillType);
 
         let controls = '';
         if (s === 'idle' || s === 'accepted') {
@@ -170,7 +168,7 @@
           </div>
           <div class="athTimerCard">
             <div class="athTimerDisplay ${timeClass}" id="brTimeEl">${timeStr}</div>
-            ${s === 'accepted' ? `<div class="athAcceptNote" style="color:${ST.newRecord ? GOLD : GREEN};">${ST.newRecord ? '🏆 New team best! ' : '✓ Saved — '}${escapeHtml(ST.playerName)}'s best: ${fmtShort(bestFor(ST.playerId, ST.drillType))}</div>` : ''}
+            ${s === 'accepted' ? `<div class="athAcceptNote" style="color:${ST.newRecord ? GOLD : GREEN};">${ST.newRecord ? '🏆 New team best! ' : '✓ Saved — '}${escapeHtml(ST.playerName)}'s best: ${fmtShort(bestFor(runs, ST.playerId, ST.drillType))}</div>` : ''}
             ${personalBest && s !== 'accepted' ? `<div class="helpText">${escapeHtml(ST.playerName)}'s best: <b style="color:${GOLD};">${fmtShort(personalBest)}</b></div>` : ''}
           </div>
           ${controls}`;
@@ -213,9 +211,9 @@
         });
         containerEl.querySelector('#brRedo')?.addEventListener('click', () => { ST.elapsedMs = 0; ST.state = 'idle'; refresh(); });
         containerEl.querySelector('#brAccept')?.addEventListener('click', async () => {
-          const prevDrillBest = drillBest(ST.drillType);
+          const prevDrillBest = drillBest(runs, ST.drillType);
           runs.push({ id: uid('br'), playerId: ST.playerId, name: ST.playerName, drillType: ST.drillType, timeMs: ST.elapsedMs, date: new Date().toISOString().slice(0, 10) });
-          await saveRuns();
+          await saveRuns(teamId);
           ST.newRecord = prevDrillBest === null || ST.elapsedMs < prevDrillBest;
           ST.state = 'accepted'; ST.elapsedMs = 0;
           if (ST.newRecord) { confetti(); showBanner('🏆 New team best!', `${ST.playerName}: ${fmtShort(runs[runs.length - 1].timeMs)}`); }

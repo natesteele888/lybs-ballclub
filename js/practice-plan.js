@@ -12,18 +12,20 @@
 (function () {
   const PRESETS = ['Warm-up / Stretch', 'Throwing', 'Infield/Outfield', 'Batting Practice', 'Base Running', 'Live BP / Scrimmage', 'Cool-down'];
 
-  let TEAM_ID = null;
-  let plans = null; // cached array
+  const cache = {}; // teamId -> plans[]
 
   async function ensurePlans(teamId) {
-    if (plans && TEAM_ID === teamId) return plans;
-    TEAM_ID = teamId;
+    if (cache[teamId]) return cache[teamId];
     const data = await window.dbGet(window.teamPath(teamId, 'practicePlans'));
-    plans = Array.isArray(data) ? data : [];
-    return plans;
+    cache[teamId] = Array.isArray(data) ? data : [];
+    return cache[teamId];
   }
-  async function savePlans() {
-    await window.dbPut(window.teamPath(TEAM_ID, 'practicePlans'), plans);
+  // Takes the current array explicitly, rather than reading it back out of
+  // cache, because the list gets reassigned (not just mutated) on delete --
+  // see the #ppDelete handler below. Updates the cache to match.
+  async function savePlans(teamId, plans) {
+    cache[teamId] = plans;
+    await window.dbPut(window.teamPath(teamId, 'practicePlans'), plans);
   }
   function totalMinutes(plan) {
     return (plan.blocks || []).reduce((sum, b) => sum + (Number(b.minutes) || 0), 0);
@@ -31,7 +33,7 @@
 
   window.PracticePlan = {
     async render(containerEl, teamId) {
-      await ensurePlans(teamId);
+      let plans = await ensurePlans(teamId);
       let view = { mode: 'list' };
       let addingCustom = false;
 
@@ -127,7 +129,7 @@
           containerEl.querySelector('#ppBack').addEventListener('click', async () => {
             p.name = containerEl.querySelector('#ppName').value.trim();
             p.date = containerEl.querySelector('#ppDate').value;
-            await savePlans();
+            await savePlans(teamId, plans);
             view = { mode: 'list' }; refresh();
           });
           containerEl.querySelector('#ppName').addEventListener('change', e => { p.name = e.target.value.trim(); });
@@ -135,7 +137,7 @@
           containerEl.querySelectorAll('[data-minutes]').forEach(input => {
             input.addEventListener('change', async () => {
               p.blocks[Number(input.dataset.minutes)].minutes = Math.max(0, Number(input.value) || 0);
-              await savePlans();
+              await savePlans(teamId, plans);
               refresh();
             });
           });
@@ -143,26 +145,26 @@
             btn.addEventListener('click', async () => {
               const i = Number(btn.dataset.blockup);
               [p.blocks[i - 1], p.blocks[i]] = [p.blocks[i], p.blocks[i - 1]];
-              await savePlans(); refresh();
+              await savePlans(teamId, plans); refresh();
             });
           });
           containerEl.querySelectorAll('[data-blockdown]').forEach(btn => {
             btn.addEventListener('click', async () => {
               const i = Number(btn.dataset.blockdown);
               [p.blocks[i + 1], p.blocks[i]] = [p.blocks[i], p.blocks[i + 1]];
-              await savePlans(); refresh();
+              await savePlans(teamId, plans); refresh();
             });
           });
           containerEl.querySelectorAll('[data-blockremove]').forEach(btn => {
             btn.addEventListener('click', async () => {
               p.blocks.splice(Number(btn.dataset.blockremove), 1);
-              await savePlans(); refresh();
+              await savePlans(teamId, plans); refresh();
             });
           });
           containerEl.querySelectorAll('[data-addpreset]').forEach(btn => {
             btn.addEventListener('click', async () => {
               p.blocks.push({ id: uid('blk'), label: btn.dataset.addpreset, minutes: 10 });
-              await savePlans(); refresh();
+              await savePlans(teamId, plans); refresh();
             });
           });
           const customBtn = containerEl.querySelector('#ppAddCustom');
@@ -173,21 +175,21 @@
               const input = containerEl.querySelector('#ppCustomInput');
               const label = (input.value || '').trim();
               addingCustom = false;
-              if (label) { p.blocks.push({ id: uid('blk'), label, minutes: 10 }); await savePlans(); }
+              if (label) { p.blocks.push({ id: uid('blk'), label, minutes: 10 }); await savePlans(teamId, plans); }
               refresh();
             });
           }
           containerEl.querySelector('#ppSave').addEventListener('click', async btnEvt => {
             p.name = containerEl.querySelector('#ppName').value.trim();
             p.date = containerEl.querySelector('#ppDate').value;
-            await withBusyButton(btnEvt.target, 'Saving...', savePlans);
+            await withBusyButton(btnEvt.target, 'Saving...', () => savePlans(teamId, plans));
             btnEvt.target.textContent = '✓ Saved!';
             setTimeout(() => refresh(), 500);
           });
           containerEl.querySelector('#ppDelete').addEventListener('click', async () => {
             if (!confirm('Delete this practice plan?')) return;
             plans = plans.filter(x => x.id !== p.id);
-            await savePlans();
+            await savePlans(teamId, plans);
             view = { mode: 'list' }; refresh();
           });
         }
