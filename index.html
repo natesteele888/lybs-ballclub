@@ -20,7 +20,7 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=87">
+<link rel="stylesheet" href="css/styles.css?v=88">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -90,6 +90,7 @@
   <div class="tabPanel" id="tab-lineups"></div>
   <div class="tabPanel" id="tab-duty"></div>
   <div class="tabPanel" id="tab-signup"></div>
+  <div class="tabPanel" id="tab-awards"></div>
   <div class="tabPanel" id="tab-calendar"></div>
   <div class="tabPanel" id="tab-archive"></div>
   <!-- Not a nav tab -- reached only by tapping a team's logo/name on a game
@@ -116,7 +117,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261009c';</script>
+<script defer>window.BUILD_V = '20261009d';</script>
 <script defer>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -126,41 +127,42 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script defer src="js/util.js?v=87"></script>
-<script defer src="js/backend.js?v=87"></script>
-<script defer src="js/team-registry.js?v=87"></script>
-<script defer src="js/cloud-auth.js?v=87"></script>
-<script defer src="js/team-config.js?v=87"></script>
-<script defer src="js/identity.js?v=87"></script>
-<script defer src="js/weather.js?v=87"></script>
-<script defer src="js/club-logos.js?v=87"></script>
-<script defer src="js/league-teams.js?v=87"></script>
-<script defer src="js/game-card.js?v=87"></script>
-<script defer src="js/pitch-smart.js?v=87"></script>
-<script defer src="js/tonight.js?v=87"></script>
-<script defer src="js/announcements.js?v=87"></script>
-<script defer src="js/homepage.js?v=87"></script>
-<script defer src="js/league-info.js?v=87"></script>
-<script defer src="js/calendar-export.js?v=87"></script>
-<script defer src="js/schedule.js?v=87"></script>
-<script defer src="js/practices.js?v=87"></script>
-<script defer src="js/calendar-view.js?v=87"></script>
-<script defer src="js/roster.js?v=87"></script>
-<script defer src="js/drill-baserunning.js?v=87"></script>
-<script defer src="js/drill-ath.js?v=87"></script>
-<script defer src="js/drill-pitching.js?v=87"></script>
-<script defer src="js/depth-chart.js?v=87"></script>
-<script defer src="js/lineup-builder.js?v=87"></script>
-<script defer src="js/duty.js?v=87"></script>
-<script defer src="js/signup.js?v=87"></script>
-<script defer src="js/stats-import.js?v=87"></script>
-<script defer src="js/social-submit.js?v=87"></script>
-<script defer src="js/gamechanger.js?v=87"></script>
-<script defer src="js/rules.js?v=87"></script>
-<script defer src="js/standings.js?v=87"></script>
-<script defer src="js/calendar-family.js?v=87"></script>
-<script defer src="js/archive.js?v=87"></script>
-<script defer src="js/team-page.js?v=87"></script>
+<script defer src="js/util.js?v=88"></script>
+<script defer src="js/backend.js?v=88"></script>
+<script defer src="js/team-registry.js?v=88"></script>
+<script defer src="js/cloud-auth.js?v=88"></script>
+<script defer src="js/team-config.js?v=88"></script>
+<script defer src="js/identity.js?v=88"></script>
+<script defer src="js/weather.js?v=88"></script>
+<script defer src="js/club-logos.js?v=88"></script>
+<script defer src="js/league-teams.js?v=88"></script>
+<script defer src="js/game-card.js?v=88"></script>
+<script defer src="js/pitch-smart.js?v=88"></script>
+<script defer src="js/tonight.js?v=88"></script>
+<script defer src="js/announcements.js?v=88"></script>
+<script defer src="js/homepage.js?v=88"></script>
+<script defer src="js/league-info.js?v=88"></script>
+<script defer src="js/calendar-export.js?v=88"></script>
+<script defer src="js/schedule.js?v=88"></script>
+<script defer src="js/practices.js?v=88"></script>
+<script defer src="js/calendar-view.js?v=88"></script>
+<script defer src="js/roster.js?v=88"></script>
+<script defer src="js/drill-baserunning.js?v=88"></script>
+<script defer src="js/drill-ath.js?v=88"></script>
+<script defer src="js/drill-pitching.js?v=88"></script>
+<script defer src="js/depth-chart.js?v=88"></script>
+<script defer src="js/lineup-builder.js?v=88"></script>
+<script defer src="js/duty.js?v=88"></script>
+<script defer src="js/signup.js?v=88"></script>
+<script defer src="js/awards.js?v=88"></script>
+<script defer src="js/stats-import.js?v=88"></script>
+<script defer src="js/social-submit.js?v=88"></script>
+<script defer src="js/gamechanger.js?v=88"></script>
+<script defer src="js/rules.js?v=88"></script>
+<script defer src="js/standings.js?v=88"></script>
+<script defer src="js/calendar-family.js?v=88"></script>
+<script defer src="js/archive.js?v=88"></script>
+<script defer src="js/team-page.js?v=88"></script>
 <script defer>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -197,7 +199,7 @@
   const NAV_CATEGORIES = [
     { id: 'home', label: 'Home', tabs: ['home'] },
     { id: 'schedule', label: 'Schedule', tabs: ['schedule', 'practices', 'gamechanger'] },
-    { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups', 'duty', 'signup'] },
+    { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups', 'duty', 'signup', 'awards'] },
     { id: 'standings', label: 'Standings', tabs: ['standings', 'seeding', 'archive'] },
     { id: 'league', label: 'League', tabs: ['league'] },
     { id: 'coaching', label: 'Coaching', tabs: ['coaching'] },
@@ -206,7 +208,7 @@
   const TAB_LABELS = {
     home: 'Home',
     schedule: 'Schedule', practices: 'Practices', calendar: 'My Calendar', gamechanger: 'GameChanger',
-    roster: 'Roster', standings: 'Standings', seeding: 'Seeding', archive: 'History', depth: 'Depth Chart', lineups: 'Lineups', duty: 'Snack Duty', signup: 'Sign-Up',
+    roster: 'Roster', standings: 'Standings', seeding: 'Seeding', archive: 'History', depth: 'Depth Chart', lineups: 'Lineups', duty: 'Snack Duty', signup: 'Sign-Up', awards: 'Awards',
     league: 'League', rules: 'Rules', pitching: 'Pitching', coaching: 'Coaching',
   };
   // Depth Chart and Lineups are roster-*editing* tools (no read-only mode
@@ -584,6 +586,7 @@
     else if (name === 'lineups') { const el = loadingEl('tab-lineups'); Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID)]).then(() => window.LineupBuilder.render(el, TEAM_ID)); }
     else if (name === 'duty') { const el = loadingEl('tab-duty'); Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Schedule.ensureLoaded(TEAM_ID), window.Duty.ensureLoaded(TEAM_ID)]).then(() => window.Duty.render(el, TEAM_ID, window.Roster.getPlayers(TEAM_ID), window.Schedule.getGames(TEAM_ID), { canEdit: canEdit() })); }
     else if (name === 'signup') { const el = loadingEl('tab-signup'); window.SignUp.ensureLoaded(TEAM_ID).then(() => window.SignUp.render(el, TEAM_ID, { canEdit: canEdit(), viewerName: SESSION.name })); }
+    else if (name === 'awards') { const el = loadingEl('tab-awards'); Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Awards.ensureLoaded(TEAM_ID)]).then(() => window.Awards.render(el, TEAM_ID, { canEdit: canEdit(), roster: window.Roster.getPlayers(TEAM_ID) })); }
     else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
     else if (name === 'archive') { const el = loadingEl('tab-archive'); window.Archive.ensureLoaded().then(() => window.Archive.render(el)); }
   }
@@ -614,7 +617,7 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script defer src="js/auth.js?v=87"></script>
+<script defer src="js/auth.js?v=88"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.
