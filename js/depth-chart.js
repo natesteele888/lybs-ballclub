@@ -157,7 +157,6 @@
       function refresh() {
         containerEl.innerHTML = `
           <div class="drillHero">
-            <div class="drillHeroIcon">🏟️</div>
             <div class="drillHeroTitle">Depth Chart</div>
             <div class="drillHeroSub">Tap a position to rank who plays there. &#9733; starts one spot at a time -- taking a new one gives up the old.</div>
           </div>

@@ -86,7 +86,6 @@
       function refresh() {
         containerEl.innerHTML = `
           <div class="drillHero">
-            <div class="drillHeroIcon">\u{1F3C6}</div>
             <div class="drillHeroTitle">Team Awards</div>
             <div class="drillHeroSub">Season-end recognition -- add a category, then tap it to pick who earned it.</div>
           </div>

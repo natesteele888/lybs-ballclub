@@ -49,7 +49,6 @@
           </div>`).join('');
         return `
           <div class="drillHero">
-            <div class="drillHeroIcon">\u{1F4D0}</div>
             <div class="drillHeroTitle">Play Diagrams</div>
             <div class="drillHeroSub">Situational positioning to reference later -- tap the field to drop a labeled spot.</div>
           </div>
@@ -142,7 +141,7 @@
             d.title = containerEl.querySelector('#pdTitle').value.trim();
             d.note = containerEl.querySelector('#pdNote').value.trim();
             await withBusyButton(btnEvt.target, 'Saving...', () => saveDiagrams(teamId, diagrams));
-            btnEvt.target.textContent = '✓ Saved!';
+            btnEvt.target.textContent = 'Saved!';
             setTimeout(() => refresh(), 500);
           });
           containerEl.querySelector('#pdDelete').addEventListener('click', async () => {

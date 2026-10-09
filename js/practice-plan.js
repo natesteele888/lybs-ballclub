@@ -47,7 +47,6 @@
           </div>`).join('');
         return `
           <div class="drillHero">
-            <div class="drillHeroIcon">\u{1F4CB}</div>
             <div class="drillHeroTitle">Practice Plan</div>
             <div class="drillHeroSub">What to run and for how long -- plan it here, run it with the drill tools above.</div>
           </div>
@@ -183,7 +182,7 @@
             p.name = containerEl.querySelector('#ppName').value.trim();
             p.date = containerEl.querySelector('#ppDate').value;
             await withBusyButton(btnEvt.target, 'Saving...', () => savePlans(teamId, plans));
-            btnEvt.target.textContent = '✓ Saved!';
+            btnEvt.target.textContent = 'Saved!';
             setTimeout(() => refresh(), 500);
           });
           containerEl.querySelector('#ppDelete').addEventListener('click', async () => {

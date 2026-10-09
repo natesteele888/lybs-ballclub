@@ -45,7 +45,6 @@
         }).join('') || '<div class="emptyState">No sign-up sheets yet.</div>';
         return `
           <div class="drillHero">
-            <div class="drillHeroIcon">📋</div>
             <div class="drillHeroTitle">Sign-Up Sheets</div>
             <div class="drillHeroSub">Who's bringing what for team events -- tap an open item to claim it.</div>
           </div>
