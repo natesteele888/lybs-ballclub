@@ -20,7 +20,7 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=84">
+<link rel="stylesheet" href="css/styles.css?v=85">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -115,7 +115,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261008l';</script>
+<script defer>window.BUILD_V = '20261009a';</script>
 <script defer>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -125,40 +125,40 @@
   window.FIREBASE_API_KEY = 'AIzaSyCK2-ZDnWxSs-5ghhueRIR4OaSZ-1NgHGY';
   // window.FIREBASE_DB_URL = 'https://lybs-ballclub-default-rtdb.firebaseio.com';
 </script>
-<script defer src="js/util.js?v=84"></script>
-<script defer src="js/backend.js?v=84"></script>
-<script defer src="js/team-registry.js?v=84"></script>
-<script defer src="js/cloud-auth.js?v=84"></script>
-<script defer src="js/team-config.js?v=84"></script>
-<script defer src="js/identity.js?v=84"></script>
-<script defer src="js/weather.js?v=84"></script>
-<script defer src="js/club-logos.js?v=84"></script>
-<script defer src="js/league-teams.js?v=84"></script>
-<script defer src="js/game-card.js?v=84"></script>
-<script defer src="js/pitch-smart.js?v=84"></script>
-<script defer src="js/tonight.js?v=84"></script>
-<script defer src="js/announcements.js?v=84"></script>
-<script defer src="js/homepage.js?v=84"></script>
-<script defer src="js/league-info.js?v=84"></script>
-<script defer src="js/calendar-export.js?v=84"></script>
-<script defer src="js/schedule.js?v=84"></script>
-<script defer src="js/practices.js?v=84"></script>
-<script defer src="js/calendar-view.js?v=84"></script>
-<script defer src="js/roster.js?v=84"></script>
-<script defer src="js/drill-baserunning.js?v=84"></script>
-<script defer src="js/drill-ath.js?v=84"></script>
-<script defer src="js/drill-pitching.js?v=84"></script>
-<script defer src="js/depth-chart.js?v=84"></script>
-<script defer src="js/lineup-builder.js?v=84"></script>
-<script defer src="js/duty.js?v=84"></script>
-<script defer src="js/stats-import.js?v=84"></script>
-<script defer src="js/social-submit.js?v=84"></script>
-<script defer src="js/gamechanger.js?v=84"></script>
-<script defer src="js/rules.js?v=84"></script>
-<script defer src="js/standings.js?v=84"></script>
-<script defer src="js/calendar-family.js?v=84"></script>
-<script defer src="js/archive.js?v=84"></script>
-<script defer src="js/team-page.js?v=84"></script>
+<script defer src="js/util.js?v=85"></script>
+<script defer src="js/backend.js?v=85"></script>
+<script defer src="js/team-registry.js?v=85"></script>
+<script defer src="js/cloud-auth.js?v=85"></script>
+<script defer src="js/team-config.js?v=85"></script>
+<script defer src="js/identity.js?v=85"></script>
+<script defer src="js/weather.js?v=85"></script>
+<script defer src="js/club-logos.js?v=85"></script>
+<script defer src="js/league-teams.js?v=85"></script>
+<script defer src="js/game-card.js?v=85"></script>
+<script defer src="js/pitch-smart.js?v=85"></script>
+<script defer src="js/tonight.js?v=85"></script>
+<script defer src="js/announcements.js?v=85"></script>
+<script defer src="js/homepage.js?v=85"></script>
+<script defer src="js/league-info.js?v=85"></script>
+<script defer src="js/calendar-export.js?v=85"></script>
+<script defer src="js/schedule.js?v=85"></script>
+<script defer src="js/practices.js?v=85"></script>
+<script defer src="js/calendar-view.js?v=85"></script>
+<script defer src="js/roster.js?v=85"></script>
+<script defer src="js/drill-baserunning.js?v=85"></script>
+<script defer src="js/drill-ath.js?v=85"></script>
+<script defer src="js/drill-pitching.js?v=85"></script>
+<script defer src="js/depth-chart.js?v=85"></script>
+<script defer src="js/lineup-builder.js?v=85"></script>
+<script defer src="js/duty.js?v=85"></script>
+<script defer src="js/stats-import.js?v=85"></script>
+<script defer src="js/social-submit.js?v=85"></script>
+<script defer src="js/gamechanger.js?v=85"></script>
+<script defer src="js/rules.js?v=85"></script>
+<script defer src="js/standings.js?v=85"></script>
+<script defer src="js/calendar-family.js?v=85"></script>
+<script defer src="js/archive.js?v=85"></script>
+<script defer src="js/team-page.js?v=85"></script>
 <script defer>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null;
@@ -486,11 +486,15 @@
   async function renderPitchingTab() {
     const el = document.getElementById('tab-pitching');
     if (!el.innerHTML) el.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
-    await Promise.all([window.Schedule.ensureLoaded(TEAM_ID), window.PitchSmart.ensureLoaded()]);
+    await Promise.all([window.Schedule.ensureLoaded(TEAM_ID), window.PitchSmart.ensureLoaded(), window.LeagueTeams.ensureLoaded()]);
     const games = window.Schedule.getGames(TEAM_ID);
-    const division = window.TeamConfig.current().macLeagueDivisionName || null;
+    const cfg = window.TeamConfig.current();
+    const division = cfg.macLeagueDivisionName || null;
     const start = pitchingWeekStart || window.PitchSmart.startOfWeek(new Date().toISOString().slice(0, 10));
+    const ourLabel = cfg.shortName || cfg.name || 'Our Team';
+    const divisionTeams = window.LeagueTeams.teamsInDivision(cfg.macLeagueDivisionId).filter(t => t !== ourLabel);
     el.innerHTML = `
+      <div id="pcEligSlot"></div>
       <div id="pcRulesSlot"></div>
       <div class="sectionHeader">
         <div class="recordLine">Week of <b>${start}</b></div>
@@ -501,6 +505,9 @@
         </div>
       </div>
       <div id="pcCalendarSlot"></div>`;
+    window.PitchSmart.renderEligibilityPanel(el.querySelector('#pcEligSlot'), {
+      ourLabel, teamOptions: divisionTeams, games, division, asOfDate: todayIso(),
+    });
     window.PitchSmart.renderRulesCard(el.querySelector('#pcRulesSlot'), division);
     window.PitchSmart.renderWeeklyCalendar(el.querySelector('#pcCalendarSlot'), games, division, start);
     el.querySelector('#pcPrevWeek').addEventListener('click', () => { pitchingWeekStart = window.PitchSmart.addDays(start, -7); renderPitchingTab(); });
@@ -604,7 +611,7 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script defer src="js/auth.js?v=84"></script>
+<script defer src="js/auth.js?v=85"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.

@@ -117,6 +117,29 @@
       </div>`;
   }
 
+  // Unavailable pitchers first and called out by count -- that's the actual
+  // question a coach has open this page to answer ("who CAN'T I use"), not
+  // a flat alphabetical roster dump that happens to include a badge. Eligible
+  // names still follow underneath, just not competing for top billing.
+  function eligibilityListHtml(byPitcher, division, asOfDate) {
+    const names = Object.keys(byPitcher);
+    if (!names.length) return '<div class="emptyState">No pitch counts logged yet. Log them on each completed game\'s detail page.</div>';
+    const statuses = names.map(name => ({ name, status: computeStatus(byPitcher[name], division, asOfDate) }));
+    const unavailable = statuses.filter(s => !s.status.eligible)
+      .sort((a, b) => (a.status.eligibleOn || '').localeCompare(b.status.eligibleOn || ''));
+    const eligible = statuses.filter(s => s.status.eligible)
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return `
+      ${unavailable.length
+        ? `<div class="sectionLabel" style="color:#ff8a8a;">Unavailable (${unavailable.length})</div>
+           <div class="listBody">${unavailable.map(s => statusHtml(s.name, s.status)).join('')}</div>`
+        : '<div class="emptyState" style="color:#5fd989;">Everyone\'s eligible right now.</div>'}
+      ${eligible.length
+        ? `<div class="sectionLabel" style="margin-top:14px;">Eligible (${eligible.length})</div>
+           <div class="listBody">${eligible.map(s => statusHtml(s.name, s.status)).join('')}</div>`
+        : ''}`;
+  }
+
   // The actual daily-max + rest-day table, on full display -- the weekly
   // calendar below shows what it means for a given pitcher, but a coach
   // needs the raw numbers in front of them too, not just a computed
@@ -125,13 +148,17 @@
   // question) without it defaulting to anything but this team's own.
   function rulesCardHtml(division, divisions) {
     const rules = rulesCache && rulesCache[division];
+    // Small cards in a wrapping row, not one full-width row per tier -- five
+    // tiers were costing five row-heights of vertical space for what's
+    // really just five short number pairs, pushing the actually-important
+    // content (who's unavailable) below the fold.
     const tierRow = (t) => {
       const range = t.max >= 999 ? `${t.min}+` : `${t.min}-${t.max}`;
-      const rest = t.restDays === 0 ? 'No rest' : `${t.restDays} day${t.restDays > 1 ? 's' : ''} rest`;
+      const rest = t.restDays === 0 ? 'No rest' : `${t.restDays}d rest`;
       return `
-        <div class="pcRuleRow">
-          <span class="pcRuleRange">${escapeHtml(range)}</span>
-          <span class="pcRuleRest">${escapeHtml(rest)}</span>
+        <div class="pcTierCard">
+          <div class="pcTierRange">${escapeHtml(range)}</div>
+          <div class="pcTierRest">${escapeHtml(rest)}</div>
         </div>`;
     };
     const picker = divisions.length > 1
@@ -186,14 +213,7 @@
     // Renders our own roster's current eligibility, computed from this
     // team's own logged pitchCounts across teams/{teamId}/schedule.
     renderOurEligibility(containerEl, games, division, asOfDate) {
-      const byPitcher = appearancesByPitcher(games);
-      const names = Object.keys(byPitcher);
-      if (!names.length) {
-        containerEl.innerHTML = '<div class="emptyState">No pitch counts logged yet. Log them on each completed game\'s detail page.</div>';
-        return;
-      }
-      const rows = names.map(name => statusHtml(name, computeStatus(byPitcher[name], division, asOfDate))).join('');
-      containerEl.innerHTML = `<div class="listBody">${rows}</div>`;
+      containerEl.innerHTML = eligibilityListHtml(appearancesByPitcher(games), division, asOfDate);
     },
 
     // Renders an opponent's eligibility from shared/pitchSmart, with an
@@ -209,10 +229,58 @@
           </div>`;
         return;
       }
-      const rows = team.pitchers.map(p => statusHtml(p.name, computeStatus(p.appearances, division, asOfDate))).join('');
+      const byPitcher = {};
+      team.pitchers.forEach(p => { byPitcher[p.name] = p.appearances; });
       containerEl.innerHTML = `
         <div class="helpText">Mirrored from macleague.org's Pitch Smart page.</div>
-        <div class="listBody">${rows}</div>`;
+        ${eligibilityListHtml(byPitcher, division, asOfDate)}`;
+    },
+
+    // The Pitching tab's main section: who's unavailable right now, for
+    // whichever team is selected -- our own roster by default, or any team
+    // in our division (same daily-max/rest-day table applies to all of
+    // them). Owns the team picker itself, same self-contained pattern as
+    // renderRulesCard's division picker above. teamOptions is this team's
+    // own division roster from LeagueTeams.teamsInDivision() -- the caller
+    // resolves that (and awaits LeagueTeams.ensureLoaded() first) since
+    // this module has no reason to know about league-teams.js otherwise.
+    renderEligibilityPanel(containerEl, opts) {
+      opts = opts || {};
+      let selected = 'OUR_TEAM';
+      async function draw() {
+        const options = [
+          `<option value="OUR_TEAM">${escapeHtml(opts.ourLabel || 'Our Team')}</option>`,
+          ...(opts.teamOptions || []).map(t => `<option value="${escapeHtml(t)}" ${t === selected ? 'selected' : ''}>${escapeHtml(t)}</option>`),
+        ].join('');
+        containerEl.innerHTML = `
+          <div class="detailCard pcRulesCard">
+            <div class="sectionLabel" style="margin:0 0 4px;">Pitcher Availability</div>
+            <select id="pcEligTeam" class="pcRulesSelect">${options}</select>
+            <div id="pcEligBody" style="margin-top:12px;"><div class="emptyState">Loading&hellip;</div></div>
+          </div>`;
+        const sel = containerEl.querySelector('#pcEligTeam');
+        sel.value = selected;
+        sel.addEventListener('change', () => { selected = sel.value; draw(); });
+        const body = containerEl.querySelector('#pcEligBody');
+        if (selected === 'OUR_TEAM') {
+          body.innerHTML = eligibilityListHtml(appearancesByPitcher(opts.games), opts.division, opts.asOfDate);
+        } else {
+          const data = await window.dbGet(window.sharedPath('pitchSmart'));
+          const team = data && data[selected];
+          if (!team || !team.pitchers || !team.pitchers.length) {
+            body.innerHTML = `
+              <div class="emptyState">
+                No MAC League pitch count data mirrored for ${escapeHtml(selected)} yet.<br>
+                <span class="helpText">This mirrors from macleague.org once Spring pitch-count reporting is active.</span>
+              </div>`;
+            return;
+          }
+          const byPitcher = {};
+          team.pitchers.forEach(p => { byPitcher[p.name] = p.appearances; });
+          body.innerHTML = eligibilityListHtml(byPitcher, opts.division, opts.asOfDate);
+        }
+      }
+      draw();
     },
 
     // Monday-start week containing dateStr.
