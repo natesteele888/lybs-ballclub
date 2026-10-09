@@ -720,6 +720,10 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .pcStatValue { font-family: var(--font-display); font-size: 26px; }
 .pcStatLabel { font-size: 9.5px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
 .siCardName { font-family: var(--font-label); font-weight: 700; font-size: 13px; color: #fff; }
+.pcPitcherRank {
+  display: inline-block; font-family: var(--font-label); font-weight: 700; font-size: 11px;
+  color: #F0C84B; background: rgba(245,166,35,0.15); border-radius: 5px; padding: 1px 5px; margin-right: 2px;
+}
 
 .coachingToggle { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; }
 .coachingToggle::-webkit-scrollbar { display: none; }

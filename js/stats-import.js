@@ -209,8 +209,26 @@
     return [leadoff, ...sorted.filter(r => r !== leadoff)];
   }
 
+  // Same transparent-heuristic framing as suggestedOrder above, for the
+  // Pitching tab's depth order instead of a batting lineup: best ERA first
+  // (qualified by IP when enough pitchers clear that bar), falling back to
+  // most IP for anyone ERA can't rank. A starting point a coach edits from,
+  // not a final answer -- matches that same ethos.
+  function suggestedPitchingOrder(rows) {
+    const withIp = rows.map(r => ({ ...r, ipDec: ipToDecimal(r.ip) }));
+    const qualified = withIp.filter(r => (r.ipDec || 0) >= 2);
+    const pool = qualified.length >= 2 ? qualified : withIp;
+    if (pool.length < 2) return [];
+    const withEra = pool.filter(r => r.era != null);
+    const byIp = pool.slice().sort((a, b) => (b.ipDec || 0) - (a.ipDec || 0));
+    if (!withEra.length) return byIp;
+    const sortedByEra = withEra.slice().sort((a, b) => a.era - b.era);
+    const rest = byIp.filter(r => r.era == null);
+    return [...sortedByEra, ...rest];
+  }
+
   window.StatsImport = {
-    parseRows, battingInsights, pitchingInsights, suggestedOrder, ipToDecimal, toFirstLastInitial,
+    parseRows, battingInsights, pitchingInsights, suggestedOrder, suggestedPitchingOrder, ipToDecimal, toFirstLastInitial,
 
     async render(containerEl, teamId, opts) {
       opts = opts || {};

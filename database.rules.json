@@ -19,14 +19,17 @@
         "importedStats": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" },
         "drills": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" },
         "signups": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal'))" },
-        "awards": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" }
+        "awards": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" },
+        "equipment": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal'))" },
+        "pitcherDepth": { ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')" }
       }
     },
 
     "shared": {
       "rules": { ".read": "auth != null", ".write": "auth != null" },
       "seasonArchive": { ".read": "auth != null", ".write": "auth != null" },
-      "macLeagueStandings": { ".read": "auth != null", ".write": "auth != null" }
+      "macLeagueStandings": { ".read": "auth != null", ".write": "auth != null" },
+      "pitchSmart": { ".read": "auth != null", ".write": "auth != null" }
     }
   }
 }
