@@ -308,12 +308,19 @@
 
     // Renders our own roster's current eligibility, computed from this
     // team's own logged pitchCounts across teams/{teamId}/schedule.
-    renderOurEligibility(containerEl, games, division, asOfDate) {
-      containerEl.innerHTML = eligibilityListHtml(appearancesByPitcher(games), division, asOfDate);
+    // teamId is optional -- without it this just skips showing rank (keeps
+    // this callable the old way, though every caller now has a teamId
+    // handy and passes one).
+    async renderOurEligibility(containerEl, games, division, asOfDate, teamId) {
+      const order = teamId ? await window.dbGet(window.teamPath(teamId, 'pitcherDepth')) : null;
+      containerEl.innerHTML = eligibilityListHtml(appearancesByPitcher(games), division, asOfDate, rankMapFromOrder(order));
     },
 
     // Renders an opponent's eligibility from shared/pitchSmart, with an
-    // honest empty state when nothing's been mirrored for them yet.
+    // honest empty state when nothing's been mirrored for them yet. Rank
+    // comes from that same record's depthOrder, whenever a coach (any
+    // coach -- same crowdsourced trust as the pitch-count mirror itself)
+    // has set one.
     async renderOpponentEligibility(containerEl, opponentName, division, asOfDate) {
       const data = await window.dbGet(window.sharedPath('pitchSmart'));
       const team = data && data[opponentName];
@@ -329,7 +336,7 @@
       team.pitchers.forEach(p => { byPitcher[p.name] = p.appearances; });
       containerEl.innerHTML = `
         <div class="helpText">Mirrored from macleague.org's Pitch Smart page.</div>
-        ${eligibilityListHtml(byPitcher, division, asOfDate)}`;
+        ${eligibilityListHtml(byPitcher, division, asOfDate, rankMapFromOrder(team.depthOrder))}`;
     },
 
     // The Pitching tab's main section: unavailable pitchers across every

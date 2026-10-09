@@ -30,6 +30,13 @@
       "seasonArchive": { ".read": "auth != null", ".write": "auth != null" },
       "macLeagueStandings": { ".read": "auth != null", ".write": "auth != null" },
       "pitchSmart": { ".read": "auth != null", ".write": "auth != null" }
+    },
+
+    "coachPrivate": {
+      "$teamId": {
+        ".read": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')",
+        ".write": "auth != null && auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal')"
+      }
     }
   }
 }

@@ -102,7 +102,7 @@
         <div id="pitchOurSlot"></div>
         <div class="sectionLabel" style="margin-top:12px;">${escapeHtml(game.opponent || 'Opponent')}</div>
         <div id="pitchTheirSlot"></div>`;
-      window.PitchSmart.renderOurEligibility(slotEl.querySelector('#pitchOurSlot'), games, division, game.date);
+      window.PitchSmart.renderOurEligibility(slotEl.querySelector('#pitchOurSlot'), games, division, game.date, teamId);
       window.PitchSmart.renderOpponentEligibility(slotEl.querySelector('#pitchTheirSlot'), game.opponent, division, game.date);
       return;
     }

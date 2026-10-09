@@ -35,6 +35,15 @@
        needed yet.
      window.teamPath(teamId, key)   -> 'teams/{teamId}/{key}'
      window.sharedPath(key)         -> 'shared/{key}'
+     window.coachPrivatePath(teamId, key) -> 'coachPrivate/{teamId}/{key}' --
+       for data that must stay coach-only to READ, not just to write (so
+       far: Coach's Notes). teams/{teamId} itself grants .read to coach
+       AND player gate emails, and Firebase RTDB rules cascade downward
+       only -- a .read rule nested under teams/{teamId} can never be MORE
+       restrictive than that ancestor grant, only less. A path that needs
+       real read privacy has to live outside the teams/ tree entirely,
+       with its own top-level rule -- see database.rules.json's
+       "coachPrivate" entry.
      window.dbGet(path)             -- async, resolves to the JSON
        value at that path (or null).
      window.dbPut(path, value)      -- async, writes the whole
@@ -56,6 +65,9 @@
   };
   window.sharedPath = function (key) {
     return `shared/${key}`;
+  };
+  window.coachPrivatePath = function (teamId, key) {
+    return `coachPrivate/${teamId}/${key}`;
   };
 
   // ---- Mock store -------------------------------------------------------
