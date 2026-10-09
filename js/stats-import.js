@@ -275,7 +275,12 @@
       }
 
       function orderHtml(order) {
-        if (!order.length) return '';
+        // The suggested order (and saving it as a lineup) is a coach
+        // planning action, not spectator content -- the public read-only
+        // view (opts.canEdit false, see refresh() below) stops at the
+        // insight cards/tables, same content Game Ball's leader tile and
+        // Awards already show everyone without needing edit rights.
+        if (!order.length || !opts.canEdit) return '';
         return `
           <div class="sectionLabel" style="margin-top:18px;">Suggested batting order</div>
           <div class="helpText">Leadoff by OBP, rest by OPS -- a starting point, not a final answer. Save it, then edit it like any other lineup.</div>
@@ -297,46 +302,52 @@
         const pitchingIns = pitchingRows.length ? pitchingInsights(pitchingRows) : [];
         const order = battingRows.length ? suggestedOrder(battingRows) : [];
 
+        const noStatsYet = !battingRows.length && !pitchingRows.length;
         containerEl.innerHTML = `
           <div class="drillHero">
             <div class="drillHeroIcon">📊</div>
-            <div class="drillHeroTitle">Stats Insights</div>
-            <div class="drillHeroSub">Upload a GameChanger season-stats export (Team &rarr; Stats &rarr; Export Stats, batting or pitching) to see who's hitting, who should lead off, and more -- computed right here, nothing leaves this browser.</div>
+            <div class="drillHeroTitle">${opts.canEdit ? 'Stats Insights' : 'Season Stats'}</div>
+            <div class="drillHeroSub">${opts.canEdit
+              ? 'Upload a GameChanger season-stats export (Team &rarr; Stats &rarr; Export Stats, batting or pitching) to see who\'s hitting, who should lead off, and more -- computed right here, nothing leaves this browser.'
+              : 'Who\'s hitting, who\'s pitching well -- from the team\'s last GameChanger stats import.'}</div>
           </div>
-          <div class="detailCard">
-            <label>GameChanger CSV export<input type="file" id="siFile" accept=".csv"></label>
-            <button class="btn btnSmall" id="siImport" disabled style="margin-top:10px;">Import</button>
-            ${data ? `<div class="helpText" style="margin-top:10px;">Last import: ${escapeHtml(data.source || 'file')} &middot; ${new Date(data.importedAt).toLocaleString()}</div>` : ''}
-            <div id="siErr" style="color:#ff8a8a;font-size:12.5px;margin-top:8px;"></div>
-          </div>
-          ${!battingRows.length && !pitchingRows.length ? '<div class="emptyState">No stats imported yet.</div>' : ''}
+          ${opts.canEdit ? `
+            <div class="detailCard">
+              <label>GameChanger CSV export<input type="file" id="siFile" accept=".csv"></label>
+              <button class="btn btnSmall" id="siImport" disabled style="margin-top:10px;">Import</button>
+              ${data ? `<div class="helpText" style="margin-top:10px;">Last import: ${escapeHtml(data.source || 'file')} &middot; ${new Date(data.importedAt).toLocaleString()}</div>` : ''}
+              <div id="siErr" style="color:#ff8a8a;font-size:12.5px;margin-top:8px;"></div>
+            </div>` : ''}
+          ${noStatsYet ? `<div class="emptyState">${opts.canEdit ? 'No stats imported yet.' : 'No stats imported yet -- check back once the coach uploads a GameChanger export.'}</div>` : ''}
           ${battingRows.length ? `<div class="sectionLabel" style="margin-top:18px;">Batting (${battingRows.length})</div>${cardsHtml(battingIns)}${tableHtml(battingRows, 'batting')}` : ''}
           ${pitchingRows.length ? `<div class="sectionLabel" style="margin-top:18px;">Pitching (${pitchingRows.length})</div>${cardsHtml(pitchingIns)}${tableHtml(pitchingRows, 'pitching')}` : ''}
           ${orderHtml(order)}`;
 
         const fileInput = containerEl.querySelector('#siFile');
         const importBtn = containerEl.querySelector('#siImport');
-        fileInput.addEventListener('change', () => { importBtn.disabled = !fileInput.files.length; });
-        importBtn.addEventListener('click', () => {
-          const file = fileInput.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = async () => {
-            try {
-              const { kind, rows } = parseRows(String(reader.result), roster);
-              if (!rows.length) throw new Error('No player rows found in that file.');
-              data = data || {};
-              if (kind === 'pitching') data.pitchingRows = rows; else data.battingRows = rows;
-              data.source = file.name;
-              data.importedAt = new Date().toISOString();
-              await window.dbPut(window.teamPath(teamId, 'importedStats'), data);
-              refresh();
-            } catch (e) {
-              containerEl.querySelector('#siErr').textContent = 'Could not read that file: ' + e.message;
-            }
-          };
-          reader.readAsText(file);
-        });
+        if (fileInput && importBtn) {
+          fileInput.addEventListener('change', () => { importBtn.disabled = !fileInput.files.length; });
+          importBtn.addEventListener('click', () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async () => {
+              try {
+                const { kind, rows } = parseRows(String(reader.result), roster);
+                if (!rows.length) throw new Error('No player rows found in that file.');
+                data = data || {};
+                if (kind === 'pitching') data.pitchingRows = rows; else data.battingRows = rows;
+                data.source = file.name;
+                data.importedAt = new Date().toISOString();
+                await window.dbPut(window.teamPath(teamId, 'importedStats'), data);
+                refresh();
+              } catch (e) {
+                containerEl.querySelector('#siErr').textContent = 'Could not read that file: ' + e.message;
+              }
+            };
+            reader.readAsText(file);
+          });
+        }
         const saveLineupBtn = containerEl.querySelector('#siSaveLineup');
         if (saveLineupBtn) {
           saveLineupBtn.addEventListener('click', async () => {
