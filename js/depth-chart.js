@@ -102,6 +102,10 @@
   }
 
   window.DepthChart = {
+    // Exposed so js/play-diagram.js can draw situational markers over the
+    // same field art instead of re-tracing or duplicating it -- same
+    // viewBox/COORDS percentage system either way.
+    fieldSvg,
     async render(containerEl, teamId) {
       await ensureChart(teamId);
       const roster = window.Roster.getPlayers(teamId);
