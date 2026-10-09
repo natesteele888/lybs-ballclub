@@ -61,7 +61,6 @@
       function setupHtml() {
         return `
           <div class="drillHero">
-            <div class="drillHeroIcon">🎯</div>
             <div class="drillHeroTitle">Pitch Chart</div>
             <div class="drillHeroSub">Track pitch location, type &amp; velocity on the 9-pocket net.</div>
           </div>
@@ -100,7 +99,7 @@
 
         const pending = PC.pendingPitch ? `
           <div class="drillCard pcPendingCard">
-            <div class="sectionLabel">${PC.pendingPitch.zone === 'ball' ? '⚪ Ball' : '✅ Strike'} &mdash; pick a type</div>
+            <div class="sectionLabel">${PC.pendingPitch.zone === 'ball' ? 'Ball' : 'Strike'} &mdash; pick a type</div>
             <div class="drillChipRow">
               ${PT_TYPES.map(t => `<button class="pcTypeBtn" data-type="${t.id}" style="--pt-color:${t.color};">${t.id}</button>`).join('')}
             </div>
@@ -121,7 +120,7 @@
             <div class="pcPocketGrid">${pockets}</div>
           </div>
           <div class="pcBelowNet">
-            <button class="btn btnGhost" id="pcBall">⚪ Ball ${ballCount ? '(' + ballCount + ')' : ''}</button>
+            <button class="btn btnGhost" id="pcBall">Ball ${ballCount ? '(' + ballCount + ')' : ''}</button>
             <div class="pcStrikeRate" style="color:${sr >= 65 ? GREEN : sr >= 50 ? GOLD : RED};">${sr}% <span>K%</span></div>
           </div>
           ${pending}
@@ -148,7 +147,6 @@
 
         return `
           <div class="drillHero">
-            <div class="drillHeroIcon">🎯</div>
             <div class="drillHeroTitle">Session complete</div>
             ${PC.pitcher ? `<div class="drillHeroSub">${escapeHtml(PC.pitcher)}</div>` : ''}
           </div>
@@ -164,7 +162,7 @@
           <div class="drillChipRow">
             ${PT_TYPES.filter(t => typeCounts[t.id] > 0).map(t => `<span class="pcTypeTag" style="--pt-color:${t.color};">${t.id} &middot; ${typeCounts[t.id]}</span>`).join('')}
           </div>
-          <button class="btn" id="pcSave" style="width:100%;margin-top:16px;">💾 Save session</button>
+          <button class="btn" id="pcSave" style="width:100%;margin-top:16px;">Save session</button>
           <div class="sectionHeader" style="margin-top:10px;">
             <button class="btn btnGhost" id="pcNew">New session</button>
             ${sessions.length ? `<button class="btn btnGhost" id="pcHistoryBtn2">History</button>` : ''}
@@ -260,7 +258,7 @@
             topSpeed: withSpeed.length ? Math.max(...withSpeed.map(p => p.speed)) : null, maxStreak,
           });
           await saveSessions(teamId);
-          btnEvt.target.textContent = '✓ Saved!';
+          btnEvt.target.textContent = 'Saved!';
           btnEvt.target.disabled = true;
         });
       }

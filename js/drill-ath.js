@@ -112,7 +112,6 @@
       function setupHtml() {
         return `
           <div class="drillHero">
-            <div class="drillHeroIcon">⚾</div>
             <div class="drillHeroTitle">Around the Horn</div>
             <div class="drillHeroSub">Time how fast each group throws around the infield.</div>
           </div>
@@ -126,10 +125,9 @@
 
       function leaderboardHtml() {
         if (!leaderboard.length) return '<div class="emptyState">No times posted yet.</div>';
-        const medals = ['🥇', '🥈', '🥉'];
         return `<div class="listBody">${leaderboard.slice(0, 20).map((e, i) => `
           <div class="listRow athBoardRow" style="cursor:default;">
-            <div class="athBoardMedal">${medals[i] || '#' + (i + 1)}</div>
+            <div class="athBoardMedal">#${i + 1}</div>
             <div class="listRowMain">
               <div class="listRowTitle">${escapeHtml(e.groupName)}</div>
               <div class="listRowSub">${(e.players || []).map(escapeHtml).join(', ')}${e.date ? ' · ' + escapeHtml(e.date) : ''}</div>
@@ -186,13 +184,13 @@
         let controls = '';
         if (s === 'idle' || s === 'accepted') {
           controls = `<button class="btn athBigBtn" id="athStart">${s === 'accepted' ? 'GO AGAIN' : 'START'}</button>
-            ${g.attempts.length ? `<button class="btn btnGhost" id="athNext" style="width:100%;margin-top:10px;">${ST.current < ST.groups.length - 1 ? 'Next group →' : 'Finish ✓'}</button>` : ''}`;
+            ${g.attempts.length ? `<button class="btn btnGhost" id="athNext" style="width:100%;margin-top:10px;">${ST.current < ST.groups.length - 1 ? 'Next group' : 'Finish'}</button>` : ''}`;
         } else if (s === 'running') {
           controls = `<button class="btn athBigBtn athStopBtn" id="athStop">STOP</button>`;
         } else if (s === 'stopped') {
           controls = `<div class="athStopRow">
             <button class="btn btnGhost" id="athRedo">↩ Redo</button>
-            <button class="btn" id="athAccept">✓ Accept</button>
+            <button class="btn" id="athAccept">Accept</button>
           </div>`;
         }
         return `
@@ -203,7 +201,7 @@
           <div class="athPillRow">${pills}</div>
           <div class="athTimerCard">
             <div class="athTimerDisplay ${timeClass}" id="athTimeEl">${timeStr}</div>
-            ${s === 'accepted' ? `<div class="athAcceptNote" style="color:${ST.newRecord ? GOLD : GREEN};">${ST.newRecord ? '🏆 New leader! ' : '✓ Saved — '}best: ${fmtShort(g.bestMs)}</div>` : ''}
+            ${s === 'accepted' ? `<div class="athAcceptNote" style="color:${ST.newRecord ? GOLD : GREEN};">${ST.newRecord ? 'New leader! ' : 'Saved — '}best: ${fmtShort(g.bestMs)}</div>` : ''}
             ${best ? `<div class="helpText">Best so far: <b style="color:${GOLD};">${fmtShort(best)}</b>${bestHolder ? ' (' + escapeHtml(bestHolder.name) + ')' : ''}</div>` : ''}
           </div>
           ${controls}`;
@@ -211,10 +209,9 @@
 
       function completeHtml() {
         const sorted = [...ST.groups].sort((a, b) => (a.bestMs || Infinity) - (b.bestMs || Infinity));
-        const medals = ['🥇', '🥈', '🥉'];
         const rows = sorted.map((g, i) => `
           <div class="listRow athBoardRow" style="cursor:default;">
-            <div class="athBoardMedal">${medals[i] || ''}</div>
+            <div class="athBoardMedal">${i < 3 ? '#' + (i + 1) : ''}</div>
             <div class="listRowMain">
               <div class="listRowTitle">${escapeHtml(g.name)}</div>
               <div class="listRowSub">${g.attempts.map(fmtShort).join(' · ') || 'No attempts'}${g.players.length ? ' · ' + g.players.map(p => escapeHtml(p.name)).join(', ') : ''}</div>
@@ -223,12 +220,11 @@
           </div>`).join('');
         return `
           <div class="drillHero">
-            <div class="drillHeroIcon">🏁</div>
             <div class="drillHeroTitle">Session complete</div>
             <div class="drillHeroSub">${ST.groups.length} groups &middot; ${ST.groups.reduce((s, g) => s + g.attempts.length, 0)} total attempts</div>
           </div>
           <div class="listBody">${rows}</div>
-          <button class="btn" id="athPost" style="width:100%;margin-top:14px;">🏆 Post to leaderboard</button>
+          <button class="btn" id="athPost" style="width:100%;margin-top:14px;">Post to leaderboard</button>
           <button class="btn btnGhost" id="athReset" style="width:100%;margin-top:8px;">New session</button>`;
       }
 
@@ -303,7 +299,7 @@
           ST.sessionBestMs = sessionBest();
           ST.newRecord = (prevBest === null || ST.elapsedMs < prevBest) && g.bestMs === ST.elapsedMs;
           ST.elapsedMs = 0; ST.state = 'accepted';
-          if (ST.newRecord) { confetti(); showBanner('🏆 New leader!', `${g.name}: ${fmtShort(g.bestMs)}`); }
+          if (ST.newRecord) { confetti(); showBanner('New leader!', `${g.name}: ${fmtShort(g.bestMs)}`); }
           refresh();
         });
         containerEl.querySelector('#athNext')?.addEventListener('click', () => {
@@ -315,7 +311,7 @@
           const date = new Date().toISOString().slice(0, 10);
           ST.groups.filter(g => g.bestMs).forEach(g => addResult(leaderboard, g.name, g.bestMs, g.players.map(p => p.name)));
           await saveLeaderboard(teamId);
-          btnEvt.target.textContent = '✓ Posted!';
+          btnEvt.target.textContent = 'Posted!';
           btnEvt.target.disabled = true;
         });
         containerEl.querySelector('#athReset')?.addEventListener('click', () => { ST.state = 'setup'; ST.elapsedMs = 0; refresh(); });

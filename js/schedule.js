@@ -61,7 +61,7 @@
     return `
       <div class="sectionLabel" style="margin-top:16px;">Game Ball</div>
       ${game.gameBall ? `
-        <div class="detailRow"><span class="popReveal">&#11088;</span> ${escapeHtml(game.gameBall.name)}</div>
+        <div class="detailRow">${escapeHtml(game.gameBall.name)}</div>
         ${opts.canEdit ? '<button class="btn btnGhost btnTiny" id="gbClear" style="margin-top:6px;">Clear</button>' : ''}
         ` : (opts.canEdit ? `
         ${roster.length ? `
@@ -246,10 +246,10 @@
               ${game.gameType === 'championship' ? '<span class="badge gameTypeBadge gameTypeChampionship">Championship</span>' : ''}
             </h3>
             <div class="detailRow">${escapeHtml(game.date || '')}${game.gameTime ? ' · ' + escapeHtml(game.gameTime) : ''}</div>
-            ${game.status === 'postponed' ? '<div class="detailRow" style="color:#F0C84B;"><b>&#9888; Postponed</b> &mdash; edit the date once a makeup is set.</div>' : ''}
-            ${game.status === 'cancelled' ? '<div class="detailRow" style="color:#ff8a8a;"><b>&#10060; Cancelled</b></div>' : ''}
-            ${game.location ? `<div class="detailRow">📍 <a href="${mapLink(game.location)}" target="_blank" rel="noopener">${escapeHtml(game.location)}</a></div>` : ''}
-            ${!played && theirLinkUrl ? `<div class="detailRow">☎️ <a href="${theirLinkUrl}" target="_blank" rel="noopener">${escapeHtml(game.opponent)}'s MAC League page</a> <span class="helpText" style="margin:0;display:inline;">&mdash; coach contact for weather/cancellation, straight from the league, not stored here</span></div>` : ''}
+            ${game.status === 'postponed' ? '<div class="detailRow" style="color:#F0C84B;"><b>Postponed</b> &mdash; edit the date once a makeup is set.</div>' : ''}
+            ${game.status === 'cancelled' ? '<div class="detailRow" style="color:#ff8a8a;"><b>Cancelled</b></div>' : ''}
+            ${game.location ? `<div class="detailRow"><a href="${mapLink(game.location)}" target="_blank" rel="noopener">${escapeHtml(game.location)}</a></div>` : ''}
+            ${!played && theirLinkUrl ? `<div class="detailRow"><a href="${theirLinkUrl}" target="_blank" rel="noopener">${escapeHtml(game.opponent)}'s MAC League page</a> <span class="helpText" style="margin:0;display:inline;">&mdash; coach contact for weather/cancellation, straight from the league, not stored here</span></div>` : ''}
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}
             ${game.notes ? `<div class="detailRow">${escapeHtml(game.notes)}</div>` : ''}
             <div id="weatherSlot"></div>

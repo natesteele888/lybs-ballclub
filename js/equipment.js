@@ -76,7 +76,6 @@
       function refresh() {
         containerEl.innerHTML = `
           <div class="drillHero">
-            <div class="drillHeroIcon">\u{1F392}</div>
             <div class="drillHeroTitle">Team Equipment</div>
             <div class="drillHeroSub">Who actually has the gear right now -- not whose turn it is, see Snack Duty for that.</div>
           </div>

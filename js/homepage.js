@@ -239,10 +239,10 @@
       }
       statTiles.push(statTileHtml(gamesRemaining, 'Games Left'));
       if (gameBallLeader) {
-        statTiles.push(statTileHtml(gameBallCounts[gameBallLeader], `<span class="popReveal">&#11088;</span> ${escapeHtml(gameBallLeader)}`));
+        statTiles.push(statTileHtml(gameBallCounts[gameBallLeader], escapeHtml(gameBallLeader)));
       }
       if (awardsGiven) {
-        statTiles.push(statTileHtml(awardsGiven, '&#127942; Awards Given'));
+        statTiles.push(statTileHtml(awardsGiven, 'Awards Given'));
       }
 
       containerEl.innerHTML = `

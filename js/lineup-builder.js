@@ -71,7 +71,6 @@
           </div>`).join('');
         return `
           <div class="drillHero">
-            <div class="drillHeroIcon">📋</div>
             <div class="drillHeroTitle">Lineups</div>
             <div class="drillHeroSub">Batting order &amp; defensive positions, saved per game.</div>
           </div>
@@ -193,7 +192,7 @@
             l.name = containerEl.querySelector('#luName').value.trim();
             l.date = containerEl.querySelector('#luDate').value;
             await saveLineups(teamId, lineups);
-            btnEvt.target.textContent = '✓ Saved!';
+            btnEvt.target.textContent = 'Saved!';
             setTimeout(() => refresh(), 500);
           });
           containerEl.querySelector('#luShare').addEventListener('click', async () => {

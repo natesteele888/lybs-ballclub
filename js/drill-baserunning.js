@@ -106,7 +106,6 @@
       function setupHtml() {
         return `
           <div class="drillHero">
-            <div class="drillHeroIcon">🏃</div>
             <div class="drillHeroTitle">Base Running</div>
             <div class="drillHeroSub">Time any runner on the roster, home to 1st or all the way around.</div>
           </div>
@@ -130,10 +129,9 @@
         });
         const rows = Object.values(bests).sort((a, b) => a.timeMs - b.timeMs);
         if (!rows.length) return '<div class="emptyState">No times logged yet for this drill.</div>';
-        const medals = ['🥇', '🥈', '🥉'];
         return `<div class="listBody">${rows.map((r, i) => `
           <div class="listRow athBoardRow" style="cursor:default;">
-            <div class="athBoardMedal">${medals[i] || '#' + (i + 1)}</div>
+            <div class="athBoardMedal">#${i + 1}</div>
             <div class="listRowMain">
               <div class="listRowTitle">${escapeHtml(r.name)}</div>
               <div class="listRowSub">${escapeHtml(r.date)}</div>
@@ -157,7 +155,7 @@
         } else if (s === 'stopped') {
           controls = `<div class="athStopRow">
             <button class="btn btnGhost" id="brRedo">↩ Redo</button>
-            <button class="btn" id="brAccept">✓ Save</button>
+            <button class="btn" id="brAccept">Save</button>
           </div>`;
         }
 
@@ -168,7 +166,7 @@
           </div>
           <div class="athTimerCard">
             <div class="athTimerDisplay ${timeClass}" id="brTimeEl">${timeStr}</div>
-            ${s === 'accepted' ? `<div class="athAcceptNote" style="color:${ST.newRecord ? GOLD : GREEN};">${ST.newRecord ? '🏆 New team best! ' : '✓ Saved — '}${escapeHtml(ST.playerName)}'s best: ${fmtShort(bestFor(runs, ST.playerId, ST.drillType))}</div>` : ''}
+            ${s === 'accepted' ? `<div class="athAcceptNote" style="color:${ST.newRecord ? GOLD : GREEN};">${ST.newRecord ? 'New team best! ' : 'Saved — '}${escapeHtml(ST.playerName)}'s best: ${fmtShort(bestFor(runs, ST.playerId, ST.drillType))}</div>` : ''}
             ${personalBest && s !== 'accepted' ? `<div class="helpText">${escapeHtml(ST.playerName)}'s best: <b style="color:${GOLD};">${fmtShort(personalBest)}</b></div>` : ''}
           </div>
           ${controls}`;
@@ -216,7 +214,7 @@
           await saveRuns(teamId);
           ST.newRecord = prevDrillBest === null || ST.elapsedMs < prevDrillBest;
           ST.state = 'accepted'; ST.elapsedMs = 0;
-          if (ST.newRecord) { confetti(); showBanner('🏆 New team best!', `${ST.playerName}: ${fmtShort(runs[runs.length - 1].timeMs)}`); }
+          if (ST.newRecord) { confetti(); showBanner('New team best!', `${ST.playerName}: ${fmtShort(runs[runs.length - 1].timeMs)}`); }
           refresh();
         });
       }

@@ -87,7 +87,6 @@
 
         containerEl.innerHTML = `
           <div class="drillHero">
-            <div class="drillHeroIcon">\u{1F9C3}</div>
             <div class="drillHeroTitle">Snack Duty</div>
             <div class="drillHeroSub">Rotates through the roster below, one player per game -- wraps around once it reaches the end.</div>
           </div>

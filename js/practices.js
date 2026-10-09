@@ -66,7 +66,7 @@
           <div class="detailCard">
             <h3>${TYPE_LABEL[item.type] || 'Practice'}</h3>
             <div class="detailRow">${escapeHtml(item.date || '')}${item.time ? ' · ' + escapeHtml(item.time) : ''}</div>
-            ${item.location ? `<div class="detailRow">📍 ${escapeHtml(item.location)}</div>` : ''}
+            ${item.location ? `<div class="detailRow">${escapeHtml(item.location)}</div>` : ''}
             ${item.notes ? `<div class="detailRow">${escapeHtml(item.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
             ${item.date >= todayIso() ? rsvpHtml(item, opts.viewerName, opts.canEdit) : ''}

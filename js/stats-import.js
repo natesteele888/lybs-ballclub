@@ -305,7 +305,6 @@
         const noStatsYet = !battingRows.length && !pitchingRows.length;
         containerEl.innerHTML = `
           <div class="drillHero">
-            <div class="drillHeroIcon">📊</div>
             <div class="drillHeroTitle">${opts.canEdit ? 'Stats Insights' : 'Season Stats'}</div>
             <div class="drillHeroSub">${opts.canEdit
               ? 'Upload a GameChanger season-stats export (Team &rarr; Stats &rarr; Export Stats, batting or pitching) to see who\'s hitting, who should lead off, and more -- computed right here, nothing leaves this browser.'
