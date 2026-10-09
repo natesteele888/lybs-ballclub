@@ -967,3 +967,21 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .toastShow { opacity: 1; transform: translateY(0); }
 .toastError { border-color: rgba(255,138,138,0.4); color: #ff8a8a; }
 .toastInfo { border-color: rgba(95,217,137,0.4); color: #5fd989; }
+
+/* Play Diagrams (js/play-diagram.js) -- tap-placed markers over the same
+   .depthField/.depthFieldSvg Depth Chart draws (window.DepthChart.fieldSvg()),
+   so a marker's left/top % lands on the same spot either tool draws it. */
+.pdMarker {
+  position: absolute; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; padding: 4px; cursor: pointer; z-index: 2;
+}
+.pdMarkerDot {
+  width: 14px; height: 14px; border-radius: 50%; background: var(--lybs-blue-bright);
+  border: 2px solid #fff; box-shadow: 0 0 8px rgba(76,106,235,0.7); flex: 0 0 auto;
+}
+.pdMarkerLabel {
+  font-family: var(--font-body); font-weight: 600; font-size: 10.5px; color: #fff;
+  background: rgba(10,14,40,0.9); border: 1px solid var(--card-border); border-radius: 6px;
+  padding: 2px 6px; white-space: nowrap; max-width: 110px; overflow: hidden; text-overflow: ellipsis;
+}
