@@ -902,3 +902,54 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   background: rgba(76,106,235,0.16); border: 1px solid rgba(76,106,235,0.35); color: #AFC0FF;
   font-family: var(--font-label); font-size: 12px; font-weight: 700;
 }
+
+/* ---- Light effects -----------------------------------------------------
+   Three tasteful additions to the existing system above, not a new one:
+   deliberately NO infinite/looping animations on anything persistent (nav,
+   cards at rest) -- this runs on a phone at a ball field for hours, and a
+   constantly-animating screen is both a battery drain and a distraction
+   from actually using the app. Everything here either fires once (card
+   light sweep, Game Ball reveal) or only while a finger/cursor is actually
+   on the element (button shimmer). */
+
+/* A thin light catching the top edge of every card -- same idea as the
+   crest's drop-shadow glow, applied as an ambient signature instead of a
+   one-off. Sits on :before so it never competes with a card's own content
+   for stacking order or box-shadow. */
+.detailCard, .listRow, .rosterRow {
+  position: relative;
+}
+.detailCard::before, .listRow::before, .rosterRow::before {
+  content: ''; position: absolute; top: 0; left: 12px; right: 12px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+  pointer-events: none;
+}
+
+/* Primary buttons -- a light sweep while hovered/pressed, not looping.
+   border-radius on the pseudo-element approximates the button's own
+   rounding since overflow:hidden on .btn itself would also clip its
+   existing box-shadow glow. */
+.btn:not(.btnGhost):not(.btnDanger) { position: relative; isolation: isolate; }
+.btn:not(.btnGhost):not(.btnDanger)::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.3) 50%, transparent 65%);
+  transform: translateX(-130%);
+  transition: transform .5s ease;
+  pointer-events: none; z-index: 1;
+}
+.btn:not(.btnGhost):not(.btnDanger):hover::after,
+.btn:not(.btnGhost):not(.btnDanger):active::after { transform: translateX(130%); }
+
+/* Game Ball reveal (js/schedule.js's gameBallHtml) -- a one-shot pop + glow
+   the moment a game ball renders (first view after being given, or anyone
+   opening that completed game afterward), not a perpetual pulse. */
+.gameBallStar {
+  display: inline-block;
+  animation: gameBallPop .5s cubic-bezier(.17,.89,.32,1.49) both;
+  filter: drop-shadow(0 0 6px rgba(240,200,75,0.8));
+}
+@keyframes gameBallPop {
+  0% { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+  60% { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}

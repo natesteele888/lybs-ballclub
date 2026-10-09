@@ -195,7 +195,7 @@
       }
       statTiles.push(statTileHtml(gamesRemaining, 'Games Left'));
       if (gameBallLeader) {
-        statTiles.push(statTileHtml(gameBallCounts[gameBallLeader], `&#11088; ${escapeHtml(gameBallLeader)}`));
+        statTiles.push(statTileHtml(gameBallCounts[gameBallLeader], `<span class="gameBallStar">&#11088;</span> ${escapeHtml(gameBallLeader)}`));
       }
 
       containerEl.innerHTML = `
