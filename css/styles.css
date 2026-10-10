@@ -676,6 +676,28 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   font-family: var(--font-label); font-size: 13px; font-weight: 700; color: var(--text2);
   flex: 0 0 auto; font-variant-numeric: tabular-nums;
 }
+/* A finished game's card -- bigger/bolder team names and a big-score
+   treatment matching .gameResultScore's look (same display font, white,
+   text-shadow), with the losing side dimmed instead of both scores
+   reading as equally important. .tonightMergedTeamFinal's sibling
+   border-top is what draws the divider line between the two rows, the
+   same way a real box score separates the teams -- only applies between
+   two of them, so a lone TBD/unplayed row never gets a stray top border. */
+.tonightMergedCardFinal {
+  background: linear-gradient(160deg, var(--card), #0A0E2C);
+  box-shadow: 0 8px 20px rgba(2,3,12,0.4);
+}
+.tonightFinalTag {
+  font-family: var(--font-label); font-size: 11px; font-weight: 800; color: var(--lybs-silver);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.tonightMergedTeamFinal .tonightTeamName { font-weight: 700; font-size: 15px; }
+.tonightMergedTeamFinal + .tonightMergedTeamFinal { border-top: 1px solid var(--card-border); padding-top: 8px; margin-top: 2px; }
+.tonightFinalScore {
+  font-family: var(--font-display); font-weight: 400; font-size: 24px; color: #fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.4); flex: 0 0 auto; min-width: 30px; text-align: right;
+}
+.tonightFinalScoreLoss { color: var(--text2); text-shadow: none; }
 .tonightWatchBtn { width: 100%; margin-top: 4px; }
 
 /* ---- Homepage ---- */
