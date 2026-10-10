@@ -834,6 +834,11 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   .depthPosLabel { font-size: 8px; }
   .depthPosStarter { font-size: 9.5px; }
   .depthPosBench { font-size: 7px; }
+  /* 6 fixed 58px buttons don't fit one row under ~400px -- flex-wrap left
+     5 on the first row and 1 alone on the second. A 3-column grid reads as
+     a deliberate 3x2 layout instead of an overflow leftover. */
+  .athGroupPicker { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .athGroupBtn { width: auto; }
 }
 
 /* ---- Lineup builder ---- */
