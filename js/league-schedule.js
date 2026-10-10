@@ -27,39 +27,33 @@
    handles a team with no teamId/logoUrl gracefully (js/tonight.js's
    teamHtml()), same as it does for a game whose scrape hasn't resolved
    a logo yet.
+
+   This tab's own week view lays its games out as a vertical stack
+   (.tonightMergedList, the same class the Full Scoreboard widget uses
+   for a whole division's worth of games) -- a week can run 17 games
+   deep, and a horizontal ticker only ever showing ~2 of them at a time
+   made browsing the whole week an extra, pointless scroll axis. The
+   ticker treatment (.homeTicker, drag-to-scroll) moved to the Home
+   screen instead (js/homepage.js's Upcoming section), where a quick
+   glance at the next league date -- not reading every game -- is the
+   actual job.
    ============================================================ */
 (function () {
   let cache = null; // { source, season, capturedAt, note, weeks: [{date, games}] }
 
-  // Same click-and-drag scroll js/homepage.js's own ticker uses -- that
-  // file's own comment explains why it's not a shared util.js export:
-  // deliberately self-contained modules, small enough not to matter.
-  function enableDragScroll(el) {
-    let down = false, dragged = false, startX = 0, startScroll = 0;
-    el.addEventListener('pointerdown', e => {
-      if (e.pointerType === 'touch') return;
-      down = true; dragged = false;
-      startX = e.clientX; startScroll = el.scrollLeft;
-    });
-    window.addEventListener('pointermove', e => {
-      if (!down) return;
-      const dx = e.clientX - startX;
-      if (!dragged && Math.abs(dx) <= 4) return;
-      dragged = true;
-      el.classList.add('dragging');
-      el.scrollLeft = startScroll - dx;
-    });
-    function end() { down = false; el.classList.remove('dragging'); }
-    window.addEventListener('pointerup', end);
-    window.addEventListener('pointercancel', end);
-    el.addEventListener('click', e => {
-      if (dragged) { e.stopPropagation(); e.preventDefault(); }
-      dragged = false;
-    }, true);
-  }
-
   function fmtWeekLabel(iso) {
     return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+
+  // Pure translation from a raw captured game record to the shared card
+  // component -- exported so js/homepage.js's Upcoming ticker can build
+  // the same cards for a date's games without duplicating this mapping.
+  function gameCardHtml(g) {
+    return window.TonightGames.mergedCardHtml({
+      divisionId: 'fall', divisionName: g.division, time: g.from,
+      teams: [{ name: g.home, teamId: null, score: null }, { name: g.away, teamId: null, score: null }],
+      location: g.location,
+    });
   }
 
   window.LeagueSchedule = {
@@ -86,6 +80,8 @@
       return cache.weeks.map(w => w.date);
     },
 
+    gameCardHtml,
+
     render(containerEl) {
       if (!cache || !cache.weeks || !cache.weeks.length) {
         containerEl.innerHTML = '<div class="emptyState">No league schedule captured yet.</div>';
@@ -107,12 +103,7 @@
 
       function gamesHtml() {
         const week = cache.weeks[activeIdx];
-        const cards = week.games.map(g => window.TonightGames.mergedCardHtml({
-          divisionId: 'fall', divisionName: g.division, time: g.from,
-          teams: [{ name: g.home, teamId: null, score: null }, { name: g.away, teamId: null, score: null }],
-          location: g.location,
-        })).join('');
-        return `<div class="homeTicker" id="fallScheduleTicker">${cards}</div>`;
+        return `<div class="tonightMergedList">${week.games.map(gameCardHtml).join('')}</div>`;
       }
 
       function refresh() {
@@ -133,8 +124,6 @@
         containerEl.querySelectorAll('[data-week]').forEach(btn => {
           btn.addEventListener('click', () => { activeIdx = Number(btn.dataset.week); refresh(); });
         });
-        const ticker = containerEl.querySelector('#fallScheduleTicker');
-        if (ticker) enableDragScroll(ticker);
       }
       refresh();
     },

@@ -85,14 +85,16 @@
    8. Upcoming      -- our next few games/practices after today, this
                        team only -- never another team's or another
                        division's, unlike the ticker/Full Scoreboard
-                       above -- plus one link-out row for the next
-                       captured MAC League date (js/league-schedule.js),
-                       which deliberately breaks that "this team only"
-                       rule since the ask for this tab was "visibility
-                       to what is happening in the Mac league," not
-                       just our own slate. A link, not inlined games --
-                       a league date can carry a dozen-plus games,
-                       which would swamp a 5-item personal list.
+                       above -- plus the next captured MAC League
+                       date's games (js/league-schedule.js) underneath,
+                       as their own small horizontal ticker (same
+                       drag-scroll component League Tonight uses up
+                       top, via LeagueSchedule.gameCardHtml). Breaks
+                       the "this team only" rule on purpose: the ask
+                       for this page was "visibility to what is
+                       happening in the Mac league," not just our own
+                       slate -- a quick scroll through that date's
+                       games, not a jump to another tab to read them.
    ============================================================ */
 (function () {
   function fmtDate(iso) {
@@ -337,16 +339,14 @@
               </div>`).join('')}</div>`
           : '<div class="emptyState">Nothing else scheduled yet.</div>'}
         ${leagueNextDate ? `
-          <div class="listRow" id="homeUpcomingLeagueLink" style="margin-top:10px;">
-            <div class="listRowMain">
-              <div class="listRowTitle">MAC League &middot; ${leagueNextGames.length} game${leagueNextGames.length === 1 ? '' : 's'}</div>
-              <div class="listRowSub">${escapeHtml(fmtDate(leagueNextDate))} &middot; every division, any town</div>
-            </div>
-            <span class="badge badgeTbd">View &rarr;</span>
-          </div>` : ''}`;
+          <div class="helpText" style="margin-top:12px;">MAC League &middot; ${escapeHtml(fmtDate(leagueNextDate))} &middot; every division, any town</div>
+          <div class="homeTicker" id="homeUpcomingLeagueTicker">${leagueNextGames.map(window.LeagueSchedule.gameCardHtml).join('')}</div>` : ''}`;
 
       const tickerTonight = containerEl.querySelector('#homeTickerTonight');
       if (tickerTonight) enableDragScroll(tickerTonight);
+
+      const tickerUpcomingLeague = containerEl.querySelector('#homeUpcomingLeagueTicker');
+      if (tickerUpcomingLeague) enableDragScroll(tickerUpcomingLeague);
 
       const annSlot = containerEl.querySelector('#homeAnnSlot');
       if (annSlot) window.Announcements.render(annSlot, teamId, { canEdit: opts.canEdit, authorName: opts.authorName });
@@ -356,9 +356,6 @@
 
       const viewSignupsBtn = containerEl.querySelector('#homeViewSignups');
       if (viewSignupsBtn) viewSignupsBtn.addEventListener('click', () => opts.onViewSignups && opts.onViewSignups());
-
-      const leagueLinkRow = containerEl.querySelector('#homeUpcomingLeagueLink');
-      if (leagueLinkRow) leagueLinkRow.addEventListener('click', () => opts.onViewFallSchedule && opts.onViewFallSchedule());
 
       const pitchSlot = containerEl.querySelector('#homePitchSlot');
       if (pitchSlot) window.PitchSmart.renderOurEligibility(pitchSlot, games, cfg.macLeagueDivisionName || null, today, teamId);
