@@ -192,6 +192,31 @@
           if (colonIdx !== -1) return { label: item.slice(0, colonIdx), value: item.slice(colonIdx + 2) };
           return { label: null, value: item };
         }
+        // Pulls the first "[Weekday,] Month Day[st/nd/rd/th]" out of a
+        // value, wherever it falls -- not just at the start, since several
+        // values lead with a qualifier first ("Minors & Majors: Sunday,
+        // June 6th ..."). What's left on either side becomes smaller lead-
+        // in/trailing text around it. Falls back to the plain value when no
+        // such date is found (a day-of-week schedule like "Rookies: Sundays
+        // 9am; ..." has no single date to call out) -- deliberately no
+        // fuzzier a match than this, since a wrong guess here would call
+        // out the wrong text in bold, worse than not calling anything out.
+        const DATE_RE = /((?:Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday),\s+)?(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}(?:st|nd|rd|th)?/;
+        function splitDate(value) {
+          const m = value.match(DATE_RE);
+          if (!m) return null;
+          let start = m.index, end = m.index + m[0].length;
+          // Pull a tightly-wrapping paren pair into the bold chunk too --
+          // "Mother's Day (May 9th); ..." would otherwise orphan the "("
+          // in the lead text and the ")" in the trailing text.
+          if (value[start - 1] === '(' && value[end] === ')') { start -= 1; end += 1; }
+          // A trailing ", 8:00-9:00pm via Zoom"-style continuation reads as
+          // a stray dangling comma once it's on its own line -- the comma
+          // belonged to the sentence the date just got pulled out of, not
+          // to this trailing fragment on its own.
+          const after = value.slice(end).trim().replace(/^,\s*/, '');
+          return { before: value.slice(0, start).trim(), date: value.slice(start, end), after };
+        }
         return cache.seasons.map(s => `
           <div class="dateSeasonCard ${s.status === 'current' ? 'dateSeasonCardCurrent' : ''}">
             <div class="dateSeasonHeader">
@@ -201,10 +226,15 @@
             <div class="dateEventGrid">
               ${s.items.map(item => {
                 const { label, value } = parseEventItem(item);
+                const split = splitDate(value);
                 return `
                   <div class="dateEventRow">
                     ${label ? `<div class="dateEventLabel">${escapeHtml(label)}</div>` : ''}
-                    <div class="dateEventValue">${escapeHtml(value)}</div>
+                    ${split ? `
+                      ${split.before ? `<div class="dateEventLead">${escapeHtml(split.before)}</div>` : ''}
+                      <div class="dateEventBig">${escapeHtml(split.date)}</div>
+                      ${split.after ? `<div class="dateEventSub">${escapeHtml(split.after)}</div>` : ''}
+                    ` : `<div class="dateEventValue">${escapeHtml(value)}</div>`}
                   </div>`;
               }).join('')}
             </div>
@@ -349,6 +379,7 @@
           </div>
           ${body}
           <div class="helpText" style="margin-top:12px;">${escapeHtml(cache.source)}</div>`;
+        scrollActiveTabIntoView(containerEl);
         containerEl.querySelectorAll('.leagueSectionTabs [data-id]').forEach(el => {
           el.addEventListener('click', () => {
             expanded = el.dataset.id;

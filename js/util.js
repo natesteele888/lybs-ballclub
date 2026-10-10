@@ -182,4 +182,19 @@
       });
     });
   };
+
+  // A horizontally-scrolling tab row (index.html's navCatBar/tabBarEl,
+  // league-info.js's section switcher, public-view.js's panel nav) rebuilds
+  // its whole innerHTML on every click, which silently resets scrollLeft to
+  // 0 -- without this, picking a tab further right than the visible edge
+  // (e.g. "Resources", last of five) re-renders the row scrolled back to
+  // the far left, hiding the very tab just chosen. Called once after
+  // innerHTML is set, same call site every time: find whichever button is
+  // .active now, scroll it fully into view. selector defaults to the
+  // .tabBtn convention most of these rows use; index.html's category bar
+  // uses .navCatBtn instead, passed explicitly.
+  window.scrollActiveTabIntoView = function scrollActiveTabIntoView(containerEl, selector) {
+    const active = containerEl.querySelector(selector || '.tabBtn.active');
+    if (active) active.scrollIntoView({ inline: 'center', block: 'nearest' });
+  };
 })();
