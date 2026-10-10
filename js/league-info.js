@@ -170,16 +170,44 @@
           <div class="listBody">${others.map(fieldRow).join('')}</div>`;
       }
 
+      // One big card per season instead of a flat bulleted block -- each
+      // card's own accent (top bar + every row's left border) picks up the
+      // status color, so "this is the one happening now" reads at a glance
+      // before anyone reads the Current/Draft badge text itself.
       function renderDates() {
         const statusBadge = (status) => {
           if (status === 'current') return '<span class="badge badgeW">Current</span>';
           if (status === 'draft') return '<span class="badge" style="background:rgba(180,187,191,0.15);color:#B4BBBF;border:1px solid rgba(180,187,191,0.3);">Draft</span>';
           return '';
         };
+        // Every item is "Label: value", except a handful whose value itself
+        // needs an embedded colon ("Season start -- Rookies, Minors &
+        // Majors: Monday, April 26th") -- those use " -- " as the label
+        // split instead, checked first so the first *real* colon inside
+        // the value doesn't get mistaken for the split point.
+        function parseEventItem(item) {
+          const dashIdx = item.indexOf(' -- ');
+          if (dashIdx !== -1) return { label: item.slice(0, dashIdx), value: item.slice(dashIdx + 4) };
+          const colonIdx = item.indexOf(': ');
+          if (colonIdx !== -1) return { label: item.slice(0, colonIdx), value: item.slice(colonIdx + 2) };
+          return { label: null, value: item };
+        }
         return cache.seasons.map(s => `
-          <div style="margin-bottom:18px;">
-            <div class="sectionLabel" style="display:flex;align-items:center;gap:8px;">${escapeHtml(s.label)} ${statusBadge(s.status)}</div>
-            <div class="helpText">${s.items.map(i => `&bull; ${escapeHtml(i)}`).join('<br>')}</div>
+          <div class="dateSeasonCard ${s.status === 'current' ? 'dateSeasonCardCurrent' : ''}">
+            <div class="dateSeasonHeader">
+              <div class="dateSeasonTitle">${escapeHtml(s.label)}</div>
+              ${statusBadge(s.status)}
+            </div>
+            <div class="dateEventGrid">
+              ${s.items.map(item => {
+                const { label, value } = parseEventItem(item);
+                return `
+                  <div class="dateEventRow">
+                    ${label ? `<div class="dateEventLabel">${escapeHtml(label)}</div>` : ''}
+                    <div class="dateEventValue">${escapeHtml(value)}</div>
+                  </div>`;
+              }).join('')}
+            </div>
           </div>`).join('');
       }
 
@@ -310,12 +338,16 @@
 
       function renderAll() {
         const current = sections.find(s => s.id === expanded) || sections[0];
+        // Dates supplies its own per-season cards (see renderDates) -- the
+        // shared .detailCard wrapper every other section uses would just
+        // nest a card around cards.
+        const body = current.id === 'dates' ? current.run() : `<div class="detailCard">${current.run()}</div>`;
         containerEl.innerHTML = `
           <div class="helpText">Mirrored from macleague.org -- field addresses, league dates, officials, and age cutoffs in one place.</div>
           <div class="leagueSectionTabs">
             ${sections.map(s => `<button class="tabBtn ${s.id === current.id ? 'active' : ''}" data-id="${s.id}">${escapeHtml(s.title)}</button>`).join('')}
           </div>
-          <div class="detailCard">${current.run()}</div>
+          ${body}
           <div class="helpText" style="margin-top:12px;">${escapeHtml(cache.source)}</div>`;
         containerEl.querySelectorAll('.leagueSectionTabs [data-id]').forEach(el => {
           el.addEventListener('click', () => {
