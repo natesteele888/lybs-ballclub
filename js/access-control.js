@@ -22,11 +22,12 @@
    an invite" message instead of entering the app -- there is no
    self-serve request-access flow.
 
-   Phase A only ever expects at most one team grant (exactly one
-   team exists). pickPrimaryGrant() below just takes the first one
-   it finds rather than offering a real picker -- Phase B replaces
-   that once a second team or a board member makes more than one
-   grant possible at once.
+   Only one team exists today, so enter() just takes grants.teams[0]
+   rather than offering a real picker, and a board-only grant (no
+   team role at all) falls back to a read-only view of that same
+   first team rather than a dead end -- both stopgaps for "only one
+   team exists," not a real multi-team picker or board console.
+   Revisit once a second team exists to make either one matter.
    ============================================================ */
 (function () {
   function emailKey(email) {
@@ -103,12 +104,32 @@
       // distinct from merely having a Google session available at all.
       window.__activeAuthMode = 'google';
       loginScreen.classList.add('hide');
-      window.onIdentityReady(grant.teamId, grant.role, identity);
+      window.onIdentityReady(grant.teamId, grant.role, identity, grants.board);
       return;
     }
 
+    // Board-only stopgap: no team grant, but this is a real board member.
+    // There's no board console yet (no cross-team dashboard, no "pick a
+    // team" picker), and only one team exists today, so land read-only
+    // ('parent' role -- canEdit() stays false) on the first known team
+    // rather than leaving a board member with nowhere to go at all. This
+    // is explicitly a stopgap for "only one team exists" -- revisit once
+    // a second team or a real board console makes knownTeamIds()[0] not
+    // an obviously-right pick anymore.
+    if (grants.board) {
+      const teamId = knownTeamIds()[0];
+      if (teamId) {
+        const identity = window.Identity.setSession(teamId, 'parent', user.name);
+        await window.TeamConfig.load(teamId);
+        window.__activeAuthMode = 'google';
+        loginScreen.classList.add('hide');
+        window.onIdentityReady(teamId, 'parent', identity, true);
+        return;
+      }
+    }
+
     showMessage(grants.board
-      ? `Signed in as ${user.email} with board access -- the board console isn't built yet. Ask a coach to also invite you to a specific team to get into a team page today.`
+      ? `Signed in as ${user.email} with board access, but no team exists yet to view.`
       : `Signed in as ${user.email}, but no team has invited you yet -- ask your coach or board for an invite.`);
   }
 

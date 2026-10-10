@@ -49,6 +49,20 @@
 (function () {
   const cache = {}; // teamId -> games[]
 
+  // Public-mirror projection for js/public-view.js's no-sign-in schedule
+  // panel -- see js/backend.js's publicSchedulePath() header comment.
+  // Deliberately an allowlist, not an exclusion list: a field added to the
+  // real game shape above should NOT show up here unless someone
+  // deliberately adds it below. Excluded on purpose: notes, pitchCounts,
+  // rsvps, driving, gameBall -- every one of those can carry a player's name.
+  function toPublicGame(g) {
+    return {
+      id: g.id, opponent: g.opponent, date: g.date, arriveTime: g.arriveTime,
+      gameTime: g.gameTime, homeAway: g.homeAway, location: g.location,
+      gameType: g.gameType, status: g.status, ourScore: g.ourScore, oppScore: g.oppScore,
+    };
+  }
+
   // Game Ball -- a completed-game-only highlight (game.gameBall =
   // {playerId, name} or null), same "attached to the item" shape as rsvps/
   // driving. Coach picks it from the roster opts.roster carries in (see
@@ -165,13 +179,19 @@
       } else {
         list[idx] = game;
       }
-      await window.dbPut(window.teamPath(teamId, 'schedule'), list);
+      await Promise.all([
+        window.dbPut(window.teamPath(teamId, 'schedule'), list),
+        window.dbPut(window.publicSchedulePath(teamId, 'games'), list.map(toPublicGame)),
+      ]);
       return game;
     },
     async deleteGame(teamId, id) {
       const list = cache[teamId] || [];
       cache[teamId] = list.filter(g => g.id !== id);
-      await window.dbPut(window.teamPath(teamId, 'schedule'), cache[teamId]);
+      await Promise.all([
+        window.dbPut(window.teamPath(teamId, 'schedule'), cache[teamId]),
+        window.dbPut(window.publicSchedulePath(teamId, 'games'), cache[teamId].map(toPublicGame)),
+      ]);
     },
     record(teamId) {
       let wins = 0, losses = 0, ties = 0;

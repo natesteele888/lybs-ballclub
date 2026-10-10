@@ -63,6 +63,21 @@
        up "what's pending for my team." emailKey is the invitee's email,
        lowercased and with '.' replaced by ',' (RTDB keys can't contain
        '.') -- see js/access-control.js's emailKey().
+     window.publicSchedulePath(teamId, key)   -> 'publicSchedule/{teamId}/{key}' --
+       key is 'games' or 'practices'. A deliberately scrubbed mirror of
+       teams/{teamId}/schedule|practices, written alongside the real save
+       (js/schedule.js, js/practices.js) with player-identifying fields
+       (RSVPs, driving, pitch counts, game ball, notes) projected out --
+       this is .read:true in database.rules.json, the one genuinely public
+       path in the whole app, so nothing with a name in it can live here.
+       Two separate sub-keys, not one combined node, because dbPut is a
+       whole-value PUT at the exact path given -- sharing one node would
+       mean a game save silently wiping out the practices mirror.
+     window.leagueEventsPath()                -> 'leagueEvents' -- org-wide,
+       not nested under teams/{teamId}, board-write/public-read (js/league-
+       events.js). Same cascading-rule reasoning as coachPrivate/access
+       above, just inverted: this needs to be LESS restrictive than
+       teams/{teamId}, so it has to live outside that tree too.
      window.dbGet(path)             -- async, resolves to the JSON
        value at that path (or null).
      window.dbPut(path, value)      -- async, writes the whole
@@ -106,6 +121,12 @@
   // map (js/team-access.js's "pending invites" list), rather than one entry.
   window.inviteByTeamPath = function (teamIdOrBoard, emailKey) {
     return emailKey ? `invitesByTeam/${teamIdOrBoard}/${emailKey}` : `invitesByTeam/${teamIdOrBoard}`;
+  };
+  window.publicSchedulePath = function (teamId, key) {
+    return `publicSchedule/${teamId}/${key}`;
+  };
+  window.leagueEventsPath = function () {
+    return 'leagueEvents';
   };
 
   // ---- Mock store -------------------------------------------------------

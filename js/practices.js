@@ -8,6 +8,13 @@
 (function () {
   const cache = {}; // teamId -> items[]
 
+  // Public-mirror projection for js/public-view.js -- see js/schedule.js's
+  // toPublicGame() and js/backend.js's publicSchedulePath() for why.
+  // Excluded on purpose: notes, rsvps -- either can carry a player's name.
+  function toPublicPractice(p) {
+    return { id: p.id, type: p.type, date: p.date, time: p.time, location: p.location };
+  }
+
   window.Practices = {
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
@@ -24,13 +31,19 @@
       const idx = list.findIndex(p => p.id === item.id);
       if (idx === -1) { item.id = item.id || uid('p'); list.push(item); }
       else list[idx] = item;
-      await window.dbPut(window.teamPath(teamId, 'practices'), list);
+      await Promise.all([
+        window.dbPut(window.teamPath(teamId, 'practices'), list),
+        window.dbPut(window.publicSchedulePath(teamId, 'practices'), list.map(toPublicPractice)),
+      ]);
       return item;
     },
     async deleteItem(teamId, id) {
       const list = cache[teamId] || [];
       cache[teamId] = list.filter(p => p.id !== id);
-      await window.dbPut(window.teamPath(teamId, 'practices'), cache[teamId]);
+      await Promise.all([
+        window.dbPut(window.teamPath(teamId, 'practices'), cache[teamId]),
+        window.dbPut(window.publicSchedulePath(teamId, 'practices'), cache[teamId].map(toPublicPractice)),
+      ]);
     },
 
     renderList(teamId, containerEl, opts) {

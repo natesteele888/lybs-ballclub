@@ -34,9 +34,12 @@
     getItems(teamId) {
       return (cache[teamId] || []).slice().sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
     },
-    async addItem(teamId, text, authorName) {
+    // source is optional -- 'gamechanger' when posted via js/gamechanger.js's
+    // "mirror this" button, so the row can show a small tag saying so.
+    // Omitted (undefined) for an ordinary coach-written note.
+    async addItem(teamId, text, authorName, source) {
       const list = cache[teamId] || (cache[teamId] = []);
-      const item = { id: uid('a'), text: text.trim(), authorName: authorName || '', createdAt: new Date().toISOString() };
+      const item = { id: uid('a'), text: text.trim(), authorName: authorName || '', createdAt: new Date().toISOString(), source: source || undefined };
       list.unshift(item);
       await window.dbPut(window.teamPath(teamId, 'announcements'), list);
       return item;
@@ -66,7 +69,7 @@
             <div class="listRow" style="cursor:default;align-items:flex-start;">
               <div class="listRowMain">
                 <div class="listRowTitle" style="font-weight:500;">${escapeHtml(a.text)}</div>
-                <div class="listRowSub">${escapeHtml(a.authorName || 'Coach')} &middot; ${escapeHtml(fmtWhen(a.createdAt))}</div>
+                <div class="listRowSub">${escapeHtml(a.authorName || 'Coach')} &middot; ${escapeHtml(fmtWhen(a.createdAt))}${a.source === 'gamechanger' ? ' &middot; <span class="badge badgeTbd">GameChanger</span>' : ''}</div>
               </div>
               ${opts.canEdit ? `
                 <div style="display:flex;gap:6px;flex:0 0 auto;">
