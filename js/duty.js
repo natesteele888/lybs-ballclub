@@ -88,7 +88,7 @@
         containerEl.innerHTML = `
           <div class="drillHero">
             <div class="drillHeroTitle">Snack Duty</div>
-            <div class="drillHeroSub">Rotates through the roster below, one player per game -- wraps around once it reaches the end.</div>
+            <div class="drillHeroSub">Who's up for snacks each game.</div>
           </div>
           <div class="sectionLabel">Up Next</div>
           ${upNextHtml}

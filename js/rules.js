@@ -47,6 +47,27 @@
   let cache = null; // rules[]
   const PIN_KEY = 'lybsPinnedRules';
 
+  // A plain flat list of 8 same-looking rows read as one big wall of text
+  // to scan past -- an icon + a distinct color per category (menu tiles AND
+  // the group headers you land on after drilling in) gives each one a
+  // shape to recognize at a glance instead of reading every label. Colors
+  // pulled from the app's existing palette so nothing here invents a new
+  // one. Default covers a category this map hasn't been taught yet (new
+  // rulebook section added upstream) rather than rendering a blank icon.
+  const CATEGORY_STYLE = {
+    'General Rules': { icon: '📋', color: '#9AA3C2' },
+    'Rookies Rules': { icon: '🌱', color: '#5fd989' },
+    'Minors Rules': { icon: '⚾', color: '#4C6AEB' },
+    'Majors Rules': { icon: '🏆', color: '#F0C84B' },
+    'Juniors & Seniors Rules': { icon: '🎓', color: '#b98af0' },
+    'Playoff Rules': { icon: '🔥', color: '#e35858' },
+    'All-Stars Information': { icon: '⭐', color: '#35c574' },
+    'Operating Guidelines': { icon: '⚙️', color: '#6ea8c9' },
+  };
+  function catStyle(cat) {
+    return CATEGORY_STYLE[cat] || { icon: '📖', color: 'var(--lybs-blue-bright)' };
+  }
+
   function getPins() {
     try { return new Set(JSON.parse(localStorage.getItem(PIN_KEY) || '[]')); }
     catch (e) { return new Set(); }
@@ -128,8 +149,10 @@
           // label should match the category's name, not surprise with a
           // bigger number.
           const count = cache.filter(r => r.category === cat).length;
+          const style = catStyle(cat);
           return `
             <div class="listRow" data-cat="${escapeHtml(cat)}">
+              <div class="rulesCatIcon" style="background:${style.color}22;color:${style.color};">${style.icon}</div>
               <div class="listRowMain">
                 <div class="listRowTitle">${escapeHtml(cat)}</div>
                 <div class="listRowSub">${count} rule${count === 1 ? '' : 's'}</div>
@@ -142,8 +165,9 @@
           </div>
           ${pinnedCount ? `
             <div class="listRow" data-cat="__pinned">
+              <div class="rulesCatIcon" style="background:#F0C84B22;color:#F0C84B;">★</div>
               <div class="listRowMain">
-                <div class="listRowTitle">★ Pinned</div>
+                <div class="listRowTitle">Pinned</div>
                 <div class="listRowSub">${pinnedCount} rule${pinnedCount === 1 ? '' : 's'}</div>
               </div>
             </div>` : ''}
@@ -167,15 +191,18 @@
           const key = `${r.category} — ${r.section}`;
           (groups[key] = groups[key] || []).push(r);
         });
-        const groupsHtml = Object.keys(groups).map(key => `
+        const groupsHtml = Object.keys(groups).map(key => {
+          const style = catStyle(groups[key][0].category);
+          return `
           <div class="rulesGroup">
-            <div class="rulesGroupHeader">${escapeHtml(key)}</div>
+            <div class="rulesGroupHeader" style="border-left-color:${style.color};color:${style.color};">${style.icon} ${escapeHtml(key)}</div>
             ${groups[key].map(r => `
               <div class="ruleItem" data-id="${escapeHtml(r.id)}">
                 <div class="ruleText">${highlight(r.text, query)}</div>
                 <button class="pinBtn ${pins.has(r.id) ? 'pinned' : ''}" data-id="${escapeHtml(r.id)}" title="Pin for quick reference">${pins.has(r.id) ? '★' : '☆'}</button>
               </div>`).join('')}
-          </div>`).join('') || '<div class="emptyState">No rules match that search.</div>';
+          </div>`;
+        }).join('') || '<div class="emptyState">No rules match that search.</div>';
 
         const title = showPinnedOnly ? '★ Pinned' : (category || 'Search results');
         containerEl.innerHTML = `

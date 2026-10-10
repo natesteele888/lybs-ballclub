@@ -158,7 +158,7 @@
         containerEl.innerHTML = `
           <div class="drillHero">
             <div class="drillHeroTitle">Depth Chart</div>
-            <div class="drillHeroSub">Tap a position to rank who plays there. &#9733; starts one spot at a time -- taking a new one gives up the old.</div>
+            <div class="drillHeroSub">Tap a position to rank who plays there.</div>
           </div>
           ${banner ? `<div class="helpText" style="color:#F0C84B;margin-bottom:10px;">${escapeHtml(banner.name)} is now starting ${escapeHtml(banner.to)} -- moved out of starting ${escapeHtml(banner.from)}.</div>` : ''}
           <div class="depthField">

@@ -196,13 +196,17 @@
         return;
       }
       const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-      const sections = divisions.map((d, i) => {
+      // Divisions with nothing tonight are left out entirely rather than
+      // each rendering their own "No games today" block -- stacking one of
+      // those per empty division (the usual case, since 1-2 divisions play
+      // on a given night) used to take up more space than the real games.
+      const playing = divisions.filter(d => window.TonightGames.allTodayGames([d.id]).length);
+      const sections = playing.map((d, i) => {
         const games = window.TonightGames.allTodayGames([d.id]);
-        const list = games.length ? games.map(mergedCardHtml).join('') : '<div class="emptyState">No games today.</div>';
         return `
           <div class="sectionLabel" style="margin-top:${i === 0 ? '4' : '18'}px;">${escapeHtml(d.name)}</div>
-          <div class="tonightMergedList">${list}</div>`;
-      }).join('');
+          <div class="tonightMergedList">${games.map(mergedCardHtml).join('')}</div>`;
+      }).join('') || '<div class="emptyState" style="padding:14px 4px;">No games in the league tonight.</div>';
       containerEl.innerHTML = `
         <div class="detailCard" style="margin-bottom:16px;">
           <div class="sectionLabel" style="margin:0;">Tonight in the League</div>

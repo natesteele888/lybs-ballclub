@@ -77,7 +77,7 @@
         containerEl.innerHTML = `
           <div class="drillHero">
             <div class="drillHeroTitle">Team Equipment</div>
-            <div class="drillHeroSub">Who actually has the gear right now -- not whose turn it is, see Snack Duty for that.</div>
+            <div class="drillHeroSub">Who has the team's gear right now.</div>
           </div>
           <div class="listBody">${items.length ? items.map(itemHtml).join('') : '<div class="emptyState">No equipment tracked yet.</div>'}</div>
           ${addRowHtml()}`;

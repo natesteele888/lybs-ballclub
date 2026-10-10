@@ -87,7 +87,7 @@
         containerEl.innerHTML = `
           <div class="drillHero">
             <div class="drillHeroTitle">Team Awards</div>
-            <div class="drillHeroSub">Season-end recognition -- add a category, then tap it to pick who earned it.</div>
+            <div class="drillHeroSub">Season-end recognition for the team.</div>
           </div>
           ${awards.length ? awards.map(awardCardHtml).join('') : '<div class="emptyState">No awards set up yet.</div>'}
           ${addRowHtml()}`;

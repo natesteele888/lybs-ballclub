@@ -52,7 +52,8 @@
           </div>`;
         return;
       }
-      await window.ClubLogos.ensureLoaded();
+      await Promise.all([window.ClubLogos.ensureLoaded(), window.LeagueInfo.ensureLoaded()]);
+      const seasonLabel = window.LeagueInfo.currentSeasonLabel();
       const hasExtendedCols = (division.rows || []).some(r => r.gp != null);
       const ageMatch = ((division.rows || [])[0] || {}).team && (division.rows[0].team.match(/^(\d{1,2}u)\b/i));
       const ageLabel = ageMatch ? ageMatch[1].toUpperCase() : '';
@@ -84,7 +85,7 @@
         : '';
       const games = (division.todayGames || []).map(g => window.TonightGames.gameRowHtml(g)).join('') || '<div class="emptyState">No games today.</div>';
       containerEl.innerHTML = `
-        <div class="sectionLabel" style="margin-bottom:6px;">${escapeHtml(ageLabel ? ageLabel + ' ' : '')}${escapeHtml(division.name || '')} Standings</div>
+        <div class="sectionLabel" style="margin-bottom:6px;">${escapeHtml(ageLabel ? ageLabel + ' ' : '')}${escapeHtml(division.name || '')} Standings${seasonLabel ? ` &middot; ${escapeHtml(seasonLabel)}` : ''}</div>
         <div class="helpText">Mirrored from <a href="https://www.macleague.org/division/${escapeHtml(divisionId)}" target="_blank" rel="noopener">macleague.org</a> — standings as of ${timeAgo(division.fetchedAt)}.</div>
         <div class="standingsTableWrap">
           <table class="standingsTable">
@@ -115,7 +116,8 @@
           </div>`;
         return;
       }
-      await window.ClubLogos.ensureLoaded();
+      await Promise.all([window.ClubLogos.ensureLoaded(), window.LeagueInfo.ensureLoaded()]);
+      const seasonLabel = window.LeagueInfo.currentSeasonLabel();
       const rows = (division.rows || []).map((r, i) => {
         const record = r.w != null ? `${r.w}-${r.l}${r.t && r.t !== '0' ? '-' + r.t : ''}` : null;
         return `
@@ -130,7 +132,7 @@
           </div>`;
       }).join('') || '<div class="emptyState">No teams mirrored for this division yet.</div>';
       containerEl.innerHTML = `
-        <div class="sectionLabel" style="margin-bottom:6px;">${escapeHtml(division.name || '')} Seeding</div>
+        <div class="sectionLabel" style="margin-bottom:6px;">${escapeHtml(division.name || '')} Seeding${seasonLabel ? ` &middot; ${escapeHtml(seasonLabel)}` : ''}</div>
         <div class="helpText">Numbered by today's standings order, best record first. MAC League hasn't published a playoff qualification count or bracket format for this division, so this is where each team stands right now -- not an official bracket.</div>
         <div class="listBody" style="margin-top:10px;">${rows}</div>`;
     },

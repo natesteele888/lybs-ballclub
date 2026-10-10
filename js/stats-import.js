@@ -307,7 +307,7 @@
           <div class="drillHero">
             <div class="drillHeroTitle">${opts.canEdit ? 'Stats Insights' : 'Season Stats'}</div>
             <div class="drillHeroSub">${opts.canEdit
-              ? 'Upload a GameChanger season-stats export (Team &rarr; Stats &rarr; Export Stats, batting or pitching) to see who\'s hitting, who should lead off, and more -- computed right here, nothing leaves this browser.'
+              ? 'Upload a GameChanger stats export (Team &rarr; Stats &rarr; Export Stats) to see who\'s hitting, who should lead off, and more.'
               : 'Who\'s hitting, who\'s pitching well -- from the team\'s last GameChanger stats import.'}</div>
           </div>
           ${opts.canEdit ? `

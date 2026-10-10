@@ -48,7 +48,7 @@
         return `
           <div class="drillHero">
             <div class="drillHeroTitle">Practice Plan</div>
-            <div class="drillHeroSub">What to run and for how long -- plan it here, run it with the drill tools above.</div>
+            <div class="drillHeroSub">Plan what to run and for how long.</div>
           </div>
           <button class="btn" id="ppNew" style="width:100%;margin-bottom:14px;">+ New plan</button>
           <div class="listBody">${rows || '<div class="emptyState">No practice plans saved yet.</div>'}</div>`;
