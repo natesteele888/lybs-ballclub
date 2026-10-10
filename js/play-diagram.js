@@ -35,6 +35,22 @@
   }
 
   window.PlayDiagram = {
+    // Called by the Practice Catalog tab's "Add diagram to my Play
+    // Diagrams" pull-in button -- same ensure/save round-trip as every
+    // other mutation here, for the same cache-coherence reason as
+    // PracticePlan.addFromCatalog. Marker ids are regenerated so pulling
+    // the same catalog diagram in twice doesn't collide.
+    async addFromCatalog(teamId, diagramLike) {
+      const diagrams = await ensureDiagrams(teamId);
+      const d = {
+        id: uid('pd'), title: diagramLike.title || '', note: diagramLike.note || '',
+        markers: (diagramLike.markers || []).map(m => ({ ...m, id: uid('mk') })),
+      };
+      diagrams.unshift(d);
+      await saveDiagrams(teamId, diagrams);
+      return d;
+    },
+
     async render(containerEl, teamId) {
       let diagrams = await ensureDiagrams(teamId);
       let view = { mode: 'list' };
