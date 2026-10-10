@@ -95,6 +95,7 @@
     const navEl = document.getElementById('publicNavBar');
     if (!navEl) return;
     navEl.innerHTML = PANELS.map(p => `<button class="tabBtn ${p.id === activePanel ? 'active' : ''}" data-panel="${p.id}">${p.label}</button>`).join('');
+    scrollActiveTabIntoView(navEl);
     navEl.querySelectorAll('[data-panel]').forEach(btn => {
       btn.addEventListener('click', () => { activePanel = btn.dataset.panel; renderNav(); renderPanel(); });
     });
