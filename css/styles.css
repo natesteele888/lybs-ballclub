@@ -501,6 +501,12 @@ a { color: var(--lybs-blue-bright); }
   width: 38px; height: 38px; border-radius: 11px; flex: 0 0 auto;
   display: flex; align-items: center; justify-content: center; font-size: 17px;
 }
+/* A section card's header row reuses .listRow as-is; expanding it drops
+   .rulesSectionRules directly below, indented enough to read as "inside"
+   the card it expanded from rather than a new sibling list. */
+.rulesSectionCard { display: flex; flex-direction: column; }
+.rulesSectionChevron { font-size: 13px; color: var(--text3); flex: 0 0 auto; }
+.rulesSectionRules { padding: 10px 0 2px 14px; border-left: 2px solid var(--card-border); margin: 6px 0 0 19px; }
 .rulesGroup { margin-bottom: 18px; }
 .rulesGroupHeader {
   display: flex; align-items: center; gap: 7px;
