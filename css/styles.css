@@ -280,26 +280,32 @@ a { color: var(--lybs-blue-bright); }
   letter-spacing: 0.01em; text-transform: uppercase; color: var(--text);
 }
 .dateEventGrid { display: flex; flex-direction: column; gap: 10px; }
+/* A calendar-chip (abbreviated month + big day number) on one side, the
+   actual event title big and bold on the other -- the title used to be
+   the small gray line and the full written-out date got the big/bold
+   treatment, backwards from what's readable at a glance on a phone. */
 .dateEventRow {
+  display: flex; align-items: center; gap: 14px;
   padding: 14px 16px; border-radius: 12px;
   background: rgba(3,5,18,0.35); border-left: 3px solid var(--lybs-blue-bright);
 }
 .dateSeasonCardCurrent .dateEventRow { border-left-color: #5fd989; }
-.dateEventLabel {
-  font-family: var(--font-label); font-size: 10.5px; font-weight: 600; color: var(--lybs-silver);
-  text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px;
+.dateChip { flex: 0 0 auto; width: 44px; text-align: center; }
+.dateChipMonth {
+  font-family: var(--font-label); font-weight: 700; font-size: 10.5px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--lybs-silver); line-height: 1;
+}
+.dateChipDay {
+  font-family: var(--font-display); font-weight: 400; font-size: 26px; color: #fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.35); line-height: 1.15; margin-top: 2px;
+}
+.dateEventBody { flex: 1 1 auto; min-width: 0; }
+.dateEventTitle {
+  font-family: var(--font-display); font-weight: 400; font-size: 18px;
+  letter-spacing: 0.01em; color: #fff; line-height: 1.25;
 }
 .dateEventValue { font-size: 14px; color: var(--text); line-height: 1.5; }
-/* The parsed-out date itself, big and bold like a game card's score
-   (.gameResultScore) -- lead/sub are the smaller context text that
-   surrounded it in the source sentence, when there was any. */
-.dateEventLead { font-size: 12.5px; color: var(--text2); margin-bottom: 2px; }
-.dateEventBig {
-  font-family: var(--font-display); font-weight: 400; font-size: 22px;
-  letter-spacing: 0.01em; text-transform: uppercase; color: #fff;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.35); line-height: 1.2;
-}
-.dateEventSub { font-size: 12.5px; color: var(--text2); margin-top: 4px; line-height: 1.45; }
+.dateEventSub { font-size: 12.5px; color: var(--text2); margin-top: 3px; line-height: 1.45; }
 
 /* Age eligibility chart (League tab -> League Ages) -- an SVG timeline
    generated from data/league-info.json's leagueAges ranges, wide enough
@@ -491,8 +497,13 @@ a { color: var(--lybs-blue-bright); }
   text-transform: uppercase; letter-spacing: 0.04em;
 }
 .rulesSearchBar select:focus { outline: none; border-color: var(--lybs-blue-bright); box-shadow: 0 0 0 3px var(--glow); }
+.rulesCatIcon {
+  width: 38px; height: 38px; border-radius: 11px; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center; font-size: 17px;
+}
 .rulesGroup { margin-bottom: 18px; }
 .rulesGroupHeader {
+  display: flex; align-items: center; gap: 7px;
   font-family: var(--font-label); font-weight: 600; font-size: 12px; color: var(--lybs-blue-bright);
   text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 9px;
   border-left: 3px solid var(--lybs-blue); padding-left: 9px;

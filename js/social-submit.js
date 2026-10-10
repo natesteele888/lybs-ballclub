@@ -136,7 +136,7 @@
       containerEl.innerHTML = `
         <div class="drillHero">
           <div class="drillHeroTitle">Share to Social</div>
-          <div class="drillHeroSub">Pick a game, add a photo and a note — get a finished caption, and optionally file it for the league's review queue.</div>
+          <div class="drillHeroSub">Create a shareable post for a game.</div>
         </div>
         <label class="drillFieldLabel">Game
           <select class="lineupSlotSelect" id="ssGame" style="width:100%;">

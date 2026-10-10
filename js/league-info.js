@@ -135,6 +135,17 @@
       return cache;
     },
 
+    // Standings has no season field of its own (the scraper mirrors
+    // macleague.org's live table, which doesn't name a season) -- this
+    // lets any tab that wants a label like "2026 Fall Season" borrow the
+    // one already maintained here instead of duplicating it. Sync, so a
+    // caller that already awaited ensureLoaded() elsewhere (every tab
+    // does, on tab-open) can use it inline during render.
+    currentSeasonLabel() {
+      const season = cache && Array.isArray(cache.seasons) ? cache.seasons.find(s => s.status === 'current') : null;
+      return season ? season.label : '';
+    },
+
     render(containerEl) {
       if (!cache) {
         containerEl.innerHTML = '<div class="emptyState">League info isn\'t available right now.</div>';
@@ -195,27 +206,41 @@
         // Pulls the first "[Weekday,] Month Day[st/nd/rd/th]" out of a
         // value, wherever it falls -- not just at the start, since several
         // values lead with a qualifier first ("Minors & Majors: Sunday,
-        // June 6th ..."). What's left on either side becomes smaller lead-
-        // in/trailing text around it. Falls back to the plain value when no
-        // such date is found (a day-of-week schedule like "Rookies: Sundays
-        // 9am; ..." has no single date to call out) -- deliberately no
-        // fuzzier a match than this, since a wrong guess here would call
-        // out the wrong text in bold, worse than not calling anything out.
-        const DATE_RE = /((?:Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday),\s+)?(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}(?:st|nd|rd|th)?/;
+        // June 6th ..."). Returns an abbreviated {month, day} for the date
+        // chip plus whatever text surrounded it (joined back into one
+        // "context" line, read under the title) -- falls back to null when
+        // no such date is found (a day-of-week schedule like "Rookies:
+        // Sundays 9am; ..." has no single date to call out) -- deliberately
+        // no fuzzier a match than this, since a wrong guess here would call
+        // out the wrong text, worse than not calling anything out.
+        const MONTH_ABBR = {
+          January: 'Jan', February: 'Feb', March: 'Mar', April: 'Apr', May: 'May', June: 'Jun',
+          July: 'Jul', August: 'Aug', September: 'Sep', October: 'Oct', November: 'Nov', December: 'Dec',
+        };
+        const DATE_RE = /(?:(?:Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday),\s+)?(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})(?:st|nd|rd|th)?/;
         function splitDate(value) {
           const m = value.match(DATE_RE);
           if (!m) return null;
           let start = m.index, end = m.index + m[0].length;
-          // Pull a tightly-wrapping paren pair into the bold chunk too --
+          // Pull a tightly-wrapping paren pair out along with the date too --
           // "Mother's Day (May 9th); ..." would otherwise orphan the "("
           // in the lead text and the ")" in the trailing text.
           if (value[start - 1] === '(' && value[end] === ')') { start -= 1; end += 1; }
-          // A trailing ", 8:00-9:00pm via Zoom"-style continuation reads as
-          // a stray dangling comma once it's on its own line -- the comma
-          // belonged to the sentence the date just got pulled out of, not
-          // to this trailing fragment on its own.
-          const after = value.slice(end).trim().replace(/^,\s*/, '');
-          return { before: value.slice(0, start).trim(), date: value.slice(start, end), after };
+          const before = value.slice(0, start).trim().replace(/[:,;-]\s*$/, '');
+          const after = value.slice(end).trim();
+          // A trailing ", 8:00-9:00pm via Zoom"/"; Hit-a-Thons ..." is the
+          // rest of the same sentence the date got pulled out of, not a
+          // fragment of its own -- when there's a "before" half to attach
+          // it to, keep its leading punctuation and butt them together
+          // ("Mother's Day" + "; Hit-a-Thons...") rather than stripping it
+          // to a bare space, which would read as a stray comma/semicolon
+          // floating mid-line. With no "before" half, that leading
+          // punctuation has nothing left to introduce, so it's dropped.
+          let context;
+          if (!before) context = after.replace(/^[,;:]\s*/, '');
+          else if (/^[,;:]/.test(after)) context = before + after;
+          else context = [before, after].filter(Boolean).join(' ');
+          return { month: MONTH_ABBR[m[1]], day: m[2], context };
         }
         return cache.seasons.map(s => `
           <div class="dateSeasonCard ${s.status === 'current' ? 'dateSeasonCardCurrent' : ''}">
@@ -227,14 +252,23 @@
               ${s.items.map(item => {
                 const { label, value } = parseEventItem(item);
                 const split = splitDate(value);
+                // No label in the source text at all (a handful of items
+                // are plain day-of-week schedules, not a dated event) --
+                // the raw value is the only thing worth showing, so it
+                // becomes the body text itself instead of leaving the title
+                // slot empty.
+                const secondary = split ? split.context : value;
                 return `
                   <div class="dateEventRow">
-                    ${label ? `<div class="dateEventLabel">${escapeHtml(label)}</div>` : ''}
                     ${split ? `
-                      ${split.before ? `<div class="dateEventLead">${escapeHtml(split.before)}</div>` : ''}
-                      <div class="dateEventBig">${escapeHtml(split.date)}</div>
-                      ${split.after ? `<div class="dateEventSub">${escapeHtml(split.after)}</div>` : ''}
-                    ` : `<div class="dateEventValue">${escapeHtml(value)}</div>`}
+                      <div class="dateChip">
+                        <div class="dateChipMonth">${escapeHtml(split.month)}</div>
+                        <div class="dateChipDay">${escapeHtml(split.day)}</div>
+                      </div>` : ''}
+                    <div class="dateEventBody">
+                      ${label ? `<div class="dateEventTitle">${escapeHtml(label)}</div>` : ''}
+                      ${secondary ? `<div class="${label ? 'dateEventSub' : 'dateEventValue'}">${escapeHtml(secondary)}</div>` : ''}
+                    </div>
                   </div>`;
               }).join('')}
             </div>

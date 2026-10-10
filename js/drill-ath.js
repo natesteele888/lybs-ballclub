@@ -157,7 +157,7 @@
               }).join('') || '<span class="helpText">No players on the roster yet — add names below.</span>'}
             </div>
             <div class="drillAddRow">
-              <input class="drillFreeInput" id="athFree${gi}" placeholder="Add a name...">
+              <input class="drillFreeInput" id="athFree${gi}" list="athRosterList" placeholder="Add a name...">
               <button class="btn btnGhost btnSmall" data-addfree="${gi}">Add</button>
             </div>
           </div>`).join('');
@@ -167,6 +167,7 @@
             <div class="recordLine">Assign players</div>
           </div>
           ${groupsHtml}
+          <datalist id="athRosterList">${roster.map(p => `<option value="${escapeHtml(p.name)}">`).join('')}</datalist>
           <button class="btn" id="athProceed" style="width:100%;margin-top:6px;">Start &rarr;</button>`;
       }
 

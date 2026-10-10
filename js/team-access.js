@@ -73,7 +73,7 @@
         containerEl.innerHTML = `
           <div class="drillHero">
             <div class="drillHeroTitle">Team Access</div>
-            <div class="drillHeroSub">Invite a specific parent by email -- separate from the shared team code, which still works for anyone who has it.</div>
+            <div class="drillHeroSub">Invite a specific parent by email.</div>
           </div>
           <div class="sectionLabel">Has access</div>
           <div class="listBody">${granted.length ? granted.map(personRowHtml).join('') : '<div class="emptyState">Nobody has been individually invited yet.</div>'}</div>
