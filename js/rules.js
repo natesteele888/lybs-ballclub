@@ -339,10 +339,11 @@
             </div>`;
         }).join('') || '<div class="emptyState">No rules in this category yet.</div>';
 
+        const currentStyle = catStyle(category);
         containerEl.innerHTML = `
           <div class="sectionHeader">
             <button class="btn btnGhost btnSmall" id="rulesBackBtn">&larr; Categories</button>
-            <div class="recordLine">${escapeHtml(category)}</div>
+            <span class="badge rulesCurrentDivision" style="background:${currentStyle.color}22;color:${currentStyle.color};border:1px solid ${currentStyle.color}55;">${currentStyle.icon} ${escapeHtml(category)}</span>
           </div>
           <div class="rulesSearchBar">
             <input id="rulesSearchInput" placeholder="Search rules -- e.g. 'balk', 'mercy', 'pitch count'" value="${escapeHtml(query)}">
