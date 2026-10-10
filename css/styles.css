@@ -999,7 +999,12 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .calDot { width: 5px; height: 5px; border-radius: 50%; }
 .calDotGame { background: var(--lybs-blue-bright); }
 .calDotPractice { background: #E6B935; }
+.calDotLeague { background: #8A93B8; }
 .calDayPanel { margin-top: 14px; }
+/* Read-only MAC League rows (js/calendar-view.js) -- nothing to tap, so no
+   pointer cursor or hover lift, unlike our own editable .listRow entries. */
+.listRowReadonly { cursor: default; }
+.listRowReadonly:hover { border-color: var(--card-border); transform: none; box-shadow: none; }
 .rsvpRow { display: flex; gap: 8px; margin-top: 6px; }
 .calAddRow { display: flex; gap: 8px; margin-top: 10px; }
 .calWeekList { display: flex; flex-direction: column; gap: 10px; }

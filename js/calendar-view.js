@@ -64,6 +64,28 @@
   }
   function rowHtml(entry) { return entry.kind === 'game' ? gameRowHtml(entry) : practiceRowHtml(entry); }
 
+  // Read-only MAC League games for a date, from js/league-schedule.js.
+  // Deliberately not merged into byDate/rowHtml: these aren't ours to open,
+  // edit, or delete, and rowHtml's data-kind is what wireRows uses to
+  // dispatch taps -- a league row carries neither, so it only ever renders,
+  // never wires.
+  function leagueRowHtml(g) {
+    return `
+      <div class="listRow listRowReadonly">
+        <div class="listRowMain">
+          <div class="listRowTitle">${escapeHtml(g.home)} vs ${escapeHtml(g.away)}</div>
+          <div class="listRowSub">${escapeHtml(g.division)}${g.from ? ' &middot; ' + escapeHtml(g.from) : ''}${g.location ? ' &middot; ' + escapeHtml(g.location) : ''}</div>
+        </div>
+        <span class="badge badgeTbd">MAC</span>
+      </div>`;
+  }
+  function leagueSectionHtml(iso) {
+    const games = window.LeagueSchedule.getGamesForDate(iso);
+    if (!games.length) return '';
+    return `<div class="sectionLabel" style="margin-top:14px;">MAC League</div>
+      <div class="listBody">${games.map(leagueRowHtml).join('')}</div>`;
+  }
+
   function wireRows(root, opts) {
     root.querySelectorAll('[data-kind]').forEach(row => {
       row.addEventListener('click', () => {
@@ -116,10 +138,12 @@
         for (let d = 1; d <= daysInMonth; d++) {
           const iso = toIso(y, m, d);
           const entries = byDate[iso] || [];
+          const dots = entries.slice(0, 3).map(e => `<span class="calDot ${e.kind === 'game' ? 'calDotGame' : 'calDotPractice'}"></span>`);
+          if (dots.length < 3 && window.LeagueSchedule.getGamesForDate(iso).length) dots.push('<span class="calDot calDotLeague"></span>');
           cells.push(`
             <button class="calCell ${iso === today ? 'calCellToday' : ''} ${iso === selectedDate ? 'calCellSelected' : ''}" data-date="${iso}">
               <span class="calCellNum">${d}</span>
-              ${entries.length ? `<span class="calDots">${entries.slice(0, 3).map(e => `<span class="calDot ${e.kind === 'game' ? 'calDotGame' : 'calDotPractice'}"></span>`).join('')}</span>` : ''}
+              ${dots.length ? `<span class="calDots">${dots.join('')}</span>` : ''}
             </button>`);
         }
         const dayEntries = selectedDate ? (byDate[selectedDate] || []) : [];
@@ -136,6 +160,7 @@
               <div class="sectionLabel">${escapeHtml(new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }))}</div>
               ${dayEntries.length ? `<div class="listBody">${dayEntries.map(rowHtml).join('')}</div>` : '<div class="emptyState">Nothing scheduled.</div>'}
               ${addButtonsHtml(opts)}
+              ${leagueSectionHtml(selectedDate)}
             ` : '<div class="helpText">Tap a day to see what\'s on it.</div>'}
           </div>`;
         containerEl.querySelector('#calPrev').addEventListener('click', () => { anchor = new Date(y, m - 1, 1); renderMonth(); });
@@ -162,6 +187,7 @@
               <div class="calWeekDayHead">${escapeHtml(d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }))}</div>
               ${entries.length ? `<div class="listBody">${entries.map(rowHtml).join('')}</div>` : '<div class="emptyState">Nothing scheduled.</div>'}
               ${addButtonsHtml(opts)}
+              ${leagueSectionHtml(iso)}
             </div>`);
         }
         const end = new Date(start); end.setDate(start.getDate() + 6);

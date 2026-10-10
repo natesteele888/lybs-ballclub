@@ -85,7 +85,14 @@
    8. Upcoming      -- our next few games/practices after today, this
                        team only -- never another team's or another
                        division's, unlike the ticker/Full Scoreboard
-                       above.
+                       above -- plus one link-out row for the next
+                       captured MAC League date (js/league-schedule.js),
+                       which deliberately breaks that "this team only"
+                       rule since the ask for this tab was "visibility
+                       to what is happening in the Mac league," not
+                       just our own slate. A link, not inlined games --
+                       a league date can carry a dozen-plus games,
+                       which would swamp a 5-item personal list.
    ============================================================ */
 (function () {
   function fmtDate(iso) {
@@ -164,6 +171,7 @@
         window.Announcements.ensureLoaded(teamId),
         window.PitchSmart.ensureLoaded(),
         window.LeagueEvents.ensureLoaded(),
+        window.LeagueSchedule.ensureLoaded(),
       ]);
 
       const today = todayStr();
@@ -187,6 +195,15 @@
         ...games.filter(g => g.date > today).map(g => ({ date: g.date, kind: 'game', item: g })),
         ...practices.filter(p => p.date > today).map(p => ({ date: p.date, kind: 'practice', item: p })),
       ].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5);
+
+      // The next captured MAC League date (today or later) -- a link out to
+      // the Fall Schedule tab, not all of that date's games inlined here.
+      // Upcoming above is deliberately this-team-only (see header comment
+      // item 8); this is the one place that boundary gets a deliberate,
+      // visible crack, per the ask for this page to show "what's happening
+      // in the Mac league," not just our own slate.
+      const leagueNextDate = window.LeagueSchedule.getAllDates().filter(d => d >= today).sort()[0] || null;
+      const leagueNextGames = leagueNextDate ? window.LeagueSchedule.getGamesForDate(leagueNextDate) : [];
 
       // ---- 5. Quick team card -- league record/rank when resolvable, our
       // own tracked record otherwise; games left comes from our own
@@ -318,7 +335,15 @@
                   <div class="listRowSub">${escapeHtml(fmtDate(x.date))}</div>
                 </div>
               </div>`).join('')}</div>`
-          : '<div class="emptyState">Nothing else scheduled yet.</div>'}`;
+          : '<div class="emptyState">Nothing else scheduled yet.</div>'}
+        ${leagueNextDate ? `
+          <div class="listRow" id="homeUpcomingLeagueLink" style="margin-top:10px;">
+            <div class="listRowMain">
+              <div class="listRowTitle">MAC League &middot; ${leagueNextGames.length} game${leagueNextGames.length === 1 ? '' : 's'}</div>
+              <div class="listRowSub">${escapeHtml(fmtDate(leagueNextDate))} &middot; every division, any town</div>
+            </div>
+            <span class="badge badgeTbd">View &rarr;</span>
+          </div>` : ''}`;
 
       const tickerTonight = containerEl.querySelector('#homeTickerTonight');
       if (tickerTonight) enableDragScroll(tickerTonight);
@@ -331,6 +356,9 @@
 
       const viewSignupsBtn = containerEl.querySelector('#homeViewSignups');
       if (viewSignupsBtn) viewSignupsBtn.addEventListener('click', () => opts.onViewSignups && opts.onViewSignups());
+
+      const leagueLinkRow = containerEl.querySelector('#homeUpcomingLeagueLink');
+      if (leagueLinkRow) leagueLinkRow.addEventListener('click', () => opts.onViewFallSchedule && opts.onViewFallSchedule());
 
       const pitchSlot = containerEl.querySelector('#homePitchSlot');
       if (pitchSlot) window.PitchSmart.renderOurEligibility(pitchSlot, games, cfg.macLeagueDivisionName || null, today, teamId);
