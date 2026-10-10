@@ -69,6 +69,23 @@
       return cache;
     },
 
+    // Sync getter -- same ensureLoaded-then-get convention as window.Schedule/
+    // window.Practices. Every game in a week shares that week's single
+    // `date`, so this is just a lookup, not a date-range scan.
+    getGamesForDate(iso) {
+      if (!cache || !cache.weeks) return [];
+      const week = cache.weeks.find(w => w.date === iso);
+      return week ? week.games : [];
+    },
+
+    // Every date any captured week covers, earliest first -- lets a caller
+    // (homepage's Upcoming list) find "the next MAC League date" without
+    // duplicating the nextIdx lookup render() already does.
+    getAllDates() {
+      if (!cache || !cache.weeks) return [];
+      return cache.weeks.map(w => w.date);
+    },
+
     render(containerEl) {
       if (!cache || !cache.weeks || !cache.weeks.length) {
         containerEl.innerHTML = '<div class="emptyState">No league schedule captured yet.</div>';
@@ -102,11 +119,17 @@
         containerEl.innerHTML = `
           <div class="drillHero">
             <div class="drillHeroTitle">Fall League Schedule</div>
-            <div class="drillHeroSub">Every MAC League game, any division, hand-captured from macleague.org on ${escapeHtml(cache.capturedAt)}.</div>
+            <div class="drillHeroSub">Every MAC League game, any division.</div>
           </div>
           ${weekChipsHtml()}
           ${gamesHtml()}
-          <div class="helpText" style="margin-top:14px;">${escapeHtml(cache.note)}</div>`;
+          <button class="btn btnGhost btnTiny" id="fallScheduleInfoBtn" style="margin-top:12px;">&#9432; About this data</button>`;
+        const infoBtn = containerEl.querySelector('#fallScheduleInfoBtn');
+        if (infoBtn) {
+          infoBtn.addEventListener('click', () => {
+            window.openInfoModal('About the Fall League Schedule', `<div class="helpText">${escapeHtml(cache.note)}</div>`);
+          });
+        }
         containerEl.querySelectorAll('[data-week]').forEach(btn => {
           btn.addEventListener('click', () => { activeIdx = Number(btn.dataset.week); refresh(); });
         });
