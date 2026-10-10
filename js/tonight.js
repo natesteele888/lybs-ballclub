@@ -78,27 +78,48 @@
     return !!ours && (name || '').toLowerCase().includes(ours);
   }
 
+  // A finished game gets the same "big bold score, dimmed loser" box-score
+  // treatment as js/game-card.js's .gameResultCard -- reusing that look (a
+  // -Loss modifier on the existing .tonightFinalScore styling) rather than
+  // the plain same-weight numbers an unplayed card's record/time gets.
+  // This card covers every league game, not just ours, so there's no W/L
+  // pill the way GameCard's own "our team" card has one -- just which
+  // score is bold. This app only ever has a final run total (ourScore/
+  // oppScore, and this merged card's equivalent team.score) -- no hits or
+  // errors are tracked anywhere, for our own games or anyone else's (the
+  // macleague.org standings mirror this pulls other teams' scores from
+  // has no such field either) -- so unlike a TV broadcast's full box
+  // score, this is runs only.
   function mergedCardHtml(game) {
     if (typeof game === 'string') return `<div class="tonightMergedCard">${escapeHtml(game)}</div>`;
     const [a, b] = game.teams || [];
     const ourGame = (a && isOurTeam(a.name)) || (b && isOurTeam(b.name));
-    const teamLine = team => {
+    const played = !!(a && b && a.score != null && b.score != null);
+    const aWins = played && a.score > b.score;
+    const bWins = played && b.score > a.score;
+    const teamLine = (team, lost) => {
       if (!team) return '<div class="tonightMergedTeam"><span class="tonightTeamName">TBD</span></div>';
-      const right = team.score != null ? escapeHtml(team.score) : (recordFor(game.divisionId, team.teamId) || '');
+      let right = '';
+      if (team.score != null) {
+        right = `<span class="tonightFinalScore${lost ? ' tonightFinalScoreLoss' : ''}">${escapeHtml(team.score)}</span>`;
+      } else {
+        const rec = recordFor(game.divisionId, team.teamId);
+        right = rec ? `<span class="tonightMergedRight">${escapeHtml(rec)}</span>` : '';
+      }
       return `
-        <div class="tonightMergedTeam">
+        <div class="tonightMergedTeam ${played ? 'tonightMergedTeamFinal' : ''}">
           ${teamHtml(team)}
-          ${right ? `<span class="tonightMergedRight">${right}</span>` : ''}
+          ${right}
         </div>`;
     };
     return `
-      <div class="tonightMergedCard">
+      <div class="tonightMergedCard ${played ? 'tonightMergedCardFinal' : ''}">
         <div class="tonightMergedTop">
           <span class="badge tonightLeagueChip">${escapeHtml(game.divisionName)}</span>
-          ${game.time ? `<span class="tonightMergedTime">${escapeHtml(game.time)}</span>` : ''}
+          ${played ? '<span class="tonightFinalTag">Final</span>' : (game.time ? `<span class="tonightMergedTime">${escapeHtml(game.time)}</span>` : '')}
         </div>
-        ${teamLine(a)}
-        ${teamLine(b)}
+        ${teamLine(a, bWins)}
+        ${teamLine(b, aWins)}
         ${game.location ? `<div class="tonightGameLocation">${escapeHtml(game.location)}</div>` : ''}
         ${ourGame ? '<button class="btn btnGhost btnSmall tonightWatchBtn" data-watch="1">Watch live on GameChanger &rarr;</button>' : ''}
       </div>`;
