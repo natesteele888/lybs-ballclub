@@ -82,5 +82,5 @@ Carries forward the same discipline as the `lybs-reporting` dashboard: roster en
 
 ## Not built yet
 
-- **Player development visuals** (situational defensive positioning diagrams) -- a content-authoring project, not an integration; no external database exists to pull this from.
+- **Practice Catalog full buildout** -- Phase 1 (data shape, nav, 2 practices + benchmark ladder per division: T-Ball/Rookies/Minors/Majors) is built and live under Resources. Phase 2 -- the rest of a full season's worth of practices per division, richer advanced/remediation content, inline diagram editing from within Practice Plan itself, and a board admin-edit UI -- is a content-authoring project, not an integration; see `data/practice-catalog-seed.json`/`data/skill-benchmarks-seed.json` for sourcing and citations.
 - **Cross-platform communication sync** (Facebook/website/GameChanger) -- `lybs-reporting` already has a manual-approval photo/caption pipeline for the league's Facebook page; a single team would want a lighter version of that, not a new system.

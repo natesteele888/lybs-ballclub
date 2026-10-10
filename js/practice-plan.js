@@ -32,6 +32,23 @@
   }
 
   window.PracticePlan = {
+    // Called by the Practice Catalog tab's "Add to my Practice Plan"
+    // pull-in button -- goes through ensurePlans/savePlans like every
+    // other mutation here so this team's in-memory cache stays correct
+    // even if the Coaching tab was already open this session (a raw
+    // dbPut would desync it). Block ids are regenerated so pulling the
+    // same catalog practice in twice doesn't collide.
+    async addFromCatalog(teamId, { name, blocks }) {
+      const plans = await ensurePlans(teamId);
+      const p = {
+        id: uid('pp'), name: name || '', date: new Date().toISOString().slice(0, 10),
+        blocks: (blocks || []).map(b => ({ ...b, id: uid('blk') })),
+      };
+      plans.unshift(p);
+      await savePlans(teamId, plans);
+      return p;
+    },
+
     async render(containerEl, teamId) {
       let plans = await ensurePlans(teamId);
       let view = { mode: 'list' };
