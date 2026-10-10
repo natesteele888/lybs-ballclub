@@ -115,12 +115,11 @@
     return `
       <div class="tonightMergedCard ${played ? 'tonightMergedCardFinal' : ''}">
         <div class="tonightMergedTop">
-          <span class="badge tonightLeagueChip">${escapeHtml(game.divisionName)}</span>
           ${played ? '<span class="tonightFinalTag">Final</span>' : (game.time ? `<span class="tonightMergedTime">${escapeHtml(game.time)}</span>` : '')}
         </div>
         ${teamLine(a, bWins)}
         ${teamLine(b, aWins)}
-        ${game.location ? `<div class="tonightGameLocation">${escapeHtml(game.location)}</div>` : ''}
+        <div class="tonightGameLocation"><strong class="tonightDivisionLabel">${escapeHtml(game.divisionName)}</strong>${game.location ? ' &middot; ' + escapeHtml(game.location) : ''}</div>
         ${ourGame ? '<button class="btn btnGhost btnSmall tonightWatchBtn" data-watch="1">Watch live on GameChanger &rarr;</button>' : ''}
       </div>`;
   }

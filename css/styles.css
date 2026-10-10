@@ -665,8 +665,11 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   background: var(--card); border: 1px solid var(--card-border); border-radius: 12px;
   padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;
 }
-.tonightMergedTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
-.tonightLeagueChip { background: rgba(76,106,235,0.15); color: #AFC0FF; border: 1px solid rgba(76,106,235,0.35); }
+/* Single child now (time or the Final tag) -- the division used to sit
+   here too as a .tonightLeagueChip badge, but a pill up top read as
+   disconnected from the teams it described; it's a bold label on the
+   location line, under the teams, instead (.tonightDivisionLabel). */
+.tonightMergedTop { display: flex; align-items: center; justify-content: flex-end; margin-bottom: 2px; min-height: 16px; }
 .tonightMergedTime {
   font-family: var(--font-label); font-size: 12px; font-weight: 700; color: var(--lybs-silver);
   letter-spacing: 0.06em; text-transform: uppercase;
@@ -676,6 +679,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   font-family: var(--font-label); font-size: 13px; font-weight: 700; color: var(--text2);
   flex: 0 0 auto; font-variant-numeric: tabular-nums;
 }
+.tonightDivisionLabel { color: #AFC0FF; font-weight: 700; }
 /* A finished game's card -- bigger/bolder team names and a big-score
    treatment matching .gameResultScore's look (same display font, white,
    text-shadow), with the losing side dimmed instead of both scores
