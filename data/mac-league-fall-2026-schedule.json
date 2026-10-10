@@ -1,0 +1,577 @@
+{
+  "source": "Hand-transcribed by the coach from macleague.org's own schedule page. Not scraped by this app -- that page lives at /schedule, which macleague.org's robots.txt explicitly disallows (see scripts/scrape-standings.mjs's header for why the automated scraper never touches it). This file is a point-in-time manual capture, not a live feed, and has no automated way to refresh -- see the note below.",
+  "season": "2026 Fall",
+  "capturedAt": "2026-10-10",
+  "note": "Covers every remaining Fall 2026 week at the time this was captured -- Nov 1 is the last week of the season. No Lunenburg Select game appears anywhere in any of these 5 weeks -- flagged, not resolved; worth confirming directly against macleague.org whether Lunenburg fielded a Fall team this season or plays under a different name there. This file goes stale the moment the season ends or a game gets rescheduled -- there is no refresh process for it yet (unlike data/rules-seed.json or data/standings-cache.json, which the app re-derives from a live source); treat every date here as what was true on capturedAt, not as live.",
+  "weeks": [
+    {
+      "date": "2026-10-11",
+      "games": [
+        {
+          "division": "Rookies",
+          "home": "8u GD Ghost Peppers",
+          "away": "8u Pepperell",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Groton CP1/far-left"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u GD Howlers",
+          "away": "8u Bolton Gold",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Groton CP4/left-lights"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u Harvard",
+          "away": "8u Bolton Green",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Harvard Field 1"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u Littleton Navy",
+          "away": "8u Littleton Gold",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Littleton (A) Field 1"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Bolton Blue",
+          "away": "10u Bolton Yellow",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Bolton Capital Field"
+        },
+        {
+          "division": "Minors",
+          "home": "10u GD Ghost Peppers",
+          "away": "10u Westford 2",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Groton CP4/left-lights"
+        },
+        {
+          "division": "Minors",
+          "home": "10u GD Dogmen",
+          "away": "10u Littleton Navy",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Groton CP2/middle"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Harvard Trojans",
+          "away": "10u Westford 1",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Harvard Field 1"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Harvard Huskies",
+          "away": "10u Townsend Ashby",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Harvard Field 2"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Littleton Gold",
+          "away": "10u GD Poison Apples",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Littleton Couper Field"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Maynard Stow",
+          "away": "10u Pepperell",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Maynard Field 1"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Bolton Blue",
+          "away": "12u Westford 1",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Bolton Capital Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Maynard Stow 1",
+          "away": "12u Groton Dunstable",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Maynard Field 1"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Pepperell",
+          "away": "12u Littleton",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Pepperell Field 1/lights"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Townsend Ashby",
+          "away": "12u Maynard Stow 2",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Townsend Craven Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Westford 2",
+          "away": "12u Bolton Green",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Westford Field G5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "games": [
+        {
+          "division": "Rookies",
+          "home": "8u Littleton Navy",
+          "away": "8u Bolton Gold",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Littleton (A) Field 1"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u Townsend Ashby",
+          "away": "8u Bolton Green",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Townsend Craven Field"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u Pepperell",
+          "away": "8u GD Poison Apples",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Pepperell Field 1/lights"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u GD Howlers",
+          "away": "8u Harvard",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Groton CP2/middle"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u GD Ghost Peppers",
+          "away": "8u Littleton Gold",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Groton CP1/far-left"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Bolton Yellow",
+          "away": "10u Harvard Huskies",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Bolton Capital Field"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Townsend Ashby",
+          "away": "10u GD Dogmen",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Townsend Craven Field"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Pepperell",
+          "away": "10u Westford 2",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Pepperell Field 1/lights"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Maynard Stow",
+          "away": "10u Bolton Blue",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Maynard Field 1"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Littleton Navy",
+          "away": "10u Littleton Gold",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Littleton Couper Field"
+        },
+        {
+          "division": "Minors",
+          "home": "10u GD Poison Apples",
+          "away": "10u Harvard Trojans",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Groton CP2/middle"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Bolton Green",
+          "away": "10u GD Ghost Peppers",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Bolton IL Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Bolton Green",
+          "away": "12u Pepperell",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Bolton Capital Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Groton Dunstable",
+          "away": "12u Bolton Blue",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Groton CP4/left-lights"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Littleton",
+          "away": "12u Maynard Stow 2",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Littleton Shaker Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Maynard Stow 1",
+          "away": "12u Townsend Ashby",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Maynard Field 1"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Westford 2",
+          "away": "12u Westford 1",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Westford Field G5"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-24",
+      "games": [
+        {
+          "division": "Rookies",
+          "home": "8u GD Poison Apples",
+          "away": "8u Townsend Ashby",
+          "from": "12:30 PM",
+          "to": "2:30 PM",
+          "location": "Groton CP2/middle"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-25",
+      "games": [
+        {
+          "division": "Rookies",
+          "home": "8u Littleton Navy",
+          "away": "8u GD Howlers",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Littleton (A) Field 1"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u Harvard",
+          "away": "8u Townsend Ashby",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Harvard Field 1"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u GD Poison Apples",
+          "away": "8u Littleton Gold",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Groton CP2/middle"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u GD Ghost Peppers",
+          "away": "8u Bolton Gold",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Groton CP1/far-left"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u Bolton Green",
+          "away": "8u Pepperell",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Bolton Capital Field"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Bolton Blue",
+          "away": "10u Westford 2",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Bolton IL Field"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Littleton Gold",
+          "away": "10u Townsend Ashby",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Littleton Couper Field"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Harvard Huskies",
+          "away": "10u Maynard Stow",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Harvard Field 2"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Harvard Trojans",
+          "away": "10u Littleton Navy",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Harvard Field 1"
+        },
+        {
+          "division": "Minors",
+          "home": "10u GD Dogmen",
+          "away": "10u Bolton Yellow",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Groton CP2/middle"
+        },
+        {
+          "division": "Minors",
+          "home": "10u GD Ghost Peppers",
+          "away": "10u Pepperell",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Groton CP4/left-lights"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Bolton Green",
+          "away": "10u Westford 1",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Bolton Capital Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Bolton Blue",
+          "away": "12u Maynard Stow 1",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Bolton Capital Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Groton Dunstable",
+          "away": "12u Westford 2",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Groton CP4/left-lights"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Littleton",
+          "away": "12u Townsend Ashby",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Littleton Shaker Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Maynard Stow 2",
+          "away": "12u Bolton Green",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Maynard Field 1"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Westford 1",
+          "away": "12u Pepperell",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Westford Field G5"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-01",
+      "games": [
+        {
+          "division": "Rookies",
+          "home": "8u Harvard",
+          "away": "8u Littleton Navy",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Harvard Field 1"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u Pepperell",
+          "away": "8u Townsend Ashby",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Pepperell Field 1/lights"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u Littleton Gold",
+          "away": "8u Bolton Green",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Littleton (A) Field 1"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u GD Howlers",
+          "away": "8u GD Ghost Peppers",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Groton CP2/middle"
+        },
+        {
+          "division": "Rookies",
+          "home": "8u Bolton Gold",
+          "away": "8u GD Poison Apples",
+          "from": "9:00 AM",
+          "to": "11:00 AM",
+          "location": "Bolton IL Field"
+        },
+        {
+          "division": "Minors",
+          "home": "10u GD Poison Apples",
+          "away": "10u Bolton Green",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Groton CP2/middle"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Westford 2",
+          "away": "10u Harvard Huskies",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Westford Field G4"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Westford 1",
+          "away": "10u GD Ghost Peppers",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Westford Field G6"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Pepperell",
+          "away": "10u Bolton Blue",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Pepperell Field 1/lights"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Maynard Stow",
+          "away": "10u GD Dogmen",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Maynard Field 1"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Harvard Trojans",
+          "away": "10u Townsend Ashby",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Harvard Field 1"
+        },
+        {
+          "division": "Minors",
+          "home": "10u Bolton Yellow",
+          "away": "10u Littleton Gold",
+          "from": "12:00 PM",
+          "to": "2:00 PM",
+          "location": "Bolton Capital Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Bolton Blue",
+          "away": "12u Townsend Ashby",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Bolton Capital Field"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Maynard Stow 1",
+          "away": "12u Westford 2",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Maynard Field 1"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Pepperell",
+          "away": "12u Groton Dunstable",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Pepperell Field 1/lights"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Westford 1",
+          "away": "12u Maynard Stow 2",
+          "from": "3:00 PM",
+          "to": "5:00 PM",
+          "location": "Westford Field G5"
+        },
+        {
+          "division": "Majors",
+          "home": "12u Bolton Green",
+          "away": "12u Littleton",
+          "from": "6:00 PM",
+          "to": "8:00 PM",
+          "location": "Bolton Capital Field"
+        }
+      ]
+    }
+  ]
+}
