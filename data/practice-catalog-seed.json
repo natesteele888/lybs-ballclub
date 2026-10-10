@@ -1,286 +1,91 @@
 {
-  "source": "USA Baseball American Development Model (Activate/Discover stages) + Youth Baseball Skills Matrix's Daily Practice Organization Outline + this app's own data/pitch-smart-rules.json. T-Ball and Rookies/Coach-Pitch content is adapted from Little League University's official diagrammed curricula (littleleague.org/downloads/tee-ball-program, littleleague.org/downloads/coach-pitch-12-week-program). Minors content is assembled from ADM + the Skills Matrix. Majors content has no official published curriculum anywhere (Little League's own site confirms the gap) -- those practices are sourceType 'lybs-original' and need LYBS coach review before being treated as settled.",
+  "source": "USA Baseball American Development Model (Activate/Discover stages) + Youth Baseball Skills Matrix's Daily Practice Organization Outline + this app's own data/pitch-smart-rules.json. T-Ball and Rookies/Coach-Pitch content is adapted from Little League University's official diagrammed curricula (littleleague.org/downloads/tee-ball-program, littleleague.org/downloads/coach-pitch-12-week-program). Minors content is assembled from ADM + the Skills Matrix. Majors content has no official published curriculum anywhere (Little League's own site confirms the gap) -- those drills are sourceType 'lybs-original' and need LYBS coach review before being treated as settled.",
   "season": "2026",
-  "note": "Phase 1 seed -- 2 practices per division, enough to prove the catalog's structure end-to-end. Not a full season's worth of practices; see the plan's Phase 2 for the full buildout.",
-  "practices": [
-    {
-      "id": "pc-tball-wk1", "division": "T-Ball", "name": "Week 1 -- Throw, Catch & Tee Work",
-      "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, Weeks 1-2",
-      "benchmarkIds": ["throw-grip", "catch-two-hand", "hit-tee"],
-      "variants": {
-        "core": { "label": "Standard", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 2, "label": "1-2 coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Partner throw & catch, soft toss", "minutes": 15, "benchmarkIds": ["throw-grip", "catch-two-hand"] },
-            { "id": "b3", "label": "Tee hitting, one station", "minutes": 20, "benchmarkIds": ["hit-tee"] },
-            { "id": "b4", "label": "Closing game", "minutes": 10 }
-          ]},
-          { "minCoaches": 3, "maxCoaches": 99, "label": "3+ coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "3-station rotation: Throw/Catch, Tee, Fielding", "minutes": 30, "benchmarkIds": ["throw-grip", "catch-two-hand", "hit-tee"],
-              "diagramRef": { "title": "T-Ball 3-station rotation", "note": "Rotate groups every ~10 min", "markers": [
-                { "id": "mk1", "x": 25, "y": 55, "label": "Throw & catch pairs" },
-                { "id": "mk2", "x": 50, "y": 80, "label": "Tee hitting" },
-                { "id": "mk3", "x": 65, "y": 45, "label": "Rolled-ball fielding" }
-              ]}},
-            { "id": "b3", "label": "Closing game", "minutes": 15 }
-          ]}
-        ]},
-        "advanced": { "label": "Advanced add-on", "note": "For kids already catching/throwing consistently -- a stretch into Rookies-level hitting", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "a1", "label": "Soft toss introduction (moving ball, not a tee)", "minutes": 15, "benchmarkIds": ["hit-soft-toss"] }
-          ]}
-        ]},
-        "remediation": { "label": "Behind-track / remediation", "note": "Extra reps for kids still building basic catch/tee comfort", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "r1", "label": "Two-handed catch reps, close distance", "minutes": 20, "benchmarkIds": ["catch-two-hand"] },
-            { "id": "r2", "label": "Tee stance and swing-path reps", "minutes": 15, "benchmarkIds": ["hit-tee"] }
-          ]}
-        ]}
-      }
-    },
-    {
-      "id": "pc-tball-wk2", "division": "T-Ball", "name": "Week 2 -- Running the Bases",
-      "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, base-running activities",
-      "benchmarkIds": ["run-to-first"],
-      "variants": {
-        "core": { "label": "Standard", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 2, "label": "1-2 coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Run-through-first reps", "minutes": 20, "benchmarkIds": ["run-to-first"] },
-            { "id": "b3", "label": "Mini scrimmage", "minutes": 20 }
-          ]},
-          { "minCoaches": 3, "maxCoaches": 99, "label": "3+ coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "2-station rotation: Base running, Throw/Catch", "minutes": 25, "benchmarkIds": ["run-to-first", "throw-grip"],
-              "diagramRef": { "title": "Base running + throwing stations", "markers": [
-                { "id": "mk1", "x": 50, "y": 70, "label": "Run through 1st" },
-                { "id": "mk2", "x": 30, "y": 40, "label": "Throw & catch pairs" }
-              ]}},
-            { "id": "b3", "label": "Mini scrimmage", "minutes": 20 }
-          ]}
-        ]},
-        "advanced": { "label": "Advanced add-on", "note": "A stretch into Rookies-level base running", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "a1", "label": "Secondary lead introduction", "minutes": 15, "benchmarkIds": ["run-secondary-lead"] }
-          ]}
-        ]},
-        "remediation": { "label": "Behind-track / remediation", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "r1", "label": "Run-through-first reps, extra sets", "minutes": 20, "benchmarkIds": ["run-to-first"] }
-          ]}
-        ]}
-      }
-    },
+  "note": "Flat, atomic drill library -- a coach picks individual drills and builds their own practice, rather than adopting a pre-made weekly plan. Each drill is tagged with a 'tier' (foundational/standard/advanced) WITHIN its division: foundational is what a player new to that level needs, advanced is a stretch for players already ahead, standard is the typical mid-season expectation. Tier lives on the drill, not the team -- this app's roster has no field for a player's prior experience, so a coach judges their own team's makeup and filters to the tier(s) that fit (e.g. a team with a few new-to-Majors players and some returners might want Foundational + Standard visible together). 'category' values are drawn from data/skill-benchmarks-seed.json's own category vocabulary, plus 'Game/Scrimmage' and 'Multi-Station' for closing activities and multi-coach station rotations. Phase 1 -- migrated from the prior pre-built-practice version, not a full buildout.",
+  "categories": ["Warm-up", "Throwing", "Catching", "Ground Ball/Infield", "Hitting", "Base Running", "Pitching", "Catching concepts", "Team Situational", "Basic Positioning", "Game/Scrimmage", "Multi-Station"],
+  "drills": [
+    { "id": "drill-tball-warmup", "division": "T-Ball", "tier": "standard", "category": "Warm-up", "title": "Dynamic Warm-up", "description": "Full-body dynamic warm-up routine before throwing.", "suggestedMinutes": 10, "benchmarkIds": ["warmup-dynamic"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, Weeks 1-2" },
+    { "id": "drill-tball-throw-catch-pairs", "division": "T-Ball", "tier": "standard", "category": "Throwing", "title": "Partner Throw & Catch", "description": "Partner throw and catch at soft-toss distance.", "suggestedMinutes": 15, "benchmarkIds": ["throw-grip", "catch-two-hand"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, Weeks 1-2" },
+    { "id": "drill-tball-tee-station", "division": "T-Ball", "tier": "standard", "category": "Hitting", "title": "Tee Hitting, One Station", "description": "Tee hitting, single station -- group rotates through.", "suggestedMinutes": 20, "benchmarkIds": ["hit-tee"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, Weeks 1-2" },
+    { "id": "drill-tball-3station-throw-tee-field", "division": "T-Ball", "tier": "standard", "category": "Multi-Station", "title": "3-Station Rotation: Throw/Catch, Tee, Fielding", "description": "Split the group into three stations and rotate every ~10 minutes. Needs about 3 coaches/helpers to run all stations at once.", "suggestedMinutes": 30, "benchmarkIds": ["throw-grip", "catch-two-hand", "hit-tee"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, Weeks 1-2", "diagramRef": { "title": "T-Ball 3-station rotation", "note": "Rotate groups every ~10 min", "markers": [
+      { "id": "mk1", "x": 25, "y": 55, "label": "Throw & catch pairs" },
+      { "id": "mk2", "x": 50, "y": 80, "label": "Tee hitting" },
+      { "id": "mk3", "x": 65, "y": 45, "label": "Rolled-ball fielding" }
+    ]}},
+    { "id": "drill-tball-soft-toss-intro", "division": "T-Ball", "tier": "advanced", "category": "Hitting", "title": "Soft Toss Introduction", "description": "Soft toss (a moving ball, not a tee) -- a stretch into Rookies-level hitting for kids already catching/hitting consistently.", "suggestedMinutes": 15, "benchmarkIds": ["hit-soft-toss"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, Weeks 1-2" },
+    { "id": "drill-tball-catch-close-reps", "division": "T-Ball", "tier": "foundational", "category": "Catching", "title": "Two-Handed Catch Reps, Close Distance", "description": "Extra reps for kids still building basic catch comfort -- shorten the toss distance and emphasize two hands.", "suggestedMinutes": 20, "benchmarkIds": ["catch-two-hand"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, Weeks 1-2" },
+    { "id": "drill-tball-tee-stance-reps", "division": "T-Ball", "tier": "foundational", "category": "Hitting", "title": "Tee Stance & Swing-Path Reps", "description": "Extra reps on tee stance and swing path for kids still building comfort at the tee.", "suggestedMinutes": 15, "benchmarkIds": ["hit-tee"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, Weeks 1-2" },
+    { "id": "drill-tball-run-to-first-reps", "division": "T-Ball", "tier": "standard", "category": "Base Running", "title": "Run-Through-First Reps", "description": "Run-through-first-base reps, no admiring the hit.", "suggestedMinutes": 20, "benchmarkIds": ["run-to-first"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, base-running activities" },
+    { "id": "drill-tball-2station-run-throw", "division": "T-Ball", "tier": "standard", "category": "Multi-Station", "title": "2-Station Rotation: Base Running, Throw/Catch", "description": "Split into two stations and rotate -- base running on one side, throw & catch pairs on the other.", "suggestedMinutes": 25, "benchmarkIds": ["run-to-first", "throw-grip"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, base-running activities", "diagramRef": { "title": "Base running + throwing stations", "markers": [
+      { "id": "mk1", "x": 50, "y": 70, "label": "Run through 1st" },
+      { "id": "mk2", "x": 30, "y": 40, "label": "Throw & catch pairs" }
+    ]}},
+    { "id": "drill-tball-secondary-lead-intro", "division": "T-Ball", "tier": "advanced", "category": "Base Running", "title": "Secondary Lead Introduction", "description": "Secondary lead off a base -- a stretch into Rookies-level base running.", "suggestedMinutes": 15, "benchmarkIds": ["run-secondary-lead"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, base-running activities" },
+    { "id": "drill-tball-run-to-first-reps-extra", "division": "T-Ball", "tier": "foundational", "category": "Base Running", "title": "Run-Through-First Reps, Extra Sets", "description": "Extra sets of run-through-first reps for kids still building the habit.", "suggestedMinutes": 20, "benchmarkIds": ["run-to-first"], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program, base-running activities" },
+    { "id": "drill-tball-game", "division": "T-Ball", "tier": "standard", "category": "Game/Scrimmage", "title": "Closing Game", "description": "A fun closing game or mini scrimmage to wrap up practice.", "suggestedMinutes": 15, "benchmarkIds": [], "sourceType": "official", "citation": "Adapted from Little League University's Tee Ball Program" },
 
-    {
-      "id": "pc-rookies-wk1", "division": "Rookies", "name": "Week 1 -- Throwing & Ground Balls",
-      "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 1-2",
-      "benchmarkIds": ["throw-crow-hop", "field-rolled-grounder"],
-      "variants": {
-        "core": { "label": "Standard", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 2, "label": "1-2 coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Crow-hop throwing reps", "minutes": 15, "benchmarkIds": ["throw-crow-hop"] },
-            { "id": "b3", "label": "Rolled grounders, two hands", "minutes": 20, "benchmarkIds": ["field-rolled-grounder"] },
-            { "id": "b4", "label": "Fun At Bat game", "minutes": 15 }
-          ]},
-          { "minCoaches": 3, "maxCoaches": 99, "label": "3+ coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "3-station rotation: Throwing, Grounders, Ready position", "minutes": 30, "benchmarkIds": ["throw-crow-hop", "field-rolled-grounder", "field-ready-position"],
-              "diagramRef": { "title": "Rookies 3-station rotation", "markers": [
-                { "id": "mk1", "x": 25, "y": 55, "label": "Crow-hop throws" },
-                { "id": "mk2", "x": 55, "y": 45, "label": "Rolled grounders" },
-                { "id": "mk3", "x": 60, "y": 65, "label": "Ready-position reps" }
-              ]}},
-            { "id": "b3", "label": "Fun At Bat game", "minutes": 20 }
-          ]}
-        ]},
-        "advanced": { "label": "Advanced add-on", "note": "A stretch into Minors-level fielding speed", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "a1", "label": "Live-speed grounders", "minutes": 15, "benchmarkIds": ["field-grounder-live"] }
-          ]}
-        ]},
-        "remediation": { "label": "Behind-track / remediation", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "r1", "label": "Catching off-glove-side reps", "minutes": 15, "benchmarkIds": ["catch-glove-side"] },
-            { "id": "r2", "label": "Rolled grounder reps, closer distance", "minutes": 15, "benchmarkIds": ["field-rolled-grounder"] }
-          ]}
-        ]}
-      }
-    },
-    {
-      "id": "pc-rookies-wk2", "division": "Rookies", "name": "Week 2 -- Coach Pitch & Mound Basics",
-      "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 5-6",
-      "benchmarkIds": ["hit-soft-toss", "pitch-mechanics"],
-      "variants": {
-        "core": { "label": "Standard", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 2, "label": "1-2 coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Soft toss hitting", "minutes": 20, "benchmarkIds": ["hit-soft-toss"] },
-            { "id": "b3", "label": "Mound mechanics introduction, fastball only", "minutes": 15, "benchmarkIds": ["pitch-mechanics"] },
-            { "id": "b4", "label": "Scrimmage", "minutes": 15 }
-          ]},
-          { "minCoaches": 3, "maxCoaches": 99, "label": "3+ coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "3-station rotation: Soft toss, Mound mechanics, Positioning", "minutes": 30, "benchmarkIds": ["hit-soft-toss", "pitch-mechanics", "position-basics"],
-              "diagramRef": { "title": "Rookies coach-pitch stations", "markers": [
-                { "id": "mk1", "x": 50, "y": 80, "label": "Soft toss" },
-                { "id": "mk2", "x": 50, "y": 50, "label": "Mound mechanics" },
-                { "id": "mk3", "x": 70, "y": 55, "label": "Positioning walkthrough" }
-              ]}},
-            { "id": "b3", "label": "Scrimmage", "minutes": 20 }
-          ]}
-        ]},
-        "advanced": { "label": "Advanced add-on", "note": "A stretch into Minors-level timing", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "a1", "label": "Front toss, timing a moving ball", "minutes": 15, "benchmarkIds": ["hit-front-toss"] }
-          ]}
-        ]},
-        "remediation": { "label": "Behind-track / remediation", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "r1", "label": "Soft toss reps, extra sets", "minutes": 20, "benchmarkIds": ["hit-soft-toss"] }
-          ]}
-        ]}
-      }
-    },
+    { "id": "drill-rookies-warmup", "division": "Rookies", "tier": "standard", "category": "Warm-up", "title": "Dynamic Warm-up", "description": "Full-body dynamic warm-up routine before throwing.", "suggestedMinutes": 10, "benchmarkIds": ["warmup-dynamic"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 1-2" },
+    { "id": "drill-rookies-crowhop-throws", "division": "Rookies", "tier": "standard", "category": "Throwing", "title": "Crow-Hop Throwing Reps", "description": "Crow-hop throw with intent, building power into the throw.", "suggestedMinutes": 15, "benchmarkIds": ["throw-crow-hop"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 1-2" },
+    { "id": "drill-rookies-rolled-grounders", "division": "Rookies", "tier": "standard", "category": "Ground Ball/Infield", "title": "Rolled Grounders, Two Hands", "description": "Field a rolled or slow-bounced grounder with two hands.", "suggestedMinutes": 20, "benchmarkIds": ["field-rolled-grounder"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 1-2" },
+    { "id": "drill-rookies-3station-throw-grounder-ready", "division": "Rookies", "tier": "standard", "category": "Multi-Station", "title": "3-Station Rotation: Throwing, Grounders, Ready Position", "description": "Split the group into three stations and rotate every ~10 minutes.", "suggestedMinutes": 30, "benchmarkIds": ["throw-crow-hop", "field-rolled-grounder", "field-ready-position"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 1-2", "diagramRef": { "title": "Rookies 3-station rotation", "markers": [
+      { "id": "mk1", "x": 25, "y": 55, "label": "Crow-hop throws" },
+      { "id": "mk2", "x": 55, "y": 45, "label": "Rolled grounders" },
+      { "id": "mk3", "x": 60, "y": 65, "label": "Ready-position reps" }
+    ]}},
+    { "id": "drill-rookies-live-speed-grounders", "division": "Rookies", "tier": "advanced", "category": "Ground Ball/Infield", "title": "Live-Speed Grounders", "description": "A stretch into Minors-level fielding speed -- hit or throw grounders at game speed instead of rolled.", "suggestedMinutes": 15, "benchmarkIds": ["field-grounder-live"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 1-2" },
+    { "id": "drill-rookies-glove-side-catch-reps", "division": "Rookies", "tier": "foundational", "category": "Catching", "title": "Catching Off-Glove-Side Reps", "description": "Extra reps catching a ball thrown slightly off to the glove side.", "suggestedMinutes": 15, "benchmarkIds": ["catch-glove-side"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 1-2" },
+    { "id": "drill-rookies-rolled-grounder-reps-close", "division": "Rookies", "tier": "foundational", "category": "Ground Ball/Infield", "title": "Rolled Grounder Reps, Closer Distance", "description": "Rolled grounder reps at a closer distance for kids still building comfort.", "suggestedMinutes": 15, "benchmarkIds": ["field-rolled-grounder"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 1-2" },
+    { "id": "drill-rookies-soft-toss-hitting", "division": "Rookies", "tier": "standard", "category": "Hitting", "title": "Soft Toss Hitting", "description": "Soft toss hitting, balanced swing.", "suggestedMinutes": 20, "benchmarkIds": ["hit-soft-toss"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 5-6" },
+    { "id": "drill-rookies-mound-mechanics-intro", "division": "Rookies", "tier": "standard", "category": "Pitching", "title": "Mound Mechanics Introduction", "description": "Basic mound mechanics introduction, fastball only.", "suggestedMinutes": 15, "benchmarkIds": ["pitch-mechanics"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 5-6" },
+    { "id": "drill-rookies-3station-softtoss-mound-position", "division": "Rookies", "tier": "standard", "category": "Multi-Station", "title": "3-Station Rotation: Soft Toss, Mound Mechanics, Positioning", "description": "Split the group into three stations and rotate every ~10 minutes.", "suggestedMinutes": 30, "benchmarkIds": ["hit-soft-toss", "pitch-mechanics", "position-basics"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 5-6", "diagramRef": { "title": "Rookies coach-pitch stations", "markers": [
+      { "id": "mk1", "x": 50, "y": 80, "label": "Soft toss" },
+      { "id": "mk2", "x": 50, "y": 50, "label": "Mound mechanics" },
+      { "id": "mk3", "x": 70, "y": 55, "label": "Positioning walkthrough" }
+    ]}},
+    { "id": "drill-rookies-front-toss-timing", "division": "Rookies", "tier": "advanced", "category": "Hitting", "title": "Front Toss, Timing a Moving Ball", "description": "A stretch into Minors-level timing -- front toss / coach pitch instead of soft toss.", "suggestedMinutes": 15, "benchmarkIds": ["hit-front-toss"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 5-6" },
+    { "id": "drill-rookies-soft-toss-reps", "division": "Rookies", "tier": "foundational", "category": "Hitting", "title": "Soft Toss Reps, Extra Sets", "description": "Extra sets of soft toss reps for kids still building timing.", "suggestedMinutes": 20, "benchmarkIds": ["hit-soft-toss"], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program, Weeks 5-6" },
+    { "id": "drill-rookies-game", "division": "Rookies", "tier": "standard", "category": "Game/Scrimmage", "title": "Fun At Bat Game", "description": "Fun At Bat modified-game format to close out practice.", "suggestedMinutes": 20, "benchmarkIds": [], "sourceType": "official", "citation": "Adapted from Little League University's Coach Pitch 12-Week Program" },
 
-    {
-      "id": "pc-minors-wk1", "division": "Minors", "name": "Week 1 -- Fundamentals Refresh",
-      "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Daily Practice Organization Outline, 10-12 band",
-      "benchmarkIds": ["throw-accuracy", "hit-front-toss"],
-      "variants": {
-        "core": { "label": "Standard", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 2, "label": "1-2 coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Accuracy throwing to a target", "minutes": 15, "benchmarkIds": ["throw-accuracy"] },
-            { "id": "b3", "label": "Front toss, single station, group rotates", "minutes": 25, "benchmarkIds": ["hit-front-toss"] }
-          ]},
-          { "minCoaches": 3, "maxCoaches": 99, "label": "3+ coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Station rotation: Throwing, Infield, Front toss", "minutes": 30, "benchmarkIds": ["throw-accuracy", "field-grounder-live", "hit-front-toss"],
-              "diagramRef": { "title": "3-station rotation", "note": "Rotate every 10 min", "markers": [
-                { "id": "mk1", "x": 30, "y": 40, "label": "Throwing pairs" },
-                { "id": "mk2", "x": 60, "y": 55, "label": "Infield grounders" },
-                { "id": "mk3", "x": 50, "y": 85, "label": "Front toss" }
-              ]}},
-            { "id": "b3", "label": "Fun At Bat scrimmage", "minutes": 25 }
-          ]}
-        ]},
-        "advanced": { "label": "Advanced add-on", "note": "For players already live-pitch ready", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "a1", "label": "Live BP, 2-strike approach", "minutes": 20, "benchmarkIds": ["hit-live-pitching"], "drillRef": { "tool": "pitching", "note": "Track with Pitch Chart" } }
-          ]}
-        ]},
-        "remediation": { "label": "Behind-track / remediation", "note": "Restructure for players not yet soft-toss consistent", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "r1", "label": "Soft toss, tee work", "minutes": 25, "benchmarkIds": ["hit-soft-toss"] }
-          ]}
-        ]}
-      }
-    },
-    {
-      "id": "pc-minors-wk2", "division": "Minors", "name": "Week 2 -- Defense & Situational Awareness",
-      "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Team Situational category, 10-12 band",
-      "benchmarkIds": ["catch-flyball", "situational-cutoffs"],
-      "variants": {
-        "core": { "label": "Standard", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 2, "label": "1-2 coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Fly ball reads and tag-up calls", "minutes": 15, "benchmarkIds": ["catch-flyball", "run-read-flyball"] },
-            { "id": "b3", "label": "Cutoff and relay introduction", "minutes": 20, "benchmarkIds": ["situational-cutoffs"] }
-          ]},
-          { "minCoaches": 3, "maxCoaches": 99, "label": "3+ coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Station rotation: Fly balls, Grounders, Catcher basics", "minutes": 30, "benchmarkIds": ["catch-flyball", "field-grounder-live", "catcher-stance"],
-              "diagramRef": { "title": "Defense station rotation", "markers": [
-                { "id": "mk1", "x": 50, "y": 20, "label": "Fly ball reads (OF)" },
-                { "id": "mk2", "x": 55, "y": 55, "label": "Infield grounders" },
-                { "id": "mk3", "x": 50, "y": 88, "label": "Catcher stance & target" }
-              ]}},
-            { "id": "b3", "label": "Scrimmage with cutoff/relay reps", "minutes": 20 }
-          ]}
-        ]},
-        "advanced": { "label": "Advanced add-on", "note": "A stretch into Majors-level fielding range", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "a1", "label": "Backhand fielding reps", "minutes": 15, "benchmarkIds": ["field-backhand"] }
-          ]}
-        ]},
-        "remediation": { "label": "Behind-track / remediation", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "r1", "label": "Rolled grounder reps, two hands", "minutes": 20, "benchmarkIds": ["field-rolled-grounder"] }
-          ]}
-        ]}
-      }
-    },
+    { "id": "drill-minors-warmup", "division": "Minors", "tier": "standard", "category": "Warm-up", "title": "Dynamic Warm-up", "description": "Full-body dynamic warm-up routine before throwing.", "suggestedMinutes": 10, "benchmarkIds": ["warmup-dynamic"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Daily Practice Organization Outline, 10-12 band" },
+    { "id": "drill-minors-accuracy-throwing", "division": "Minors", "tier": "standard", "category": "Throwing", "title": "Accuracy Throwing to a Target", "description": "Throw accurately to a chest-high target from infield distance.", "suggestedMinutes": 15, "benchmarkIds": ["throw-accuracy"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Daily Practice Organization Outline, 10-12 band" },
+    { "id": "drill-minors-front-toss-station", "division": "Minors", "tier": "standard", "category": "Hitting", "title": "Front Toss, Single Station", "description": "Front toss / coach pitch, single station -- group rotates through.", "suggestedMinutes": 25, "benchmarkIds": ["hit-front-toss"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Daily Practice Organization Outline, 10-12 band" },
+    { "id": "drill-minors-3station-throw-infield-fronttoss", "division": "Minors", "tier": "standard", "category": "Multi-Station", "title": "3-Station Rotation: Throwing, Infield, Front Toss", "description": "Split the group into three stations and rotate every ~10 minutes.", "suggestedMinutes": 30, "benchmarkIds": ["throw-accuracy", "field-grounder-live", "hit-front-toss"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Daily Practice Organization Outline, 10-12 band", "diagramRef": { "title": "3-station rotation", "note": "Rotate every 10 min", "markers": [
+      { "id": "mk1", "x": 30, "y": 40, "label": "Throwing pairs" },
+      { "id": "mk2", "x": 60, "y": 55, "label": "Infield grounders" },
+      { "id": "mk3", "x": 50, "y": 85, "label": "Front toss" }
+    ]}},
+    { "id": "drill-minors-live-bp-intro", "division": "Minors", "tier": "advanced", "category": "Hitting", "title": "Live BP Introduction, 2-Strike Approach", "description": "Live batting practice introduction, including a 2-strike approach -- for players ready to move past front toss.", "suggestedMinutes": 20, "benchmarkIds": ["hit-live-pitching"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Daily Practice Organization Outline, 10-12 band", "drillRef": { "tool": "pitching", "note": "Track with Pitch Chart" } },
+    { "id": "drill-minors-soft-toss-tee-work", "division": "Minors", "tier": "foundational", "category": "Hitting", "title": "Soft Toss & Tee Work", "description": "Back to soft toss and tee work for players not yet front-toss consistent.", "suggestedMinutes": 25, "benchmarkIds": ["hit-soft-toss"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Daily Practice Organization Outline, 10-12 band" },
+    { "id": "drill-minors-flyball-reads", "division": "Minors", "tier": "standard", "category": "Catching", "title": "Fly Ball Reads & Tag-Up Calls", "description": "Track and catch a fly ball hit in the air; read whether to tag up or advance.", "suggestedMinutes": 15, "benchmarkIds": ["catch-flyball", "run-read-flyball"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Team Situational category, 10-12 band" },
+    { "id": "drill-minors-cutoff-relay-intro", "division": "Minors", "tier": "standard", "category": "Team Situational", "title": "Cutoff & Relay Introduction", "description": "Understands cutoff and relay positioning.", "suggestedMinutes": 20, "benchmarkIds": ["situational-cutoffs"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Team Situational category, 10-12 band" },
+    { "id": "drill-minors-3station-flyball-grounder-catcher", "division": "Minors", "tier": "standard", "category": "Multi-Station", "title": "3-Station Rotation: Fly Balls, Grounders, Catcher Basics", "description": "Split the group into three stations and rotate every ~10 minutes.", "suggestedMinutes": 30, "benchmarkIds": ["catch-flyball", "field-grounder-live", "catcher-stance"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Team Situational category, 10-12 band", "diagramRef": { "title": "Defense station rotation", "markers": [
+      { "id": "mk1", "x": 50, "y": 20, "label": "Fly ball reads (OF)" },
+      { "id": "mk2", "x": 55, "y": 55, "label": "Infield grounders" },
+      { "id": "mk3", "x": 50, "y": 88, "label": "Catcher stance & target" }
+    ]}},
+    { "id": "drill-minors-backhand-reps", "division": "Minors", "tier": "advanced", "category": "Ground Ball/Infield", "title": "Backhand Fielding Reps", "description": "A stretch into Majors-level fielding range -- backhand a grounder hit to the glove side.", "suggestedMinutes": 15, "benchmarkIds": ["field-backhand"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Team Situational category, 10-12 band" },
+    { "id": "drill-minors-rolled-grounder-reps", "division": "Minors", "tier": "foundational", "category": "Ground Ball/Infield", "title": "Rolled Grounder Reps, Two Hands", "description": "Back-to-basics rolled grounder reps for players still building clean fundamentals.", "suggestedMinutes": 20, "benchmarkIds": ["field-rolled-grounder"], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Team Situational category, 10-12 band" },
+    { "id": "drill-minors-game", "division": "Minors", "tier": "standard", "category": "Game/Scrimmage", "title": "Scrimmage", "description": "Live scrimmage, folding in cutoff/relay reps where they come up.", "suggestedMinutes": 20, "benchmarkIds": [], "sourceType": "adapted", "citation": "USA Baseball ADM Discover stage + Skills Matrix Daily Practice Organization Outline" },
 
-    {
-      "id": "pc-majors-wk1", "division": "Majors", "name": "Week 1 -- Live Pitching & Pitch Count Awareness",
-      "sourceType": "lybs-original", "citation": "Adapted from ADM Discover/Progress stage guidance + this app's own data/pitch-smart-rules.json -- no official Majors curriculum exists anywhere; review before treating as settled.",
-      "benchmarkIds": ["hit-live-pitching", "pitch-count-awareness"],
-      "variants": {
-        "core": { "label": "Standard", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 2, "label": "1-2 coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Live BP", "minutes": 25, "benchmarkIds": ["hit-live-pitching"], "drillRef": { "tool": "pitching", "note": "Track with Pitch Chart" } },
-            { "id": "b3", "label": "Pitch count & rest-day rules walkthrough", "minutes": 10, "benchmarkIds": ["pitch-count-awareness"] }
-          ]},
-          { "minCoaches": 3, "maxCoaches": 99, "label": "3+ coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Station rotation: Live BP, Relay throws, Catcher blocking", "minutes": 35, "benchmarkIds": ["hit-live-pitching", "throw-relay", "catcher-blocking"],
-              "diagramRef": { "title": "Majors station rotation", "markers": [
-                { "id": "mk1", "x": 50, "y": 80, "label": "Live BP" },
-                { "id": "mk2", "x": 30, "y": 35, "label": "Relay throws" },
-                { "id": "mk3", "x": 55, "y": 90, "label": "Catcher blocking" }
-              ]}},
-            { "id": "b3", "label": "Scrimmage", "minutes": 25 }
-          ]}
-        ]},
-        "advanced": { "label": "Advanced add-on", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "a1", "label": "Situational hitting -- move the runner over", "minutes": 20, "benchmarkIds": ["hit-situational"] }
-          ]}
-        ]},
-        "remediation": { "label": "Behind-track / remediation", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "r1", "label": "Front toss timing reps", "minutes": 20, "benchmarkIds": ["hit-front-toss"] }
-          ]}
-        ]}
-      }
-    },
-    {
-      "id": "pc-majors-wk2", "division": "Majors", "name": "Week 2 -- Defense, Relays & Rundowns",
-      "sourceType": "lybs-original", "citation": "Adapted from ADM Progress stage team-play guidance -- no official Majors curriculum exists anywhere; review before treating as settled.",
-      "benchmarkIds": ["throw-relay", "situational-bunt-defense"],
-      "variants": {
-        "core": { "label": "Standard", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 2, "label": "1-2 coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Relay throw reps", "minutes": 20, "benchmarkIds": ["throw-relay"] },
-            { "id": "b3", "label": "Bunt defense walkthrough", "minutes": 20, "benchmarkIds": ["situational-bunt-defense"] }
-          ]},
-          { "minCoaches": 3, "maxCoaches": 99, "label": "3+ coaches", "blocks": [
-            { "id": "b1", "label": "Dynamic warm-up", "minutes": 10, "benchmarkIds": ["warmup-dynamic"] },
-            { "id": "b2", "label": "Station rotation: Relays, Double plays, Rundowns", "minutes": 35, "benchmarkIds": ["throw-relay", "field-double-play", "situational-rundown"],
-              "diagramRef": { "title": "Relay & rundown stations", "markers": [
-                { "id": "mk1", "x": 30, "y": 35, "label": "Relay throws" },
-                { "id": "mk2", "x": 55, "y": 55, "label": "Double-play feeds" },
-                { "id": "mk3", "x": 65, "y": 65, "label": "Rundown reps" }
-              ]}},
-            { "id": "b3", "label": "Scrimmage", "minutes": 25 }
-          ]}
-        ]},
-        "advanced": { "label": "Advanced add-on", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "a1", "label": "Stolen-base read reps", "minutes": 15, "benchmarkIds": ["run-steal-read"], "drillRef": { "tool": "baserunning", "note": "Track with Base Running timer" } }
-          ]}
-        ]},
-        "remediation": { "label": "Behind-track / remediation", "coachProfiles": [
-          { "minCoaches": 1, "maxCoaches": 99, "label": "Any", "blocks": [
-            { "id": "r1", "label": "Live-speed grounder & throw reps", "minutes": 20, "benchmarkIds": ["field-grounder-live"] }
-          ]}
-        ]}
-      }
-    }
+    { "id": "drill-majors-warmup", "division": "Majors", "tier": "standard", "category": "Warm-up", "title": "Dynamic Warm-up", "description": "Full-body dynamic warm-up routine before throwing.", "suggestedMinutes": 10, "benchmarkIds": ["warmup-dynamic"], "sourceType": "lybs-original", "citation": "Adapted from ADM Discover/Progress stage guidance -- no official Majors curriculum exists anywhere; review before treating as settled." },
+    { "id": "drill-majors-live-bp", "division": "Majors", "tier": "standard", "category": "Hitting", "title": "Live BP", "description": "Full live batting practice off a coach or pitching-machine arm; track pitch counts/calls on the Pitch Chart tool while it runs.", "suggestedMinutes": 25, "benchmarkIds": ["hit-live-pitching"], "sourceType": "lybs-original", "citation": "Adapted from ADM Discover/Progress stage guidance + this app's own data/pitch-smart-rules.json -- no official Majors curriculum exists anywhere; review before treating as settled.", "drillRef": { "tool": "pitching", "note": "Track with Pitch Chart" } },
+    { "id": "drill-majors-pitch-count-talk", "division": "Majors", "tier": "standard", "category": "Pitching", "title": "Pitch Count & Rest-Day Rules Walkthrough", "description": "Walk the team through their own pitch count and the rest-day rules that follow -- this app's own Pitch Smart data.", "suggestedMinutes": 10, "benchmarkIds": ["pitch-count-awareness"], "sourceType": "official", "citation": "This app's own data/pitch-smart-rules.json, sourced from MAC League's Pitch Smart tables" },
+    { "id": "drill-majors-3station-livebp-relay-catcherblock", "division": "Majors", "tier": "standard", "category": "Multi-Station", "title": "Station Rotation: Live BP, Relay Throws, Catcher Blocking", "description": "Split the group into three stations and rotate.", "suggestedMinutes": 35, "benchmarkIds": ["hit-live-pitching", "throw-relay", "catcher-blocking"], "sourceType": "lybs-original", "citation": "Adapted from ADM Discover/Progress stage guidance -- no official Majors curriculum exists anywhere; review before treating as settled.", "diagramRef": { "title": "Majors station rotation", "markers": [
+      { "id": "mk1", "x": 50, "y": 80, "label": "Live BP" },
+      { "id": "mk2", "x": 30, "y": 35, "label": "Relay throws" },
+      { "id": "mk3", "x": 55, "y": 90, "label": "Catcher blocking" }
+    ]}},
+    { "id": "drill-majors-situational-hitting", "division": "Majors", "tier": "advanced", "category": "Hitting", "title": "Situational Hitting -- Move the Runner Over", "description": "Situational hitting for experienced Majors hitters -- move the runner over, hit behind the runner.", "suggestedMinutes": 20, "benchmarkIds": ["hit-situational"], "sourceType": "lybs-original", "citation": "Adapted from ADM Progress stage team-play guidance -- no official Majors curriculum exists anywhere; review before treating as settled." },
+    { "id": "drill-majors-fronttoss-timing-reps", "division": "Majors", "tier": "foundational", "category": "Hitting", "title": "Front Toss Timing Reps", "description": "For players new to Majors-level pitching speed -- back to front toss timing before live BP.", "suggestedMinutes": 20, "benchmarkIds": ["hit-front-toss"], "sourceType": "lybs-original", "citation": "Adapted from ADM Discover/Progress stage guidance -- no official Majors curriculum exists anywhere; review before treating as settled." },
+    { "id": "drill-majors-relay-throw-reps", "division": "Majors", "tier": "standard", "category": "Throwing", "title": "Relay Throw Reps", "description": "Relay throw mechanics -- hit the cutoff man.", "suggestedMinutes": 20, "benchmarkIds": ["throw-relay"], "sourceType": "lybs-original", "citation": "Adapted from ADM Progress stage team-play guidance -- no official Majors curriculum exists anywhere; review before treating as settled." },
+    { "id": "drill-majors-bunt-defense-walkthrough", "division": "Majors", "tier": "standard", "category": "Team Situational", "title": "Bunt Defense Walkthrough", "description": "Execute bunt-defense assignments as a team.", "suggestedMinutes": 20, "benchmarkIds": ["situational-bunt-defense"], "sourceType": "lybs-original", "citation": "Adapted from ADM Progress stage team-play guidance -- no official Majors curriculum exists anywhere; review before treating as settled." },
+    { "id": "drill-majors-3station-relay-dp-rundown", "division": "Majors", "tier": "standard", "category": "Multi-Station", "title": "Station Rotation: Relays, Double Plays, Rundowns", "description": "Split the group into three stations and rotate.", "suggestedMinutes": 35, "benchmarkIds": ["throw-relay", "field-double-play", "situational-rundown"], "sourceType": "lybs-original", "citation": "Adapted from ADM Progress stage team-play guidance -- no official Majors curriculum exists anywhere; review before treating as settled.", "diagramRef": { "title": "Relay & rundown stations", "markers": [
+      { "id": "mk1", "x": 30, "y": 35, "label": "Relay throws" },
+      { "id": "mk2", "x": 55, "y": 55, "label": "Double-play feeds" },
+      { "id": "mk3", "x": 65, "y": 65, "label": "Rundown reps" }
+    ]}},
+    { "id": "drill-majors-steal-read-reps", "division": "Majors", "tier": "advanced", "category": "Base Running", "title": "Stolen-Base Read Reps", "description": "Read a pitcher's move and time a stolen-base jump -- for experienced Majors base runners.", "suggestedMinutes": 15, "benchmarkIds": ["run-steal-read"], "sourceType": "lybs-original", "citation": "Adapted from ADM Progress stage guidance -- no official Majors curriculum exists anywhere; review before treating as settled.", "drillRef": { "tool": "baserunning", "note": "Track with Base Running timer" } },
+    { "id": "drill-majors-grounder-throw-reps", "division": "Majors", "tier": "foundational", "category": "Ground Ball/Infield", "title": "Live-Speed Grounder & Throw Reps", "description": "For players new to Majors-level grounder speed -- live-speed grounders with a throw to first.", "suggestedMinutes": 20, "benchmarkIds": ["field-grounder-live"], "sourceType": "lybs-original", "citation": "Adapted from ADM Discover/Progress stage guidance -- no official Majors curriculum exists anywhere; review before treating as settled." },
+    { "id": "drill-majors-game", "division": "Majors", "tier": "standard", "category": "Game/Scrimmage", "title": "Scrimmage", "description": "Live scrimmage to close out practice.", "suggestedMinutes": 25, "benchmarkIds": [], "sourceType": "lybs-original", "citation": "Adapted from ADM Discover/Progress stage guidance -- no official Majors curriculum exists anywhere; review before treating as settled." }
   ]
 }

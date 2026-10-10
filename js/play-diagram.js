@@ -38,7 +38,7 @@
     // Called by the Practice Catalog tab's "Add diagram to my Play
     // Diagrams" pull-in button -- same ensure/save round-trip as every
     // other mutation here, for the same cache-coherence reason as
-    // PracticePlan.addFromCatalog. Marker ids are regenerated so pulling
+    // PracticePlan.addDrillToPlan. Marker ids are regenerated so pulling
     // the same catalog diagram in twice doesn't collide.
     async addFromCatalog(teamId, diagramLike) {
       const diagrams = await ensureDiagrams(teamId);
