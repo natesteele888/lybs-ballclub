@@ -258,6 +258,39 @@ a { color: var(--lybs-blue-bright); }
 }
 .leagueSectionTabs::-webkit-scrollbar { display: none; }
 
+/* Important Dates (League tab) -- one big card per season instead of a
+   flat bulleted block, each event inside broken into its own labeled row
+   instead of a plain bullet line. The current season's card/rows pick up
+   a green accent (top bar + row left-border) so it reads as "the one
+   happening now" before anyone reads the Current/Draft badge text. */
+.dateSeasonCard {
+  background: linear-gradient(160deg, var(--card), #0A0E2C);
+  border: 1px solid var(--card-border); border-radius: 18px; padding: 20px;
+  margin-bottom: 16px; box-shadow: 0 16px 40px rgba(2,3,12,0.5);
+  position: relative; overflow: hidden;
+}
+.dateSeasonCard::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--card-border);
+}
+.dateSeasonCardCurrent::before { background: linear-gradient(90deg, #35c574, #5fd989); }
+.dateSeasonHeader { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.dateSeasonTitle {
+  font-family: var(--font-display); font-weight: 400; font-size: 19px;
+  letter-spacing: 0.01em; text-transform: uppercase; color: var(--text);
+}
+.dateEventGrid { display: flex; flex-direction: column; gap: 8px; }
+.dateEventRow {
+  padding: 11px 14px; border-radius: 10px;
+  background: rgba(3,5,18,0.35); border-left: 3px solid var(--lybs-blue-bright);
+}
+.dateSeasonCardCurrent .dateEventRow { border-left-color: #5fd989; }
+.dateEventLabel {
+  font-family: var(--font-label); font-size: 10.5px; font-weight: 600; color: var(--lybs-silver);
+  text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px;
+}
+.dateEventValue { font-size: 14px; color: var(--text); line-height: 1.5; }
+
 /* Age eligibility chart (League tab -> League Ages) -- an SVG timeline
    generated from data/league-info.json's leagueAges ranges, wide enough
    that it needs horizontal scroll on a phone (native touch scroll, same
