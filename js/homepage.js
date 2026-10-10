@@ -5,53 +5,7 @@
    knowing which of Roster's eight sub-tabs or Coaching's five tools
    to go dig through.
 
-   0. Announcements -- a coach-only note (js/announcements.js),
-                       shown first since it's the one thing on this
-                       page meant to be time-sensitive ("practice
-                       moved to 6pm"). Hidden entirely for a non-
-                       coach when there's nothing posted, rather than
-                       showing an empty section with nothing to read.
-   0.5 Needs a Volunteer -- unclaimed Sign-Up Sheet items
-                       (teams/{teamId}/signups), the one thing on this
-                       whole page that's a direct ask of whoever's
-                       reading it rather than just information -- so
-                       it sits with Announcements, above the purely
-                       informational sections, and only shows up at
-                       all when something's actually still open.
-   0.7 League Events -- org-wide (js/league-events.js), not scoped to
-                       this team -- an annual meeting, a league-wide
-                       date. Read-only here regardless of role; posting
-                       one is board-only, from the new "Board" nav
-                       category. Same "only show up when there's
-                       something to show" rule as the two above.
-   1. Today        -- our own games/practices scheduled for today
-                       (teams/{teamId}/schedule + practices), plus an
-                       "nobody has the gear bag" nag (teams/{teamId}/
-                       equipment) right under it -- but only computed
-                       and only shown on a day it'd actually matter,
-                       same gate as Who Can Pitch Today below rather
-                       than a standing warning that's noise on an off
-                       day.
-   1.5 Who Can Pitch Today -- only on a day we have a game, the exact
-                       same js/pitch-smart.js eligibility list already
-                       shown on a game's own detail page, surfaced here
-                       so a coach doesn't have to go find that game
-                       first just to check who's available -- no new
-                       computation, just a second mount point for a
-                       component that already existed.
-   2. Around Town   -- every Lunenburg team's games today, across
-                       every division (name-matched against
-                       shared/macLeagueStandings), not just ours.
-   3. League Tonight -- the existing "Tonight in the League" widget
-                       (js/tonight.js), mounted here as-is: one section
-                       per division, always all shown (see that file's
-                       header -- there are only a few MAC League
-                       divisions, not enough to justify a filter).
-   4. Upcoming      -- our next few games/practices after today, this
-                       team only -- never another team's or another
-                       division's, unlike "Around Town"/"League
-                       Tonight" above.
-   5. Quick team card -- record, standings rank, games left to play
+   0. Quick team card -- record, standings rank, games left to play
                        (from the league standings mirror when this team
                        resolves there, our own tracked record/schedule
                        otherwise), this season's Game Ball leader when
@@ -72,11 +26,66 @@
                        where that actually belongs, same substitute used
                        everywhere else in this app that touches a
                        coach's contact info.
-
-   "Around Town" is a horizontally scrollable strip (drag-and-swipe,
-   same as the nav bars), not an auto-animating marquee -- a real
-   marquee looks broken with only 1-2 items and takes the choice of
-   pace away from whoever's reading it.
+   1. League Tonight (ticker) -- a horizontally scrollable strip
+                       (drag-and-swipe, same as the nav bars, not an
+                       auto-animating marquee -- a real marquee looks
+                       broken with only 1-2 items and takes the choice
+                       of pace away from whoever's reading it) of EVERY
+                       MAC League game today, any division, any town --
+                       not just ours. Placed right under the team card,
+                       first thing on the page, same spot a sports app's
+                       live-scores strip usually sits. Used to be two
+                       separate things -- a Lunenburg-only "Around Town"
+                       ticker here and a full division-grouped list much
+                       further down -- folded into one ticker plus a
+                       "Full Scoreboard" section (item 7 below) for
+                       whoever wants the full list, instead of showing
+                       overlapping score data twice on one page.
+   2. Announcements -- a coach-only note (js/announcements.js). Hidden
+                       entirely for a non-coach when there's nothing
+                       posted, rather than showing an empty section
+                       with nothing to read.
+   2.5 Needs a Volunteer -- unclaimed Sign-Up Sheet items
+                       (teams/{teamId}/signups), the one thing on this
+                       whole page that's a direct ask of whoever's
+                       reading it rather than just information -- so
+                       it sits with Announcements, above the purely
+                       informational sections, and only shows up at
+                       all when something's actually still open.
+   2.7 League Events -- org-wide (js/league-events.js), not scoped to
+                       this team -- an annual meeting, a league-wide
+                       date. Read-only here regardless of role; posting
+                       one is board-only, from the new "Board" nav
+                       category. Same "only show up when there's
+                       something to show" rule as the two above.
+   3. Today        -- our own games/practices scheduled for today
+                       (teams/{teamId}/schedule + practices), plus an
+                       "nobody has the gear bag" nag (teams/{teamId}/
+                       equipment) right under it -- but only computed
+                       and only shown on a day it'd actually matter,
+                       same gate as Who Can Pitch Today below rather
+                       than a standing warning that's noise on an off
+                       day.
+   3.5 Who Can Pitch Today -- only on a day we have a game, the exact
+                       same js/pitch-smart.js eligibility list already
+                       shown on a game's own detail page, surfaced here
+                       so a coach doesn't have to go find that game
+                       first just to check who's available -- no new
+                       computation, just a second mount point for a
+                       component that already existed.
+   7. Full Scoreboard -- the existing "Tonight in the League" widget
+                       (js/tonight.js), mounted here as-is: one section
+                       per division, full detail (location, "Watch live"
+                       for our own game), always all shown (see that
+                       file's header -- there are only a few MAC League
+                       divisions, not enough to justify a filter). The
+                       ticker above is the quick glance; this is "see
+                       everything," same pairing a sports app's own
+                       ticker-plus-"Full Scoreboard"-link usually offers.
+   8. Upcoming      -- our next few games/practices after today, this
+                       team only -- never another team's or another
+                       division's, unlike the ticker/Full Scoreboard
+                       above.
    ============================================================ */
 (function () {
   function fmtDate(iso) {
@@ -166,9 +175,12 @@
       const todayPractices = practices.filter(p => p.date === today).map(p => ({ kind: 'practice', item: p }));
       const todayItems = [...todayGames, ...todayPractices];
 
-      // ---- 2. Around Town -- every Lunenburg team's games today, any division ----
-      const allToday = window.TonightGames.allTodayGames(null).filter(g => typeof g !== 'string');
-      const aroundTown = allToday.filter(g => (g.teams || []).some(t => /lunenburg/i.test(t.name || '')));
+      // ---- League Tonight (ticker) -- every MAC League game today, any
+      // division, any town -- not just Lunenburg's (that narrower cut
+      // used to be its own "Around Town" section further down the page;
+      // folded in here since a coach glancing at a ticker wants the
+      // whole night's slate, not a second, smaller strip to also check). ----
+      const tonightTicker = window.TonightGames.allTodayGames(null).filter(g => typeof g !== 'string');
 
       // ---- 4. Upcoming -- our next few games/practices after today ----
       const upcoming = [
@@ -264,6 +276,11 @@
           ${leagueMatch ? `<a class="btn btnSmall" style="width:100%;margin-top:4px;" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
         </div>
 
+        ${tonightTicker.length ? `
+          <div class="sectionLabel" style="margin-top:18px;">League Tonight</div>
+          <div class="helpText">Every MAC League game today, any division.</div>
+          <div class="homeTicker" id="homeTickerTonight">${tonightTicker.map(window.TonightGames.mergedCardHtml).join('')}</div>` : ''}
+
         ${(window.Announcements.getItems(teamId).length || opts.canEdit) ? `
           <div class="sectionLabel" style="margin-top:18px;">Announcements</div>
           <div id="homeAnnSlot"></div>` : ''}
@@ -289,12 +306,7 @@
           <div class="sectionLabel" style="margin-top:18px;">Who Can Pitch Today</div>
           <div id="homePitchSlot"></div>` : ''}
 
-        ${aroundTown.length ? `
-          <div class="sectionLabel" style="margin-top:18px;">Around Town</div>
-          <div class="helpText">Every Lunenburg team playing today, any division.</div>
-          <div class="homeTicker" id="homeTickerTown">${aroundTown.map(window.TonightGames.mergedCardHtml).join('')}</div>` : ''}
-
-        <div class="sectionLabel" style="margin-top:18px;">League Tonight</div>
+        <div class="sectionLabel" style="margin-top:18px;">Full Scoreboard</div>
         <div id="homeLeagueSlot"></div>
 
         <div class="sectionLabel" style="margin-top:18px;">Upcoming</div>
@@ -308,8 +320,8 @@
               </div>`).join('')}</div>`
           : '<div class="emptyState">Nothing else scheduled yet.</div>'}`;
 
-      const tickerTown = containerEl.querySelector('#homeTickerTown');
-      if (tickerTown) enableDragScroll(tickerTown);
+      const tickerTonight = containerEl.querySelector('#homeTickerTonight');
+      if (tickerTonight) enableDragScroll(tickerTonight);
 
       const annSlot = containerEl.querySelector('#homeAnnSlot');
       if (annSlot) window.Announcements.render(annSlot, teamId, { canEdit: opts.canEdit, authorName: opts.authorName });
