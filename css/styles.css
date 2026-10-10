@@ -501,6 +501,10 @@ a { color: var(--lybs-blue-bright); }
   width: 38px; height: 38px; border-radius: 11px; flex: 0 0 auto;
   display: flex; align-items: center; justify-content: center; font-size: 17px;
 }
+/* The plain gray recordLine text this replaced was easy to miss as "which
+   division am I even looking at" -- a colored pill matching the category's
+   own icon/color (same ones the menu tiles use) reads at a glance instead. */
+.rulesCurrentDivision { font-size: 13px; padding: 6px 12px; white-space: nowrap; }
 /* A section card's header row reuses .listRow as-is; expanding it drops
    .rulesSectionRules directly below, indented enough to read as "inside"
    the card it expanded from rather than a new sibling list. */
