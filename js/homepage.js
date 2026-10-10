@@ -18,6 +18,12 @@
                        it sits with Announcements, above the purely
                        informational sections, and only shows up at
                        all when something's actually still open.
+   0.7 League Events -- org-wide (js/league-events.js), not scoped to
+                       this team -- an annual meeting, a league-wide
+                       date. Read-only here regardless of role; posting
+                       one is board-only, from the new "Board" nav
+                       category. Same "only show up when there's
+                       something to show" rule as the two above.
    1. Today        -- our own games/practices scheduled for today
                        (teams/{teamId}/schedule + practices), plus an
                        "nobody has the gear bag" nag (teams/{teamId}/
@@ -148,6 +154,7 @@
         window.ClubLogos.ensureLoaded(),
         window.Announcements.ensureLoaded(teamId),
         window.PitchSmart.ensureLoaded(),
+        window.LeagueEvents.ensureLoaded(),
       ]);
 
       const today = todayStr();
@@ -261,6 +268,10 @@
           <div class="sectionLabel" style="margin-top:18px;">Announcements</div>
           <div id="homeAnnSlot"></div>` : ''}
 
+        ${window.LeagueEvents.getUpcoming().length ? `
+          <div class="sectionLabel" style="margin-top:18px;">League Events</div>
+          <div id="homeLeagueEventsSlot"></div>` : ''}
+
         ${openSignupItems.length ? `
           <div class="sectionLabel" style="margin-top:18px;">Needs a Volunteer</div>
           <div class="helpText">${openSignupItems.length} item${openSignupItems.length === 1 ? '' : 's'} still open: ${openSignupItems.slice(0, 4).map(i => escapeHtml(i.name)).join(', ')}${openSignupItems.length > 4 ? ', &hellip;' : ''}</div>
@@ -302,6 +313,9 @@
 
       const annSlot = containerEl.querySelector('#homeAnnSlot');
       if (annSlot) window.Announcements.render(annSlot, teamId, { canEdit: opts.canEdit, authorName: opts.authorName });
+
+      const leagueEventsSlot = containerEl.querySelector('#homeLeagueEventsSlot');
+      if (leagueEventsSlot) window.LeagueEvents.render(leagueEventsSlot, { canEdit: false });
 
       const viewSignupsBtn = containerEl.querySelector('#homeViewSignups');
       if (viewSignupsBtn) viewSignupsBtn.addEventListener('click', () => opts.onViewSignups && opts.onViewSignups());

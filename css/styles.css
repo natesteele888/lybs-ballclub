@@ -125,6 +125,23 @@ a { color: var(--lybs-blue-bright); }
   font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.08em;
 }
 .loginDivider::before, .loginDivider::after { content: ''; flex: 1; height: 1px; background: var(--card-border); }
+.loginPublicLink {
+  display: block; text-align: center; margin-top: 16px;
+  color: var(--text2); font-size: 12.5px; font-family: var(--font-body);
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.loginPublicLink:hover { color: var(--text); }
+
+/* ---- Public view (no sign-in) -- reuses .topBar/.leagueSectionTabs/
+   .listRow etc. from elsewhere in this file; only what's genuinely new
+   lives here. ---- */
+#publicView { min-height: 100vh; }
+.publicViewBody { padding: 14px; max-width: 640px; margin: 0 auto; }
+#publicTeamSelect {
+  width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--card-border);
+  background: rgba(3,5,18,0.7); color: var(--text); font-size: 15px; margin-bottom: 12px;
+  font-family: var(--font-body);
+}
 
 /* ---- Buttons ---- */
 .btn {

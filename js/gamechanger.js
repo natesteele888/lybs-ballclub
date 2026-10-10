@@ -73,9 +73,25 @@
           <div class="errorText" id="gcError"></div>
         </div>`;
 
+      // No automatic sync exists or can exist -- GameChanger has no public
+      // API, no webhooks, and "posts" specifically aren't reachable by any
+      // means at all, official or not (confirmed both in this file's own
+      // header comment and fresh research). This is the realistic
+      // alternative: a manual, one-tap mirror into this team's own
+      // Announcements feed (js/announcements.js), tagged so parents can see
+      // where it came from.
+      const mirrorForm = !opts.canEdit ? '' : `
+        <div class="gcAddForm">
+          <div class="sectionLabel">Mirror a GameChanger update</div>
+          <div class="helpText">After you post something in GameChanger, tap this to log the same update to your team's own feed -- GameChanger has no feed this app can read automatically.</div>
+          <textarea id="gcMirrorInput" rows="3" placeholder="What did you just post in GameChanger?"></textarea>
+          <button class="btn btnSmall" id="gcMirrorBtn">Post to team feed</button>
+        </div>`;
+
       containerEl.innerHTML = `
         <div class="helpText">Live schedule and scores straight from GameChanger. This is display-only — our own Schedule tab stays the source of truth for calendar sync, since GameChanger has no feed to sync from.</div>
         ${widgetHtml}
+        ${mirrorForm}
         ${addForm}`;
 
       if (opts.canEdit) {
@@ -93,6 +109,14 @@
           if (!confirm('Remove the GameChanger widget?')) return;
           await window.GameChanger.remove(teamId);
           window.GameChanger.render(teamId, containerEl, opts);
+        });
+        const mirrorBtn = containerEl.querySelector('#gcMirrorBtn');
+        if (mirrorBtn) mirrorBtn.addEventListener('click', async () => {
+          const input = containerEl.querySelector('#gcMirrorInput');
+          const text = input.value.trim();
+          if (!text) return;
+          await withBusyButton(mirrorBtn, 'Posting...', () => window.Announcements.addItem(teamId, text, opts.addedBy, 'gamechanger'));
+          input.value = '';
         });
       }
     },
