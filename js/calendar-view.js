@@ -158,7 +158,7 @@
           <div class="calDayPanel" ${selectedDate ? `data-date="${selectedDate}"` : ''}>
             ${selectedDate ? `
               <div class="sectionLabel">${escapeHtml(new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }))}</div>
-              ${dayEntries.length ? `<div class="listBody">${dayEntries.map(rowHtml).join('')}</div>` : '<div class="emptyState">Nothing scheduled.</div>'}
+              ${dayEntries.length ? `<div class="listBody">${dayEntries.map(rowHtml).join('')}</div>` : '<div class="emptyState">Nothing scheduled for us.</div>'}
               ${addButtonsHtml(opts)}
               ${leagueSectionHtml(selectedDate)}
             ` : '<div class="helpText">Tap a day to see what\'s on it.</div>'}
@@ -185,7 +185,7 @@
           days.push(`
             <div class="calWeekDay ${iso === today ? 'calWeekDayToday' : ''}" data-date="${iso}">
               <div class="calWeekDayHead">${escapeHtml(d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }))}</div>
-              ${entries.length ? `<div class="listBody">${entries.map(rowHtml).join('')}</div>` : '<div class="emptyState">Nothing scheduled.</div>'}
+              ${entries.length ? `<div class="listBody">${entries.map(rowHtml).join('')}</div>` : '<div class="emptyState">Nothing scheduled for us.</div>'}
               ${addButtonsHtml(opts)}
               ${leagueSectionHtml(iso)}
             </div>`);
