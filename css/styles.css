@@ -720,9 +720,30 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .tonightWatchBtn { width: 100%; margin-top: 4px; }
 
 /* ---- Homepage ---- */
+/* A blue-tinted wash instead of the same flat card gradient every other
+   section on the page uses -- first thing on the page, so it reads as a
+   banner anchoring everything below it rather than just another box in
+   the stack. .detailCard's own ::before top-edge highlight still applies
+   on top of this (same selector list, untouched). */
+.homeTeamCard { background: linear-gradient(165deg, rgba(76,106,235,0.24), var(--card) 48%, #0A0E2C); border-color: rgba(76,106,235,0.32); }
 .homeTeamHeaderRow { display: flex; align-items: center; gap: 14px; }
-.homeTeamLogo { width: 56px; height: 56px; object-fit: contain; flex: 0 0 auto; }
+.homeTeamLogo { width: 56px; height: 56px; object-fit: contain; flex: 0 0 auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
 .homeTeamInfo { flex: 1 1 auto; min-width: 140px; }
+.homeTeamName {
+  font-family: var(--font-display); font-weight: 400; font-size: 21px; letter-spacing: 0.01em;
+  text-transform: uppercase; line-height: 1.2; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+/* One small colored icon chip per Home section (same icon-badge language
+   as Rules' own .rulesCatIcon) so the page reads as a set of distinct,
+   scannable sections instead of a stack of same-weight gray caps labels. */
+.sectionHeaderRow { display: flex; align-items: center; gap: 8px; margin: 18px 0 8px; }
+.sectionHeaderRow .sectionLabel { margin: 0; }
+.sectionIconChip {
+  width: 24px; height: 24px; border-radius: 7px; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.homeEmptyState { color: var(--text2); font-size: 13px; padding: 24px 10px; text-align: center; line-height: 1.6; }
+.homeEmptyStateIcon { font-size: 22px; display: block; margin-bottom: 6px; opacity: 0.5; }
 .homeTicker {
   display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none;
   padding-bottom: 4px; margin-top: 10px; cursor: grab;
@@ -1019,6 +1040,10 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 @media (max-width: 420px) {
   .calCellNum { font-size: 11px; }
   .calHeaderLabel { font-size: 12px; }
+  /* "Lunenburg Select (Majors A)" at 21px wraps with just "A)" orphaned
+     on its own line on a narrow phone -- one size down fits the common
+     "Town Teamname (Division X)" shape on one or two balanced lines. */
+  .homeTeamName { font-size: 18px; }
 }
 
 /* Global error toast -- see index.html's unhandledrejection listener */

@@ -106,6 +106,38 @@
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
   }
 
+  // One colored icon chip per section -- same icon-badge language as the
+  // Rules tab's own CATEGORY_STYLE/.rulesCatIcon, scoped to this file (not
+  // reusing rules.js's map directly, which is keyed by rulebook category
+  // names, not these section names). Colors are raw hex, not CSS vars --
+  // sectionHeaderHtml() appends an alpha suffix for the chip's tinted
+  // background, which only works on a literal hex string.
+  const SECTION_STYLE = {
+    tonight: { icon: '🏟️', color: '#4C6AEB' },
+    announcements: { icon: '📣', color: '#F0C84B' },
+    leagueEvents: { icon: '🗓️', color: '#b98af0' },
+    volunteer: { icon: '🙋', color: '#5fd989' },
+    today: { icon: '📅', color: '#e35858' },
+    pitch: { icon: '🌀', color: '#6ea8c9' },
+    scoreboard: { icon: '📊', color: '#4C6AEB' },
+    upcoming: { icon: '⏭️', color: '#B4BBBF' },
+  };
+  function sectionHeaderHtml(key, label) {
+    const s = SECTION_STYLE[key];
+    return `
+      <div class="sectionHeaderRow">
+        <span class="sectionIconChip" style="background:${s.color}22;color:${s.color};">${s.icon}</span>
+        <div class="sectionLabel">${escapeHtml(label)}</div>
+      </div>`;
+  }
+  // Same icon as the section it sits inside, dimmed, above the usual
+  // centered gray text -- costs nothing extra (the icon's already looked
+  // up for the header above it) and turns an empty moment on the page
+  // into something that still looks designed rather than just blank.
+  function homeEmptyStateHtml(key, text) {
+    return `<div class="homeEmptyState"><span class="homeEmptyStateIcon">${SECTION_STYLE[key].icon}</span>${escapeHtml(text)}</div>`;
+  }
+
   // Same click-and-drag scroll as the nav bars (index.html keeps its own
   // copy too -- small enough, and these are deliberately self-contained
   // modules rather than reaching into index.html's closure for it).
@@ -288,7 +320,7 @@
           <div class="homeTeamHeaderRow">
             <img class="homeTeamLogo" src="assets/images/lybs-icon.png" alt="">
             <div class="homeTeamInfo">
-              <div class="listRowTitle" style="font-size:17px;">${escapeHtml(cfg.name || cfg.shortName)}</div>
+              <div class="homeTeamName">${escapeHtml(cfg.name || cfg.shortName)}</div>
             </div>
           </div>
           <div class="pcStatRow" style="margin:12px 0 0;">${statTiles.join('')}</div>
@@ -296,39 +328,39 @@
         </div>
 
         ${tonightTicker.length ? `
-          <div class="sectionLabel" style="margin-top:18px;">League Tonight</div>
+          ${sectionHeaderHtml('tonight', 'League Tonight')}
           <div class="helpText">Every MAC League game today, any division.</div>
           <div class="homeTicker" id="homeTickerTonight">${tonightTicker.map(window.TonightGames.mergedCardHtml).join('')}</div>` : ''}
 
         ${(window.Announcements.getItems(teamId).length || opts.canEdit) ? `
-          <div class="sectionLabel" style="margin-top:18px;">Announcements</div>
+          ${sectionHeaderHtml('announcements', 'Announcements')}
           <div id="homeAnnSlot"></div>` : ''}
 
         ${window.LeagueEvents.getUpcoming().length ? `
-          <div class="sectionLabel" style="margin-top:18px;">League Events</div>
+          ${sectionHeaderHtml('leagueEvents', 'League Events')}
           <div id="homeLeagueEventsSlot"></div>` : ''}
 
         ${openSignupItems.length ? `
-          <div class="sectionLabel" style="margin-top:18px;">Needs a Volunteer</div>
+          ${sectionHeaderHtml('volunteer', 'Needs a Volunteer')}
           <div class="helpText">${openSignupItems.length} item${openSignupItems.length === 1 ? '' : 's'} still open: ${openSignupItems.slice(0, 4).map(i => escapeHtml(i.name)).join(', ')}${openSignupItems.length > 4 ? ', &hellip;' : ''}</div>
           <button class="btn btnSmall" id="homeViewSignups" style="width:100%;margin-top:8px;">Open Sign-Up Sheets</button>` : ''}
 
-        <div class="sectionLabel" style="margin-top:18px;">Today</div>
+        ${sectionHeaderHtml('today', 'Today')}
         ${todayItems.length
           ? `<div class="listBody">${todayItems.map(x => todayItemHtml(x.kind, x.item)).join('')}</div>`
-          : '<div class="emptyState">Nothing on the calendar for us today.</div>'}
+          : homeEmptyStateHtml('today', 'Nothing on the calendar for us today.')}
         ${uncheckedEquipment.length
           ? `<div class="helpText" style="color:#F0C84B;margin-top:6px;">&#9888; Nobody has: ${uncheckedEquipment.map(e => escapeHtml(e.name)).join(', ')}</div>`
           : ''}
 
         ${todayGames.length ? `
-          <div class="sectionLabel" style="margin-top:18px;">Who Can Pitch Today</div>
+          ${sectionHeaderHtml('pitch', 'Who Can Pitch Today')}
           <div id="homePitchSlot"></div>` : ''}
 
-        <div class="sectionLabel" style="margin-top:18px;">Full Scoreboard</div>
+        ${sectionHeaderHtml('scoreboard', 'Full Scoreboard')}
         <div id="homeLeagueSlot"></div>
 
-        <div class="sectionLabel" style="margin-top:18px;">Upcoming</div>
+        ${sectionHeaderHtml('upcoming', 'Upcoming')}
         ${upcoming.length
           ? `<div class="listBody">${upcoming.map(x => `
               <div class="listRow" style="cursor:default;">
@@ -337,7 +369,7 @@
                   <div class="listRowSub">${escapeHtml(fmtDate(x.date))}</div>
                 </div>
               </div>`).join('')}</div>`
-          : '<div class="emptyState">Nothing else scheduled yet.</div>'}
+          : homeEmptyStateHtml('upcoming', 'Nothing else scheduled yet.')}
         ${leagueNextDate ? `
           <div class="helpText" style="margin-top:12px;">MAC League &middot; ${escapeHtml(fmtDate(leagueNextDate))} &middot; every division, any town</div>
           <div class="homeTicker" id="homeUpcomingLeagueTicker">${leagueNextGames.map(window.LeagueSchedule.gameCardHtml).join('')}</div>` : ''}`;
