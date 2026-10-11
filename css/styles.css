@@ -151,6 +151,7 @@ a { color: var(--lybs-blue-bright); }
   font-family: var(--font-label); letter-spacing: 0.04em; text-transform: uppercase;
   box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 8px 20px rgba(46,82,232,0.25);
   transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  display: inline-block; text-decoration: none; text-align: center;
 }
 .btn:hover { filter: brightness(1.08); box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 10px 26px rgba(46,82,232,0.4); }
 .btn:active { transform: translateY(1px); }
