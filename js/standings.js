@@ -133,8 +133,16 @@
       }).join('') || '<div class="emptyState">No teams mirrored for this division yet.</div>';
       containerEl.innerHTML = `
         <div class="sectionLabel" style="margin-bottom:6px;">${escapeHtml(division.name || '')} Seeding${seasonLabel ? ` &middot; ${escapeHtml(seasonLabel)}` : ''}</div>
-        <div class="helpText">Numbered by today's standings order, best record first. MAC League hasn't published a playoff qualification count or bracket format for this division, so this is where each team stands right now -- not an official bracket.</div>
+        <div class="helpText">Today's standings order, best record first &mdash; not an official bracket.
+          <button class="btn btnGhost btnTiny" id="seedingInfoBtn" style="margin-left:4px;">&#9432;</button>
+        </div>
         <div class="listBody" style="margin-top:10px;">${rows}</div>`;
+      const infoBtn = containerEl.querySelector('#seedingInfoBtn');
+      if (infoBtn) {
+        infoBtn.addEventListener('click', () => {
+          window.openInfoModal('About Seeding', '<div class="helpText">MAC League hasn\'t published a playoff qualification count or bracket format for this division, so this is where each team stands right now by today\'s standings order -- not an official bracket.</div>');
+        });
+      }
     },
   };
 })();

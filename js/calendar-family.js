@@ -61,11 +61,19 @@
             ${g.teamName} <span class="helpText">(${g.events.length} events)</span>
           </label>`).join('');
         containerEl.innerHTML = `
-          <div class="helpText">Combines every team this device has logged into into one calendar file. Not synced from GameChanger in real time -- GameChanger has no feed for that; this reflects whatever's entered on each team's Schedule/Practices tabs.</div>
+          <div class="helpText">Combines every team this device has logged into into one calendar file.
+            <button class="btn btnGhost btnTiny" id="familyCalInfoBtn" style="margin-left:4px;">&#9432;</button>
+          </div>
           <div class="teamCheckList">${rows}</div>
           <div class="detailActions">
             <button class="btn" id="downloadCombinedBtn">Download combined calendar (.ics)</button>
           </div>`;
+        const infoBtn = containerEl.querySelector('#familyCalInfoBtn');
+        if (infoBtn) {
+          infoBtn.addEventListener('click', () => {
+            window.openInfoModal('About the Combined Calendar', '<div class="helpText">Not synced from GameChanger in real time -- GameChanger has no feed for that. This reflects whatever\'s entered on each team\'s Schedule/Practices tabs.</div>');
+          });
+        }
         containerEl.querySelectorAll('.teamCheck').forEach(cb => {
           cb.addEventListener('change', () => {
             if (cb.checked) included.add(cb.dataset.team); else included.delete(cb.dataset.team);
