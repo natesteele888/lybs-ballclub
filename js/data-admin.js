@@ -18,6 +18,13 @@
    file's header for the one-time setup.
    ============================================================ */
 (function () {
+  // Same "don't tell the whole story inline, put it behind an (i) button"
+  // treatment js/league-schedule.js already uses for the Fall Schedule
+  // tab's own note -- the full explanation (why this can't be a live
+  // fetch) is detail worth having, just not worth everyone reading it
+  // every time they open this screen.
+  const FULL_NOTE = "Standings and today's scores come from a scheduled job that mirrors macleague.org into this app, not a live fetch every time someone opens it. macleague.org doesn't allow a browser to pull from it directly, so a real server-side job (.github/workflows/standings.yml) has to do it instead.";
+
   // Same relative-time formatting js/standings.js already shows next to
   // each division's table -- duplicated rather than exported, same small-
   // self-contained-module convention this app uses elsewhere (e.g. each
@@ -49,8 +56,16 @@
         </div>`).join('');
       containerEl.innerHTML = `
         <div class="sectionLabel">League Data Sync</div>
-        <div class="helpText">Standings and today's scores come from a scheduled job that mirrors macleague.org into this app, not a live fetch every time someone opens it &mdash; macleague.org doesn't allow a browser to pull from it directly, so a real server-side job has to do it instead. That job runs automatically every 30 minutes, 8am&ndash;9pm ET, every day of the season.</div>
-        ${rows ? `<div class="listBody" style="margin-top:12px;">${rows}</div>` : ''}`;
+        <div class="helpText">Synced automatically every 30 minutes, 8am&ndash;9pm ET, every day of the season.</div>
+        ${rows ? `<div class="listBody" style="margin-top:12px;">${rows}</div>` : ''}
+        <button class="btn btnGhost btnTiny" id="dataAdminInfoBtn" style="margin-top:12px;">&#9432; About this data</button>`;
+
+      const infoBtn = containerEl.querySelector('#dataAdminInfoBtn');
+      if (infoBtn) {
+        infoBtn.addEventListener('click', () => {
+          window.openInfoModal('About League Data Sync', `<div class="helpText">${FULL_NOTE}</div>`);
+        });
+      }
     },
   };
 })();
