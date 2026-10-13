@@ -98,6 +98,11 @@
       last = l; first = (f || '').split(/\s+/)[0];
     } else {
       const parts = s.split(/\s+/).filter(Boolean);
+      // Drop a trailing generational suffix ("Jr.", "Sr.", "II", "III", "IV")
+      // so it isn't mistaken for the last name in "First Last Suffix" form.
+      if (parts.length > 2 && /^(jr\.?|sr\.?|ii|iii|iv)$/i.test(parts[parts.length - 1])) {
+        parts.pop();
+      }
       first = parts[0]; last = parts[parts.length - 1];
     }
     if (!first) return s;
