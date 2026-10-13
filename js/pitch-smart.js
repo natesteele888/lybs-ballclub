@@ -303,7 +303,16 @@
     renderRulesCard(containerEl, defaultDivision) {
       const divisions = Object.keys(rulesCache || {});
       if (!divisions.length) { containerEl.innerHTML = ''; return; }
-      let selected = divisions.includes(defaultDivision) ? defaultDivision : divisions[0];
+      // A team's macLeagueDivisionName is "Juniors & Seniors" (one combined
+      // roster bracket, matching how rules.js/team-registry.js name it) but
+      // Juniors and Seniors pitch at different daily maxes (95 vs 105), so
+      // this table is keyed by the two separately -- "Juniors & Seniors"
+      // itself is never a key here. Falling through to divisions[0] for
+      // that team would silently show whatever's first in the JSON
+      // (currently "Majors") instead of either of its own tables.
+      let selected = divisions.includes(defaultDivision) ? defaultDivision
+        : /juniors/i.test(defaultDivision || '') && divisions.includes('Juniors') ? 'Juniors'
+        : divisions[0];
       function draw() {
         containerEl.innerHTML = rulesCardHtml(selected, divisions);
         const sel = containerEl.querySelector('#pcRulesDivision');

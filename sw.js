@@ -17,7 +17,7 @@
 // zone at the field didn't just show stale data -- it broke outright: the
 // shell loaded but every tab's own module was missing, since only
 // index.html/styles.css/manifest.json were ever cached.
-const CACHE_NAME = 'lybs-ballclub-shell-20261013u';
+const CACHE_NAME = 'lybs-ballclub-shell-20261013v';
 const SHELL_FILES = [
   './index.html',
   './css/styles.css',
@@ -74,10 +74,18 @@ const SHELL_FILES = [
 ];
 
 self.addEventListener('install', (event) => {
+  // No .catch() swallowing a failed addAll -- cache.addAll is all-or-nothing,
+  // so if even one shell file fails to fetch (a flaky connection, exactly
+  // the scenario this file exists to survive), letting the rejection
+  // propagate keeps the browser on the previous, fully-working worker and
+  // retries this install later. skipWaiting() only runs once every shell
+  // file is actually cached, which also means activate's cleanup below
+  // never runs against a half-populated cache.
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_FILES)).catch(() => {})
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(SHELL_FILES))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -89,11 +97,33 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+function timeout(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  event.respondWith(
+  // Navigating to the bare scope root (a bookmark, a home-screen icon
+  // added without the manifest's exact start_url, a plain shared link)
+  // never matches a cache entry keyed by the resolved './index.html' URL
+  // SHELL_FILES caches it under -- route every top-level navigation to
+  // that one entry regardless of the exact URL requested.
+  const cacheKey = event.request.mode === 'navigate' ? './index.html' : event.request;
+  event.respondWith((async () => {
+    const networkPromise = fetch(event.request).catch(() => null);
+    // On a weak sideline connection fetch() can sit pending a long time
+    // before it ever rejects -- race it against a short timeout instead of
+    // only falling back once the network definitively fails, so a slow
+    // link gets the cached shell promptly instead of a long hang.
+    const early = await Promise.race([networkPromise, timeout(2500)]);
+    if (early) return early;
     // ignoreSearch: a request for js/util.js?v=82 still matches the entry
     // cached as js/util.js -- see SHELL_FILES' header comment above.
-    fetch(event.request).catch(() => caches.match(event.request, { ignoreSearch: true }))
-  );
+    const cached = await caches.match(cacheKey, { ignoreSearch: true });
+    if (cached) return cached;
+    // Nothing cached for this request -- wait out the slow network instead
+    // of failing outright.
+    const late = await networkPromise;
+    return late || Response.error();
+  })());
 });

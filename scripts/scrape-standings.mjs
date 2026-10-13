@@ -67,8 +67,13 @@ function parseStandingsTable(html) {
       const teamMatch = chunk.match(/<a href="\/team\/(\d+)">\s*([^<]+?)\s*<\/a>/);
       if (!teamMatch) continue;
       // Column order after the Team <td> is fixed: GP, W, L, T, PCT, RF, RA, DIFF
-      // -- each as its own <td class="text-center">...</td>.
+      // -- each as its own <td class="text-center">...</td>. A page-template
+      // change that added/removed a column would silently shift every field
+      // after it into the wrong label instead of erroring, so a count
+      // mismatch is treated the same as "couldn't parse this page" below
+      // rather than stored as if it were trustworthy.
       const cellMatches = [...chunk.matchAll(/<td class="text-center">\s*([^<]+?)\s*<\/td>/g)].map(m => m[1].trim());
+      if (cellMatches.length !== 8) throw new Error(`Standings row for team ${teamMatch[1]} has ${cellMatches.length} stat cells, expected 8 -- page structure may have changed`);
       const [gp, w, l, t, pct, rf, ra, diff] = cellMatches;
       const team = teamMatch[2].trim();
       rows.push({
@@ -79,7 +84,13 @@ function parseStandingsTable(html) {
       });
     }
   }
-  return { name: nameMatch ? nameMatch[1].trim().replace(/\s*-\s*Standings$/i, '') : null, rows };
+  // tableMatch null means the expected table markup wasn't found at all
+  // (template change, maintenance page, a block) -- distinct from a real
+  // table that's legitimately empty (rowChunks with no team rows, e.g. a
+  // division with no teams yet), which still returns tableFound: true with
+  // an empty rows[]. The caller uses this to avoid overwriting a good
+  // existing mirror with what looks like an empty season.
+  return { name: nameMatch ? nameMatch[1].trim().replace(/\s*-\s*Standings$/i, '') : null, rows, tableFound: !!tableMatch };
 }
 
 // Today's Games lives on the bare division page, one "scorebox" table per
@@ -90,9 +101,13 @@ function parseStandingsTable(html) {
 // starts/finishes), and a location row.
 function parseTodayGames(html) {
   const todayMatch = html.match(/<h3>Today's Games<\/h3>([\s\S]*?)(?:<div class="col-xs-12 col-md-6">|<h3>Standings<\/h3>)/);
-  if (!todayMatch) return [];
+  // todayMatch null means the "Today's Games" block itself wasn't found --
+  // distinct from finding it and it explicitly saying "no games scheduled",
+  // which is a confirmed-empty day (found: true, games: []). See
+  // parseStandingsTable's tableFound for the same distinction.
+  if (!todayMatch) return { found: false, games: [] };
   const block = todayMatch[1];
-  if (/no games scheduled/i.test(block)) return [];
+  if (/no games scheduled/i.test(block)) return { found: true, games: [] };
   const games = [];
   const boxRe = /<div class="scorebox">\s*<table class="">([\s\S]*?)<\/table>/g;
   let m;
@@ -110,7 +125,7 @@ function parseTodayGames(html) {
     const locMatch = chunk.match(/<tr class="location">\s*<td colspan="100%">([^<]*)<\/td>/);
     games.push({ gameId, time, teams, location: locMatch ? locMatch[1].trim() : null });
   }
-  return games;
+  return { found: true, games };
 }
 
 async function fetchDivision(divisionId) {
@@ -119,7 +134,8 @@ async function fetchDivision(divisionId) {
   if (!baseRes.ok) throw new Error(`Fetch failed for division ${divisionId}: HTTP ${baseRes.status}`);
   const baseHtml = await baseRes.text();
   const nameMatch = baseHtml.match(/<h1>\s*(?:<[^>]+>\s*)*([^<\n]+?)\s*(?:<|$)/);
-  const todayGames = parseTodayGames(baseHtml);
+  const { found: todayFound, games: todayGames } = parseTodayGames(baseHtml);
+  if (!todayFound) throw new Error(`Division ${divisionId}: couldn't find the "Today's Games" block -- page structure may have changed`);
 
   await new Promise(r => setTimeout(r, CRAWL_DELAY_MS)); // respect robots.txt Crawl-delay: 5 between the two fetches
 
@@ -127,7 +143,8 @@ async function fetchDivision(divisionId) {
   const standingsRes = await fetch(standingsUrl, { headers: { 'User-Agent': USER_AGENT } });
   if (!standingsRes.ok) throw new Error(`Fetch failed for division ${divisionId} standings: HTTP ${standingsRes.status}`);
   const standingsHtml = await standingsRes.text();
-  const { name: standingsName, rows } = parseStandingsTable(standingsHtml);
+  const { name: standingsName, rows, tableFound } = parseStandingsTable(standingsHtml);
+  if (!tableFound) throw new Error(`Division ${divisionId}: couldn't find the standings table -- page structure may have changed`);
 
   return {
     divisionId,
