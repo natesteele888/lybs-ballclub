@@ -105,14 +105,22 @@
     return initial && last !== first ? `${first} ${initial}` : first;
   }
 
+  // A roster of 12-15 kids can easily have two "John S"-shaped matches
+  // (same first name, same last initial) -- silently returning whichever
+  // one the array happens to list first would misattribute one of their
+  // real stats to the other's name/id. Treat more than one match as no
+  // match at all, same as a true no-match: the row falls back to the
+  // "First L" placeholder (toFirstLastInitial's own output) instead of a
+  // confident-looking but possibly wrong roster link.
   function matchRosterPlayer(rawName, roster) {
     const display = toFirstLastInitial(rawName);
     const [first, initial] = display.split(' ');
-    return (roster || []).find(p => {
+    const matches = (roster || []).filter(p => {
       const parts = (p.name || '').split(' ');
       return parts[0] && parts[0].toLowerCase() === (first || '').toLowerCase()
         && (parts[1] || '').toLowerCase() === (initial || '').toLowerCase();
-    }) || null;
+    });
+    return matches.length === 1 ? matches[0] : null;
   }
 
   function parseRows(text, roster) {
@@ -288,11 +296,15 @@
             ${order.map((r, i) => `
               <div class="listRow" style="cursor:default;">
                 <div class="lineupSlotNum" style="margin-right:10px;">${i + 1}</div>
-                <div class="listRowMain"><div class="listRowTitle">${escapeHtml(r.name)}</div></div>
+                <div class="listRowMain">
+                  <div class="listRowTitle">${escapeHtml(r.name)}</div>
+                  ${!r.playerId ? '<div class="listRowSub" style="color:#F0C84B;">No roster match -- won\'t be saved</div>' : ''}
+                </div>
                 <div class="listRowSub">${r.ops != null ? r.ops.toFixed(3) + ' OPS' : (r.avg != null ? r.avg.toFixed(3) + ' AVG' : '')}</div>
               </div>`).join('')}
           </div>
-          <button class="btn" id="siSaveLineup" style="width:100%;margin-top:10px;">Save as new lineup</button>`;
+          <button class="btn" id="siSaveLineup" style="width:100%;margin-top:10px;">Save as new lineup</button>
+          <div class="helpText" id="siSaveLineupErr" style="margin-top:6px;min-height:16px;"></div>`;
       }
 
       function refresh() {
@@ -314,7 +326,10 @@
             <div class="detailCard">
               <label>GameChanger CSV export<input type="file" id="siFile" accept=".csv"></label>
               <button class="btn btnSmall" id="siImport" disabled style="margin-top:10px;">Import</button>
-              ${data ? `<div class="helpText" style="margin-top:10px;">Last import: ${escapeHtml(data.source || 'file')} &middot; ${new Date(data.importedAt).toLocaleString()}</div>` : ''}
+              ${data && (data.battingImportedAt || data.pitchingImportedAt) ? `<div class="helpText" style="margin-top:10px;">
+                ${data.battingImportedAt ? `Batting: ${escapeHtml(data.battingSource || 'file')} &middot; ${new Date(data.battingImportedAt).toLocaleString()}<br>` : ''}
+                ${data.pitchingImportedAt ? `Pitching: ${escapeHtml(data.pitchingSource || 'file')} &middot; ${new Date(data.pitchingImportedAt).toLocaleString()}` : ''}
+              </div>` : (data && data.importedAt ? `<div class="helpText" style="margin-top:10px;">Last import: ${escapeHtml(data.source || 'file')} &middot; ${new Date(data.importedAt).toLocaleString()}</div>` : '')}
               <div id="siErr" style="color:#ff8a8a;font-size:12.5px;margin-top:8px;"></div>
             </div>` : ''}
           ${noStatsYet ? `<div class="emptyState">${opts.canEdit ? 'No stats imported yet.' : 'No stats imported yet -- check back once the coach uploads a GameChanger export.'}</div>` : ''}
@@ -335,9 +350,20 @@
                 const { kind, rows } = parseRows(String(reader.result), roster);
                 if (!rows.length) throw new Error('No player rows found in that file.');
                 data = data || {};
-                if (kind === 'pitching') data.pitchingRows = rows; else data.battingRows = rows;
-                data.source = file.name;
-                data.importedAt = new Date().toISOString();
+                // Tracked per kind, not one shared field -- a batting import
+                // and a pitching import merge into the same record (see
+                // this file's own header), so the "last import" label needs
+                // to remember each one's own file/date, not just whichever
+                // was uploaded most recently.
+                if (kind === 'pitching') {
+                  data.pitchingRows = rows;
+                  data.pitchingSource = file.name;
+                  data.pitchingImportedAt = new Date().toISOString();
+                } else {
+                  data.battingRows = rows;
+                  data.battingSource = file.name;
+                  data.battingImportedAt = new Date().toISOString();
+                }
                 await window.dbPut(window.teamPath(teamId, 'importedStats'), data);
                 refresh();
               } catch (e) {
@@ -348,9 +374,14 @@
           });
         }
         const saveLineupBtn = containerEl.querySelector('#siSaveLineup');
+        const saveLineupErrEl = containerEl.querySelector('#siSaveLineupErr');
         if (saveLineupBtn) {
           saveLineupBtn.addEventListener('click', async () => {
             const matched = order.filter(r => r.playerId);
+            if (!matched.length) {
+              if (saveLineupErrEl) saveLineupErrEl.textContent = "None of these rows matched a roster player -- nothing to save.";
+              return;
+            }
             await window.LineupBuilder.createFromOrder(teamId, matched);
             if (opts.switchTool) opts.switchTool('lineups');
           });
