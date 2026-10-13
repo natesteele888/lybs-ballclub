@@ -194,12 +194,22 @@
             const list = chart[selected];
             const i = Number(btn.dataset.down);
             [list[i + 1], list[i]] = [list[i], list[i + 1]];
+            if (i === 0) {
+              const movedFrom = enforceStarterExclusivity(chart, selected);
+              if (movedFrom) banner = { name: list[0].name, from: movedFrom, to: selected };
+            }
             await saveChart(teamId); refresh();
           });
         });
         containerEl.querySelectorAll('[data-remove]').forEach(btn => {
           btn.addEventListener('click', async () => {
-            chart[selected].splice(Number(btn.dataset.remove), 1);
+            const list = chart[selected];
+            const removedTopSpot = Number(btn.dataset.remove) === 0;
+            list.splice(Number(btn.dataset.remove), 1);
+            if (removedTopSpot && list.length) {
+              const movedFrom = enforceStarterExclusivity(chart, selected);
+              if (movedFrom) banner = { name: list[0].name, from: movedFrom, to: selected };
+            }
             await saveChart(teamId); refresh();
           });
         });
