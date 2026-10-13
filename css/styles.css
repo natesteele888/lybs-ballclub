@@ -598,7 +598,6 @@ a { color: var(--lybs-blue-bright); }
 .gameResultMeta { font-size: 10.5px; color: var(--text3); font-family: var(--font-label); letter-spacing: 0.03em; }
 .gameResultRow { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
 .gameResultTeam { display: flex; flex-direction: row; align-items: center; gap: 8px; flex: 1 1 0; min-width: 0; }
-.gameResultNameRight { text-align: right; }
 .gameResultLogo, .gameResultLogoFallback {
   width: 40px; height: 40px; border-radius: 10px; flex: 0 0 auto;
   box-shadow: 0 4px 10px rgba(0,0,0,0.35);
@@ -615,6 +614,14 @@ a { color: var(--lybs-blue-bright); }
   flex: 1 1 auto; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
 }
+/* .gameResultNameRight{text-align:right} used to sit alongside .gameResultName
+   above, but both are single-class selectors of equal specificity, so
+   .gameResultName's own text-align:left (declared second) always won --
+   the opponent's name next never actually mirrored to book-end the card
+   the way js/game-card.js's header comment says it's meant to. Scoping
+   through the wrapping .gameResultTeamRight gives this the higher
+   specificity it needs to actually apply. */
+.gameResultTeamRight .gameResultName { text-align: right; }
 .gameResultCenter { display: flex; align-items: center; gap: 7px; flex: 0 0 auto; padding: 0 4px; }
 .gameResultScore {
   font-family: var(--font-display); font-weight: 400; font-size: 26px; color: #fff; min-width: 32px; text-align: center;

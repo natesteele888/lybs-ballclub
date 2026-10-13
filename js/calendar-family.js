@@ -57,8 +57,8 @@
       function renderBody() {
         const rows = groups.map(g => `
           <label class="teamCheckRow">
-            <input type="checkbox" class="teamCheck" data-team="${g.teamId}" ${included.has(g.teamId) ? 'checked' : ''}>
-            ${g.teamName} <span class="helpText">(${g.events.length} events)</span>
+            <input type="checkbox" class="teamCheck" data-team="${escapeHtml(g.teamId)}" ${included.has(g.teamId) ? 'checked' : ''}>
+            ${escapeHtml(g.teamName)} <span class="helpText">(${g.events.length} events)</span>
           </label>`).join('');
         containerEl.innerHTML = `
           <div class="helpText">Combines every team this device has logged into into one calendar file.
