@@ -53,7 +53,7 @@
       // to the score and their name trailing off toward the edge.
       const theirTeamBlock = `<div class="gameResultName">${escapeHtml(opts.theirName)}</div>${theirLogo}`;
       const theirTeamHtml = opts.theirName
-        ? `<div class="gameResultTeam gameResultTeamRight gameResultTeamLink" data-team-nav="${escapeHtml(opts.theirName)}" title="See ${escapeHtml(opts.theirName)}'s team page">${theirTeamBlock}</div>`
+        ? `<div class="gameResultTeam gameResultTeamRight gameResultTeamLink" data-team-nav="${escapeHtml(opts.theirName)}" title="See ${escapeHtml(opts.theirName)}'s team page" tabindex="0" role="button">${theirTeamBlock}</div>`
         : `<div class="gameResultTeam gameResultTeamRight">${theirTeamBlock}</div>`;
       return `
         <div class="gameResultCard">

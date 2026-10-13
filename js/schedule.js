@@ -123,11 +123,21 @@
 
     function renderLogged() {
       const logged = game.pitchCounts || [];
-      const rows = logged.map((pc, i) => `
+      // Every entry gets a stable id -- including ones logged before this
+      // existed -- so its remove button can filter by identity instead of
+      // array position. Position breaks when two different rows get
+      // removed in quick succession: the first click's filter runs
+      // synchronously and shrinks game.pitchCounts before its own await
+      // even resolves, so the second click's index (captured from the
+      // pre-removal render) no longer points at the row its button was
+      // actually on. Assigned only in memory here, not written on its
+      // own -- it rides along naturally the next time anything saves.
+      logged.forEach(pc => { if (!pc.id) pc.id = uid('pc'); });
+      const rows = logged.map(pc => `
         <div class="listRow" style="cursor:default;">
           <div class="listRowMain"><div class="listRowTitle">${escapeHtml(pc.name)}</div></div>
           <span class="badge badgeTbd">${escapeHtml(String(pc.pitches))} pitches</span>
-          ${opts.canEdit ? `<button class="btn btnTiny" data-i="${i}" title="Remove">&times;</button>` : ''}
+          ${opts.canEdit ? `<button class="btn btnTiny" data-pcid="${escapeHtml(pc.id)}" title="Remove">&times;</button>` : ''}
         </div>`).join('') || '<div class="emptyState">No pitch counts logged for this game yet.</div>';
       const form = opts.canEdit ? `
         <div class="gcAddForm" style="margin-top:10px;">
@@ -137,10 +147,11 @@
           <button class="btn btnSmall" id="pcAddBtn">Add</button>
         </div>` : '';
       slotEl.innerHTML = `<div class="listBody">${rows}</div>${form}`;
-      slotEl.querySelectorAll('button[data-i]').forEach(btn => {
+      slotEl.querySelectorAll('button[data-pcid]').forEach(btn => {
         btn.addEventListener('click', async () => {
-          const i = Number(btn.dataset.i);
-          game.pitchCounts = (game.pitchCounts || []).filter((_, idx) => idx !== i);
+          const removedId = btn.dataset.pcid;
+          btn.disabled = true;
+          game.pitchCounts = (game.pitchCounts || []).filter(pc => pc.id !== removedId);
           await window.Schedule.saveGame(teamId, game);
           renderLogged();
         });
@@ -150,7 +161,7 @@
         const name = slotEl.querySelector('#pcName').value.trim();
         const pitches = Number(slotEl.querySelector('#pcPitches').value);
         if (!name || !Number.isFinite(pitches)) return;
-        game.pitchCounts = (game.pitchCounts || []).concat([{ name, pitches }]);
+        game.pitchCounts = (game.pitchCounts || []).concat([{ id: uid('pc'), name, pitches }]);
         await window.Schedule.saveGame(teamId, game);
         renderLogged();
       });
