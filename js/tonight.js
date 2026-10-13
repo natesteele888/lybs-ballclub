@@ -206,12 +206,19 @@
     // regardless.
     render(containerEl, _unusedDivisionId, opts) {
       opts = opts || {};
+      // Same dimmed-icon-above-the-message empty state js/homepage.js's own
+      // homeEmptyStateHtml() uses for its Home-tab siblings (📊 is that
+      // file's own SECTION_STYLE.scoreboard icon) -- redeclared here rather
+      // than exported, since this is the only mount point for this widget
+      // (js/homepage.js's #homeLeagueSlot) and a cross-file reach for two
+      // icon/color literals isn't worth it.
+      const emptyState = text => `<div class="homeEmptyState"><span class="homeEmptyStateIcon">📊</span>${escapeHtml(text)}</div>`;
       const divisions = window.TonightGames.availableDivisions();
       if (!divisions.length) {
         containerEl.innerHTML = `
           <div class="detailCard" style="margin-bottom:16px;">
             <div class="sectionLabel">Tonight in the League</div>
-            <div class="emptyState">No league schedule mirrored yet.</div>
+            ${emptyState('No league schedule mirrored yet.')}
           </div>`;
         return;
       }
@@ -226,7 +233,7 @@
         return `
           <div class="sectionLabel" style="margin-top:${i === 0 ? '4' : '18'}px;">${escapeHtml(d.name)}</div>
           <div class="tonightMergedList">${games.map(mergedCardHtml).join('')}</div>`;
-      }).join('') || '<div class="emptyState" style="padding:14px 4px;">No games in the league tonight.</div>';
+      }).join('') || emptyState('No games in the league tonight.');
       containerEl.innerHTML = `
         <div class="detailCard" style="margin-bottom:16px;">
           <div class="sectionLabel" style="margin:0;">Tonight in the League</div>

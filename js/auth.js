@@ -15,6 +15,10 @@
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
+  // No caller in this codebase uses window.sha256Hex -- every real check
+  // below calls the local function directly. Exposed anyway as a devtools
+  // console convenience: `await sha256Hex('newcode')` to generate the hash
+  // for a new TEAM_REGISTRY.codeHashes entry by hand.
   window.sha256Hex = sha256Hex;
 
   const screenEl = document.getElementById('loginScreen');
