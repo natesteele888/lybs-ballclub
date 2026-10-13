@@ -259,6 +259,13 @@
         if (input) { input.focus(); input.setSelectionRange(pos, pos); }
       }
 
+      // Same dimmed-icon-above-the-message empty state js/homepage.js's own
+      // homeEmptyStateHtml() uses -- Rules already has a per-category icon
+      // (catStyle) to draw from, which is exactly what that pattern expects.
+      function emptyStateHtml(icon, text) {
+        return `<div class="homeEmptyState"><span class="homeEmptyStateIcon">${icon}</span>${escapeHtml(text)}</div>`;
+      }
+
       function renderMenu() {
         const pinnedCount = cache.filter(r => pins.has(r.id)).length;
         const visibleCategories = showAllDivisions ? categories : categories.filter(isRelevant);
@@ -351,7 +358,7 @@
               </div>
               ${expanded ? `<div class="rulesSectionRules">${rules.map(ruleItemHtml).join('')}</div>` : ''}
             </div>`;
-        }).join('') || '<div class="emptyState">No rules in this category yet.</div>';
+        }).join('') || emptyStateHtml(catStyle(category).icon, 'No rules in this category yet.');
 
         const currentStyle = catStyle(category);
         containerEl.innerHTML = `
@@ -393,7 +400,7 @@
             <div class="rulesGroupHeader" style="border-left-color:${style.color};color:${style.color};">${style.icon} ${escapeHtml(key)}</div>
             ${groups[key].map(ruleItemHtml).join('')}
           </div>`;
-        }).join('') || '<div class="emptyState">No rules match that search.</div>';
+        }).join('') || emptyStateHtml('🔍', 'No rules match that search.');
 
         const title = showPinnedOnly ? '★ Pinned' : 'Search results';
         containerEl.innerHTML = `

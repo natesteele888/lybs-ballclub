@@ -287,7 +287,7 @@
     return `
       <div class="sectionLabel" style="color:#ff8a8a;">Unavailable Across the League (${all.length})</div>
       <div class="listBody">${all.map(s => statusHtml(s.name, s.status, s.rank, s.team)).join('')}</div>
-      <div class="helpText" style="margin-top:10px;">Only covers teams with logged pitch counts -- ours directly, others from whatever's been mirrored or shared. Switch the picker above for one team's full eligible list too.</div>`;
+      <button class="btn btnGhost btnTiny" id="pcUnavailInfoBtn" style="margin-top:10px;">&#9432; About this list</button>`;
   }
 
   window.PitchSmart = {
@@ -450,6 +450,12 @@
           await loadOurDepth();
           body.innerHTML = await allTeamsUnavailableHtml(opts, rankMapFromOrder(ourDepth));
           depthSlot.innerHTML = '';
+          const unavailInfoBtn = body.querySelector('#pcUnavailInfoBtn');
+          if (unavailInfoBtn) {
+            unavailInfoBtn.addEventListener('click', () => {
+              window.openInfoModal('About This List', '<div class="helpText">Only covers teams with logged pitch counts -- ours directly, others from whatever\'s been mirrored or shared. Switch the picker above for one team\'s full eligible list too.</div>');
+            });
+          }
           return;
         }
         if (selected === 'OUR_TEAM') {
