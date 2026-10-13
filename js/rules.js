@@ -245,6 +245,20 @@
         });
       }
 
+      // Every render* function below rebuilds the whole panel's innerHTML on
+      // every keystroke (one render path shared across menu/section-card/
+      // flat-list, rather than three separate update paths) -- which
+      // destroys and recreates #rulesSearchInput itself each time, so
+      // without this the box would lose focus and cursor position after
+      // every single character typed. Restores both right after the rebuild.
+      function onSearchInput(e) {
+        const pos = e.target.selectionStart;
+        query = e.target.value;
+        renderList();
+        const input = containerEl.querySelector('#rulesSearchInput');
+        if (input) { input.focus(); input.setSelectionRange(pos, pos); }
+      }
+
       function renderMenu() {
         const pinnedCount = cache.filter(r => pins.has(r.id)).length;
         const visibleCategories = showAllDivisions ? categories : categories.filter(isRelevant);
@@ -283,7 +297,7 @@
             <button class="btn btnGhost btnSmall" id="rulesDivisionToggle" style="width:100%;margin-top:10px;">
               ${showAllDivisions ? `Show only ${escapeHtml(teamDivision)} &amp; general rules` : `+ Show ${hiddenCount} more division${hiddenCount === 1 ? '' : 's'}`}
             </button>` : ''}`;
-        containerEl.querySelector('#rulesSearchInput').addEventListener('input', e => { query = e.target.value; renderList(); });
+        containerEl.querySelector('#rulesSearchInput').addEventListener('input', onSearchInput);
         containerEl.querySelectorAll('.listRow').forEach(row => {
           row.addEventListener('click', () => {
             if (row.dataset.cat === '__pinned') { showPinnedOnly = true; category = ''; }
@@ -350,7 +364,7 @@
           </div>
           <div class="listBody" style="margin-top:10px;gap:10px;">${cards}</div>`;
         containerEl.querySelector('#rulesBackBtn').addEventListener('click', () => { category = ''; try { localStorage.setItem(CATEGORY_KEY, ''); } catch (e) {} renderList(); });
-        containerEl.querySelector('#rulesSearchInput').addEventListener('input', e => { query = e.target.value; renderList(); });
+        containerEl.querySelector('#rulesSearchInput').addEventListener('input', onSearchInput);
         containerEl.querySelectorAll('[data-section]').forEach(row => {
           row.addEventListener('click', () => {
             const key = row.dataset.section;
@@ -393,7 +407,7 @@
           </div>
           <div class="rulesList" id="rulesListEl">${groupsHtml}</div>`;
         containerEl.querySelector('#rulesBackBtn').addEventListener('click', () => { query = ''; category = ''; showPinnedOnly = false; renderList(); });
-        containerEl.querySelector('#rulesSearchInput').addEventListener('input', e => { query = e.target.value; renderList(); });
+        containerEl.querySelector('#rulesSearchInput').addEventListener('input', onSearchInput);
         containerEl.querySelector('#rulesPinnedToggle').addEventListener('click', () => { showPinnedOnly = !showPinnedOnly; renderList(); });
         wirePinButtons(containerEl.querySelector('#rulesListEl'), showPinnedOnly ? () => renderList() : null);
       }

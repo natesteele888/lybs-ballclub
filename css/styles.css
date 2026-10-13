@@ -151,7 +151,7 @@ a { color: var(--lybs-blue-bright); }
   font-family: var(--font-label); letter-spacing: 0.04em; text-transform: uppercase;
   box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 8px 20px rgba(46,82,232,0.25);
   transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
-  display: inline-block; text-decoration: none; text-align: center;
+  display: inline-block; text-decoration: none; text-align: center; white-space: nowrap;
 }
 .btn:hover { filter: brightness(1.08); box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 10px 26px rgba(46,82,232,0.4); }
 .btn:active { transform: translateY(1px); }
@@ -336,7 +336,11 @@ a { color: var(--lybs-blue-bright); }
 @keyframes panelIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ---- Section chrome ---- */
-.sectionHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 10px; }
+/* flex-wrap:wrap so a title + action-button(s) row drops to two lines on a
+   narrow phone instead of squeezing both into one -- without it, a longer
+   title (e.g. Pitching's "Week of <date>") had nowhere to go but wrap
+   mid-string while the buttons beside it held their ground. */
+.sectionHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 10px; flex-wrap: wrap; }
 .recordLine { font-size: 13px; color: var(--text2); font-family: var(--font-label); letter-spacing: 0.03em; }
 .recordLine b { color: #fff; font-size: 16px; }
 .sectionLabel {
