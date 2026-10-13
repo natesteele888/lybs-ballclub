@@ -15,7 +15,7 @@
    Coach-only -- see index.html's Coaching tab gating.
    ============================================================ */
 (function () {
-  const GOLD = '#f5a623', GREEN = '#10b981', RED = '#ef4444';
+  const GOLD = '#f5a623', GREEN = '#10b981';
 
   function fmt(ms) {
     const s = ms / 1000;

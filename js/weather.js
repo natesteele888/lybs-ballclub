@@ -156,19 +156,4 @@
     if (!address || !dateStr) { wrapEl.style.display = 'none'; wrapEl.innerHTML = ''; return; }
     fetchForecast(address, dateStr, timeStr).then(data => renderInto(wrapEl, data));
   };
-
-  // Compact version -- icon + temp only, for the right side of a list row
-  // (js/practices.js) where there's no room for the full weatherBox.
-  function renderCompactInto(wrap, data) {
-    if (!wrap) return;
-    if (!data) { wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
-    const temp = data.temp != null ? data.temp : data.tempHigh;
-    wrap.style.display = '';
-    wrap.innerHTML = `<span class="weatherIcon">${data.icon}</span><span>${temp}°F</span>`;
-  }
-  window.loadCompactWeatherInto = function (wrapEl, address, dateStr, timeStr) {
-    if (!wrapEl) return;
-    if (!address || !dateStr) { wrapEl.style.display = 'none'; wrapEl.innerHTML = ''; return; }
-    fetchForecast(address, dateStr, timeStr).then(data => renderCompactInto(wrapEl, data));
-  };
 })();

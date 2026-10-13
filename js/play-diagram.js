@@ -132,9 +132,17 @@
           const field = containerEl.querySelector('#pdField');
           field.addEventListener('click', async e => {
             const rect = field.getBoundingClientRect();
-            const x = Math.round(((e.clientX - rect.left) / rect.width) * 1000) / 10;
-            const y = Math.round(((e.clientY - rect.top) / rect.height) * 1000) / 10;
-            if (x < 0 || x > 100 || y < 0 || y > 100) return;
+            const rawX = ((e.clientX - rect.left) / rect.width) * 100;
+            const rawY = ((e.clientY - rect.top) / rect.height) * 100;
+            if (rawX < 0 || rawX > 100 || rawY < 0 || rawY > 100) return;
+            // .depthField clips overflow and a marker's label (up to 110px
+            // wide, centered on the tap point) can be nearly a third of
+            // that width -- a marker placed right at an edge had its own
+            // label clipped off. Keep placed markers inset the same way
+            // Depth Chart's own fixed position presets already stay well
+            // clear of the edges.
+            const x = Math.round(Math.min(96, Math.max(4, rawX)) * 10) / 10;
+            const y = Math.round(Math.min(96, Math.max(4, rawY)) * 10) / 10;
             const label = prompt('Label for this spot (e.g. "Cutoff man"):');
             if (!label || !label.trim()) return;
             d.markers.push({ id: uid('mk'), x, y, label: label.trim() });

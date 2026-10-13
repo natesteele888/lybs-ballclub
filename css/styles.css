@@ -353,7 +353,7 @@ a { color: var(--lybs-blue-bright); }
 
 /* ---- Lists ---- */
 .listBody { display: flex; flex-direction: column; gap: 10px; }
-.listRow, .rosterRow {
+.listRow {
   background: linear-gradient(145deg, var(--card), #0C1230);
   border: 1px solid var(--card-border); border-radius: 12px; padding: 13px 15px;
   display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer;
@@ -361,7 +361,6 @@ a { color: var(--lybs-blue-bright); }
 }
 .listRow:hover { border-color: rgba(76,106,235,0.45); transform: translateY(-1px); box-shadow: 0 10px 24px rgba(5,7,28,0.5); }
 .listRow:active { border-color: rgba(76,106,235,0.6); transform: translateY(0) scale(0.98); box-shadow: 0 4px 12px rgba(5,7,28,0.5); }
-.rosterRow { cursor: default; }
 /* Without flex:1, this shrinks to its own text width -- harmless with just
    two flex siblings (badge, this), but with three (badge, this, a button)
    "justify-content: space-between" splits the leftover space into the two
@@ -1094,10 +1093,10 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
    crest's drop-shadow glow, applied as an ambient signature instead of a
    one-off. Sits on :before so it never competes with a card's own content
    for stacking order or box-shadow. */
-.detailCard, .listRow, .rosterRow {
+.detailCard, .listRow {
   position: relative;
 }
-.detailCard::before, .listRow::before, .rosterRow::before {
+.detailCard::before, .listRow::before {
   content: ''; position: absolute; top: 0; left: 12px; right: 12px; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
   pointer-events: none;
