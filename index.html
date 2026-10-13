@@ -3,8 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#090D32">
+<meta name="theme-color" content="#090D32" id="themeColorMeta">
 <title>Lunenburg Blue Knights — Select</title>
+<!-- Applies a saved light-mode choice before the stylesheet below even
+     loads, let alone paints -- without this, every page load would flash
+     dark-then-light for anyone who picked light mode last time. Plain,
+     synchronous (not defer): has to run and finish before first paint. -->
+<script>
+(function () {
+  try {
+    if (localStorage.getItem('lybsTheme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  } catch (e) {}
+})();
+</script>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="assets/images/favicon-64.png">
@@ -20,7 +33,7 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=138">
+<link rel="stylesheet" href="css/styles.css?v=140">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -70,6 +83,7 @@
       <h1>Public Info</h1>
     </div>
     <div class="topBarActions">
+      <button class="topBarThemeBtn" title="Switch to light mode" aria-label="Switch to light mode">🌙</button>
       <button class="btn btnGhost btnSmall" id="publicViewBack">&larr; Back to login</button>
     </div>
   </div>
@@ -88,6 +102,7 @@
       <h1 data-team-short>Select</h1>
     </div>
     <div class="topBarActions">
+      <button class="topBarThemeBtn" title="Switch to light mode" aria-label="Switch to light mode">🌙</button>
       <!-- Coach-only -- toggled by onIdentityReady below. Opens
            js/social-submit.js in the modal sheet at the bottom of body,
            not a nav tab: a one-off action, not a place to browse to. -->
@@ -169,7 +184,43 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261013m';</script>
+<script defer>window.BUILD_V = '20261013o';</script>
+
+<!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
+     instances (public view + app shell) need it, independent of sign-in
+     state. The actual class-applying logic already ran synchronously in
+     <head> (before first paint, to avoid a flash); this is just wiring the
+     button(s) up and keeping them in sync with that state from here on. -->
+<script defer>
+(function () {
+  var THEME_KEY = 'lybsTheme';
+  function current() {
+    try { return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark'; }
+    catch (e) { return 'dark'; }
+  }
+  function applyToButtons(theme) {
+    document.querySelectorAll('.topBarThemeBtn').forEach(function (btn) {
+      btn.textContent = theme === 'light' ? '☀️' : '🌙';
+      var label = theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
+      btn.setAttribute('aria-label', label);
+      btn.title = label;
+    });
+    var meta = document.getElementById('themeColorMeta');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#FFFFFF' : '#090D32');
+  }
+  function setTheme(theme) {
+    if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    else document.documentElement.removeAttribute('data-theme');
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+    applyToButtons(theme);
+  }
+  applyToButtons(current());
+  document.querySelectorAll('.topBarThemeBtn').forEach(function (btn) {
+    btn.addEventListener('click', function () { setTheme(current() === 'light' ? 'dark' : 'light'); });
+  });
+})();
+</script>
+
 <script defer>
   // Firebase project: lybs-ballclub (console.firebase.google.com/project/lybs-ballclub).
   // API key is a public project identifier, not a secret -- see cloud-auth.js's header
@@ -193,52 +244,52 @@
      silently change behavior underneath this app -- bump deliberately. -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-app-compat.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-auth-compat.min.js"></script>
-<script defer src="js/util.js?v=138"></script>
-<script defer src="js/backend.js?v=138"></script>
-<script defer src="js/team-registry.js?v=138"></script>
-<script defer src="js/cloud-auth.js?v=138"></script>
-<script defer src="js/google-auth.js?v=138"></script>
-<script defer src="js/team-config.js?v=138"></script>
-<script defer src="js/identity.js?v=138"></script>
-<script defer src="js/weather.js?v=138"></script>
-<script defer src="js/club-logos.js?v=138"></script>
-<script defer src="js/league-teams.js?v=138"></script>
-<script defer src="js/game-card.js?v=138"></script>
-<script defer src="js/pitch-smart.js?v=138"></script>
-<script defer src="js/tonight.js?v=138"></script>
-<script defer src="js/announcements.js?v=138"></script>
-<script defer src="js/league-events.js?v=138"></script>
-<script defer src="js/data-admin.js?v=138"></script>
-<script defer src="js/homepage.js?v=138"></script>
-<script defer src="js/league-info.js?v=138"></script>
-<script defer src="js/calendar-export.js?v=138"></script>
-<script defer src="js/schedule.js?v=138"></script>
-<script defer src="js/practices.js?v=138"></script>
-<script defer src="js/calendar-view.js?v=138"></script>
-<script defer src="js/roster.js?v=138"></script>
-<script defer src="js/drill-baserunning.js?v=138"></script>
-<script defer src="js/drill-ath.js?v=138"></script>
-<script defer src="js/drill-pitching.js?v=138"></script>
-<script defer src="js/depth-chart.js?v=138"></script>
-<script defer src="js/lineup-builder.js?v=138"></script>
-<script defer src="js/duty.js?v=138"></script>
-<script defer src="js/signup.js?v=138"></script>
-<script defer src="js/awards.js?v=138"></script>
-<script defer src="js/equipment.js?v=138"></script>
-<script defer src="js/team-access.js?v=138"></script>
-<script defer src="js/coach-notes.js?v=138"></script>
-<script defer src="js/practice-plan.js?v=138"></script>
-<script defer src="js/play-diagram.js?v=138"></script>
-<script defer src="js/stats-import.js?v=138"></script>
-<script defer src="js/social-submit.js?v=138"></script>
-<script defer src="js/gamechanger.js?v=138"></script>
-<script defer src="js/rules.js?v=138"></script>
-<script defer src="js/practice-catalog.js?v=138"></script>
-<script defer src="js/standings.js?v=138"></script>
-<script defer src="js/calendar-family.js?v=138"></script>
-<script defer src="js/archive.js?v=138"></script>
-<script defer src="js/league-schedule.js?v=138"></script>
-<script defer src="js/team-page.js?v=138"></script>
+<script defer src="js/util.js?v=140"></script>
+<script defer src="js/backend.js?v=140"></script>
+<script defer src="js/team-registry.js?v=140"></script>
+<script defer src="js/cloud-auth.js?v=140"></script>
+<script defer src="js/google-auth.js?v=140"></script>
+<script defer src="js/team-config.js?v=140"></script>
+<script defer src="js/identity.js?v=140"></script>
+<script defer src="js/weather.js?v=140"></script>
+<script defer src="js/club-logos.js?v=140"></script>
+<script defer src="js/league-teams.js?v=140"></script>
+<script defer src="js/game-card.js?v=140"></script>
+<script defer src="js/pitch-smart.js?v=140"></script>
+<script defer src="js/tonight.js?v=140"></script>
+<script defer src="js/announcements.js?v=140"></script>
+<script defer src="js/league-events.js?v=140"></script>
+<script defer src="js/data-admin.js?v=140"></script>
+<script defer src="js/homepage.js?v=140"></script>
+<script defer src="js/league-info.js?v=140"></script>
+<script defer src="js/calendar-export.js?v=140"></script>
+<script defer src="js/schedule.js?v=140"></script>
+<script defer src="js/practices.js?v=140"></script>
+<script defer src="js/calendar-view.js?v=140"></script>
+<script defer src="js/roster.js?v=140"></script>
+<script defer src="js/drill-baserunning.js?v=140"></script>
+<script defer src="js/drill-ath.js?v=140"></script>
+<script defer src="js/drill-pitching.js?v=140"></script>
+<script defer src="js/depth-chart.js?v=140"></script>
+<script defer src="js/lineup-builder.js?v=140"></script>
+<script defer src="js/duty.js?v=140"></script>
+<script defer src="js/signup.js?v=140"></script>
+<script defer src="js/awards.js?v=140"></script>
+<script defer src="js/equipment.js?v=140"></script>
+<script defer src="js/team-access.js?v=140"></script>
+<script defer src="js/coach-notes.js?v=140"></script>
+<script defer src="js/practice-plan.js?v=140"></script>
+<script defer src="js/play-diagram.js?v=140"></script>
+<script defer src="js/stats-import.js?v=140"></script>
+<script defer src="js/social-submit.js?v=140"></script>
+<script defer src="js/gamechanger.js?v=140"></script>
+<script defer src="js/rules.js?v=140"></script>
+<script defer src="js/practice-catalog.js?v=140"></script>
+<script defer src="js/standings.js?v=140"></script>
+<script defer src="js/calendar-family.js?v=140"></script>
+<script defer src="js/archive.js?v=140"></script>
+<script defer src="js/league-schedule.js?v=140"></script>
+<script defer src="js/team-page.js?v=140"></script>
 <script defer>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null, IS_BOARD = false;
@@ -746,7 +797,7 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script defer src="js/auth.js?v=138"></script>
+<script defer src="js/auth.js?v=140"></script>
 <!-- access-control.js also calls window.onIdentityReady, but only from
      inside an async googleAuth.onReady() callback, never at top-level
      script-execution time -- so unlike auth.js it doesn't strictly need to
@@ -754,12 +805,12 @@
      google-auth.js. Placed next to auth.js anyway since the two play the
      same role (driving entry into the app) for their respective sign-in
      paths. -->
-<script defer src="js/access-control.js?v=138"></script>
+<script defer src="js/access-control.js?v=140"></script>
 <!-- public-view.js wires up #publicViewLink/#publicViewBack -- needs
      TEAM_REGISTRY, LeagueInfo, Standings, and LeagueEvents to already
      exist, no ordering constraint relative to auth.js/access-control.js
      since it never touches onIdentityReady or the gated app shell at all. -->
-<script defer src="js/public-view.js?v=138"></script>
+<script defer src="js/public-view.js?v=140"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.
