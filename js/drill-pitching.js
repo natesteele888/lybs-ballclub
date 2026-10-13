@@ -105,7 +105,7 @@
             </div>
             <div class="pcSpeedRow">
               <input class="drillFreeInput" id="pcSpeedInp" type="number" min="20" max="100" placeholder="mph (optional)" inputmode="numeric">
-              <button class="btn btnSmall" id="pcCommit">Log pitch</button>
+              <button class="btn btnSmall" id="pcCommit" ${PC.pendingPitch.type ? '' : 'disabled'}>Log pitch</button>
               <button class="btn btnGhost btnSmall" id="pcCancelPending">Cancel</button>
             </div>
           </div>` : '';
@@ -227,13 +227,15 @@
           btn.addEventListener('click', () => {
             containerEl.querySelectorAll('.pcTypeBtn').forEach(b => b.classList.toggle('pcTypeBtnOn', b === btn));
             if (PC.pendingPitch) PC.pendingPitch.type = btn.dataset.type;
+            const commitBtn = containerEl.querySelector('#pcCommit');
+            if (commitBtn) commitBtn.disabled = false;
           });
         });
         containerEl.querySelector('#pcCommit')?.addEventListener('click', () => {
-          if (!PC.pendingPitch) return;
+          if (!PC.pendingPitch || !PC.pendingPitch.type) return;
           const speedInp = containerEl.querySelector('#pcSpeedInp');
           const speed = speedInp && speedInp.value ? parseInt(speedInp.value, 10) : null;
-          PC.pitches.push({ zone: PC.pendingPitch.zone, type: PC.pendingPitch.type || '4FB', speed });
+          PC.pitches.push({ zone: PC.pendingPitch.zone, type: PC.pendingPitch.type, speed });
           PC.pendingPitch = null;
           if (PC.targetCount < 999 && PC.pitches.length >= PC.targetCount) PC.state = 'done';
           refresh();

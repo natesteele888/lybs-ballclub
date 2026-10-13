@@ -37,7 +37,13 @@
     d.setDate(d.getDate() + days);
     return d.toISOString().slice(0, 10);
   }
+  // Every division's rules table starts its lowest tier at min:1 (see
+  // data/pitch-smart-rules.json), so 0 pitches matches no tier and used to
+  // fall through to the `||` fallback -- which was the LAST tier (the
+  // highest rest requirement) instead of the first, flagging a pitcher who
+  // threw nothing at all as needing the most rest of anyone.
   function tierFor(pitches, rules) {
+    if (pitches <= 0) return rules.tiers[0];
     return rules.tiers.find(t => pitches >= t.min && pitches <= t.max) || rules.tiers[rules.tiers.length - 1];
   }
 

@@ -120,7 +120,7 @@
         ${teamLine(a, bWins)}
         ${teamLine(b, aWins)}
         <div class="tonightGameLocation"><strong class="tonightDivisionLabel">${escapeHtml(game.divisionName)}</strong>${game.location ? ' &middot; ' + escapeHtml(game.location) : ''}</div>
-        ${ourGame ? '<button class="btn btnGhost btnSmall tonightWatchBtn" data-watch="1">Watch live on GameChanger &rarr;</button>' : ''}
+        ${ourGame && !played ? '<button class="btn btnGhost btnSmall tonightWatchBtn" data-watch="1">Watch live on GameChanger &rarr;</button>' : ''}
       </div>`;
   }
 
