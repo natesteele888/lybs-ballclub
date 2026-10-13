@@ -221,6 +221,14 @@
         function splitDate(value) {
           const m = value.match(DATE_RE);
           if (!m) return null;
+          // A value naming more than one distinct date (e.g. "Blackouts:
+          // Mother's Day (May 9th); Hit-a-Thons (May 15-16); Memorial Day
+          // weekend (May 29-31)...") has no single date to call out --
+          // pulling just the first into a chip would misrepresent it as a
+          // one-day event and dump the other two dates into a run-on
+          // subtitle. Bail to the same plain-value rendering used when no
+          // date is found at all, same as the one-date case already does.
+          if ((value.match(new RegExp(DATE_RE.source, 'g')) || []).length > 1) return null;
           let start = m.index, end = m.index + m[0].length;
           // Pull a tightly-wrapping paren pair out along with the date too --
           // "Mother's Day (May 9th); ..." would otherwise orphan the "("

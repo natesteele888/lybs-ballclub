@@ -21,7 +21,6 @@
      window.firebaseAuthed(url)
      window.signInWithGate(teamId, role, passwordHash)
      window.hasGateSession()
-     window.currentGateSession() -- {teamId, role} or null
    ============================================================ */
 (function () {
   // Public project identifier, not a secret -- see README.md "Go live".
@@ -53,11 +52,6 @@
   window.hasGateSession = function () {
     const s = loadGateSession();
     return !!(s && s.refreshToken);
-  };
-  window.currentGateSession = function () {
-    if (cached) return { teamId: cached.teamId, role: cached.role };
-    const s = loadGateSession();
-    return s ? { teamId: s.teamId, role: s.role } : null;
   };
   window.signOutOfGate = function () {
     cached = null;

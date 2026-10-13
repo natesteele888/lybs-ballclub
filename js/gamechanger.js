@@ -89,10 +89,18 @@
         </div>`;
 
       containerEl.innerHTML = `
-        <div class="helpText">Live schedule and scores straight from GameChanger. This is display-only — our own Schedule tab stays the source of truth for calendar sync, since GameChanger has no feed to sync from.</div>
+        <div class="helpText">Live schedule and scores from GameChanger &mdash; display-only.
+          <button class="btn btnGhost btnTiny" id="gcInfoBtn" style="margin-left:4px;">&#9432;</button>
+        </div>
         ${widgetHtml}
         ${mirrorForm}
         ${addForm}`;
+      const gcInfoBtn = containerEl.querySelector('#gcInfoBtn');
+      if (gcInfoBtn) {
+        gcInfoBtn.addEventListener('click', () => {
+          window.openInfoModal('About GameChanger', '<div class="helpText">Our own Schedule tab stays the source of truth for calendar sync, since GameChanger has no feed to sync from.</div>');
+        });
+      }
 
       if (opts.canEdit) {
         containerEl.querySelector('#gcSaveBtn').addEventListener('click', async () => {
