@@ -65,7 +65,7 @@
     gp: ['gp'], pa: ['pa'], ab: ['ab'], r: ['r'], h: ['h'],
     b2: ['2b'], b3: ['3b'], hr: ['hr'], rbi: ['rbi'], bb: ['bb'], so: ['so'],
     sb: ['sb'], cs: ['cs'], avg: ['avg'], obp: ['obp'], slg: ['slg'], ops: ['ops'],
-    hbp: ['hbp'], sac: ['sac'], sf: ['sf'], barsp: ['ba/rsp', 'barsp'], psPerPa: ['ps/pa'],
+    hbp: ['hbp'], sac: ['sac'], sf: ['sf'], barsp: ['ba/rsp', 'barsp', 'ba/risp', 'barisp'], psPerPa: ['ps/pa'],
     ip: ['ip'], er: ['er'], era: ['era'], w: ['w'], l: ['l'], sv: ['sv'], bf: ['bf'],
   };
   function normalizeHeader(h) {
