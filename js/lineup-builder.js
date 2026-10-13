@@ -93,9 +93,9 @@
             </select>
             <select class="lineupSlotSelect lineupPosSelect" data-pos="${i}">${posOpts}</select>
             <div class="depthRowActions">
-              <button class="btn btnTiny" data-slotup="${i}" ${i === 0 ? 'disabled' : ''}>↑</button>
-              <button class="btn btnTiny" data-slotdown="${i}" ${i === total - 1 ? 'disabled' : ''}>↓</button>
-              <button class="btn btnTiny" data-slotremove="${i}">&times;</button>
+              <button class="btn btnTiny" data-slotup="${i}" ${i === 0 ? 'disabled' : ''} aria-label="Move up" title="Move up">↑</button>
+              <button class="btn btnTiny" data-slotdown="${i}" ${i === total - 1 ? 'disabled' : ''} aria-label="Move down" title="Move down">↓</button>
+              <button class="btn btnTiny" data-slotremove="${i}" aria-label="Remove player" title="Remove player">&times;</button>
             </div>
           </div>`;
       }

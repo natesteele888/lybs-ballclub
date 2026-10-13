@@ -48,7 +48,7 @@
         ".read": "auth != null && (root.child('boardMembers').child(auth.uid).val() == true || root.child('access').child($teamId).child(auth.uid).val() == 'coach' || auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal'))",
         "$uid": {
           ".read": "auth != null && (auth.uid == $uid || root.child('boardMembers').child(auth.uid).val() == true || root.child('access').child($teamId).child(auth.uid).val() == 'coach' || auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal'))",
-          ".write": "auth != null && ((auth.uid == $uid && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',')).child($teamId).child('role').val() == newData.val()) || (!newData.exists() && root.child('boardMembers').child(auth.uid).val() == true))",
+          ".write": "auth != null && ((auth.uid == $uid && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',')).child($teamId).child('role').val() == newData.val()) || (!newData.exists() && (root.child('boardMembers').child(auth.uid).val() == true || (data.val() == 'parent' && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')))))",
           ".validate": "newData.isString() && (newData.val() == 'coach' || newData.val() == 'parent')"
         }
       }

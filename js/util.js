@@ -40,7 +40,19 @@
   // touching, just the duplicate function bodies removed.
   window.mapUrl = window.mapLink;
 
-  window.todayIso = function todayIso() { return new Date().toISOString().slice(0, 10); };
+  // Local date parts, NOT toISOString().slice(0,10) -- that reads the UTC
+  // date, which in US Eastern time is already tomorrow's date for roughly
+  // 4-5 hours every evening (8:30pm EDT, for instance, is already after
+  // midnight UTC). Every "is this today" check in the app (homepage's
+  // Today section, schedule.js's TBD-badge logic, practices.js's RSVP
+  // visibility, calendar-view.js's today-highlight) reads this one
+  // function, so that UTC rollover used to make an evening game/practice
+  // that's still in progress vanish from "today" and get treated as
+  // already past, hours before it actually was.
+  window.todayIso = function todayIso() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
   window.todayStr = window.todayIso; // homepage.js's name for the same thing
 
   // practices.js's three item types, labeled -- shared so a practice

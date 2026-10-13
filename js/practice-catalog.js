@@ -372,7 +372,16 @@
           });
         });
         const searchInput = containerEl.querySelector('#catSearchInput');
-        if (searchInput) searchInput.addEventListener('input', e => { view.query = e.target.value; refresh(); });
+        // refresh() rebuilds this whole panel's innerHTML (including this
+        // input) on every keystroke -- same bug shape js/rules.js's search
+        // box had, fixed there by restoring focus/cursor right after.
+        if (searchInput) searchInput.addEventListener('input', e => {
+          const pos = e.target.selectionStart;
+          view.query = e.target.value;
+          refresh();
+          const newSearch = containerEl.querySelector('#catSearchInput');
+          if (newSearch) { newSearch.focus(); newSearch.setSelectionRange(pos, pos); }
+        });
         const back1 = containerEl.querySelector('#catBackToDivisions');
         if (back1) back1.addEventListener('click', () => { view.division = null; refresh(); });
         const back2 = containerEl.querySelector('#catBackToCategories');

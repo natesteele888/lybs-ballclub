@@ -65,7 +65,7 @@
         <tr class="${r.isUs ? 'standingsUsRow' : ''}">
           <td>${r.isUs
             ? `<div class="standingsTeamCell">${window.ClubLogos.badgeHtml(r.team, 26)}${escapeHtml(stripAgePrefix(r.team))}</div>`
-            : `<div class="standingsTeamCell standingsTeamLink" data-team-nav="${escapeHtml(stripAgePrefix(r.team))}">${window.ClubLogos.badgeHtml(r.team, 26)}${escapeHtml(stripAgePrefix(r.team))}</div>`}</td>
+            : `<div class="standingsTeamCell standingsTeamLink" data-team-nav="${escapeHtml(stripAgePrefix(r.team))}" tabindex="0" role="button">${window.ClubLogos.badgeHtml(r.team, 26)}${escapeHtml(stripAgePrefix(r.team))}</div>`}</td>
           ${hasExtendedCols ? `
             <td class="numCell">${escapeHtml(r.gp ?? '')}</td>
             <td class="numCell">${escapeHtml(r.w ?? '')}</td>
@@ -121,7 +121,7 @@
       const rows = (division.rows || []).map((r, i) => {
         const record = r.w != null ? `${r.w}-${r.l}${r.t && r.t !== '0' ? '-' + r.t : ''}` : null;
         return `
-          <div class="listRow ${r.isUs ? 'standingsUsRow' : ''}" style="cursor:${r.isUs ? 'default' : 'pointer'};" ${r.isUs ? '' : `data-team-nav="${escapeHtml(stripAgePrefix(r.team))}"`}>
+          <div class="listRow ${r.isUs ? 'standingsUsRow' : ''}" style="cursor:${r.isUs ? 'default' : 'pointer'};" ${r.isUs ? '' : `data-team-nav="${escapeHtml(stripAgePrefix(r.team))}" tabindex="0" role="button"`}>
             <div class="seedNum">${i + 1}</div>
             ${window.ClubLogos.badgeHtml(r.team, 26)}
             <div class="listRowMain">
