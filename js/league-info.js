@@ -164,7 +164,7 @@
               <div class="listRowSub">${escapeHtml(f.town)} &middot; ${escapeHtml(f.address)}</div>
             </div>
             <div class="fieldRowLinks">
-              <a class="btn btnGhost btnTiny" href="${mapUrl(f.address)}" target="_blank" rel="noopener">Map</a>
+              <button type="button" class="btn btnGhost btnTiny mapTriggerBtn" data-map-label="${escapeHtml(f.name)}" data-map-address="${escapeHtml(f.address)}">Map</button>
               ${hasCoords ? `<a class="btn btnGhost btnTiny" href="${streetViewUrl(f.lat, f.lng)}" target="_blank" rel="noopener">Street View</a>` : ''}
             </div>
           </div>`;
@@ -427,6 +427,9 @@
             expanded = el.dataset.id;
             renderAll();
           });
+        });
+        containerEl.querySelectorAll('.mapTriggerBtn').forEach(el => {
+          el.addEventListener('click', () => window.openMapModal(el.dataset.mapLabel, el.dataset.mapAddress));
         });
         if (current.id === 'ages') wireAgeEligibility(containerEl);
       }

@@ -1,8 +1,11 @@
 /* ============================================================
    MAC League club logos -- fuzzy-matches a team/opponent name
    string (e.g. "GD 12U Cardinals", "Ayer-Shirley Majors Panthers",
-   "TAYBS Majors Gold") against the 10 MAC League towns and returns
-   that town's badge.
+   "TAYBS Majors Gold") against the MAC League towns and returns
+   that town's badge. Westford fields Minors/Majors teams but has
+   no /club/ page of its own on macleague.org (no entry in its
+   CLUBS nav dropdown) -- its badge here comes from its team pages
+   instead, same crossbar.s3.amazonaws.com host as the rest.
 
    Hotlinked only -- see data/mac-league-clubs.json's header note.
    These <img> tags point straight at crossbar.s3.amazonaws.com; we
