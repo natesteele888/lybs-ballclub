@@ -34,6 +34,14 @@
   --text2: #9AA3C2;
   --text3: #6B7394;
   --glow: rgba(46, 82, 232, 0.45);
+  --gold: #F0C84B;
+  /* Status-color family (eligible/win/positive, rest/loss/negative,
+     championship-orange) -- dark-mode values pulled straight off a dark
+     navy card, retuned for light mode below since none of them were
+     ever readable against a white one. */
+  --status-green: #5fd989;
+  --status-red: #ff8a8a;
+  --status-orange: #FF9A5A;
   /* RGB channel triplets (no rgba() wrapper) so rgba(var(--x-rgb), alpha)
      call sites each keep their own alpha while the color itself retheme
      in one place -- see the [data-theme="light"] block below. */
@@ -74,12 +82,26 @@
   --glow: rgba(46, 82, 232, 0.25);
   --overlay-rgb: 20, 24, 48;
   --sunken-rgb: 228, 231, 239;
+  /* The dark-mode gold (#F0C84B) is ~1.6:1 against this theme's near-white
+     surfaces -- nowhere near readable as text. This darker amber keeps the
+     same hue family at ~5:1, used only for actual text/border accents (the
+     dark, fixed-background .athBanner popup and .pcPocketMed/.pcNetFrame
+     mini-diagram stay pinned to the brighter dark-mode gold -- see their
+     own rules -- since both keep an always-dark background in either
+     theme). */
+  --gold: #8A6914;
   /* --lybs-silver is a brand constant, not one of the semantic tokens
      above -- but 13 call sites use it directly as the color for a small
      uppercase caption (section labels, form field labels, etc.), and its
      one fixed value (#B4BBBF, tuned for a dark page) is too low-contrast
      against a light one. */
   --lybs-silver: #6A7290;
+  /* Same contrast problem as --gold above, same fix shape: darker, more
+     saturated versions of the same hue, tuned against a white card instead
+     of a dark navy one. */
+  --status-green: #147a3c;
+  --status-red: #9a2b2b;
+  --status-orange: #a35a1a;
 }
 /* The login/identity screens keep their current dark, fixed-brand look
    (dramatic navy gradient background, same as always) in BOTH modes --
@@ -271,6 +293,7 @@ a { color: var(--lybs-blue-bright); }
   min-height: 36px; flex: 0 0 auto;
 }
 .topBarShareBtn:hover { background: rgba(76,106,235,0.24); }
+:root[data-theme="light"] .topBarShareBtn { color: var(--lybs-blue-deep); }
 .topBarThemeBtn {
   background: rgba(var(--overlay-rgb),0.08); border: 1px solid var(--card-border); color: var(--text);
   font-size: 15px; width: 36px; height: 36px; min-height: 36px; border-radius: 50%; cursor: pointer;
@@ -335,6 +358,7 @@ a { color: var(--lybs-blue-bright); }
 .tabBtn:hover { color: var(--text2); }
 .tabBtn:active { color: var(--text); background: rgba(var(--overlay-rgb),0.05); }
 .tabBtn.active { color: #fff; border-bottom-color: var(--lybs-blue-bright); text-shadow: 0 0 18px rgba(76,106,235,0.6); }
+:root[data-theme="light"] .tabBtn.active { color: var(--lybs-blue-deep); text-shadow: none; }
 
 /* League Info's 5 sections (Fields, Dates, Officials, Ages, Resources) --
    same pill-row look as the real sub-tab bar above (reuses .tabBtn), just
@@ -430,7 +454,7 @@ a { color: var(--lybs-blue-bright); }
 }
 .helpText { font-size: 12px; color: var(--text2); line-height: 1.6; margin: 8px 0; }
 .helpText code { background: rgba(var(--overlay-rgb),0.08); padding: 1px 6px; border-radius: 4px; font-size: 11px; }
-.errorText { color: #FF6B6B; font-size: 12px; min-height: 16px; }
+.errorText { color: var(--status-red); font-size: 12px; min-height: 16px; }
 
 /* ---- Lists ---- */
 .listBody { display: flex; flex-direction: column; gap: 10px; }
@@ -484,6 +508,7 @@ a { color: var(--lybs-blue-bright); }
 }
 .pitchCalendar th:first-child { border-left: none; text-align: left; }
 .pitchCalendar th.pcGameCol { background: rgba(46,82,232,0.22); color: #fff; }
+:root[data-theme="light"] .pitchCalendar th.pcGameCol { color: var(--lybs-blue-deep); }
 /* Opponent names like "Ayer-Shirley Major 70s A" would otherwise stretch this
    th (and so every column in the row) to fit one long name on one line --
    the parent th's nowrap is for the day/date label, not this. */
@@ -497,9 +522,10 @@ a { color: var(--lybs-blue-bright); }
 }
 .pitchCalendar tbody tr:last-child td { border-bottom: none; }
 .pcPitcherName { text-align: left; font-weight: 700; white-space: nowrap; border-left: none; }
-.pcCellEligible { color: #5fd989; font-weight: 700; background: rgba(53,197,116,0.08); }
-.pcCellRest { color: #ff8a8a; font-weight: 700; background: rgba(214,69,69,0.1); }
+.pcCellEligible { color: var(--status-green); font-weight: 700; background: rgba(53,197,116,0.08); }
+.pcCellRest { color: var(--status-red); font-weight: 700; background: rgba(214,69,69,0.1); }
 .pcCellPitched { color: #fff; font-weight: 800; background: rgba(46,82,232,0.18); }
+:root[data-theme="light"] .pcCellPitched { color: var(--lybs-blue-deep); }
 .pcLegendDot {
   display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
   border-radius: 5px; font-size: 10px; font-weight: 800; margin-right: 3px; vertical-align: middle;
@@ -532,9 +558,9 @@ a { color: var(--lybs-blue-bright); }
   font-family: var(--font-label); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 7px;
   letter-spacing: 0.04em;
 }
-.badgeW { background: rgba(53,197,116,0.15); color: #5fd989; border: 1px solid rgba(53,197,116,0.3); }
-.badgeL { background: rgba(214,69,69,0.15); color: #ff8a8a; border: 1px solid rgba(214,69,69,0.3); }
-.badgeT { background: rgba(230,185,53,0.15); color: #ffd45f; border: 1px solid rgba(230,185,53,0.3); }
+.badgeW { background: rgba(53,197,116,0.15); color: var(--status-green); border: 1px solid rgba(53,197,116,0.3); }
+.badgeL { background: rgba(214,69,69,0.15); color: var(--status-red); border: 1px solid rgba(214,69,69,0.3); }
+.badgeT { background: rgba(230,185,53,0.15); color: var(--gold); border: 1px solid rgba(230,185,53,0.3); }
 .badgeTbd { background: rgba(180,187,191,0.1); color: var(--text2); }
 
 /* ---- Detail / forms ---- */
@@ -621,7 +647,9 @@ a { color: var(--lybs-blue-bright); }
   padding: 8px; min-width: 36px; min-height: 36px; display: inline-flex; align-items: center; justify-content: center;
 }
 .pinBtn.pinned { color: #FFD45F; text-shadow: 0 0 10px rgba(255,212,95,0.6); }
+:root[data-theme="light"] .pinBtn.pinned { color: var(--gold); text-shadow: none; }
 .active.btnGhost { background: rgba(76,106,235,0.15); border-color: rgba(76,106,235,0.4); color: #AFC0FF; }
+:root[data-theme="light"] .active.btnGhost { color: var(--lybs-blue-deep); }
 
 /* ---- Standings ---- */
 .standingsTableWrap { overflow-x: auto; border-radius: 10px; }
@@ -635,8 +663,8 @@ a { color: var(--lybs-blue-bright); }
 .standingsTable td:first-child { white-space: normal; }
 .standingsTable tbody tr:hover { background: rgba(var(--overlay-rgb),0.03); }
 .standingsTable .numCell { text-align: center; font-variant-numeric: tabular-nums; }
-.standingsTable .diffPos { color: #5fd989; font-weight: 700; }
-.standingsTable .diffNeg { color: #ff8a8a; font-weight: 700; }
+.standingsTable .diffPos { color: var(--status-green); font-weight: 700; }
+.standingsTable .diffNeg { color: var(--status-red); font-weight: 700; }
 .standingsUsRow {
   background: linear-gradient(90deg, rgba(46,82,232,0.22), rgba(46,82,232,0.05));
   font-weight: 700; border-left: 3px solid var(--lybs-blue-bright);
@@ -738,8 +766,8 @@ a { color: var(--lybs-blue-bright); }
 
 /* ---- Game type badge (regular/playoff/championship) ---- */
 .gameTypeBadge { margin-left: 6px; vertical-align: middle; }
-.gameTypePlayoff { background: rgba(230,185,53,0.18); color: #F0C84B; border: 1px solid rgba(230,185,53,0.4); }
-.gameTypeChampionship { background: rgba(230,106,53,0.2); color: #FF9A5A; border: 1px solid rgba(230,106,53,0.45); }
+.gameTypePlayoff { background: rgba(230,185,53,0.18); color: var(--gold); border: 1px solid rgba(230,185,53,0.4); }
+.gameTypeChampionship { background: rgba(230,106,53,0.2); color: var(--status-orange); border: 1px solid rgba(230,106,53,0.45); }
 
 /* ---- Opponent card links out to their macleague.org team page ---- */
 .gameResultTeamLink { text-decoration: none; cursor: pointer; border-radius: 12px; transition: background .15s; }
@@ -809,6 +837,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   flex: 0 0 auto; font-variant-numeric: tabular-nums;
 }
 .tonightDivisionLabel { color: #AFC0FF; font-weight: 700; }
+:root[data-theme="light"] .tonightDivisionLabel { color: var(--lybs-blue-deep); }
 /* A finished game's card -- bigger/bolder team names and a big-score
    treatment matching .gameResultScore's look (same display font, white,
    text-shadow), with the losing side dimmed instead of both scores
@@ -869,7 +898,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 
 /* ---- Coaching drills (Around the Horn + Pitch Chart) ---- */
 .drillHero { text-align: center; padding: 10px 0 20px; }
-.drillHeroTitle { font-family: var(--font-display); font-size: 24px; letter-spacing: 0.02em; color: #F0C84B; }
+.drillHeroTitle { font-family: var(--font-display); font-size: 24px; letter-spacing: 0.02em; color: var(--gold); }
 .drillHeroSub { font-size: 12.5px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
 .drillCard {
   background: var(--card); border: 1px solid var(--card-border); border-radius: 14px;
@@ -884,7 +913,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   font-size: 13px; font-weight: 600; cursor: pointer; min-height: 40px;
 }
 .drillChip:disabled { opacity: 0.35; cursor: default; }
-.drillChipOn { background: rgba(245,166,35,0.18); border-color: #F0C84B; color: #F0C84B; }
+.drillChipOn { background: rgba(245,166,35,0.18); border-color: var(--gold); color: var(--gold); }
 .drillAddRow { display: flex; gap: 8px; margin-top: 10px; }
 .drillFreeInput {
   flex: 1; padding: 11px 13px; border-radius: 9px; border: 1px solid var(--card-border);
@@ -898,7 +927,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   width: 58px; height: 58px; border-radius: 14px; font-family: var(--font-display); font-size: 26px;
   border: 2px solid var(--card-border); background: rgba(var(--overlay-rgb),0.04); color: var(--text2); cursor: pointer;
 }
-.athGroupBtn:hover { border-color: #F0C84B; color: #F0C84B; }
+.athGroupBtn:hover { border-color: var(--gold); color: var(--gold); }
 .athBanner {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.4); z-index: 9999;
   text-align: center; background: rgba(5,7,28,0.92); padding: 24px 36px; border-radius: 18px;
@@ -910,17 +939,17 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .athBannerSub { font-size: 13px; color: #fff; margin-top: 6px; font-weight: 700; }
 .athPillRow { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
 .athPill { padding: 5px 11px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-.athPillDone { background: rgba(16,185,129,0.12); color: #5fd989; border: 1px solid rgba(16,185,129,0.3); }
-.athPillCur { background: rgba(245,166,35,0.15); color: #F0C84B; border: 1px solid rgba(245,166,35,0.35); }
+.athPillDone { background: rgba(16,185,129,0.12); color: var(--status-green); border: 1px solid rgba(16,185,129,0.3); }
+.athPillCur { background: rgba(245,166,35,0.15); color: var(--gold); border: 1px solid rgba(245,166,35,0.35); }
 .athPillWait { background: rgba(var(--overlay-rgb),0.04); color: var(--text3); border: 1px solid var(--card-border); }
 .athTimerCard {
   text-align: center; padding: 22px 14px 18px; background: var(--card); border: 1px solid var(--card-border);
   border-radius: 18px; margin-bottom: 14px;
 }
 .athTimerDisplay { font-family: var(--font-display); font-size: 68px; line-height: 1; letter-spacing: 0.02em; color: var(--text); }
-.athTimeRun { color: #F0C84B; }
-.athTimeStop { color: #ff8a8a; }
-.athTimeAccept { color: #5fd989; }
+.athTimeRun { color: var(--gold); }
+.athTimeStop { color: var(--status-red); }
+.athTimeAccept { color: var(--status-green); }
 .athAcceptNote { font-size: 12px; margin-top: 6px; font-weight: 700; }
 .athBigBtn { width: 100%; padding: 22px; font-size: 28px; letter-spacing: 0.04em; }
 .athStopBtn { background: linear-gradient(180deg, #e35858, #9a2b2b); }
@@ -974,7 +1003,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 .siCardName { font-family: var(--font-label); font-weight: 700; font-size: 13px; color: var(--text); }
 .pcPitcherRank {
   display: inline-block; font-family: var(--font-label); font-weight: 700; font-size: 11px;
-  color: #F0C84B; background: rgba(245,166,35,0.15); border-radius: 5px; padding: 1px 5px; margin-right: 2px;
+  color: var(--gold); background: rgba(245,166,35,0.15); border-radius: 5px; padding: 1px 5px; margin-right: 2px;
 }
 
 .coachingToggle { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; }
@@ -984,7 +1013,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 /* ---- Depth chart ---- */
 .depthRow { gap: 10px; }
 .depthRank {
-  width: 26px; height: 26px; border-radius: 7px; background: rgba(245,166,35,0.15); color: #F0C84B;
+  width: 26px; height: 26px; border-radius: 7px; background: rgba(245,166,35,0.15); color: var(--gold);
   font-family: var(--font-display); font-size: 15px; display: flex; align-items: center; justify-content: center;
   flex: 0 0 auto;
 }
@@ -1038,6 +1067,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   width: 26px; height: 26px; border-radius: 50%; background: rgba(76,106,235,0.18); color: #AFC0FF;
   font-family: var(--font-display); font-size: 14px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
 }
+:root[data-theme="light"] .lineupSlotNum { color: var(--lybs-blue-deep); }
 .lineupSlotSelect {
   padding: 9px 10px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(var(--sunken-rgb),0.6);
   color: var(--text); font-size: 13px; font-family: var(--font-body); min-height: 40px; flex: 1 1 140px; min-width: 0;
@@ -1118,6 +1148,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   .appModalOverlay { align-items: center; }
   .appModalSheet { border-radius: 16px; }
 }
+.mapModalFrame { width: 100%; height: 240px; border: 0; border-radius: 10px; display: block; background: rgba(var(--overlay-rgb),0.04); }
 
 /* Calendar view (Schedule tab -> Month/Week, js/calendar-view.js) */
 .calHeader { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 12px 0 10px; }
@@ -1176,6 +1207,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   background: rgba(76,106,235,0.16); border: 1px solid rgba(76,106,235,0.35); color: #AFC0FF;
   font-family: var(--font-label); font-size: 12px; font-weight: 700;
 }
+:root[data-theme="light"] .seedNum { color: var(--lybs-blue-deep); }
 
 /* ---- Light effects -----------------------------------------------------
    Three tasteful additions to the existing system above, not a new one:
@@ -1230,8 +1262,8 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   opacity: 0; transform: translateY(10px); transition: opacity .25s ease, transform .25s ease;
 }
 .toastShow { opacity: 1; transform: translateY(0); }
-.toastError { border-color: rgba(255,138,138,0.4); color: #ff8a8a; }
-.toastInfo { border-color: rgba(95,217,137,0.4); color: #5fd989; }
+.toastError { border-color: rgba(255,138,138,0.4); color: var(--status-red); }
+.toastInfo { border-color: rgba(95,217,137,0.4); color: var(--status-green); }
 
 /* Play Diagrams (js/play-diagram.js) -- tap-placed markers over the same
    .depthField/.depthFieldSvg Depth Chart draws (window.DepthChart.fieldSvg()),
