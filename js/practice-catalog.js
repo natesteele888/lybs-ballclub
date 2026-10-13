@@ -256,7 +256,11 @@
 
       function drillListHtml(division, category) {
         const filtered = drills.filter(d => d.division === division && d.category === category && matchesTier(d));
-        const rows = filtered.map(drillRowHtml).join('') || '<div class="emptyState">No drills in this tier selection yet.</div>';
+        // Same dimmed-icon-above-the-message empty state js/homepage.js's
+        // own homeEmptyStateHtml() established -- this view already has the
+        // category's own icon in scope one screen up (catStyle(category)),
+        // exactly what that pattern expects.
+        const rows = filtered.map(drillRowHtml).join('') || `<div class="homeEmptyState"><span class="homeEmptyStateIcon">${catStyle(category).icon}</span>No drills in this tier selection yet.</div>`;
         return `
           <div class="sectionHeader">
             <button class="btn btnGhost btnSmall" id="catBackToCategories">&larr; ${escapeHtml(division)}</button>
