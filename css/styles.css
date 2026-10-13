@@ -184,14 +184,20 @@ a { color: var(--lybs-blue-bright); }
   position: sticky; top: 0; z-index: 50;
   box-shadow: 0 1px 0 rgba(46,82,232,0.15);
 }
-.topBarBrand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+/* The team name/logo is the brand identity -- it shouldn't be what gives
+   up space first. flex-shrink:0 protects this whole group at its natural
+   size; .topBarActions (below) absorbs the squeeze instead, since a
+   board member's longer whoami text ("Coach Nate · Coach · Board") is
+   secondary, already-abbreviated utility text that degrades fine with
+   its own ellipsis -- a team name clipped to "SEL…" didn't. */
+.topBarBrand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 0 0 auto; }
 .topBarLogo { height: 34px; width: auto; flex: 0 0 auto; filter: drop-shadow(0 2px 6px rgba(46,82,232,0.35)); }
-.topBarActions { display: flex; align-items: center; gap: 12px; flex: 0 0 auto; }
+.topBarActions { display: flex; align-items: center; gap: 12px; flex: 0 1 auto; min-width: 0; }
 .topBarShareBtn {
   background: rgba(76,106,235,0.14); border: 1px solid rgba(76,106,235,0.4); color: #AFC0FF;
   font-family: var(--font-label); font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
   text-transform: uppercase; padding: 10px 14px; border-radius: 20px; cursor: pointer; white-space: nowrap;
-  min-height: 36px;
+  min-height: 36px; flex: 0 0 auto;
 }
 .topBarShareBtn:hover { background: rgba(76,106,235,0.24); }
 .topBar h1 {
@@ -201,7 +207,7 @@ a { color: var(--lybs-blue-bright); }
 }
 .topBar .whoami {
   font-size: 11px; color: var(--text2); font-family: var(--font-label); letter-spacing: 0.03em;
-  text-transform: uppercase; white-space: nowrap; flex: 0 1 auto; min-width: 0;
+  text-transform: uppercase; white-space: nowrap; flex: 1 1 auto; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; max-width: 40vw; cursor: pointer; padding: 8px 2px; margin: -8px -2px;
 }
 .topBar .whoami:active { color: var(--text); }
