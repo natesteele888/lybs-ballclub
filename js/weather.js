@@ -87,7 +87,18 @@
     if (parts.length !== 3 || parts.some(isNaN)) return Promise.resolve(null);
     const eventDate = new Date(parts[0], parts[1] - 1, parts[2]);
     const daysOut = Math.round((eventDate - today) / 86400000);
-    if (daysOut < 0 || daysOut > 15) { cache[cacheKey] = null; return Promise.resolve(null); }
+    // "Already past" is permanent for this session -- fine to cache. "More
+    // than 15 days out" is NOT: it's a function of today's date, and
+    // becomes false as the calendar advances. Caching it under the same
+    // cacheKey as a real failure used to mean a game first viewed 16+ days
+    // ahead never got a forecast for the rest of that browser session, even
+    // once it entered Open-Meteo's real 16-day window -- the unconditional
+    // cache-hit check above returned the stale null before this check ever
+    // ran again. The date math here is cheap and runs before any network
+    // call, so leaving the "too far out" case uncached just means it's
+    // re-checked (not re-fetched) on every call, which is fine.
+    if (daysOut < 0) { cache[cacheKey] = null; return Promise.resolve(null); }
+    if (daysOut > 15) return Promise.resolve(null);
 
     const candidates = buildCityCandidates(address);
     if (!candidates.length) { cache[cacheKey] = null; return Promise.resolve(null); }

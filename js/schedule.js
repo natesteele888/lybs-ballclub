@@ -269,7 +269,7 @@
       const editing = !!opts.editing;
       if (!editing) {
         const played = game.ourScore != null && game.oppScore != null;
-        const theirLinkUrl = window.LeagueTeams.teamUrl(game.opponent);
+        const theirLinkUrl = window.LeagueTeams.teamUrl(game.opponent, window.TeamConfig.current().macLeagueDivisionId);
         containerEl.innerHTML = `
           <div class="detailCard">
             <h3>${window.ClubLogos.badgeHtml(game.opponent, 26)}${game.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(game.opponent || 'TBD')}

@@ -49,7 +49,8 @@
         window.Archive.ensureLoaded(),
       ]);
 
-      const leagueMatch = window.LeagueTeams.find(opponentName); // {teamId, team, divisionId} | null
+      const ourDivisionId = window.TeamConfig.current().macLeagueDivisionId;
+      const leagueMatch = window.LeagueTeams.find(opponentName, ourDivisionId); // {teamId, team, divisionId} | null
       const club = window.ClubLogos.find(opponentName); // {town, logoUrl} | null
       const badge = window.ClubLogos.badgeHtml(opponentName, 56);
 
@@ -94,7 +95,7 @@
               ${statTileHtml(escapeHtml(standingsRow.rf ?? '-'), 'Runs For')}
               ${statTileHtml(escapeHtml(standingsRow.ra ?? '-'), 'Runs Against')}
             </div>` : `<div class="helpText" style="margin-top:10px;">No current standings mirrored for this team.</div>`}
-          ${leagueMatch ? `<a class="btn" style="width:100%;margin-top:14px;" href="${window.LeagueTeams.teamUrl(opponentName)}" target="_blank" rel="noopener">Full schedule, roster &amp; coach contact on macleague.org</a>` : ''}
+          ${leagueMatch ? `<a class="btn" style="width:100%;margin-top:14px;" href="${window.LeagueTeams.teamUrl(opponentName, ourDivisionId)}" target="_blank" rel="noopener">Full schedule, roster &amp; coach contact on macleague.org</a>` : ''}
         </div>
 
         ${theirFields.length ? `

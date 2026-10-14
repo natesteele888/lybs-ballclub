@@ -110,6 +110,12 @@
       const roster = window.Roster.getPlayers(teamId);
       let selected = null; // position currently expanded for editing
       let banner = null; // {name, from, to} -- shown once, right after a starter gets bumped
+      // Shared across all four reorder/remove/add handlers below -- a
+      // double-click/tap before the pending saveChart()+refresh() replaces
+      // this DOM (and its listeners) used to let the same stale `list`
+      // array get spliced/pushed into twice, deleting or adding a second,
+      // unintended player.
+      let busy = false;
 
       function posCardHtml(p) {
         const list = chart[p];
@@ -179,6 +185,8 @@
 
         containerEl.querySelectorAll('[data-up]').forEach(btn => {
           btn.addEventListener('click', async () => {
+            if (busy) return;
+            busy = true;
             const list = chart[selected];
             const i = Number(btn.dataset.up);
             [list[i - 1], list[i]] = [list[i], list[i - 1]];
@@ -186,11 +194,13 @@
               const movedFrom = enforceStarterExclusivity(chart, selected);
               if (movedFrom) banner = { name: list[0].name, from: movedFrom, to: selected };
             }
-            await saveChart(teamId); refresh();
+            await saveChart(teamId); busy = false; refresh();
           });
         });
         containerEl.querySelectorAll('[data-down]').forEach(btn => {
           btn.addEventListener('click', async () => {
+            if (busy) return;
+            busy = true;
             const list = chart[selected];
             const i = Number(btn.dataset.down);
             [list[i + 1], list[i]] = [list[i], list[i + 1]];
@@ -198,11 +208,13 @@
               const movedFrom = enforceStarterExclusivity(chart, selected);
               if (movedFrom) banner = { name: list[0].name, from: movedFrom, to: selected };
             }
-            await saveChart(teamId); refresh();
+            await saveChart(teamId); busy = false; refresh();
           });
         });
         containerEl.querySelectorAll('[data-remove]').forEach(btn => {
           btn.addEventListener('click', async () => {
+            if (busy) return;
+            busy = true;
             const list = chart[selected];
             const removedTopSpot = Number(btn.dataset.remove) === 0;
             list.splice(Number(btn.dataset.remove), 1);
@@ -210,11 +222,13 @@
               const movedFrom = enforceStarterExclusivity(chart, selected);
               if (movedFrom) banner = { name: list[0].name, from: movedFrom, to: selected };
             }
-            await saveChart(teamId); refresh();
+            await saveChart(teamId); busy = false; refresh();
           });
         });
         containerEl.querySelectorAll('[data-add]').forEach(btn => {
           btn.addEventListener('click', async () => {
+            if (busy) return;
+            busy = true;
             const list = chart[selected];
             const wasEmpty = list.length === 0;
             list.push({ id: btn.dataset.add, name: btn.dataset.name });
@@ -222,7 +236,7 @@
               const movedFrom = enforceStarterExclusivity(chart, selected);
               if (movedFrom) banner = { name: btn.dataset.name, from: movedFrom, to: selected };
             }
-            await saveChart(teamId); refresh();
+            await saveChart(teamId); busy = false; refresh();
           });
         });
       }

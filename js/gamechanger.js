@@ -54,11 +54,19 @@
       opts = opts || {};
       if (!containerEl.innerHTML) containerEl.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
       const record = await window.GameChanger.load(teamId);
+      // The iframe itself is built as a real DOM node below, not this
+      // string -- a coach-pasted snippet almost always contains a quoted
+      // attribute (<script src="...">), and escapeHtml() only escapes
+      // & < > (see util.js), not " or '. Serializing that into a
+      // srcdoc="..." HTML attribute string let a quoted snippet break out
+      // of the attribute and inject live attributes (e.g. onload="...")
+      // onto the real <iframe> element in the PARENT page -- completely
+      // outside the sandbox, arbitrary JS in this app's real origin with
+      // the signed-in session. Assigning .srcdoc as a JS property instead
+      // never goes through HTML-attribute parsing at all, so this can't
+      // happen regardless of what characters the snippet contains.
       const widgetHtml = record && record.snippet
-        ? `<iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
-             referrerpolicy="no-referrer"
-             srcdoc="${escapeHtml('<!DOCTYPE html><html><head><meta charset=\'utf-8\'><style>body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;}</style></head><body>' + record.snippet + '</body></html>')}"
-             class="gcFrame"></iframe>`
+        ? '<div id="gcFrameSlot"></div>'
         : '<div class="emptyState">No GameChanger widget added yet.</div>';
 
       const addForm = !opts.canEdit ? '' : `
@@ -95,6 +103,15 @@
         ${widgetHtml}
         ${mirrorForm}
         ${addForm}`;
+      const frameSlot = containerEl.querySelector('#gcFrameSlot');
+      if (frameSlot && record && record.snippet) {
+        const frame = document.createElement('iframe');
+        frame.setAttribute('sandbox', 'allow-scripts allow-popups allow-popups-to-escape-sandbox');
+        frame.referrerPolicy = 'no-referrer';
+        frame.className = 'gcFrame';
+        frame.srcdoc = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;}</style></head><body>' + record.snippet + '</body></html>';
+        frameSlot.replaceWith(frame);
+      }
       const gcInfoBtn = containerEl.querySelector('#gcInfoBtn');
       if (gcInfoBtn) {
         gcInfoBtn.addEventListener('click', () => {

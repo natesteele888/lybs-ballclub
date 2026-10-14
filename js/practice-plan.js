@@ -27,12 +27,30 @@
   const TOOL_LABEL = { ath: 'Around the Horn', baserunning: 'Base Running', pitching: 'Pitch Chart' };
 
   const cache = {}; // teamId -> plans[]
+  const pending = {}; // teamId -> in-flight ensurePlans() promise
 
+  // Caches the in-flight fetch, not just the resolved value -- the
+  // Practice Catalog tab's "+ Add to my Practice Plan" button and this
+  // tool's own render() can each call this for the same team within
+  // moments of each other (e.g. a coach adds a drill, then immediately
+  // switches to Practice Plan itself), and without this guard whichever
+  // dbGet resolved second would clobber cache[teamId] with its own array,
+  // silently orphaning the block the other call had just added and saved
+  // -- same shape as the play-diagram.js cache race fixed earlier this
+  // session, same fix.
   async function ensurePlans(teamId) {
     if (cache[teamId]) return cache[teamId];
-    const data = await window.dbGet(window.teamPath(teamId, 'practicePlans'));
-    cache[teamId] = Array.isArray(data) ? data : [];
-    return cache[teamId];
+    if (pending[teamId]) return pending[teamId];
+    pending[teamId] = (async () => {
+      try {
+        const data = await window.dbGet(window.teamPath(teamId, 'practicePlans'));
+        cache[teamId] = Array.isArray(data) ? data : [];
+        return cache[teamId];
+      } finally {
+        delete pending[teamId];
+      }
+    })();
+    return pending[teamId];
   }
   // Takes the current array explicitly, rather than reading it back out of
   // cache, because the list gets reassigned (not just mutated) on delete --
@@ -59,7 +77,7 @@
     const plans = await ensurePlans(teamId);
     let p = planId ? plans.find(x => x.id === planId) : null;
     if (!p) {
-      p = { id: uid('pp'), name: '', date: new Date().toISOString().slice(0, 10), blocks: [] };
+      p = { id: uid('pp'), name: '', date: todayIso(), blocks: [] };
       plans.unshift(p);
     }
     p.blocks.push(blockFromDrill(drill));
@@ -280,11 +298,13 @@
             btn.addEventListener('click', () => { addMode = btn.dataset.addmode; addingCustom = false; refresh(); });
           });
           containerEl.querySelectorAll('[data-adddrill]').forEach(btn => {
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
               const drill = window.PracticeCatalog.getDrills().find(d => d.id === btn.dataset.adddrill);
               if (!drill) return;
-              p.blocks.push(blockFromDrill(drill));
-              await savePlans(teamId, plans); refresh();
+              withBusyButton(btn, 'Adding...', async () => {
+                p.blocks.push(blockFromDrill(drill));
+                await savePlans(teamId, plans); refresh();
+              });
             });
           });
           const libSearch = containerEl.querySelector('#ppLibSearch');

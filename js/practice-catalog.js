@@ -428,8 +428,16 @@
             await window.PracticePlan.ensurePlans(teamId);
             const slot = containerEl.querySelector('#catAddPlanSlot');
             slot.innerHTML = addPlanPickerHtml();
+            // Plain re-entrancy flag rather than withBusyButton -- these
+            // rows are plan-name/date text, not a button, so stomping
+            // .textContent over them for the brief round trip would blank
+            // out the row's own content instead of just disabling it. This
+            // still closes the same double-tap-adds-the-drill-twice gap.
+            let adding = false;
             slot.querySelectorAll('[data-plan]').forEach(row => {
               row.addEventListener('click', async () => {
+                if (adding) return;
+                adding = true;
                 const d = drills.find(x => x.id === view.drillId);
                 const planId = row.dataset.plan === '__new' ? null : row.dataset.plan;
                 await window.PracticePlan.addDrillToPlan(teamId, planId, d);
