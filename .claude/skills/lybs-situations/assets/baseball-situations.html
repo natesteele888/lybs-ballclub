@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Where Do I Go? — Baseball Situations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0c1512; --panel:#132420; --panel2:#1a302a; --line:#28453c;
+  --grass:#3f8455; --grass2:#4a9764; --dirt:#b5794c; --dirt2:#a3683f; --track:#965f3a; --fence:#2c4438;
+  --chalk:#f2f5f1; --mute:#8fa89e;
+  --amber:#ffc53d; --cyan:#4fd1e0; --violet:#b39aff; --rose:#ff7b72; --lime:#8fe388; --orange:#ff9a3d;
+  --r:10px;
+}
+:root:not([data-theme="light"]){color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--night); color:var(--chalk);
+  font-family:'Barlow',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:16px; line-height:1.5;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+h1,h2,h3,.cond{font-family:'Barlow Condensed','Barlow',sans-serif;font-weight:700;letter-spacing:.01em}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- shell ---- */
+.wrap{max-width:560px;margin:0 auto;padding:0 12px 96px}
+header.top{display:flex;align-items:center;gap:10px;padding:14px 4px 10px}
+.logo{width:36px;height:36px;flex:0 0 auto}
+.tname{font-size:20px;line-height:1.1}
+.tsub{font-size:12px;color:var(--mute);letter-spacing:.06em;font-family:'Barlow Condensed',sans-serif}
+
+/* ---- scoreboard strip ---- */
+.board{background:linear-gradient(180deg,#0a1210,#132420);border:1px solid var(--line);
+  border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.board .lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--mute);letter-spacing:.14em;margin-bottom:5px}
+.bd-diamond{width:46px;height:46px;position:relative;flex:0 0 auto}
+.bd-diamond button{position:absolute;width:15px;height:15px;transform:rotate(45deg);
+  border:1.5px solid #5d7a6f;background:transparent;border-radius:2px;transition:background .15s}
+.bd-diamond button[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);
+  box-shadow:0 0 9px rgba(255,197,61,.55)}
+.bd-1{right:0;top:15px} .bd-2{left:15px;top:0} .bd-3{left:0;top:15px}
+.outs{display:flex;gap:6px}
+.outs button{width:18px;height:18px;border-radius:50%;border:1.5px solid #5d7a6f;background:transparent;transition:background .15s}
+.outs button.on{background:var(--rose);border-color:var(--rose);box-shadow:0 0 9px rgba(255,123,114,.5)}
+.board .grow{flex:1}
+.pill{border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:5px 11px;font-size:12px;
+  font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;color:var(--mute)}
+.pill.on{background:var(--amber);color:#111;border-color:var(--amber);font-weight:700}
+
+/* ---- field ---- */
+.fieldwrap{position:relative;background:#0a1210;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+svg.field{display:block;width:100%;height:auto;touch-action:manipulation}
+.player{cursor:pointer}
+.pdot{stroke:#12241c;stroke-width:2.5}
+.ptxt{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;fill:#0e1a16;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.route{fill:none;stroke-dasharray:5 5;opacity:.75}
+.hint{position:absolute;left:10px;bottom:8px;font-size:11px;color:var(--mute);font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em}
+
+.playbar{display:flex;gap:8px;margin:10px 0}
+.playbar button{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:var(--r);
+  padding:11px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;letter-spacing:.04em}
+.playbar button.primary{background:var(--amber);color:#111;border-color:var(--amber)}
+.playbar button:active{transform:translateY(1px)}
+.transport{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+#btnPP{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;min-width:62px}
+#scrub{flex:1;accent-color:var(--amber);min-width:0}
+#clock{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--mute);min-width:36px;text-align:right}
+.calls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.call{font-family:'Barlow Condensed',sans-serif;font-size:14px;padding:5px 11px;border-radius:999px}
+.call.out{background:#2f6b44;color:#eafff0}
+.call.safe{background:#6b3230;color:#ffecea}
+.call.note{background:var(--panel2);color:var(--mute);border:1px solid var(--line);letter-spacing:.06em}
+
+/* ---- job list ---- */
+.jobs{margin-top:4px}
+.jobs{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:2px 12px;margin-top:8px}
+.job{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+.job:last-child{border-bottom:none}
+.job.me{background:linear-gradient(90deg,rgba(255,197,61,.15),transparent);
+  margin:0 -12px;padding-left:12px;padding-right:12px;border-radius:6px}
+.job .num{width:30px;flex:0 0 auto;text-align:center}
+.jn{display:flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:#0e1a16}
+.jp{display:block;font-size:10px;color:var(--mute);margin-top:3px;font-family:'Barlow Condensed',sans-serif}
+.job .body{flex:1;min-width:0}
+.job .role{font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:.09em;margin-bottom:1px}
+.job .cue{font-size:14px;line-height:1.4;color:#dce7e1}
+.job.dim{opacity:.38}
+
+.bigjob{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--amber);
+  border-radius:var(--r);padding:14px 15px;margin-bottom:10px}
+.bigjob .r{font-family:'Barlow Condensed',sans-serif;font-size:26px;line-height:1.1;color:var(--amber)}
+.bigjob .c{font-size:17px;margin-top:5px}
+
+/* ---- generic ---- */
+.sec{margin:18px 0 8px;font-size:19px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:9px}
+.muted{color:var(--mute);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 11px;font-size:14px}
+.chip.on{background:var(--amber);color:#111;border-color:var(--amber);font-weight:600}
+select,input[type=text],textarea{width:100%;background:#0a1210;color:var(--chalk);border:1px solid var(--line);
+  border-radius:8px;padding:10px;font-family:inherit;font-size:15px}
+label.f{display:block;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--mute);
+  letter-spacing:.1em;margin:10px 0 4px}
+.btn{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 14px;
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;letter-spacing:.04em}
+.btn.go{background:var(--amber);color:#111;border-color:var(--amber)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left}
+th{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--mute);letter-spacing:.1em}
+
+/* ---- tabs ---- */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(10,18,16,.96);
+  backdrop-filter:blur(8px);border-top:1px solid var(--line);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs button{flex:1;padding:11px 2px 13px;font-family:'Barlow Condensed',sans-serif;font-size:15px;
+  letter-spacing:.02em;color:var(--mute);border-top:2px solid transparent}
+nav.tabs button.on{color:var(--amber);border-top-color:var(--amber)}
+.page{display:none} .page.on{display:block}
+
+.quizq{font-size:20px;line-height:1.25;margin-bottom:4px}
+.feedback{border-radius:var(--r);padding:12px 14px;margin-bottom:9px;font-size:15px}
+.feedback.good{background:#16301f;border:1px solid #2f6b44}
+.feedback.bad{background:#301a19;border:1px solid #6b3230}
+.score{display:flex;gap:16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--mute);letter-spacing:.08em}
+.score b{color:var(--chalk);font-size:19px;display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#f2f5f1"/>
+  <path d="M8.5,6.5 C14.5,13 14.5,27 8.5,33.5" stroke="#c0392b" fill="none" stroke-width="1.5" stroke-dasharray="1.2 3.2" stroke-linecap="round"/>
+  <path d="M31.5,6.5 C25.5,13 25.5,27 31.5,33.5" stroke="#c0392b" fill="none" stroke-width="1.5" stroke-dasharray="1.2 3.2" stroke-linecap="round"/></svg>
+  <div>
+    <div class="tname cond" id="teamName">Majors Select</div>
+    <div class="tsub" id="teamSub">Where do I go?</div>
+  </div>
+</header>
+
+<!-- ============================ PLAY ============================ -->
+<section class="page on" id="p-play">
+
+  <div class="board">
+    <div>
+      <div class="lbl">RUNNERS</div>
+      <div class="bd-diamond">
+        <button class="bd-1" data-base="1" aria-label="Runner on first" aria-pressed="false"></button>
+        <button class="bd-2" data-base="2" aria-label="Runner on second" aria-pressed="false"></button>
+        <button class="bd-3" data-base="3" aria-label="Runner on third" aria-pressed="false"></button>
+      </div>
+    </div>
+    <div>
+      <div class="lbl">OUTS</div>
+      <div class="outs" id="outsBox">
+        <button data-out="0" aria-label="0 outs"></button>
+        <button data-out="1" aria-label="1 out"></button>
+        <button data-out="2" aria-label="2 outs"></button>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <button class="pill" id="infIn" aria-pressed="false">Infield in</button>
+  </div>
+
+  <div class="fieldwrap">
+    <svg class="field" id="svg" viewBox="0 0 520 482" role="img" aria-label="Baseball field with player movement"></svg>
+    <div class="hint" id="fieldHint">Tap the field to hit it there</div>
+  </div>
+
+  <div class="chips" id="typeChips" style="margin:9px 0 2px"></div>
+
+  <div class="playbar">
+    <button class="primary" id="btnRun">Run the play</button>
+    <button id="btnPick">Pick the ball</button>
+  </div>
+
+  <div class="transport">
+    <button id="btnPP">Play</button>
+    <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Scrub through the play">
+    <span id="clock">0.0s</span>
+    <button class="pill" id="btnSlow" aria-pressed="false">Slow</button>
+  </div>
+  <div class="calls" id="callBox"></div>
+
+  <div id="pickBox" style="display:none"></div>
+
+  <div class="card" style="padding:11px 12px">
+    <div class="lbl cond" style="font-size:11px;color:var(--mute);letter-spacing:.14em;margin-bottom:6px">I AM PLAYING</div>
+    <div class="chips" id="meChips"></div>
+  </div>
+
+  <div id="bigJobBox"></div>
+  <div class="jobs" id="jobs"></div>
+  <div class="card muted" id="teachBox" style="display:none"></div>
+</section>
+
+<!-- ============================ QUIZ ============================ -->
+<section class="page" id="p-quiz">
+  <h2 class="sec">Situation quiz</h2>
+  <div class="card">
+    <div class="quizq cond" id="qText">Ready?</div>
+    <div class="muted" id="qSub">Pick a position to practice, then tap where you'd go on the field.</div>
+  </div>
+  <div class="chips" id="qPosChips" style="margin-bottom:10px"></div>
+  <div class="fieldwrap">
+    <svg class="field" id="qsvg" viewBox="0 0 520 482" role="img" aria-label="Quiz field — tap where you would go"></svg>
+  </div>
+  <div id="qFeedback" style="margin-top:10px"></div>
+  <div class="row" style="margin-top:8px">
+    <button class="btn go" id="qNext" style="flex:1">New situation</button>
+    <button class="btn" id="qReveal">Show me</button>
+  </div>
+  <div class="card score" style="margin-top:12px">
+    <div><b id="qRight">0</b>right</div>
+    <div><b id="qTotal">0</b>reps</div>
+    <div><b id="qStreak">0</b>streak</div>
+  </div>
+</section>
+
+<!-- ============================ RULES ============================ -->
+<section class="page" id="p-rules">
+  <h2 class="sec">Five rules that cover almost everything</h2>
+  <div class="card"><b class="cond" style="font-size:17px">1. Nobody stands still.</b>
+    <div class="muted" style="color:#dce7e1">On every batted ball you are fielding it, covering a base, cutting a throw, or backing up a throw. If you can't say which one, you're wrong.</div></div>
+  <div class="card"><b class="cond" style="font-size:17px">2. Throws to second: ball side goes out.</b>
+    <div class="muted" style="color:#dce7e1">Ball to left field, shortstop goes out for the relay and the second baseman covers. Ball to right field, they swap.</div></div>
+  <div class="card"><b class="cond" style="font-size:17px">3. Throws to third: shortstop is the cut.</b>
+    <div class="muted" style="color:#dce7e1">Every time, from anywhere. The third baseman stays on the bag.</div></div>
+  <div class="card"><b class="cond" style="font-size:17px">4. Throws home: left field, third baseman cuts. Center or right, first baseman cuts.</b>
+    <div class="muted" style="color:#dce7e1">The catcher is the only one who can see the runner, so the catcher makes the call: "Cut!" or "Let it go!"</div></div>
+  <div class="card"><b class="cond" style="font-size:17px">5. The pitcher backs up one base, not two.</b>
+    <div class="muted" style="color:#dce7e1">Third or home — pick the one the ball is going to and get deep behind it.</div></div>
+  <h2 class="sec">Infield fly</h2>
+  <div class="card muted" style="color:#dce7e1">Runners on first and second, or bases loaded, with fewer than two outs, and an infielder can catch a fair pop with ordinary effort — the umpire calls the batter out on the spot. Nobody is forced anymore. So catch it, and if you drop it, do not go running to a base looking for a force that isn't there. The runners can still advance at their own risk, so hold your bag and look them back.</div>
+  <h2 class="sec">When the batter can run on strike three</h2>
+  <div class="card"><table>
+    <tr><th>Situation</th><th>Batter</th></tr>
+    <tr><td>First base empty</td><td style="color:var(--lime)">Can run</td></tr>
+    <tr><td>Two outs, any runners</td><td style="color:var(--lime)">Can run</td></tr>
+    <tr><td>Runner on first, fewer than two outs</td><td style="color:var(--rose)">Just out — stay home</td></tr>
+  </table></div>
+  <div class="card muted" style="color:#dce7e1">The catcher does not have to catch it cleanly for it to be a strike. He has to catch it in the air. If it touches dirt first, the batter is live under the rules above — and half your team will forget.</div>
+  <h2 class="sec">Cut numbers</h2>
+  <div class="card muted" style="color:#dce7e1">The catcher yells a number and everybody knows what it means. "Cut" on its own means cut it and hold the ball.</div>
+  <div class="card"><table>
+    <tr><th>Call</th><th>Means</th></tr>
+    <tr><td><b class="cond" style="font-size:16px;color:var(--cyan)">Cut 2</b></td><td>Cut it and throw to second</td></tr>
+    <tr><td><b class="cond" style="font-size:16px;color:var(--cyan)">Cut 3</b></td><td>Cut it and throw to third</td></tr>
+    <tr><td><b class="cond" style="font-size:16px;color:var(--cyan)">Cut 4</b></td><td>Cut it and throw home</td></tr>
+    <tr><td><b class="cond" style="font-size:16px;color:var(--mute)">Let it go</b></td><td>Duck. Ball goes through untouched</td></tr>
+  </table></div>
+  <h2 class="sec">Who is the cut man</h2>
+  <div class="card"><table>
+    <tr><th>Throw going to</th><th>From left</th><th>From center</th><th>From right</th></tr>
+    <tr><td>Second</td><td>SS</td><td>SS or 2B</td><td>2B</td></tr>
+    <tr><td>Third</td><td>SS</td><td>SS</td><td>SS</td></tr>
+    <tr><td>Home</td><td>3B</td><td>1B</td><td>1B</td></tr>
+    <tr><td class="muted">Extra-base hit</td><td colspan="3" class="muted">1B is always cut 4, SS and 2B run the relay</td></tr>
+  </table></div>
+  <h2 class="sec">What the colors mean</h2>
+  <div class="card" id="legendBox"></div>
+</section>
+
+<!-- ============================ TEAM ============================ -->
+<section class="page" id="p-team">
+  <h2 class="sec">Schedule</h2>
+  <div class="card"><table id="schedTable"></table></div>
+  <h2 class="sec">Who plays where</h2>
+  <div class="card"><table id="rosterTable"></table></div>
+  <div class="row">
+    <button class="btn" id="editTeam">Edit roster &amp; schedule</button>
+  </div>
+  <div id="teamEditBox"></div>
+</section>
+
+<!-- ============================ EDIT ============================ -->
+<section class="page" id="p-edit">
+  <h2 class="sec">Coach's editor</h2>
+  <div class="card muted">Change any assignment and it saves to this device. Export the CSV to share it with your org or commit it to the repo.</div>
+
+  <label class="f">SITUATION</label>
+  <select id="eSit"></select>
+  <label class="f">RUNNERS / OUTS THIS EDIT APPLIES TO</label>
+  <div class="row">
+    <select id="eBases" style="flex:1"></select>
+    <select id="eOuts" style="flex:1"></select>
+  </div>
+  <label class="f">POSITION</label>
+  <select id="ePos"></select>
+  <label class="f">JOB</label>
+  <select id="eRole"></select>
+  <label class="f">WHERE HE GOES</label>
+  <select id="eTarget"></select>
+  <label class="f">WHAT YOU TELL HIM</label>
+  <textarea id="eCue" rows="2"></textarea>
+  <div class="row" style="margin-top:10px">
+    <button class="btn go" id="eSave">Save this rule</button>
+    <button class="btn" id="eReset">Undo my changes</button>
+  </div>
+
+  <h2 class="sec">Org in a box</h2>
+  <label class="f">TEAM NAME</label>
+  <input type="text" id="cfgName">
+  <label class="f">TAGLINE</label>
+  <input type="text" id="cfgSub">
+  <div class="row" style="margin-top:10px">
+    <button class="btn go" id="cfgSave">Save identity</button>
+  </div>
+
+  <h2 class="sec">Data</h2>
+  <div class="row">
+    <button class="btn" id="expResp">Export responsibilities.csv</button>
+    <button class="btn" id="expSit">Export situations.csv</button>
+    <button class="btn" id="impBtn">Import a CSV</button>
+  </div>
+  <input type="file" id="impFile" accept=".csv,text/csv" style="display:none">
+  <div class="card muted" id="dataStat" style="margin-top:10px"></div>
+</section>
+
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="play" class="on">Play</button>
+  <button data-tab="quiz">Quiz</button>
+  <button data-tab="rules">Rules</button>
+  <button data-tab="team">Team</button>
+  <button data-tab="edit">Edit</button>
+</nav>
+
+<script>
+/* ==================================================================
+   Where Do I Go? — youth baseball situations engine
+   Self-contained. Data lives in two CSVs embedded below and can be
+   replaced wholesale (Edit > Import) to re-skin for another org.
+   ================================================================== */
+
+const SITUATIONS_CSV = `ball_id,label,group,ball_type,ball_x,ball_y,teaching_point,tap,ball_from,set_bases,set_outs,runners
+GB_P,Ground ball back to the pitcher,Ground balls,ground,260,352,"Comebackers are the most common play a pitcher makes. Field it, turn, and throw.",yes,PLATE,,,force
+GB_C,Chopper in front of the plate,Ground balls,ground,262,396,Catcher has to come out from behind the mask and make a barehand-or-glove play.,yes,PLATE,,,force
+GB_1B,Ground ball to first,Ground balls,ground,352,318,The pitcher covering first is the single most-missed play at this age.,yes,PLATE,,,force
+GB_2B,Ground ball to second,Ground balls,ground,312,262,,yes,PLATE,,,force
+GB_SS,Ground ball to short,Ground balls,ground,208,262,,yes,PLATE,,,force
+GB_3B,Ground ball to third,Ground balls,ground,168,318,,yes,PLATE,,,force
+GB_1B_HOLE,Ground ball in the hole at first,Ground balls,ground,378,288,"1B ranges right, so somebody else has to be at the bag — that's the pitcher.",yes,PLATE,,,force
+GB_SS_HOLE,Ground ball deep in the hole at short,Ground balls,ground,166,276,Long throw. Set your feet — a rushed throw here is two bases.,yes,PLATE,,,force
+GB_MIDDLE,Ground ball up the middle,Ground balls,ground,258,238,Both middle infielders break. Call it early and loud so you don't collide.,yes,PLATE,,,force
+GB_SLOW_3B,Slow roller down the third base line,Ground balls,ground,212,358,"Charge it. Barehand on the run, throw from where you are.",yes,PLATE,,,force
+BUNT_P,Bunt back to the pitcher,Bunts,bunt,260,376,,yes,PLATE,,,force
+BUNT_1B,Bunt down the first base line,Bunts,bunt,299,367,Second baseman must cover first — the first baseman is charging the ball.,yes,PLATE,,,force
+BUNT_3B,Bunt down the third base line,Bunts,bunt,221,367,Shortstop rotates to third. Nobody is home if he doesn't.,yes,PLATE,,,force
+POP_INF_L,Pop up on the left side of the infield,Pop ups,pop,176,288,The fielder going back has priority over the fielder coming in.,yes,PLATE,,,none
+POP_INF_R,Pop up on the right side of the infield,Pop ups,pop,344,288,,yes,PLATE,,,none
+POP_MIDDLE,Pop up over second base,Pop ups,pop,260,232,Center fielder beats both middle infielders to this ball. Let him have it.,yes,PLATE,,,none
+FOUL_POP_C,Foul pop behind the plate,Pop ups,pop,258,454,"Mask off, find the ball, then throw the mask the other way.",yes,PLATE,,,none
+FOUL_POP_1B,Foul pop down the first base line,Pop ups,pop,381,320,,yes,PLATE,,,none
+FOUL_POP_3B,Foul pop down the third base line,Pop ups,pop,139,320,,yes,PLATE,,,none
+FLY_LF,Fly ball to left field,Fly balls (caught),fly,108,204,,yes,PLATE,,,tag
+FLY_CF,Fly ball to center field,Fly balls (caught),fly,260,150,,yes,PLATE,,,tag
+FLY_RF,Fly ball to right field,Fly balls (caught),fly,412,204,Right fielder has the longest throw to third. Hit the cutoff.,yes,PLATE,,,tag
+SINGLE_LF,Base hit to left field,Base hits,hit,112,236,,yes,PLATE,,,single
+SINGLE_CF,Base hit to center field,Base hits,hit,260,186,,yes,PLATE,,,single
+SINGLE_RF,Base hit to right field,Base hits,hit,408,236,,yes,PLATE,,,single
+GAP_LC,Ball in the left-center gap,Extra base hits,gap,186,152,Two-man relay. The trail man saves a run when the relay throw gets away.,yes,PLATE,,,double
+GAP_RC,Ball in the right-center gap,Extra base hits,gap,336,152,,yes,PLATE,,,double
+LINE_LF,Double down the left field line,Extra base hits,gap,112,250,,yes,PLATE,,,double
+LINE_RF,Double down the right field line,Extra base hits,gap,408,250,,yes,PLATE,,,double
+OVER_CF,Ball over the center fielder's head,Extra base hits,gap,260,96,"Nobody panics. Get it in with two throws, not one heroic one.",yes,PLATE,,,double
+WILD_PITCH,Wild pitch or passed ball,Battery plays,loose,306,452,Pitcher covering the plate is the play nobody practices and everybody needs.,no,PLATE,,,wp
+STEAL_2B,Runner steals second,Battery plays,steal,260,452,Pitcher must get off the mound and out of the throwing lane.,no,PLATE,,,steal2
+STEAL_3B,Runner steals third,Battery plays,steal,260,452,,no,PLATE,,,steal3
+OVER_LF,Over the left fielder's head,Cutoffs & relays,gap,100,179,Two-man relay. The trail man exists because 11-year-olds throw the relay over the cutoff's head.,yes,PLATE,,,double
+CORNER_LF,Ball rolls into the left field corner,Cutoffs & relays,gap,78,210,Longest throw on the field. Nobody should try to make it in one.,yes,PLATE,,,double
+WALL_LC,Off the fence in left-center,Cutoffs & relays,gap,170,102,,yes,PLATE,,,double
+OVER_RF,Over the right fielder's head,Cutoffs & relays,gap,420,179,,yes,PLATE,,,double
+CORNER_RF,Ball rolls into the right field corner,Cutoffs & relays,gap,442,210,,yes,PLATE,,,double
+WALL_RC,Off the fence in right-center,Cutoffs & relays,gap,350,102,Second base is open on purpose. The trail man is the one who retreats to it.,yes,PLATE,,,double
+THROW_BEHIND_1B,Cut man throws behind the runner at first,Cutoffs & relays,hit,398,250,"This is why the second baseman covers first on a throw home. Free out, twice a season.",no,PLATE,2,,single
+THROW_BEHIND_2B,Cut man throws behind the runner at second,Cutoffs & relays,hit,116,244,Runners round second hard and stop watching the ball. The cut man is the only one who can see it.,no,PLATE,1,,single
+RD_1B_2B,Rundown between first and second,Rundowns,run,300,300,Run him BACK toward first. A runner retreating can't advance if you drop the ball.,no,BASE_2,1,,rundown
+RD_2B_3B,Rundown between second and third,Rundowns,run,222,300,Run him back toward second. Never chase him toward a base he wants.,no,BASE_3,2,,rundown
+RD_3B_HOME,Rundown between third and home,Rundowns,run,222,378,The one that decides games. Catcher runs him back to third; pitcher takes the plate.,no,PLATE,3,,rundown
+FT_THROW_THROUGH,First and third: throw through to second,First and third,steal,260,300,Use it when you're ahead or the run doesn't matter. You are trading a run for an out.,no,PLATE,13,,steal2
+FT_CUT,First and third: pitcher cuts the throw,First and third,steal,262,320,"Same look, same arm slot. The pitcher is the one making the decision, not the catcher.",no,PLATE,13,,steal2
+FT_LOOK_BACK,"First and third: look him back, give up the base",First and third,steal,272,402,The safest play and the hardest to teach. Giving up second beats giving up a run.,no,PLATE,13,,steal2
+PICK_1B,Pickoff at first,Pickoffs,pick,335,340,"You don't need velocity, you need surprise. Quick feet beat a big arm.",no,MOUND,1,,pickoff
+PICK_2B,Pickoff at second,Pickoffs,pick,260,265,"Timing play, not a look play. Count it out together so you arrive with the ball.",no,MOUND,2,,pickoff
+PICK_3B_BACK,Catcher back-picks at third,Pickoffs,pick,185,340,"High risk. Only with a big lead off the bag, and only on a clean catch.",no,PLATE,3,,pickoff
+D3K_TAG,"Strike three in the dirt, ball at your feet",Dropped third strike,loose,276,436,"If the ball is right there, tag him. A three-foot tag beats a ninety-foot throw every time.",no,PLATE,_,,force
+D3K_THROW,"Strike three in the dirt, throw to first",Dropped third strike,loose,302,448,"Step around the batter and throw from OUTSIDE the baseline, or you'll hit him in the back.",no,PLATE,_,,force
+D3K_BACKSTOP,Strike three gets all the way to the backstop,Dropped third strike,loose,314,462,Now it's a wild pitch AND a dropped third strike. Look at the other runners before you look at the batter.,no,PLATE,_,,contact
+D3K_LOADED,"Strike three in the dirt, bases loaded, two outs",Dropped third strike,loose,268,430,"Everybody is forced, including the batter. Step on the plate — do not throw anywhere.",no,PLATE,123,2,force
+SQUEEZE,Squeeze bunt with a runner on third,Bunts,bunt,246,386,"You have about two seconds. Everybody charges, the catcher clears a lane, nobody panics.",no,PLATE,3,,contact`;
+const RESP_CSV = `ball_id,bases,outs,context,pos,role,target,cue,throw
+GB_P,*,*,*,P,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_P,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the throw, not before.",
+GB_P,*,*,*,2B,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_P,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
+GB_P,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
+GB_P,*,*,*,SS,BACKUP,BU_2_L,Slide in behind second on the left-field side.,
+GB_P,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_P,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_P,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_P,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
+GB_P,1|12|13|123,0|1,*,P,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_P,1|12|13|123,0|1,*,2B,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_P,1|12|13|123,0|1,*,SS,BACKUP,BU_2_L,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_P,3|13|23|123,0|1,INF_IN,P,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_P,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
+GB_P,123,0|1,*,P,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_P,123,0|1,*,C,PLATE,PLATE,"Force at home. Touch the plate first, then look to first.",
+GB_P,*,2,*,P,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_C,*,*,*,C,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_C,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the throw, not before.",
+GB_C,*,*,*,SS,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_C,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
+GB_C,*,*,*,P,BACKUP,BU_1_IN,"Off the mound to the foul side of the line, inside the right fielder. He has the deep ball, you have the short one.",
+GB_C,*,*,*,2B,BACKUP,BU_2_R,Get behind the throw. Don't stand and watch it.,
+GB_C,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_C,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_C,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_C,1|12|13|123,0|1,*,C,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_C,1|12|13|123,0|1,*,SS,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_C,1|12|13|123,0|1,*,2B,BACKUP,BU_2_R,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_C,3|13|23|123,0|1,INF_IN,C,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_C,123,0|1,*,C,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_C,123,0|1,*,C,FIELD,BALL,"Force at home and you're standing on it. Step on the plate, then throw to first.",PLATE>BASE_1
+GB_C,*,2,*,C,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_1B,*,*,*,1B,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_1B,*,*,*,P,COVER,BASE_1,"Ball to the right side — first base is yours. Sprint to the line, then up it.",
+GB_1B,*,*,*,SS,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_1B,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
+GB_1B,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
+GB_1B,*,*,*,2B,BACKUP,BU_1_IN,Get behind the throw. Don't stand and watch it.,
+GB_1B,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_1B,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_1B,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_1B,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
+GB_1B,1|12|13|123,0|1,*,1B,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_1B,1|12|13|123,0|1,*,SS,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_1B,1|12|13|123,0|1,*,2B,BACKUP,BU_2_R,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_1B,3|13|23|123,0|1,INF_IN,1B,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_1B,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
+GB_1B,123,0|1,*,1B,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_1B,123,0|1,*,C,PLATE,PLATE,"Force at home. Touch the plate first, then look to first.",
+GB_1B,*,2,*,1B,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_2B,*,*,*,2B,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_2B,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the throw, not before.",
+GB_2B,*,*,*,SS,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_2B,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
+GB_2B,*,*,*,P,BACKUP,BU_1_IN,"Off the mound to the foul side of the line, inside the right fielder. He has the deep ball, you have the short one.",
+GB_2B,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
+GB_2B,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_2B,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_2B,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_2B,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
+GB_2B,1|12|13|123,0|1,*,2B,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_2B,1|12|13|123,0|1,*,SS,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_2B,3|13|23|123,0|1,INF_IN,2B,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_2B,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
+GB_2B,123,0|1,*,2B,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_2B,123,0|1,*,C,PLATE,PLATE,"Force at home. Touch the plate first, then look to first.",
+GB_2B,*,2,*,2B,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_SS,*,*,*,SS,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_SS,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the throw, not before.",
+GB_SS,*,*,*,2B,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_SS,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
+GB_SS,*,*,*,P,BACKUP,BU_1_IN,"Off the mound to the foul side of the line, inside the right fielder. He has the deep ball, you have the short one.",
+GB_SS,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
+GB_SS,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_SS,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_SS,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_SS,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
+GB_SS,1|12|13|123,0|1,*,SS,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_SS,1|12|13|123,0|1,*,2B,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_SS,3|13|23|123,0|1,INF_IN,SS,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_SS,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
+GB_SS,123,0|1,*,SS,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_SS,123,0|1,*,C,PLATE,PLATE,"Force at home. Touch the plate first, then look to first.",
+GB_SS,*,2,*,SS,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_3B,*,*,*,3B,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_3B,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the throw, not before.",
+GB_3B,*,*,*,2B,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_3B,*,*,*,SS,COVER,BASE_3,Third baseman went to the ball — third is yours.,
+GB_3B,*,*,*,P,BACKUP,BU_1_IN,"Off the mound to the foul side of the line, inside the right fielder. He has the deep ball, you have the short one.",
+GB_3B,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
+GB_3B,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_3B,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_3B,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_3B,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
+GB_3B,1|12|13|123,0|1,*,3B,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_3B,1|12|13|123,0|1,*,2B,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_3B,1|12|13|123,0|1,*,SS,BACKUP,BU_2_L,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_3B,3|13|23|123,0|1,INF_IN,3B,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_3B,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
+GB_3B,123,0|1,*,3B,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_3B,123,0|1,*,C,PLATE,PLATE,"Force at home. Touch the plate first, then look to first.",
+GB_3B,*,2,*,3B,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_1B_HOLE,*,*,*,1B,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_1B_HOLE,*,*,*,P,COVER,BASE_1,"Ball to the right side — first base is yours. Sprint to the line, then up it.",
+GB_1B_HOLE,*,*,*,SS,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_1B_HOLE,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
+GB_1B_HOLE,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
+GB_1B_HOLE,*,*,*,2B,BACKUP,BU_1_IN,Get behind the throw. Don't stand and watch it.,
+GB_1B_HOLE,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_1B_HOLE,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_1B_HOLE,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_1B_HOLE,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
+GB_1B_HOLE,1|12|13|123,0|1,*,1B,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_1B_HOLE,1|12|13|123,0|1,*,SS,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_1B_HOLE,1|12|13|123,0|1,*,2B,BACKUP,BU_2_R,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_1B_HOLE,3|13|23|123,0|1,INF_IN,1B,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_1B_HOLE,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
+GB_1B_HOLE,123,0|1,*,1B,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_1B_HOLE,123,0|1,*,C,PLATE,PLATE,"Force at home. Touch the plate first, then look to first.",
+GB_1B_HOLE,*,2,*,1B,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_SS_HOLE,*,*,*,SS,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_SS_HOLE,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the throw, not before.",
+GB_SS_HOLE,*,*,*,2B,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_SS_HOLE,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
+GB_SS_HOLE,*,*,*,P,BACKUP,BU_1_IN,"Off the mound to the foul side of the line, inside the right fielder. He has the deep ball, you have the short one.",
+GB_SS_HOLE,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
+GB_SS_HOLE,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_SS_HOLE,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_SS_HOLE,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_SS_HOLE,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
+GB_SS_HOLE,1|12|13|123,0|1,*,SS,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_SS_HOLE,1|12|13|123,0|1,*,2B,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_SS_HOLE,3|13|23|123,0|1,INF_IN,SS,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_SS_HOLE,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
+GB_SS_HOLE,123,0|1,*,SS,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_SS_HOLE,123,0|1,*,C,PLATE,PLATE,"Force at home. Touch the plate first, then look to first.",
+GB_SS_HOLE,*,2,*,SS,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_MIDDLE,*,*,*,SS,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_MIDDLE,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the throw, not before.",
+GB_MIDDLE,*,*,*,2B,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_MIDDLE,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
+GB_MIDDLE,*,*,*,P,BACKUP,BU_1_IN,"Off the mound to the foul side of the line, inside the right fielder. He has the deep ball, you have the short one.",
+GB_MIDDLE,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
+GB_MIDDLE,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_MIDDLE,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_MIDDLE,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_MIDDLE,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
+GB_MIDDLE,1|12|13|123,0|1,*,SS,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_MIDDLE,1|12|13|123,0|1,*,2B,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_MIDDLE,3|13|23|123,0|1,INF_IN,SS,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_MIDDLE,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
+GB_MIDDLE,123,0|1,*,SS,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_MIDDLE,123,0|1,*,C,PLATE,PLATE,"Force at home. Touch the plate first, then look to first.",
+GB_MIDDLE,*,2,*,SS,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_SLOW_3B,*,*,*,3B,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
+GB_SLOW_3B,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the throw, not before.",
+GB_SLOW_3B,*,*,*,2B,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_SLOW_3B,*,*,*,SS,COVER,BASE_3,Third baseman went to the ball — third is yours.,
+GB_SLOW_3B,*,*,*,P,BACKUP,BU_1_IN,"Off the mound to the foul side of the line, inside the right fielder. He has the deep ball, you have the short one.",
+GB_SLOW_3B,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
+GB_SLOW_3B,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
+GB_SLOW_3B,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
+GB_SLOW_3B,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
+GB_SLOW_3B,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
+GB_SLOW_3B,1|12|13|123,0|1,*,3B,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
+GB_SLOW_3B,1|12|13|123,0|1,*,2B,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
+GB_SLOW_3B,1|12|13|123,0|1,*,SS,BACKUP,BU_2_L,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_SLOW_3B,3|13|23|123,0|1,INF_IN,3B,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
+GB_SLOW_3B,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
+GB_SLOW_3B,123,0|1,*,3B,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
+GB_SLOW_3B,123,0|1,*,C,PLATE,PLATE,"Force at home. Touch the plate first, then look to first.",
+GB_SLOW_3B,*,2,*,3B,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+BUNT_P,*,*,*,P,FIELD,BALL,Charge it. Circle the ball and field it facing your target.,BASE_1
+BUNT_P,*,*,*,1B,FIELD,BALL,"Charge on contact, then read it. If it's not yours, peel back.",
+BUNT_P,*,*,*,2B,COVER,BASE_1,First is yours on every bunt — the first baseman is charging.,
+BUNT_P,*,*,*,SS,COVER,BASE_2,Second is yours on every bunt.,
+BUNT_P,*,*,*,3B,COVER,BASE_3,Stay at third. Somebody has to be there.,
+BUNT_P,*,*,*,C,DIRECT,PLATE,You see the whole field. Call the base out loud: 'One! One!',
+BUNT_P,*,*,*,LF,BACKUP,BU_3,Sprint in behind third.,
+BUNT_P,*,*,*,CF,BACKUP,BU_2,Sprint in behind second.,
+BUNT_P,*,*,*,RF,BACKUP,BU_1,Sprint in behind first.,
+BUNT_P,1|12|13|123,0|1,*,P,FIELD,BALL,Sac bunt. Take the sure out at first unless you field it fast and clean.,BASE_1
+BUNT_P,2|23,0|1,*,P,FIELD,BALL,"Runner on second. Look him back to the bag first, then throw to first.",BASE_1
+BUNT_P,3|13|23|123,0|1,INF_IN,P,FIELD,BALL,"Runner on third. Field it, check him, throw home only if he broke.",PLATE
+BUNT_1B,*,*,*,1B,FIELD,BALL,Charge it. Circle the ball and field it facing your target.,BASE_1
+BUNT_1B,*,*,*,P,FIELD,BALL,Off the mound on contact. Call it loud or clear out of the way.,
+BUNT_1B,*,*,*,2B,COVER,BASE_1,First is yours on every bunt — the first baseman is charging.,
+BUNT_1B,*,*,*,SS,COVER,BASE_2,Second is yours on every bunt.,
+BUNT_1B,*,*,*,3B,COVER,BASE_3,Stay at third. Somebody has to be there.,
+BUNT_1B,*,*,*,C,DIRECT,PLATE,You see the whole field. Call the base out loud: 'One! One!',
+BUNT_1B,*,*,*,LF,BACKUP,BU_3,Sprint in behind third.,
+BUNT_1B,*,*,*,CF,BACKUP,BU_2,Sprint in behind second.,
+BUNT_1B,*,*,*,RF,BACKUP,BU_1,Sprint in behind first.,
+BUNT_1B,1|12|13|123,0|1,*,1B,FIELD,BALL,Sac bunt. Take the sure out at first unless you field it fast and clean.,BASE_1
+BUNT_1B,2|23,0|1,*,1B,FIELD,BALL,"Runner on second. Look him back to the bag first, then throw to first.",BASE_1
+BUNT_1B,3|13|23|123,0|1,INF_IN,1B,FIELD,BALL,"Runner on third. Field it, check him, throw home only if he broke.",PLATE
+BUNT_3B,*,*,*,3B,FIELD,BALL,Charge it. Circle the ball and field it facing your target.,BASE_1
+BUNT_3B,*,*,*,P,FIELD,BALL,Off the mound on contact. Call it loud or clear out of the way.,
+BUNT_3B,*,*,*,SS,COVER,BASE_3,Third baseman charged — third is yours. Rotate behind him.,
+BUNT_3B,*,*,*,1B,COVER,BASE_1,Stay at the bag on a bunt to the other side.,
+BUNT_3B,*,*,*,2B,COVER,BASE_2,Second is yours — the shortstop rotated to third.,
+BUNT_3B,*,*,*,C,DIRECT,PLATE,You see the whole field. Call the base out loud: 'One! One!',
+BUNT_3B,*,*,*,LF,BACKUP,BU_3,Sprint in behind third.,
+BUNT_3B,*,*,*,CF,BACKUP,BU_2,Sprint in behind second.,
+BUNT_3B,*,*,*,RF,BACKUP,BU_1,Sprint in behind first.,
+BUNT_3B,1|12|13|123,0|1,*,3B,FIELD,BALL,Sac bunt. Take the sure out at first unless you field it fast and clean.,BASE_1
+BUNT_3B,2|23,0|1,*,3B,FIELD,BALL,"Runner on second. Look him back to the bag first, then throw to first.",BASE_1
+BUNT_3B,3|13|23|123,0|1,INF_IN,3B,FIELD,BALL,"Runner on third. Field it, check him, throw home only if he broke.",PLATE
+POP_INF_L,*,*,*,P,DIRECT,MOUND,Get out of the way. This is never your ball.,
+POP_INF_L,*,*,*,C,DIRECT,PLATE,You're the traffic cop. Point at it and call a name.,
+POP_INF_L,*,*,*,1B,HOLD,POS_1B,Stay out of the way and hold the runners.,
+POP_INF_L,*,*,*,2B,HOLD,POS_2B,Stay out of the way and hold the runners.,
+POP_INF_L,*,*,*,3B,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+POP_INF_L,*,*,*,SS,FIELD,BALL,Call it loud three times: 'Ball! Ball! Ball!',
+POP_INF_L,*,*,*,LF,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+POP_INF_L,*,*,*,CF,HOLD,POS_CF,Stay out of the way and hold the runners.,
+POP_INF_L,*,*,*,RF,HOLD,POS_RF,Stay out of the way and hold the runners.,
+POP_INF_L,1|12|13|123,0|1,*,SS,FIELD,BALL,Infield fly — batter is out whether you catch it or not. Just catch it.,
+POP_INF_R,*,*,*,P,DIRECT,MOUND,Get out of the way. This is never your ball.,
+POP_INF_R,*,*,*,C,DIRECT,PLATE,You're the traffic cop. Point at it and call a name.,
+POP_INF_R,*,*,*,1B,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+POP_INF_R,*,*,*,2B,FIELD,BALL,Call it loud three times: 'Ball! Ball! Ball!',
+POP_INF_R,*,*,*,3B,HOLD,POS_3B,Stay out of the way and hold the runners.,
+POP_INF_R,*,*,*,SS,HOLD,POS_SS,Stay out of the way and hold the runners.,
+POP_INF_R,*,*,*,LF,HOLD,POS_LF,Stay out of the way and hold the runners.,
+POP_INF_R,*,*,*,CF,HOLD,POS_CF,Stay out of the way and hold the runners.,
+POP_INF_R,*,*,*,RF,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+POP_INF_R,1|12|13|123,0|1,*,2B,FIELD,BALL,Infield fly — batter is out whether you catch it or not. Just catch it.,
+POP_MIDDLE,*,*,*,P,DIRECT,MOUND,Get out of the way. This is never your ball.,
+POP_MIDDLE,*,*,*,C,DIRECT,PLATE,You're the traffic cop. Point at it and call a name.,
+POP_MIDDLE,*,*,*,1B,HOLD,POS_1B,Stay out of the way and hold the runners.,
+POP_MIDDLE,*,*,*,2B,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+POP_MIDDLE,*,*,*,3B,HOLD,POS_3B,Stay out of the way and hold the runners.,
+POP_MIDDLE,*,*,*,SS,FIELD,BALL,Call it loud three times: 'Ball! Ball! Ball!',
+POP_MIDDLE,*,*,*,LF,HOLD,POS_LF,Stay out of the way and hold the runners.,
+POP_MIDDLE,*,*,*,CF,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+POP_MIDDLE,*,*,*,RF,HOLD,POS_RF,Stay out of the way and hold the runners.,
+POP_MIDDLE,1|12|13|123,0|1,*,SS,FIELD,BALL,Infield fly — batter is out whether you catch it or not. Just catch it.,
+FOUL_POP_C,*,*,*,P,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+FOUL_POP_C,*,*,*,C,FIELD,BALL,Call it loud three times: 'Ball! Ball! Ball!',
+FOUL_POP_C,*,*,*,1B,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+FOUL_POP_C,*,*,*,2B,HOLD,POS_2B,Stay out of the way and hold the runners.,
+FOUL_POP_C,*,*,*,3B,HOLD,POS_3B,Stay out of the way and hold the runners.,
+FOUL_POP_C,*,*,*,SS,HOLD,POS_SS,Stay out of the way and hold the runners.,
+FOUL_POP_C,*,*,*,LF,HOLD,POS_LF,Stay out of the way and hold the runners.,
+FOUL_POP_C,*,*,*,CF,HOLD,POS_CF,Stay out of the way and hold the runners.,
+FOUL_POP_C,*,*,*,RF,HOLD,POS_RF,Stay out of the way and hold the runners.,
+FOUL_POP_C,1|12|13|123,0|1,*,C,FIELD,BALL,Infield fly — batter is out whether you catch it or not. Just catch it.,
+FOUL_POP_1B,*,*,*,P,DIRECT,MOUND,Get out of the way. This is never your ball.,
+FOUL_POP_1B,*,*,*,C,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+FOUL_POP_1B,*,*,*,1B,FIELD,BALL,Call it loud three times: 'Ball! Ball! Ball!',
+FOUL_POP_1B,*,*,*,2B,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+FOUL_POP_1B,*,*,*,3B,HOLD,POS_3B,Stay out of the way and hold the runners.,
+FOUL_POP_1B,*,*,*,SS,HOLD,POS_SS,Stay out of the way and hold the runners.,
+FOUL_POP_1B,*,*,*,LF,HOLD,POS_LF,Stay out of the way and hold the runners.,
+FOUL_POP_1B,*,*,*,CF,HOLD,POS_CF,Stay out of the way and hold the runners.,
+FOUL_POP_1B,*,*,*,RF,HOLD,POS_RF,Stay out of the way and hold the runners.,
+FOUL_POP_1B,1|12|13|123,0|1,*,1B,FIELD,BALL,Infield fly — batter is out whether you catch it or not. Just catch it.,
+FOUL_POP_3B,*,*,*,P,DIRECT,MOUND,Get out of the way. This is never your ball.,
+FOUL_POP_3B,*,*,*,C,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+FOUL_POP_3B,*,*,*,1B,HOLD,POS_1B,Stay out of the way and hold the runners.,
+FOUL_POP_3B,*,*,*,2B,HOLD,POS_2B,Stay out of the way and hold the runners.,
+FOUL_POP_3B,*,*,*,3B,FIELD,BALL,Call it loud three times: 'Ball! Ball! Ball!',
+FOUL_POP_3B,*,*,*,SS,BACKUP,BALL,Go hard until you hear someone call it — then peel off.,
+FOUL_POP_3B,*,*,*,LF,HOLD,POS_LF,Stay out of the way and hold the runners.,
+FOUL_POP_3B,*,*,*,CF,HOLD,POS_CF,Stay out of the way and hold the runners.,
+FOUL_POP_3B,*,*,*,RF,HOLD,POS_RF,Stay out of the way and hold the runners.,
+FOUL_POP_3B,1|12|13|123,0|1,*,3B,FIELD,BALL,Infield fly — batter is out whether you catch it or not. Just catch it.,
+FLY_LF,*,*,*,LF,FIELD,BALL,"Catch it moving toward your target, not flat-footed.",BASE_2
+FLY_LF,*,*,*,CF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+FLY_LF,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+FLY_LF,*,*,*,1B,COVER,BASE_1,Back to the bag. The hitter might round it.,
+FLY_LF,*,*,*,2B,COVER,BASE_2,Cover second.,
+FLY_LF,*,*,*,SS,CUT,CUT_2_L,Go out and be the cut. Give him a chest to throw at.,
+FLY_LF,*,*,*,3B,COVER,BASE_3,Stay at third.,
+FLY_LF,*,*,*,C,PLATE,PLATE,Stay home.,
+FLY_LF,*,*,*,P,BACKUP,MOUND,Watch the play. Be ready to back up a base.,
+FLY_LF,3|13|23|123,0|1,*,LF,FIELD,BALL,"Catch it behind the base so you're moving forward. Throw through the cutoff, low.",CUT_PLATE_L>PLATE
+FLY_LF,3|13|23|123,0|1,*,3B,CUT,CUT_PLATE_L,"You are cut 4. Line up between him and the plate, hands high. Catcher's call decides it.",
+FLY_LF,3|13|23|123,0|1,*,C,PLATE,PLATE,"Set up in front of the plate. Call the cut loud — he can't see the runner, you can.",
+FLY_LF,3|13|23|123,0|1,*,P,BACKUP,BU_PLATE,"Back up the plate. Get deep, behind the catcher.",
+FLY_LF,3|13|23|123,0|1,*,SS,COVER,BASE_3,"Third baseman is the cut, so third is yours.",
+FLY_LF,3|13|23|123,0|1,*,2B,COVER,BASE_2,Second is yours.,
+FLY_LF,2|23,0|1,*,LF,FIELD,BALL,He's going to tag and go to third. Catch it moving in and throw to the bag.,CUT_3>BASE_3
+FLY_LF,2|23,0|1,*,SS,CUT,CUT_3,"You are cut 3 on every throw to third, from anywhere on the field.",
+FLY_LF,2|23,0|1,*,3B,COVER,BASE_3,Straddle the bag and give him a target.,
+FLY_LF,*,2,*,LF,FIELD,BALL,Two outs — catch it and the inning is over. Nothing else matters.,
+FLY_CF,*,*,*,CF,FIELD,BALL,"Catch it moving toward your target, not flat-footed.",BASE_2
+FLY_CF,*,*,*,LF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+FLY_CF,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+FLY_CF,*,*,*,1B,COVER,BASE_1,Back to the bag. The hitter might round it.,
+FLY_CF,*,*,*,2B,COVER,BASE_2,Cover second.,
+FLY_CF,*,*,*,SS,CUT,CUT_2_R,Go out and be the cut. Give him a chest to throw at.,
+FLY_CF,*,*,*,3B,COVER,BASE_3,Stay at third.,
+FLY_CF,*,*,*,C,PLATE,PLATE,Stay home.,
+FLY_CF,*,*,*,P,BACKUP,MOUND,Watch the play. Be ready to back up a base.,
+FLY_CF,3|13|23|123,0|1,*,CF,FIELD,BALL,"Catch it behind the base so you're moving forward. Throw through the cutoff, low.",CUT_PLATE_R>PLATE
+FLY_CF,3|13|23|123,0|1,*,1B,CUT,CUT_PLATE_R,"You are cut 4. Line up between him and the plate, hands high. Catcher's call decides it.",
+FLY_CF,3|13|23|123,0|1,*,C,PLATE,PLATE,"Set up in front of the plate. Call the cut loud — he can't see the runner, you can.",
+FLY_CF,3|13|23|123,0|1,*,P,BACKUP,BU_PLATE,"Back up the plate. Get deep, behind the catcher.",
+FLY_CF,3|13|23|123,0|1,*,2B,COVER,BASE_1,"First baseman is the cut, so first is yours.",
+FLY_CF,3|13|23|123,0|1,*,SS,COVER,BASE_2,Second is yours.,
+FLY_CF,3|13|23|123,0|1,*,3B,COVER,BASE_3,Third is yours.,
+FLY_CF,2|23,0|1,*,CF,FIELD,BALL,He's going to tag and go to third. Catch it moving in and throw to the bag.,CUT_3>BASE_3
+FLY_CF,2|23,0|1,*,SS,CUT,CUT_3,"You are cut 3 on every throw to third, from anywhere on the field.",
+FLY_CF,2|23,0|1,*,3B,COVER,BASE_3,Straddle the bag and give him a target.,
+FLY_CF,*,2,*,CF,FIELD,BALL,Two outs — catch it and the inning is over. Nothing else matters.,
+FLY_RF,*,*,*,RF,FIELD,BALL,"Catch it moving toward your target, not flat-footed.",BASE_2
+FLY_RF,*,*,*,CF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+FLY_RF,*,*,*,LF,BACKUP,BU_2_L,Come all the way in and back up the throw to second.,
+FLY_RF,*,*,*,1B,COVER,BASE_1,Back to the bag. The hitter might round it.,
+FLY_RF,*,*,*,2B,COVER,BASE_2,Cover second.,
+FLY_RF,*,*,*,SS,CUT,CUT_2_R,Go out and be the cut. Give him a chest to throw at.,
+FLY_RF,*,*,*,3B,COVER,BASE_3,Stay at third.,
+FLY_RF,*,*,*,C,PLATE,PLATE,Stay home.,
+FLY_RF,*,*,*,P,BACKUP,MOUND,Watch the play. Be ready to back up a base.,
+FLY_RF,3|13|23|123,0|1,*,RF,FIELD,BALL,"Catch it behind the base so you're moving forward. Throw through the cutoff, low.",CUT_PLATE_R>PLATE
+FLY_RF,3|13|23|123,0|1,*,1B,CUT,CUT_PLATE_R,"You are cut 4. Line up between him and the plate, hands high. Catcher's call decides it.",
+FLY_RF,3|13|23|123,0|1,*,C,PLATE,PLATE,"Set up in front of the plate. Call the cut loud — he can't see the runner, you can.",
+FLY_RF,3|13|23|123,0|1,*,P,BACKUP,BU_PLATE,"Back up the plate. Get deep, behind the catcher.",
+FLY_RF,3|13|23|123,0|1,*,2B,COVER,BASE_1,"First baseman is the cut, so first is yours.",
+FLY_RF,3|13|23|123,0|1,*,SS,COVER,BASE_2,Second is yours.,
+FLY_RF,3|13|23|123,0|1,*,3B,COVER,BASE_3,Third is yours.,
+FLY_RF,2|23,0|1,*,RF,FIELD,BALL,He's going to tag and go to third. Catch it moving in and throw to the bag.,CUT_3>BASE_3
+FLY_RF,2|23,0|1,*,SS,CUT,CUT_3,"You are cut 3 on every throw to third, from anywhere on the field.",
+FLY_RF,2|23,0|1,*,3B,COVER,BASE_3,Straddle the bag and give him a target.,
+FLY_RF,*,2,*,RF,FIELD,BALL,Two outs — catch it and the inning is over. Nothing else matters.,
+SINGLE_LF,*,*,*,LF,FIELD,BALL,Charge it. Field it on your throwing-hand side and come up firing.,CUT_2>BASE_2
+SINGLE_LF,*,*,*,CF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+SINGLE_LF,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+SINGLE_LF,*,*,*,SS,CUT,CUT_2_L,"You are cut 2. Go out and meet the throw, turn glove side.",
+SINGLE_LF,*,*,*,2B,COVER,BASE_2,Cover the bag.,
+SINGLE_LF,*,*,*,1B,COVER,BASE_1,He's rounding the bag — get back behind him.,
+SINGLE_LF,*,*,*,3B,COVER,BASE_3,Stay at third.,
+SINGLE_LF,*,*,*,C,PLATE,PLATE,Stay home and read the play.,
+SINGLE_LF,*,*,*,P,BACKUP,BU_2,Get behind second in case the throw sails.,
+SINGLE_LF,1|12,*,*,LF,FIELD,BALL,Runner from first is going to third. Get it to the cut on one hop.,CUT_3>BASE_3
+SINGLE_LF,1|12,*,*,SS,CUT,CUT_3,You are cut 3. Always. Line up about 45 feet in front of the bag.,
+SINGLE_LF,1|12,*,*,3B,COVER,BASE_3,"Get to the bag, straddle it, wait for the throw.",
+SINGLE_LF,1|12,*,*,2B,COVER,BASE_2,Take second behind the hitter.,
+SINGLE_LF,1|12,*,*,P,BACKUP,BU_3,Back up third. Get deep — 20 feet behind the bag.,
+SINGLE_LF,2|3|13|23|123,*,*,LF,FIELD,BALL,He's scoring on this. Throw low through the cutoff — a one-hopper beats a rainbow.,CUT_PLATE_L>PLATE
+SINGLE_LF,2|3|13|23|123,*,*,3B,CUT,CUT_PLATE_L,"You are cut 4. Get in the line between him and the plate, hands up so he can find you.",
+SINGLE_LF,2|3|13|23|123,*,*,C,PLATE,PLATE,Give him the plate until you have the ball. Then drop a shin in front and tag.,
+SINGLE_LF,2|3|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate, deep and behind the catcher.",
+SINGLE_LF,2|3|13|23|123,*,*,SS,COVER,BASE_3,Third baseman is the cut — you have third.,
+SINGLE_LF,2|3|13|23|123,*,*,2B,COVER,BASE_2,Second is yours.,
+SINGLE_CF,*,*,*,CF,FIELD,BALL,Charge it. Field it on your throwing-hand side and come up firing.,CUT_2>BASE_2
+SINGLE_CF,*,*,*,LF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+SINGLE_CF,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+SINGLE_CF,*,*,*,2B,CUT,CUT_2_R,"You are cut 2. Go out and meet the throw, turn glove side.",
+SINGLE_CF,*,*,*,SS,COVER,BASE_2,Cover the bag.,
+SINGLE_CF,*,*,*,1B,COVER,BASE_1,He's rounding the bag — get back behind him.,
+SINGLE_CF,*,*,*,3B,COVER,BASE_3,Stay at third.,
+SINGLE_CF,*,*,*,C,PLATE,PLATE,Stay home and read the play.,
+SINGLE_CF,*,*,*,P,BACKUP,BU_2,Get behind second in case the throw sails.,
+SINGLE_CF,1|12,*,*,CF,FIELD,BALL,Runner from first is going to third. Get it to the cut on one hop.,CUT_3>BASE_3
+SINGLE_CF,1|12,*,*,SS,CUT,CUT_3,You are cut 3. Always. Line up about 45 feet in front of the bag.,
+SINGLE_CF,1|12,*,*,3B,COVER,BASE_3,"Get to the bag, straddle it, wait for the throw.",
+SINGLE_CF,1|12,*,*,2B,COVER,BASE_2,Take second behind the hitter.,
+SINGLE_CF,1|12,*,*,P,BACKUP,BU_3,Back up third. Get deep — 20 feet behind the bag.,
+SINGLE_CF,2|3|13|23|123,*,*,CF,FIELD,BALL,He's scoring on this. Throw low through the cutoff — a one-hopper beats a rainbow.,CUT_PLATE_R>PLATE
+SINGLE_CF,2|3|13|23|123,*,*,1B,CUT,CUT_PLATE_R,"You are cut 4. Get in the line between him and the plate, hands up so he can find you.",
+SINGLE_CF,2|3|13|23|123,*,*,C,PLATE,PLATE,Give him the plate until you have the ball. Then drop a shin in front and tag.,
+SINGLE_CF,2|3|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate, deep and behind the catcher.",
+SINGLE_CF,2|3|13|23|123,*,*,2B,COVER,BASE_1,First baseman is the cut — you have first.,
+SINGLE_CF,2|3|13|23|123,*,*,SS,COVER,BASE_2,Second is yours.,
+SINGLE_CF,2|3|13|23|123,*,*,3B,COVER,BASE_3,Third is yours.,
+SINGLE_RF,*,*,*,RF,FIELD,BALL,Charge it. Field it on your throwing-hand side and come up firing.,CUT_2>BASE_2
+SINGLE_RF,*,*,*,CF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+SINGLE_RF,*,*,*,LF,BACKUP,BU_2_L,Come all the way in and back up the throw to second.,
+SINGLE_RF,*,*,*,2B,CUT,CUT_2_R,"You are cut 2. Go out and meet the throw, turn glove side.",
+SINGLE_RF,*,*,*,SS,COVER,BASE_2,Cover the bag.,
+SINGLE_RF,*,*,*,1B,COVER,BASE_1,He's rounding the bag — get back behind him.,
+SINGLE_RF,*,*,*,3B,COVER,BASE_3,Stay at third.,
+SINGLE_RF,*,*,*,C,PLATE,PLATE,Stay home and read the play.,
+SINGLE_RF,*,*,*,P,BACKUP,BU_2,Get behind second in case the throw sails.,
+SINGLE_RF,1|12,*,*,RF,FIELD,BALL,Runner from first is going to third. Get it to the cut on one hop.,CUT_3>BASE_3
+SINGLE_RF,1|12,*,*,SS,CUT,CUT_3,You are cut 3. Always. Line up about 45 feet in front of the bag.,
+SINGLE_RF,1|12,*,*,3B,COVER,BASE_3,"Get to the bag, straddle it, wait for the throw.",
+SINGLE_RF,1|12,*,*,2B,COVER,BASE_2,Take second behind the hitter.,
+SINGLE_RF,1|12,*,*,P,BACKUP,BU_3,Back up third. Get deep — 20 feet behind the bag.,
+SINGLE_RF,2|3|13|23|123,*,*,RF,FIELD,BALL,He's scoring on this. Throw low through the cutoff — a one-hopper beats a rainbow.,CUT_PLATE_R>PLATE
+SINGLE_RF,2|3|13|23|123,*,*,1B,CUT,CUT_PLATE_R,"You are cut 4. Get in the line between him and the plate, hands up so he can find you.",
+SINGLE_RF,2|3|13|23|123,*,*,C,PLATE,PLATE,Give him the plate until you have the ball. Then drop a shin in front and tag.,
+SINGLE_RF,2|3|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate, deep and behind the catcher.",
+SINGLE_RF,2|3|13|23|123,*,*,2B,COVER,BASE_1,First baseman is the cut — you have first.,
+SINGLE_RF,2|3|13|23|123,*,*,SS,COVER,BASE_2,Second is yours.,
+SINGLE_RF,2|3|13|23|123,*,*,3B,COVER,BASE_3,Third is yours.,
+GAP_LC,*,*,*,CF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_LC>BASE_3
+GAP_LC,*,*,*,LF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+GAP_LC,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+GAP_LC,*,*,*,SS,RELAY,RELAY_LC,"Sprint out, wave your arms, yell his name. Catch it turning glove-side.",
+GAP_LC,*,*,*,2B,TRAIL,TRAIL_LC,"Stay 15 feet behind the relay man. If it gets past him, it's yours.",
+GAP_LC,*,*,*,3B,COVER,BASE_3,Straddle the bag. He's trying for a triple.,
+GAP_LC,*,*,*,1B,CUT,CUT_PLATE_R,Line up for the throw home in case he keeps coming.,
+GAP_LC,*,*,*,C,PLATE,PLATE,Stay home and call the play for everybody.,
+GAP_LC,*,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+GAP_LC,2|3|12|13|23|123,*,*,CF,FIELD,BALL,Runners are scoring. Hit the relay man — he'll decide where it goes.,RELAY_LC>PLATE
+GAP_LC,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,Back up the plate instead of third.,
+GAP_RC,*,*,*,CF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_RC>BASE_3
+GAP_RC,*,*,*,LF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+GAP_RC,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+GAP_RC,*,*,*,2B,RELAY,RELAY_RC,"Sprint out, wave your arms, yell his name. Catch it turning glove-side.",
+GAP_RC,*,*,*,SS,TRAIL,TRAIL_RC,"Stay 15 feet behind the relay man. If it gets past him, it's yours.",
+GAP_RC,*,*,*,3B,COVER,BASE_3,Straddle the bag. He's trying for a triple.,
+GAP_RC,*,*,*,1B,CUT,CUT_PLATE_R,Line up for the throw home in case he keeps coming.,
+GAP_RC,*,*,*,C,PLATE,PLATE,Stay home and call the play for everybody.,
+GAP_RC,*,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+GAP_RC,2|3|12|13|23|123,*,*,CF,FIELD,BALL,Runners are scoring. Hit the relay man — he'll decide where it goes.,RELAY_RC>PLATE
+GAP_RC,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,Back up the plate instead of third.,
+LINE_LF,*,*,*,LF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_LF>BASE_3
+LINE_LF,*,*,*,CF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+LINE_LF,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+LINE_LF,*,*,*,SS,RELAY,RELAY_LF,"Sprint out, wave your arms, yell his name. Catch it turning glove-side.",
+LINE_LF,*,*,*,2B,TRAIL,TRAIL_LC,"Stay 15 feet behind the relay man. If it gets past him, it's yours.",
+LINE_LF,*,*,*,3B,COVER,BASE_3,Straddle the bag. He's trying for a triple.,
+LINE_LF,*,*,*,1B,CUT,CUT_PLATE_R,Line up for the throw home in case he keeps coming.,
+LINE_LF,*,*,*,C,PLATE,PLATE,Stay home and call the play for everybody.,
+LINE_LF,*,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+LINE_LF,2|3|12|13|23|123,*,*,LF,FIELD,BALL,Runners are scoring. Hit the relay man — he'll decide where it goes.,RELAY_LF>PLATE
+LINE_LF,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,Back up the plate instead of third.,
+LINE_RF,*,*,*,RF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_RF>BASE_3
+LINE_RF,*,*,*,CF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+LINE_RF,*,*,*,LF,BACKUP,BU_2_L,Come all the way in and back up the throw to second.,
+LINE_RF,*,*,*,2B,RELAY,RELAY_RF,"Sprint out, wave your arms, yell his name. Catch it turning glove-side.",
+LINE_RF,*,*,*,SS,TRAIL,TRAIL_RC,"Stay 15 feet behind the relay man. If it gets past him, it's yours.",
+LINE_RF,*,*,*,3B,COVER,BASE_3,Straddle the bag. He's trying for a triple.,
+LINE_RF,*,*,*,1B,CUT,CUT_PLATE_R,Line up for the throw home in case he keeps coming.,
+LINE_RF,*,*,*,C,PLATE,PLATE,Stay home and call the play for everybody.,
+LINE_RF,*,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+LINE_RF,2|3|12|13|23|123,*,*,RF,FIELD,BALL,Runners are scoring. Hit the relay man — he'll decide where it goes.,RELAY_RF>PLATE
+LINE_RF,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,Back up the plate instead of third.,
+OVER_CF,*,*,*,CF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_CF>BASE_3
+OVER_CF,*,*,*,LF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+OVER_CF,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+OVER_CF,*,*,*,SS,RELAY,RELAY_CF,"Sprint out, wave your arms, yell his name. Catch it turning glove-side.",
+OVER_CF,*,*,*,2B,TRAIL,TRAIL_LC,"Stay 15 feet behind the relay man. If it gets past him, it's yours.",
+OVER_CF,*,*,*,3B,COVER,BASE_3,Straddle the bag. He's trying for a triple.,
+OVER_CF,*,*,*,1B,CUT,CUT_PLATE_R,Line up for the throw home in case he keeps coming.,
+OVER_CF,*,*,*,C,PLATE,PLATE,Stay home and call the play for everybody.,
+OVER_CF,*,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+OVER_CF,2|3|12|13|23|123,*,*,CF,FIELD,BALL,Runners are scoring. Hit the relay man — he'll decide where it goes.,RELAY_CF>PLATE
+OVER_CF,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,Back up the plate instead of third.,
+WILD_PITCH,*,*,*,P,COVER,PLATE,"Sprint to the plate. Straddle the line, give the catcher a target.",
+WILD_PITCH,*,*,*,C,FIELD,BALL,"Find it fast. Bare hand it, get your body around, look before you throw.",
+WILD_PITCH,*,*,*,1B,COVER,BASE_1,Cover first.,
+WILD_PITCH,*,*,*,2B,BACKUP,BU_1_IN,Back up first from the inside.,
+WILD_PITCH,*,*,*,3B,COVER,BASE_3,Cover third — that's where he's going.,
+WILD_PITCH,*,*,*,SS,COVER,BASE_2,Cover second.,
+WILD_PITCH,*,*,*,LF,BACKUP,BU_3,In behind third.,
+WILD_PITCH,*,*,*,CF,BACKUP,BU_2,In behind second.,
+WILD_PITCH,*,*,*,RF,BACKUP,BU_1,In behind first.,
+WILD_PITCH,3|13|23|123,*,*,C,FIELD,BALL,"Runner on third is going. Get the ball, then flip or throw to the pitcher at the plate.",PLATE
+WILD_PITCH,3|13|23|123,*,*,P,COVER,PLATE,"This is your out. Straddle the third base line, take the throw, swipe tag.",
+WILD_PITCH,1|12,*,*,C,FIELD,BALL,"Only a runner on first — get it, set your feet, throw to second.",BASE_2
+STEAL_2B,*,*,*,P,DIRECT,MOUND,Get off the mound toward first. Do not block the throw.,
+STEAL_2B,*,*,*,C,FIELD,PLATE,"Catch, replace, throw. Quick feet beat a big arm.",BASE_2
+STEAL_2B,*,*,*,1B,COVER,BASE_1,Stay at first.,
+STEAL_2B,*,*,*,2B,BACKUP,BU_2_R,Back up the bag from the right side. A throw past you is a run.,
+STEAL_2B,*,*,*,3B,COVER,BASE_3,Stay at third — watch for the trail runner.,
+STEAL_2B,*,*,*,SS,COVER,BASE_2,"Cover the bag. Get there early, tag down in front of it.",
+STEAL_2B,*,*,*,LF,HOLD,POS_LF,Hold your position.,
+STEAL_2B,*,*,*,CF,BACKUP,BU_2,Sprint in behind second on every steal.,
+STEAL_2B,*,*,*,RF,HOLD,POS_RF,Hold your position.,
+STEAL_2B,13|123,*,*,C,FIELD,PLATE,"First and third. Check the runner at third first, then throw. If he broke, come to me.",BASE_2
+STEAL_2B,13|123,*,*,3B,COVER,BASE_3,Runner on third is the one who scores. Stay on the bag and yell if he breaks.,
+STEAL_2B,13|123,*,*,P,DIRECT,MOUND,"Be ready for the cut. If the catcher calls it, catch it and look at third.",
+STEAL_3B,*,*,*,P,DIRECT,MOUND,Duck out of the lane toward first base side.,
+STEAL_3B,*,*,*,C,FIELD,PLATE,"Step toward third and throw over the pitcher, not around him.",BASE_3
+STEAL_3B,*,*,*,1B,COVER,BASE_1,Stay at first.,
+STEAL_3B,*,*,*,2B,COVER,BASE_2,Cover second behind him.,
+STEAL_3B,*,*,*,3B,COVER,BASE_3,"Inside corner of the bag, tag down. Let the throw come to you.",
+STEAL_3B,*,*,*,SS,BACKUP,BU_3_IN,"Rotate in behind third, inside the left fielder.",
+STEAL_3B,*,*,*,LF,BACKUP,BU_3,Sprint in behind third. Every throw to third is yours.,
+STEAL_3B,*,*,*,CF,HOLD,POS_CF,Hold your position.,
+STEAL_3B,*,*,*,RF,HOLD,POS_RF,Hold your position.,
+OVER_LF,*,*,*,LF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_LF>BASE_3
+OVER_LF,*,*,*,CF,BACKUP,BALL,"Go with him. If it kicks off the fence, you're the one who saves the run.",
+OVER_LF,*,*,*,RF,BACKUP,BU_2,All the way in behind second. That's where this ball is coming.,
+OVER_LF,*,*,*,SS,RELAY,RELAY_LF,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+OVER_LF,*,*,*,2B,TRAIL,TRAIL_LF,"Fifteen feet behind the relay man, same line. If the throw sails it's yours — and if the runner stops at second, you take the bag.",
+OVER_LF,*,*,*,3B,COVER,BASE_3,"Straddle the bag and stay there. The relay man is the cut, not you.",
+OVER_LF,*,*,*,1B,CUT,CUT_PLATE_R,"Trail the hitter to the mound, then line up for the plate. You are cut 4 on every extra-base hit.",
+OVER_LF,*,*,*,C,PLATE,PLATE,You run this play. Call the number twice and loud: 'Cut 3! Cut 3!' or 'Cut 4!' or 'Let it go!',
+OVER_LF,*,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+OVER_LF,2|3|12|13|23|123,*,*,LF,FIELD,BALL,Runners are scoring. Don't look up at them — turn and find your relay man.,RELAY_LF>PLATE
+OVER_LF,2|3|12|13|23|123,*,*,SS,RELAY,RELAY_LF,Catch it turning glove side toward home. Then listen — the catcher is calling a number.,
+OVER_LF,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate instead of third. Twenty feet deep, behind the catcher.",
+CORNER_LF,*,*,*,LF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_CORNER_L>BASE_3
+CORNER_LF,*,*,*,CF,BACKUP,BALL,"Go with him. If it kicks off the fence, you're the one who saves the run.",
+CORNER_LF,*,*,*,RF,BACKUP,BU_2,All the way in behind second. That's where this ball is coming.,
+CORNER_LF,*,*,*,SS,RELAY,RELAY_CORNER_L,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+CORNER_LF,*,*,*,2B,TRAIL,TRAIL_LF,"Fifteen feet behind the relay man, same line. If the throw sails it's yours — and if the runner stops at second, you take the bag.",
+CORNER_LF,*,*,*,3B,COVER,BASE_3,"Straddle the bag and stay there. The relay man is the cut, not you.",
+CORNER_LF,*,*,*,1B,CUT,CUT_PLATE_R,"Trail the hitter to the mound, then line up for the plate. You are cut 4 on every extra-base hit.",
+CORNER_LF,*,*,*,C,PLATE,PLATE,You run this play. Call the number twice and loud: 'Cut 3! Cut 3!' or 'Cut 4!' or 'Let it go!',
+CORNER_LF,*,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+CORNER_LF,2|3|12|13|23|123,*,*,LF,FIELD,BALL,Runners are scoring. Don't look up at them — turn and find your relay man.,RELAY_CORNER_L>PLATE
+CORNER_LF,2|3|12|13|23|123,*,*,SS,RELAY,RELAY_CORNER_L,Catch it turning glove side toward home. Then listen — the catcher is calling a number.,
+CORNER_LF,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate instead of third. Twenty feet deep, behind the catcher.",
+WALL_LC,*,*,*,CF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_DEEP_L>BASE_3
+WALL_LC,*,*,*,LF,BACKUP,BALL,"Go with him. If it kicks off the fence, you're the one who saves the run.",
+WALL_LC,*,*,*,RF,BACKUP,BU_2,All the way in behind second. That's where this ball is coming.,
+WALL_LC,*,*,*,SS,RELAY,RELAY_DEEP_L,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+WALL_LC,*,*,*,2B,TRAIL,TRAIL_DEEP_L,"Fifteen feet behind the relay man, same line. If the throw sails it's yours — and if the runner stops at second, you take the bag.",
+WALL_LC,*,*,*,3B,COVER,BASE_3,"Straddle the bag and stay there. The relay man is the cut, not you.",
+WALL_LC,*,*,*,1B,CUT,CUT_PLATE_R,"Trail the hitter to the mound, then line up for the plate. You are cut 4 on every extra-base hit.",
+WALL_LC,*,*,*,C,PLATE,PLATE,You run this play. Call the number twice and loud: 'Cut 3! Cut 3!' or 'Cut 4!' or 'Let it go!',
+WALL_LC,*,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+WALL_LC,2|3|12|13|23|123,*,*,CF,FIELD,BALL,Runners are scoring. Don't look up at them — turn and find your relay man.,RELAY_DEEP_L>PLATE
+WALL_LC,2|3|12|13|23|123,*,*,SS,RELAY,RELAY_DEEP_L,Catch it turning glove side toward home. Then listen — the catcher is calling a number.,
+WALL_LC,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate instead of third. Twenty feet deep, behind the catcher.",
+OVER_RF,*,*,*,RF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_RF>BASE_3
+OVER_RF,*,*,*,CF,BACKUP,BALL,"Go with him. If it kicks off the fence, you're the one who saves the run.",
+OVER_RF,*,*,*,LF,BACKUP,BU_2,All the way in behind second. That's where this ball is coming.,
+OVER_RF,*,*,*,2B,RELAY,RELAY_RF,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+OVER_RF,*,*,*,SS,TRAIL,TRAIL_RF,"Fifteen feet behind the relay man, same line. If the throw sails it's yours — and if the runner stops at second, you take the bag.",
+OVER_RF,*,*,*,3B,COVER,BASE_3,"Straddle the bag and stay there. The relay man is the cut, not you.",
+OVER_RF,*,*,*,1B,CUT,CUT_PLATE_R,"Trail the hitter to the mound, then line up for the plate. You are cut 4 on every extra-base hit.",
+OVER_RF,*,*,*,C,PLATE,PLATE,You run this play. Call the number twice and loud: 'Cut 3! Cut 3!' or 'Cut 4!' or 'Let it go!',
+OVER_RF,*,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+OVER_RF,2|3|12|13|23|123,*,*,RF,FIELD,BALL,Runners are scoring. Don't look up at them — turn and find your relay man.,RELAY_RF>PLATE
+OVER_RF,2|3|12|13|23|123,*,*,2B,RELAY,RELAY_RF,Catch it turning glove side toward home. Then listen — the catcher is calling a number.,
+OVER_RF,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate instead of third. Twenty feet deep, behind the catcher.",
+CORNER_RF,*,*,*,RF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_CORNER_R>BASE_3
+CORNER_RF,*,*,*,CF,BACKUP,BALL,"Go with him. If it kicks off the fence, you're the one who saves the run.",
+CORNER_RF,*,*,*,LF,BACKUP,BU_2,All the way in behind second. That's where this ball is coming.,
+CORNER_RF,*,*,*,2B,RELAY,RELAY_CORNER_R,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+CORNER_RF,*,*,*,SS,TRAIL,TRAIL_RF,"Fifteen feet behind the relay man, same line. If the throw sails it's yours — and if the runner stops at second, you take the bag.",
+CORNER_RF,*,*,*,3B,COVER,BASE_3,"Straddle the bag and stay there. The relay man is the cut, not you.",
+CORNER_RF,*,*,*,1B,CUT,CUT_PLATE_R,"Trail the hitter to the mound, then line up for the plate. You are cut 4 on every extra-base hit.",
+CORNER_RF,*,*,*,C,PLATE,PLATE,You run this play. Call the number twice and loud: 'Cut 3! Cut 3!' or 'Cut 4!' or 'Let it go!',
+CORNER_RF,*,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+CORNER_RF,2|3|12|13|23|123,*,*,RF,FIELD,BALL,Runners are scoring. Don't look up at them — turn and find your relay man.,RELAY_CORNER_R>PLATE
+CORNER_RF,2|3|12|13|23|123,*,*,2B,RELAY,RELAY_CORNER_R,Catch it turning glove side toward home. Then listen — the catcher is calling a number.,
+CORNER_RF,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate instead of third. Twenty feet deep, behind the catcher.",
+WALL_RC,*,*,*,CF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_DEEP_R>BASE_3
+WALL_RC,*,*,*,RF,BACKUP,BALL,"Go with him. If it kicks off the fence, you're the one who saves the run.",
+WALL_RC,*,*,*,LF,BACKUP,BU_2,All the way in behind second. That's where this ball is coming.,
+WALL_RC,*,*,*,2B,RELAY,RELAY_DEEP_R,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+WALL_RC,*,*,*,SS,TRAIL,TRAIL_DEEP_R,"Fifteen feet behind the relay man, same line. If the throw sails it's yours — and if the runner stops at second, you take the bag.",
+WALL_RC,*,*,*,3B,COVER,BASE_3,"Straddle the bag and stay there. The relay man is the cut, not you.",
+WALL_RC,*,*,*,1B,CUT,CUT_PLATE_R,"Trail the hitter to the mound, then line up for the plate. You are cut 4 on every extra-base hit.",
+WALL_RC,*,*,*,C,PLATE,PLATE,You run this play. Call the number twice and loud: 'Cut 3! Cut 3!' or 'Cut 4!' or 'Let it go!',
+WALL_RC,*,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+WALL_RC,2|3|12|13|23|123,*,*,CF,FIELD,BALL,Runners are scoring. Don't look up at them — turn and find your relay man.,RELAY_DEEP_R>PLATE
+WALL_RC,2|3|12|13|23|123,*,*,2B,RELAY,RELAY_DEEP_R,Catch it turning glove side toward home. Then listen — the catcher is calling a number.,
+WALL_RC,2|3|12|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate instead of third. Twenty feet deep, behind the catcher.",
+THROW_BEHIND_1B,*,*,*,RF,FIELD,BALL,Hit the cut man in the chest. Let him decide where it goes.,CUT_PLATE_R>BASE_1
+THROW_BEHIND_1B,*,*,*,1B,CUT,CUT_PLATE_R,"Catch it, then look at first before you do anything else. Big turn means you throw behind him.",
+THROW_BEHIND_1B,*,*,*,2B,COVER,BASE_1,You are the reason this play exists. Get to first — the throw is coming there.,
+THROW_BEHIND_1B,*,*,*,SS,COVER,BASE_2,Cover second in case he breaks for it.,
+THROW_BEHIND_1B,*,*,*,3B,COVER,BASE_3,Stay at third.,
+THROW_BEHIND_1B,*,*,*,C,PLATE,PLATE,"If the run is going to score anyway, call 'Cut, one!' and get the free out instead.",
+THROW_BEHIND_1B,*,*,*,P,BACKUP,BU_PLATE,Back up the plate until you hear the cut call.,
+THROW_BEHIND_1B,*,*,*,LF,BACKUP,BU_2,In behind second.,
+THROW_BEHIND_1B,*,*,*,CF,BACKUP,BALL,Back up right field.,
+THROW_BEHIND_2B,*,*,*,LF,FIELD,BALL,Get it in to the cut man quick and on a line.,CUT_3>BASE_2
+THROW_BEHIND_2B,*,*,*,SS,CUT,CUT_3,"Catch it and check second. If he took a big turn, spin and throw behind him.",
+THROW_BEHIND_2B,*,*,*,2B,COVER,BASE_2,Get to the bag and give a target. The throw can come back to you.,
+THROW_BEHIND_2B,*,*,*,3B,COVER,BASE_3,Straddle third. You still have the lead runner.,
+THROW_BEHIND_2B,*,*,*,1B,CUT,CUT_PLATE_R,Line up for the plate in case he keeps coming.,
+THROW_BEHIND_2B,*,*,*,C,PLATE,PLATE,"Call it: 'Cut, two!' — he can't see the runner, you can.",
+THROW_BEHIND_2B,*,*,*,P,BACKUP,BU_3,Back up third.,
+THROW_BEHIND_2B,*,*,*,CF,BACKUP,BALL,Back up left field.,
+THROW_BEHIND_2B,*,*,*,RF,BACKUP,BU_2,In behind second.,
+SINGLE_LF,13|123,*,*,3B,CUT,CUT_PLATE_L,"Corners. After you cut it, look at second — the hitter is trying to sneak into scoring position.",
+SINGLE_CF,13|123,*,*,1B,CUT,CUT_PLATE_R,"Corners. After you cut it, look at second — the hitter is trying to sneak into scoring position.",
+SINGLE_RF,13|123,*,*,1B,CUT,CUT_PLATE_R,"Corners. After you cut it, look at second — the hitter is trying to sneak into scoring position.",
+RD_1B_2B,*,*,*,P,BACKUP,BU_1_IN,"Behind first, inside the right fielder. After the first throw you're in the lane.",
+RD_1B_2B,*,*,*,C,PLATE,PLATE,Stay home. The runner you forget about is the one who scores.,
+RD_1B_2B,*,*,*,1B,COVER,BASE_1,"Stand a step in FRONT of the bag. Call 'Now!' once — one throw, then you're the chaser.",
+RD_1B_2B,*,*,*,2B,CHASE,CHASE_TO_1,"Ball up by your ear, run at him full speed. Make him commit to a direction.",BASE_1
+RD_1B_2B,*,*,*,3B,COVER,BASE_3,Stay at third.,
+RD_1B_2B,*,*,*,SS,COVER,BASE_2,"Take second. If he gets back past everybody, that's where he's going.",
+RD_1B_2B,*,*,*,LF,BACKUP,BU_3,In behind third.,
+RD_1B_2B,*,*,*,CF,BACKUP,BU_2,In behind second.,
+RD_1B_2B,*,*,*,RF,BACKUP,BU_1,Deep behind first.,
+RD_2B_3B,*,*,*,P,BACKUP,BU_2_L,"Back up second from the left side, then get in the lane.",
+RD_2B_3B,*,*,*,C,PLATE,PLATE,Stay home unless there's nobody else on.,
+RD_2B_3B,*,*,*,1B,COVER,BASE_1,Stay at first.,
+RD_2B_3B,*,*,*,2B,COVER,BASE_2,"Stand a step in FRONT of the bag. Call 'Now!' once — one throw, then you're the chaser.",
+RD_2B_3B,*,*,*,3B,COVER,BASE_3,Stay on third. That's the base he's trying to steal.,
+RD_2B_3B,*,*,*,SS,CHASE,CHASE_TO_2,"Ball up by your ear, run at him full speed. Make him commit to a direction.",BASE_2
+RD_2B_3B,*,*,*,LF,BACKUP,BU_3,In behind third.,
+RD_2B_3B,*,*,*,CF,BACKUP,BU_2,Deep behind second.,
+RD_2B_3B,*,*,*,RF,BACKUP,BU_1,In behind first.,
+RD_3B_HOME,*,*,*,P,COVER,PLATE,The catcher left the plate. It's yours now — get on it.,
+RD_3B_HOME,*,*,*,C,CHASE,CHASE_TO_3,"Ball up by your ear, run at him full speed. Make him commit to a direction.",BASE_3
+RD_3B_HOME,*,*,*,1B,COVER,BASE_1,Stay at first.,
+RD_3B_HOME,*,*,*,2B,COVER,BASE_2,Stay at second.,
+RD_3B_HOME,*,*,*,3B,COVER,BASE_3,"Stand a step in FRONT of the bag. Call 'Now!' once — one throw, then you're the chaser.",
+RD_3B_HOME,*,*,*,SS,BACKUP,BU_3_IN,Get behind third. You're the next man in the lane.,
+RD_3B_HOME,*,*,*,LF,BACKUP,BU_3,Deep behind third.,
+RD_3B_HOME,*,*,*,CF,BACKUP,BU_2,In behind second.,
+RD_3B_HOME,*,*,*,RF,BACKUP,BU_1,In behind first.,
+FT_THROW_THROUGH,*,*,*,P,DIRECT,MOUND,Off the line toward first. Do not block this throw.,
+FT_THROW_THROUGH,*,*,*,C,FIELD,PLATE,"Straight through, normal throw. Then trust your shortstop to read the runner.",BASE_2
+FT_THROW_THROUGH,*,*,*,1B,COVER,BASE_1,Stay at first.,
+FT_THROW_THROUGH,*,*,*,2B,BACKUP,BU_2_R,Behind the bag on the right side. A ball through here is a run.,
+FT_THROW_THROUGH,*,*,*,3B,COVER,BASE_3,Do not leave this bag. Your only job is to yell the second he breaks.,
+FT_THROW_THROUGH,*,*,*,SS,COVER,BASE_2,Take the throw and look home immediately. Do not sweep a tag first.,
+FT_THROW_THROUGH,*,*,*,LF,BACKUP,BU_3,In behind third.,
+FT_THROW_THROUGH,*,*,*,CF,BACKUP,BU_2,Sprint in behind second on every one of these.,
+FT_THROW_THROUGH,*,*,*,RF,BACKUP,BU_1,In behind first.,
+FT_CUT,*,*,*,P,CUT,MOUND,"Step in front of the mound and catch it. Look at third first — if he broke, throw home.",
+FT_CUT,*,*,*,C,FIELD,PLATE,Throw it exactly like you're going to second. Sell it.,MOUND
+FT_CUT,*,*,*,1B,COVER,BASE_1,Stay at first.,
+FT_CUT,*,*,*,2B,BACKUP,BU_2_R,Behind the bag on the right side. A ball through here is a run.,
+FT_CUT,*,*,*,3B,COVER,BASE_3,Do not leave this bag. Your only job is to yell the second he breaks.,
+FT_CUT,*,*,*,SS,COVER,BASE_2,"Still cover the bag. If the pitcher lets it go, it's a real throw.",
+FT_CUT,*,*,*,LF,BACKUP,BU_3,In behind third.,
+FT_CUT,*,*,*,CF,BACKUP,BU_2,Sprint in behind second on every one of these.,
+FT_CUT,*,*,*,RF,BACKUP,BU_1,In behind first.,
+FT_LOOK_BACK,*,*,*,P,DIRECT,MOUND,Get off the line and be an option if the catcher changes his mind.,
+FT_LOOK_BACK,*,*,*,C,DIRECT,PLATE,"Show the throw, then hold it. Step hard toward third and freeze him. Concede second.",
+FT_LOOK_BACK,*,*,*,1B,COVER,BASE_1,Stay at first.,
+FT_LOOK_BACK,*,*,*,2B,BACKUP,BU_2_R,Behind the bag on the right side. A ball through here is a run.,
+FT_LOOK_BACK,*,*,*,3B,COVER,BASE_3,Do not leave this bag. Your only job is to yell the second he breaks.,
+FT_LOOK_BACK,*,*,*,SS,COVER,BASE_2,Take the bag anyway and let him have it standing up.,
+FT_LOOK_BACK,*,*,*,LF,BACKUP,BU_3,In behind third.,
+FT_LOOK_BACK,*,*,*,CF,BACKUP,BU_2,Sprint in behind second on every one of these.,
+FT_LOOK_BACK,*,*,*,RF,BACKUP,BU_1,In behind first.,
+PICK_1B,*,*,*,P,FIELD,MOUND,"Short arm stroke, quick turn. Throw to the inside corner of the bag.",BASE_1
+PICK_1B,*,*,*,C,PLATE,PLATE,Stay home and read it.,
+PICK_1B,*,*,*,1B,COVER,BASE_1,Sneak in behind him on the sign. Tag down at the front corner.,
+PICK_1B,*,*,*,2B,COVER,BASE_2,Cover second in case he takes off instead.,
+PICK_1B,*,*,*,3B,COVER,BASE_3,Stay at third.,
+PICK_1B,*,*,*,SS,BACKUP,BU_2_L,Get behind second from the left side.,
+PICK_1B,*,*,*,LF,BACKUP,BU_3,In behind third.,
+PICK_1B,*,*,*,CF,BACKUP,BU_2,In behind second.,
+PICK_1B,*,*,*,RF,BACKUP,BU_1,Sprint in behind first. This is the throw that ends up in the corner.,
+PICK_2B,*,*,*,P,FIELD,MOUND,"Count it out in your head and turn on the number, not on what you see.",BASE_2
+PICK_2B,*,*,*,C,PLATE,PLATE,Stay home.,
+PICK_2B,*,*,*,1B,COVER,BASE_1,Stay at first.,
+PICK_2B,*,*,*,2B,BACKUP,BU_2_R,"Behind the bag on the right side. If this gets through, he scores.",
+PICK_2B,*,*,*,3B,COVER,BASE_3,Stay at third — he'll try to take it if this goes wrong.,
+PICK_2B,*,*,*,SS,COVER,BASE_2,Break behind him on the count. Get there exactly when the ball does.,
+PICK_2B,*,*,*,LF,BACKUP,BU_3,In behind third.,
+PICK_2B,*,*,*,CF,BACKUP,BU_2,Sprint in. Every pickoff at second needs you behind it.,
+PICK_2B,*,*,*,RF,BACKUP,BU_1,In behind first.,
+PICK_3B_BACK,*,*,*,P,DIRECT,MOUND,Duck. Do not reach for it.,
+PICK_3B_BACK,*,*,*,C,FIELD,PLATE,"Only if you caught it clean and he's way off. Step around the hitter, don't throw across him.",BASE_3
+PICK_3B_BACK,*,*,*,1B,COVER,BASE_1,Stay at first.,
+PICK_3B_BACK,*,*,*,2B,COVER,BASE_2,Stay at second.,
+PICK_3B_BACK,*,*,*,3B,COVER,BASE_3,"Get behind him as the pitch is caught. Be on the bag, not drifting to it.",
+PICK_3B_BACK,*,*,*,SS,BACKUP,BU_3_IN,Rotate in behind third.,
+PICK_3B_BACK,*,*,*,LF,BACKUP,BU_3,Sprint in. Without you this throw is a run.,
+PICK_3B_BACK,*,*,*,CF,BACKUP,BU_2,In behind second.,
+PICK_3B_BACK,*,*,*,RF,BACKUP,BU_1,In behind first.,
+D3K_TAG,*,*,*,1B,COVER,BASE_1,Get to the bag. He is running whether he knows the rule or not.,
+D3K_TAG,*,*,*,P,BACKUP,BU_1_IN,"Point at the ball and yell 'Ball! Ball!', then get down the line behind first.",
+D3K_TAG,*,*,*,RF,BACKUP,BU_1,Sprint in behind first. This throw sails more than any other throw all year.,
+D3K_TAG,*,*,*,2B,COVER,BASE_2,Take second. He'll keep running if the throw gets away.,
+D3K_TAG,*,*,*,SS,BACKUP,BU_2_L,Get behind second from the left side.,
+D3K_TAG,*,*,*,3B,COVER,BASE_3,Stay at third.,
+D3K_TAG,*,*,*,LF,BACKUP,BU_3,In behind third.,
+D3K_TAG,*,*,*,CF,BACKUP,BU_2,In behind second.,
+D3K_TAG,*,*,*,C,FIELD,BALL,Don't throw. Pick it up and tag him before he clears the box. Easiest out in baseball.,
+D3K_THROW,*,*,*,1B,COVER,BASE_1,Get to the bag. He is running whether he knows the rule or not.,
+D3K_THROW,*,*,*,P,BACKUP,BU_1_IN,"Point at the ball and yell 'Ball! Ball!', then get down the line behind first.",
+D3K_THROW,*,*,*,RF,BACKUP,BU_1,Sprint in behind first. This throw sails more than any other throw all year.,
+D3K_THROW,*,*,*,2B,COVER,BASE_2,Take second. He'll keep running if the throw gets away.,
+D3K_THROW,*,*,*,SS,BACKUP,BU_2_L,Get behind second from the left side.,
+D3K_THROW,*,*,*,3B,COVER,BASE_3,Stay at third.,
+D3K_THROW,*,*,*,LF,BACKUP,BU_3,In behind third.,
+D3K_THROW,*,*,*,CF,BACKUP,BU_2,In behind second.,
+D3K_THROW,*,*,*,C,FIELD,BALL,"Find it, step out toward the foul line, then throw. Never throw across the runner's back.",BASE_1
+D3K_BACKSTOP,*,*,*,1B,COVER,BASE_1,Get to the bag. He is running whether he knows the rule or not.,
+D3K_BACKSTOP,*,*,*,P,COVER,PLATE,"Get to the plate. If anybody is coming home, you are the play.",
+D3K_BACKSTOP,*,*,*,RF,BACKUP,BU_1,Sprint in behind first. This throw sails more than any other throw all year.,
+D3K_BACKSTOP,*,*,*,2B,COVER,BASE_2,Take second. He'll keep running if the throw gets away.,
+D3K_BACKSTOP,*,*,*,SS,BACKUP,BU_2_L,Get behind second from the left side.,
+D3K_BACKSTOP,*,*,*,3B,COVER,BASE_3,Stay at third.,
+D3K_BACKSTOP,*,*,*,LF,BACKUP,BU_3,In behind third.,
+D3K_BACKSTOP,*,*,*,CF,BACKUP,BU_2,In behind second.,
+D3K_BACKSTOP,*,*,*,C,FIELD,BALL,"Sprint, don't jog. Get it, then look up: the batter might be the least dangerous runner out there.",BASE_1
+D3K_BACKSTOP,3|13|23|123,*,*,C,FIELD,BALL,Runner on third is going. Forget the batter — get it and flip it to the pitcher at the plate.,PLATE
+D3K_BACKSTOP,3|13|23|123,*,*,P,COVER,PLATE,"Straddle the line at the plate, give a target, take the throw and swipe tag.",
+D3K_LOADED,*,*,*,1B,COVER,BASE_1,Get to the bag. He is running whether he knows the rule or not.,
+D3K_LOADED,*,*,*,P,BACKUP,BU_1_IN,"Point at the ball and yell 'Ball! Ball!', then get down the line behind first.",
+D3K_LOADED,*,*,*,RF,BACKUP,BU_1,Sprint in behind first. This throw sails more than any other throw all year.,
+D3K_LOADED,*,*,*,2B,COVER,BASE_2,Take second. He'll keep running if the throw gets away.,
+D3K_LOADED,*,*,*,SS,BACKUP,BU_2_L,Get behind second from the left side.,
+D3K_LOADED,*,*,*,3B,COVER,BASE_3,Stay at third.,
+D3K_LOADED,*,*,*,LF,BACKUP,BU_3,In behind third.,
+D3K_LOADED,*,*,*,CF,BACKUP,BU_2,In behind second.,
+D3K_LOADED,*,*,*,C,FIELD,BALL,Force at home and you're standing on it. Pick it up and touch the plate. Inning over.,PLATE
+SQUEEZE,*,*,*,P,FIELD,BALL,Off the mound on contact. Bare hand it if you have to — there is no time to circle this one.,PLATE
+SQUEEZE,*,*,*,C,COVER,PLATE,"Clear the plate and give him a lane. Catch it first, tag second. Blocking the plate without the ball is the run.",
+SQUEEZE,*,*,*,3B,FIELD,BALL,Charge on the pitcher's first move. If it's on your half of the line it's yours.,
+SQUEEZE,*,*,*,1B,FIELD,BALL,Charge on contact. Call it or peel off — don't do both.,
+SQUEEZE,*,*,*,2B,COVER,BASE_1,First is yours. Both corners are charging.,
+SQUEEZE,*,*,*,SS,COVER,BASE_3,Third is yours once the third baseman charges.,
+SQUEEZE,*,*,*,LF,BACKUP,BU_3,In behind third.,
+SQUEEZE,*,*,*,CF,BACKUP,BU_2,In behind second.,
+SQUEEZE,*,*,*,RF,BACKUP,BU_1,In behind first.,
+SQUEEZE,13|23|123,*,*,P,FIELD,BALL,"More than one runner. Get the sure out at home, then look — the hitter is not the problem.",PLATE
+FLY_LF,13|123,0|1,*,3B,CUT,CUT_PLATE_L,"Two runners tagging. Cut it, check home first, then look at second — the other one is going too.",
+FLY_LF,13|123,0|1,*,C,PLATE,PLATE,"Two runners moving. Call the plate first. If the run is beaten, call 'Cut, two!' and get the back one.",
+FLY_CF,13|123,0|1,*,1B,CUT,CUT_PLATE_R,"Two runners tagging. Cut it, check home first, then look at second — the other one is going too.",
+FLY_CF,13|123,0|1,*,C,PLATE,PLATE,"Two runners moving. Call the plate first. If the run is beaten, call 'Cut, two!' and get the back one.",
+FLY_RF,13|123,0|1,*,1B,CUT,CUT_PLATE_R,"Two runners tagging. Cut it, check home first, then look at second — the other one is going too.",
+FLY_RF,13|123,0|1,*,C,PLATE,PLATE,"Two runners moving. Call the plate first. If the run is beaten, call 'Cut, two!' and get the back one.",`;
+
+/* ------------------------------ CSV ------------------------------ */
+function parseCSV(text){
+  const rows=[]; let row=[], cell='', q=false;
+  text = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){
+      if(c==='"'){ if(text[i+1]==='"'){cell+='"';i++;} else q=false; }
+      else cell+=c;
+    } else if(c==='"') q=true;
+    else if(c===','){ row.push(cell); cell=''; }
+    else if(c==='\n'){ row.push(cell); cell=''; if(row.some(v=>v!=='')) rows.push(row); row=[]; }
+    else cell+=c;
+  }
+  row.push(cell); if(row.some(v=>v!=='')) rows.push(row);
+  const head=rows.shift();
+  return rows.map(r=>{const o={};head.forEach((h,i)=>o[h.trim()]=(r[i]??'').trim());return o;});
+}
+function toCSV(rows,cols){
+  const esc=v=>{v=(v==null?'':String(v));return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  return [cols.join(',')].concat(rows.map(r=>cols.map(c=>esc(r[c])).join(','))).join('\n');
+}
+
+/* ------------------------------ geometry ------------------------------ */
+const HOME=[260,415], MOUND=[260,334], B1=[335,340], B2=[260,265], B3=[185,340];
+const STARTS={P:[260,336],C:[260,452],'1B':[348,316],'2B':[312,258],'3B':[172,316],SS:[208,258],
+              LF:[108,214],CF:[260,162],RF:[412,214]};
+const LM={
+  BASE_1:B1, BASE_2:B2, BASE_3:B3, PLATE:HOME, MOUND:MOUND, BALL:null,
+  BU_1:[392,308], BU_2:[260,210], BU_3:[128,308], BU_PLATE:[300,466],
+  BU_1_IN:[369,334], BU_1_LINE:[318,362], BU_3_IN:[151,334],
+  BU_2_L:[234,232], BU_2_R:[286,232],
+  CHASE_TO_1:[318,320], CHASE_TO_2:[238,288], CHASE_TO_3:[208,362],
+  CUT_PLATE_L:[224,372], CUT_PLATE_R:[296,372],
+  CUT_3:[214,296], CUT_3_L:[198,300], CUT_3_R:[230,294],
+  CUT_2:[260,300], CUT_2_L:[224,290], CUT_2_R:[296,290],
+  RELAY_LF:[150,270], RELAY_LC:[198,234], RELAY_CF:[252,224], RELAY_RC:[322,234], RELAY_RF:[370,270],
+  TRAIL_LC:[234,270], TRAIL_RC:[288,270],
+  RELAY_CORNER_L:[152,290], RELAY_CORNER_R:[368,290],
+  TRAIL_LF:[188,300], TRAIL_RF:[332,300],
+  RELAY_DEEP_L:[176,190], RELAY_DEEP_R:[344,190],
+  TRAIL_DEEP_L:[218,238], TRAIL_DEEP_R:[302,238]
+};
+Object.keys(STARTS).forEach(p=>LM['POS_'+p]=STARTS[p]);
+const POSN={P:'1',C:'2','1B':'3','2B':'4','3B':'5',SS:'6',LF:'7',CF:'8',RF:'9'};
+const POSLIST=['P','C','1B','2B','3B','SS','LF','CF','RF'];
+const ROLES={
+  FIELD:{c:'var(--amber)',t:'Field the ball'},
+  CHASE:{c:'var(--orange)',t:'Run the runner back'},
+  COVER:{c:'var(--chalk)',t:'Cover a base'},
+  CUT:{c:'var(--cyan)',t:'Cutoff man'},
+  RELAY:{c:'var(--cyan)',t:'Relay man'},
+  TRAIL:{c:'var(--cyan)',t:'Trail the relay'},
+  BACKUP:{c:'var(--violet)',t:'Back up a throw'},
+  PLATE:{c:'var(--chalk)',t:'Protect the plate'},
+  DIRECT:{c:'var(--lime)',t:'Talk / direct traffic'},
+  HOLD:{c:'var(--mute)',t:'Hold your spot'}
+};
+
+/* ------------------------------ state ------------------------------ */
+const LS='wdig.v1.';
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v;}catch(e){return d;}},
+             set(k,v){try{store.set(k,v);}catch(e){}},
+             del(k){try{store.del(k);}catch(e){}}};
+let SITS=parseCSV(SITUATIONS_CSV);
+let BASE_RULES=parseCSV(RESP_CSV);
+let MYRULES=JSON.parse(store.get(LS+'rules','[]'));
+let CFG=Object.assign({name:'Majors Select',sub:'Where do I go?'},JSON.parse(store.get(LS+'cfg','{}')));
+let TEAM=Object.assign({
+  schedule:[['Sat Apr 11','vs Thunder','10:00a','Home'],['Sat Apr 18','@ Rivercats','1:00p','Away'],
+            ['Sat Apr 25','vs Storm','10:00a','Home'],['Sat May 2','@ Bandits','11:30a','Away']],
+  roster:[['Desmond','SS / P'],['Add your players','in the Edit tab']]
+},JSON.parse(store.get(LS+'team','{}')));
+
+let S={ball:'GB_SS', bases:'_', outs:0, infIn:false, me:null, tapType:'ground'};
+const TAPTYPES=[['ground','Grounder',['ground']],['air','In the air',['fly','pop']],
+                ['hit','Base hit',['hit','gap']],['bunt','Bunt',['bunt']]];
+
+function rules(){ return BASE_RULES.concat(MYRULES); }
+function sitById(id){ return SITS.find(s=>s.ball_id===id)||SITS[0]; }
+function basesLabel(b){ return b==='_'?'Bases empty':'Runner'+(b.length>1?'s':'')+' on '+
+  b.split('').map(x=>({'1':'1st','2':'2nd','3':'3rd'})[x]).join(' & '); }
+
+/* ------------------------------ resolver ------------------------------ */
+function matches(pat,val){
+  if(pat==='*'||pat==='') return true;
+  return pat.split('|').some(p=>p.trim()===String(val));
+}
+function resolve(ball,bases,outs,infIn){
+  const out={};
+  rules().forEach((r,i)=>{
+    if(r.ball_id!==ball) return;
+    if(!matches(r.bases,bases)) return;
+    if(!matches(r.outs,outs)) return;
+    if(r.context && r.context!=='*'){ if(r.context==='INF_IN' && !infIn) return; }
+    let score=(r.bases!=='*'?4:0)+(r.outs!=='*'?2:0)+(r.context!=='*'?8:0)+(i/100000);
+    const cur=out[r.pos];
+    if(!cur||score>=cur._s) out[r.pos]=Object.assign({},r,{_s:score});
+  });
+  POSLIST.forEach(p=>{ if(!out[p]) out[p]={pos:p,role:'HOLD',target:'POS_'+p,cue:'Hold your spot and watch the ball.',throw:'',_s:-1}; });
+  return out;
+}
+function pt(name,sit){
+  if(!name||name==='BALL') return [ +sit.ball_x, +sit.ball_y ];
+  return LM[name]||STARTS[name]||[+sit.ball_x,+sit.ball_y];
+}
+
+/* ------------------------------ field drawing ------------------------------ */
+const FAN="M260,415 L31,272 A232.6,232.6 0 0 1 489,272 Z";
+const SKIN="M260,415 L121.4,276.4 A196,196 0 0 1 398.6,276.4 Z";
+function mowStripes(){
+  /* Classic fan mow: wedges radiating from home, every other one cut the other way. */
+  let out='';
+  const N=10, span=116, a0=-58;
+  for(let i=0;i<N;i++){
+    if(i%2) continue;
+    const r=360, p=a=>[260+r*Math.sin(a*Math.PI/180), 415-r*Math.cos(a*Math.PI/180)];
+    const[x0,y0]=p(a0+i*span/N), [x1,y1]=p(a0+(i+1)*span/N);
+    out+=`<path d="M260,415 L${x0.toFixed(1)},${y0.toFixed(1)} L${x1.toFixed(1)},${y1.toFixed(1)} Z" fill="var(--grass2)" opacity=".62"/>`;
+  }
+  return out;
+}
+function fieldBase(){
+  /* Home (260,415). Field is a fan with edges 58 deg off centre, so a band of foul
+     grass sits outside each 45 deg foul line. Skinned infield is a 45 deg sector of
+     radius 196 — past the bases, foul line to foul line, as on a real field. */
+  return `
+  <defs>
+    <clipPath id="fairclip"><path d="${FAN}"/></clipPath>
+    <clipPath id="backclip"><circle cx="260" cy="428" r="80"/></clipPath>
+    <radialGradient id="gLight" cx="50%" cy="74%" r="80%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".17"/>
+      <stop offset=".5" stop-color="#ffffff" stop-opacity=".05"/>
+      <stop offset="1" stop-color="#000814" stop-opacity=".30"/>
+    </radialGradient>
+    <radialGradient id="dLight" cx="50%" cy="86%" r="78%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".15"/>
+      <stop offset=".6" stop-color="#ffffff" stop-opacity=".02"/>
+      <stop offset="1" stop-color="#000814" stop-opacity=".22"/>
+    </radialGradient>
+    <radialGradient id="mLight" cx="42%" cy="34%" r="70%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#000814" stop-opacity=".16"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="520" height="482" fill="#0e1a15"/>
+
+  <circle cx="260" cy="428" r="94" fill="var(--track)"/>
+  <path d="M260,438 L12.4,260.3 A252.7,252.7 0 0 1 507.6,260.3 Z" fill="var(--track)"/>
+  <circle cx="260" cy="428" r="94" fill="none" stroke="#16241c" stroke-width="3"/>
+  <path d="M260,438 L12.4,260.3 A252.7,252.7 0 0 1 507.6,260.3 Z" fill="none" stroke="#16241c" stroke-width="3.5"/>
+
+  <circle cx="260" cy="428" r="80" fill="var(--grass)"/>
+  <g clip-path="url(#backclip)"><circle cx="260" cy="428" r="80" fill="url(#gLight)"/></g>
+  <path d="${FAN}" fill="var(--grass)"/>
+  <g clip-path="url(#fairclip)">${mowStripes()}
+    <path d="${FAN}" fill="url(#gLight)"/></g>
+  <path d="${FAN}" fill="none" stroke="#2a5a41" stroke-width="2"/>
+
+  <path d="${SKIN}" fill="var(--dirt)"/>
+  <path d="${SKIN}" fill="url(#dLight)"/>
+  <path d="${SKIN}" fill="none" stroke="#7d5133" stroke-width="1.6" opacity=".7"/>
+  <circle cx="260" cy="417" r="31" fill="var(--dirt)"/>
+  <path d="M182,438 A80,80 0 0 0 338,438" fill="none" stroke="#dfe6e0" stroke-width="2" opacity=".45"/>
+
+  <polygon points="260,395 315,340 260,285 205,340" fill="var(--grass)"/>
+  <polygon points="260,395 315,340 260,285 205,340" fill="url(#gLight)"/>
+  <polygon points="260,395 315,340 260,285 205,340" fill="none" stroke="#2a5a41" stroke-width="1.6"/>
+  <circle cx="335" cy="340" r="17" fill="var(--dirt)"/>
+  <circle cx="260" cy="265" r="17" fill="var(--dirt)"/>
+  <circle cx="185" cy="340" r="17" fill="var(--dirt)"/>
+  <circle cx="260" cy="334" r="27" fill="var(--dirt)"/>
+  <circle cx="260" cy="334" r="27" fill="url(#mLight)"/>
+  <rect x="254" y="332" width="12" height="4" rx="1" fill="#fff" opacity=".92"/>
+
+  <line x1="260" y1="415" x2="52.5" y2="207.5" stroke="#fff" stroke-width="3"/>
+  <line x1="260" y1="415" x2="467.5" y2="207.5" stroke="#fff" stroke-width="3"/>
+  <line x1="52.5" y1="207.5" x2="52.5" y2="180" stroke="#f5d76e" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="467.5" y1="207.5" x2="467.5" y2="180" stroke="#f5d76e" stroke-width="4.5" stroke-linecap="round"/>
+
+  <rect x="343" y="341" width="38" height="15" fill="none" stroke="#fff" stroke-width="1.6"
+        opacity=".8" transform="rotate(-45 362 348.5)"/>
+  <rect x="139" y="341" width="38" height="15" fill="none" stroke="#fff" stroke-width="1.6"
+        opacity=".8" transform="rotate(45 158 348.5)"/>
+
+  <rect x="241" y="406" width="10" height="17" fill="none" stroke="#fff" stroke-width="1.4" opacity=".8"/>
+  <rect x="269" y="406" width="10" height="17" fill="none" stroke="#fff" stroke-width="1.4" opacity=".8"/>
+  <rect x="249" y="425" width="22" height="13" fill="none" stroke="#fff" stroke-width="1.4" opacity=".65"/>
+
+  <rect x="329" y="334" width="12" height="12" fill="#fff" transform="rotate(45 335 340)"/>
+  <rect x="254" y="259" width="12" height="12" fill="#fff" transform="rotate(45 260 265)"/>
+  <rect x="179" y="334" width="12" height="12" fill="#fff" transform="rotate(45 185 340)"/>
+  <polygon points="252,408 268,408 268,417 260,424 252,417" fill="#fff"/>`;
+}
+function runnersSVG(bases){
+  let s='';
+  const spots={'1':B1,'2':B2,'3':B3};
+  bases.split('').forEach(b=>{ if(!spots[b])return; const[x,y]=spots[b];
+    s+=`<circle cx="${x+17}" cy="${y-13}" r="8" fill="var(--rose)" stroke="#12241c" stroke-width="2.5"/>`;});
+  return s;
+}
+function planRunnersSVG(plan){
+  return plan.runners.map((r,i)=>{ const[x,y]=r.pts[0];
+    return `<ellipse data-rsh="${i}" cx="${x}" cy="${y+9}" rx="8" ry="3" fill="#06110c" opacity=".33"/>`+
+           `<circle data-runner="${i}" cx="${x}" cy="${y}" r="8.5" fill="var(--rose)" stroke="#12241c" stroke-width="2.5"/>`;
+  }).join('');
+}
+
+function renderField(svg,assign,sit,opts){
+  opts=opts||{};
+  let s=fieldBase()+(opts.plan?planRunnersSVG(opts.plan):runnersSVG(S.bases));
+  // ball landing marker
+  s+=`<circle cx="${sit.ball_x}" cy="${sit.ball_y}" r="6" fill="none" stroke="#fff" stroke-width="2.5" opacity=".95"/>`;
+  s+=`<circle cx="${sit.ball_x}" cy="${sit.ball_y}" r="13" fill="none" stroke="#fff" stroke-width="1.5" opacity=".5"/>`;
+  // routes
+  if(!opts.hideRoutes){
+    POSLIST.forEach(p=>{
+      const a=assign[p]; const from=STARTS[p]; const to=pt(a.target,sit);
+      if(Math.hypot(to[0]-from[0],to[1]-from[1])<6) return;
+      if(opts.only&&opts.only!==p) return;
+      const col=ROLES[a.role]?ROLES[a.role].c:'var(--mute)';
+      const dim=(S.me&&S.me!==p&&!opts.only)?'.22':'.8';
+      s+=`<line class="route" x1="${from[0]}" y1="${from[1]}" x2="${to[0]}" y2="${to[1]}" stroke="${col}" stroke-width="2.5" opacity="${dim}"/>`;
+    });
+  }
+  // players
+  POSLIST.forEach(p=>{
+    const a=assign[p]; const col=ROLES[a.role]?ROLES[a.role].c:'var(--mute)';
+    const[x,y]=STARTS[p];
+    const isMe=S.me===p; const dim=(S.me&&!isMe)?.3:1;
+    s+=`<g class="player" data-pos="${p}" opacity="${dim}">
+      <ellipse data-sh="${p}" cx="${x}" cy="${y+(isMe?16:13.5)-2}" rx="${isMe?14:12}" ry="4.5" fill="#06110c" opacity=".35"/>
+      <circle class="pdot" data-dot="${p}" cx="${x}" cy="${y}" r="${isMe?16:13.5}" fill="${col}"/>
+      <text class="ptxt" data-txt="${p}" x="${x}" y="${y}">${POSN[p]}</text></g>`;
+  });
+  s+=`<ellipse id="ballsh" cx="260" cy="415" rx="5" ry="2" fill="#06110c" opacity="0"/>`+
+     `<circle id="ball" cx="260" cy="415" r="6" fill="#fff" stroke="#8c2f28" stroke-width="1.5" opacity="0"/>`;
+  svg.innerHTML=s;
+}
+
+/* ------------------------------ timing model ------------------------------ */
+/* Tunable. All speeds in viewBox px/sec; 106px = 60 feet. */
+const TIME={
+  runner:26,        /* px/sec — 106px = 60ft, so this is 4.1s home to first */
+  rounding:1.15,    /* a runner taking two or more bases doesn't stop at the bag */
+  fielder:34, throw:118, react:.25, transfer:.42,
+  ball:{ground:130,bunt:74,hit:150,gap:150,loose:95,run:120,steal:400,pick:400},
+  hang:{fly:3.2,pop:2.5},
+  gather:{ground:.55,bunt:.75,hit:.7,gap:2.6,fly:.55,pop:.4,loose:.85,steal:.9,pick:.1,run:.2}
+};
+const BASEPT={H:HOME,'1':B1,'2':B2,'3':B3};
+const NEXT={H:'1','1':'2','2':'3','3':'H'};
+const MAXSTEP={H:4,'1':3,'2':2,'3':1};
+const BASEKEY={BASE_1:'1',BASE_2:'2',BASE_3:'3',PLATE:'H'};
+const BASENAME={'1':'first','2':'second','3':'third',H:'the plate'};
+function dist(a,b){return Math.hypot(b[0]-a[0],b[1]-a[1]);}
+function along(pts,k){
+  if(pts.length<2) return pts[0].slice();
+  const seg=[]; let tot=0;
+  for(let i=1;i<pts.length;i++){const d=dist(pts[i-1],pts[i]);seg.push(d);tot+=d;}
+  if(!tot) return pts[0].slice();
+  let want=k*tot;
+  for(let i=0;i<seg.length;i++){
+    if(want<=seg[i]||i===seg.length-1){const f=seg[i]?Math.max(0,Math.min(1,want/seg[i])):1;
+      return [pts[i][0]+(pts[i+1][0]-pts[i][0])*f, pts[i][1]+(pts[i+1][1]-pts[i][1])*f];}
+    want-=seg[i];
+  }
+  return pts[pts.length-1].slice();
+}
+function receiverAt(assign,landmark){
+  const want=['COVER','PLATE','CUT','RELAY','CHASE'];
+  return POSLIST.find(p=>assign[p].target===landmark&&want.includes(assign[p].role))||
+         POSLIST.find(p=>assign[p].target===landmark);
+}
+function runnerPlan(sit,bases,outs,catchT){
+  const code=sit.runners||'force', out=[];
+  const has=b=>bases.indexOf(b)>=0;
+  const add=(from,steps,delay,mul)=>{
+    steps=Math.min(steps,MAXSTEP[from]);
+    const pts=[BASEPT[from].slice()]; let cur=from;
+    for(let i=0;i<steps;i++){cur=NEXT[cur];pts.push(BASEPT[cur].slice());}
+    let d=0;for(let i=1;i<pts.length;i++)d+=dist(pts[i-1],pts[i]);
+    const spd=TIME.runner*(mul||(steps>1?TIME.rounding:1));
+    out.push({pts,start:delay,dur:Math.max(.45,d/spd),from,to:cur});
+  };
+  if(code==='force'){
+    add('H',1,TIME.react);
+    if(has('1')){add('1',1,0); if(has('2')){add('2',1,0); if(has('3'))add('3',1,0);}}
+  } else if(code==='single'){
+    add('H',1,TIME.react);
+    if(has('1'))add('1',2,0); if(has('2'))add('2',2,0); if(has('3'))add('3',1,0);
+  } else if(code==='contact'){
+    add('H',1,TIME.react);
+    ['1','2','3'].forEach(b=>{if(has(b))add(b,1,0);});
+  } else if(code==='double'){
+    add('H',2,TIME.react);
+    if(has('1'))add('1',2,0); if(has('2'))add('2',2,0); if(has('3'))add('3',1,0);
+  } else if(code==='tag'){
+    if(outs<2){ if(has('3'))add('3',1,catchT+.12,TIME.rounding); if(has('2'))add('2',1,catchT+.12,TIME.rounding); }
+  } else if(code==='wp'){
+    ['1','2','3'].forEach(b=>{if(has(b))add(b,1,.38);});
+  } else if(code==='steal2'){ if(has('1'))add('1',1,0);
+  } else if(code==='steal3'){ if(has('2'))add('2',1,0);
+  } else if(code==='pickoff'){
+    const b=(sit.set_bases||'1').charAt(0);
+    if(has(b)){const a=BASEPT[b],n=BASEPT[NEXT[b]];
+      const lead=[a[0]+(n[0]-a[0])*.22,a[1]+(n[1]-a[1])*.22];
+      out.push({pts:[a.slice(),lead,a.slice()],start:0,dur:1.9,from:b,to:b});}
+  } else if(code==='rundown'){
+    const b=(sit.set_bases||'1').charAt(0);
+    if(has(b)){const a=BASEPT[b],n=BASEPT[NEXT[b]];
+      const mid=[(a[0]+n[0])/2,(a[1]+n[1])/2];
+      const far=[a[0]+(n[0]-a[0])*.72,a[1]+(n[1]-a[1])*.72];
+      out.push({pts:[mid,far,mid,a.slice()],start:0,dur:3.2,from:b,to:b});}
+  }
+  /* anyone left standing on a bag still gets drawn */
+  ['1','2','3'].forEach(b=>{ if(has(b)&&!out.some(r=>r.from===b))
+    out.push({pts:[BASEPT[b].slice()],start:0,dur:.1,from:b,to:b,hold:true}); });
+  return out;
+}
+
+/* ------------------------------ building one play ------------------------------ */
+function buildPlay(){
+  const sit=sitById(S.ball), assign=resolve(S.ball,S.bases,S.outs,S.infIn);
+  const type=sit.ball_type||'ground';
+  const bp=[+sit.ball_x,+sit.ball_y];
+  const origin=(sit.ball_from&&LM[sit.ball_from])?LM[sit.ball_from].slice():HOME.slice();
+  const legs=[]; let t=0;
+  const fl=TIME.hang[type]||Math.max(.3,dist(origin,bp)/(TIME.ball[type]||150));
+  legs.push({from:origin,to:bp,start:0,dur:fl,
+             arc:(type==='fly'||type==='pop')?38:((type==='hit'||type==='gap')?14:0)});
+  t=fl;
+  const chain=[]; const thrower=POSLIST.find(p=>assign[p].throw);
+  if(thrower){
+    chain.push(POSN[thrower]);
+    t+=(TIME.gather[type]!=null?TIME.gather[type]:.5);
+    let from=bp, prevCut=false;
+    assign[thrower].throw.split('>').forEach((step,i)=>{
+      const key=step.trim(), to=pt(key,sit);
+      if(i>0&&!prevCut) t+=TIME.transfer;
+      prevCut=(key.indexOf('CUT_')===0);
+      const dur=Math.max(.22,dist(from,to)/TIME.throw);
+      legs.push({from,to,start:t,dur,arc:11,target:key});
+      t+=dur; from=to;
+      const rec=receiverAt(assign,key);
+      if(rec&&POSN[rec]!==chain[chain.length-1]) chain.push(POSN[rec]);
+    });
+  }
+  const moves=POSLIST.map(p=>{const from=STARTS[p].slice(),to=pt(assign[p].target,sit);
+    return {p,from,to,dur:Math.max(.2,dist(from,to)/TIME.fielder)};});
+  const runners=runnerPlan(sit,S.bases,S.outs,fl);
+  const calls=[];
+  if(sit.runners!=='rundown') legs.forEach(l=>{ const bk=BASEKEY[l.target]; if(!bk) return;
+    const r=runners.find(x=>x.to===bk&&!x.hold); if(!r) return;
+    const ballT=l.start+l.dur, runT=r.start+r.dur;
+    calls.push({base:bk,out:ballT<runT-.03,t:Math.max(ballT,runT)});
+  });
+  const ends=runners.map(r=>r.start+r.dur).concat([t,1.5]);
+  return {sit,assign,legs,moves,runners,calls,chain,duration:Math.max.apply(null,ends)+.8};
+}
+
+/* ------------------------------ playback ------------------------------ */
+let PLAN=null, PT=0, PLAYING=false, RATE=1, raf=null, lastNow=0;
+function setPP(){const b=document.getElementById('btnPP'); if(b)b.textContent=PLAYING?'Pause':'Play';}
+function stopPlay(){PLAYING=false; if(raf)cancelAnimationFrame(raf); raf=null; setPP();}
+function tick(now){
+  if(!PLAYING||!PLAN) return;
+  PT+=Math.min(.05,(now-lastNow)/1000)*RATE; lastNow=now;
+  if(PT>=PLAN.duration){PT=PLAN.duration; renderAt(PLAN,PT); stopPlay(); return;}
+  renderAt(PLAN,PT); raf=requestAnimationFrame(tick);
+}
+function runPlay(){
+  drawPlay(); PT=0; PLAYING=true; lastNow=performance.now(); setPP();
+  if(raf)cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
+}
+function renderAt(plan,t){
+  const svg=document.getElementById('svg');
+  plan.moves.forEach(m=>{
+    const k=Math.max(0,Math.min(1,t/m.dur)), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    const x=m.from[0]+(m.to[0]-m.from[0])*e, y=m.from[1]+(m.to[1]-m.from[1])*e;
+    const d=svg.querySelector('[data-dot="'+m.p+'"]'), tx=svg.querySelector('[data-txt="'+m.p+'"]');
+    const sh=svg.querySelector('[data-sh="'+m.p+'"]');
+    if(d){d.setAttribute('cx',x);d.setAttribute('cy',y);}
+    if(tx){tx.setAttribute('x',x);tx.setAttribute('y',y);}
+    if(sh){sh.setAttribute('cx',x);sh.setAttribute('cy',y+(+d.getAttribute('r'))-2);}
+  });
+  plan.runners.forEach((r,i)=>{
+    const el=svg.querySelector('[data-runner="'+i+'"]'); if(!el) return;
+    const k=Math.max(0,Math.min(1,(t-r.start)/r.dur));
+    const p=along(r.pts,k); el.setAttribute('cx',p[0]); el.setAttribute('cy',p[1]);
+    const rs=svg.querySelector('[data-rsh="'+i+'"]');
+    if(rs){rs.setAttribute('cx',p[0]);rs.setAttribute('cy',p[1]+9);}
+  });
+  const ball=svg.querySelector('#ball');
+  if(ball){
+    let leg=plan.legs[0];
+    for(let i=0;i<plan.legs.length;i++) if(t>=plan.legs[i].start) leg=plan.legs[i];
+    const k=Math.max(0,Math.min(1,(t-leg.start)/leg.dur));
+    const bx=leg.from[0]+(leg.to[0]-leg.from[0])*k;
+    const gy=leg.from[1]+(leg.to[1]-leg.from[1])*k;
+    const lift=Math.sin(k*Math.PI)*(leg.arc||0);
+    ball.setAttribute('cx',bx); ball.setAttribute('cy',gy-lift); ball.setAttribute('opacity','1');
+    const bs=svg.querySelector('#ballsh');
+    if(bs){ const h=Math.min(1,lift/38);
+      bs.setAttribute('cx',bx); bs.setAttribute('cy',gy+3);
+      bs.setAttribute('rx',5+h*4); bs.setAttribute('ry',2+h*1.4);
+      bs.setAttribute('opacity',String(.34-h*.16)); }
+  }
+  const cl=document.getElementById('clock'); if(cl) cl.textContent=t.toFixed(1)+'s';
+  const sc=document.getElementById('scrub'); if(sc&&PLAYING) sc.value=Math.round(t/plan.duration*1000);
+  const cb=document.getElementById('callBox');
+  if(cb){
+    const shown=plan.calls.filter(c=>t>=c.t+.15);
+    let h=shown.map(c=>'<span class="call '+(c.out?'out':'safe')+'">'+
+      (c.out?'Out at ':'Safe at ')+BASENAME[c.base]+'</span>').join('');
+    if(shown.length&&plan.chain.length>1) h+='<span class="call note">'+plan.chain.join('-')+'</span>';
+    cb.innerHTML=h;
+  }
+}
+
+/* ------------------------------ play page ------------------------------ */
+function drawPlay(){
+  stopPlay(); PT=0;
+  PLAN=buildPlay();
+  const sit=PLAN.sit, assign=PLAN.assign;
+  renderField(document.getElementById('svg'),assign,sit,{plan:PLAN});
+  const sc=document.getElementById('scrub'); if(sc) sc.value=0;
+  renderAt(PLAN,0);
+  document.getElementById('fieldHint').textContent=sit.label+' · '+basesLabel(S.bases)+' · '+S.outs+' out'+(S.outs===1?'':'s');
+
+  const big=document.getElementById('bigJobBox');
+  if(S.me){
+    const a=assign[S.me];
+    big.innerHTML=`<div class="bigjob"><div class="r">${(ROLES[a.role]||{t:a.role}).t}</div>
+      <div class="c">${a.cue||''}</div></div>`;
+  } else big.innerHTML='';
+
+  document.getElementById('jobs').innerHTML=POSLIST.map(p=>{
+    const a=assign[p]; const col=ROLES[a.role]?ROLES[a.role].c:'var(--mute)';
+    const cls=S.me===p?'job me':(S.me?'job dim':'job');
+    return `<div class="${cls}">
+      <div class="num"><span class="jn" style="background:${col}">${POSN[p]}</span><span class="jp">${p}</span></div>
+      <div class="body"><div class="role" style="color:${col}">${(ROLES[a.role]||{t:a.role}).t}</div>
+      <div class="cue">${a.cue||''}</div></div></div>`;
+  }).join('');
+
+  const tb=document.getElementById('teachBox');
+  if(sit.teaching_point){tb.style.display='';tb.innerHTML='<b class="cond" style="color:var(--amber)">Coaching point</b><br>'+sit.teaching_point;}
+  else tb.style.display='none';
+}
+
+function buildPicker(){
+  const box=document.getElementById('pickBox');
+  const groups=[...new Set(SITS.map(s=>s.group))];
+  box.innerHTML=groups.map(g=>`<div class="card"><div class="lbl cond" style="font-size:11px;color:var(--mute);letter-spacing:.14em;margin-bottom:7px">${g.toUpperCase()}</div>
+    <div class="chips">${SITS.filter(s=>s.group===g).map(s=>
+      `<button class="chip${s.ball_id===S.ball?' on':''}" data-sit="${s.ball_id}">${s.label}</button>`).join('')}</div></div>`).join('');
+}
+function nearestSituation(x,y){
+  const types=(TAPTYPES.find(t=>t[0]===S.tapType)||TAPTYPES[0])[2];
+  let best=null,bd=1e9;
+  SITS.forEach(s=>{ if(s.tap==='no'||!types.includes(s.ball_type)) return;
+    const d=Math.hypot(x-s.ball_x,y-s.ball_y); if(d<bd){bd=d;best=s;}});
+  return best;
+}
+function svgPoint(svg,evt){
+  const r=svg.getBoundingClientRect(), vb=svg.viewBox.baseVal;
+  const cx=(evt.touches?evt.touches[0].clientX:evt.clientX)-r.left;
+  const cy=(evt.touches?evt.touches[0].clientY:evt.clientY)-r.top;
+  return [cx/r.width*vb.width, cy/r.height*vb.height];
+}
+
+/* ------------------------------ quiz ------------------------------ */
+let Q={pos:'SS',sit:null,bases:'_',outs:0,answered:false,
+  right:+store.get(LS+'qr',0), total:+store.get(LS+'qt',0), streak:+store.get(LS+'qs',0)};
+function newQuestion(){
+  Q.sit=SITS[Math.floor(Math.random()*SITS.length)];
+  const states=['_','1','2','3','12','13','23','123'];
+  Q.bases=states[Math.floor(Math.random()*states.length)];
+  Q.outs=Math.floor(Math.random()*3);
+  Q.answered=false;
+  drawQuiz();
+}
+function drawQuiz(){
+  const prevB=S.bases,prevM=S.me; S.bases=Q.bases; S.me=null;
+  const assign=resolve(Q.sit.ball_id,Q.bases,Q.outs,false);
+  renderField(document.getElementById('qsvg'),assign,Q.sit,{hideRoutes:!Q.answered,only:Q.pos});
+  S.bases=prevB; S.me=prevM;
+  document.getElementById('qText').textContent=Q.sit.label;
+  document.getElementById('qSub').textContent=basesLabel(Q.bases)+' · '+Q.outs+' out'+(Q.outs===1?'':'s')+
+    ' · You are the '+Q.pos+'. Tap where you go.';
+  document.getElementById('qPosChips').innerHTML=POSLIST.map(p=>
+    `<button class="chip${p===Q.pos?' on':''}" data-qpos="${p}">${p}</button>`).join('');
+  document.getElementById('qRight').textContent=Q.right;
+  document.getElementById('qTotal').textContent=Q.total;
+  document.getElementById('qStreak').textContent=Q.streak;
+  if(!Q.answered) document.getElementById('qFeedback').innerHTML='';
+}
+function answerQuiz(x,y,reveal){
+  if(Q.answered&&!reveal) return;
+  const assign=resolve(Q.sit.ball_id,Q.bases,Q.outs,false);
+  const a=assign[Q.pos]; const target=pt(a.target,Q.sit);
+  const d=reveal?999:Math.hypot(x-target[0],y-target[1]);
+  const ok=d<48;
+  Q.answered=true; Q.total++; if(ok){Q.right++;Q.streak++;} else Q.streak=0;
+  store.set(LS+'qr',Q.right);store.set(LS+'qt',Q.total);store.set(LS+'qs',Q.streak);
+  drawQuiz();
+  document.getElementById('qFeedback').innerHTML=
+    `<div class="feedback ${ok?'good':'bad'}"><b class="cond" style="font-size:17px">${reveal?'Here it is':(ok?"That's it.":'Not quite.')}</b><br>
+      ${(ROLES[a.role]||{t:a.role}).t} — ${a.cue||''}</div>`;
+}
+
+/* ------------------------------ team ------------------------------ */
+function drawTeam(){
+  document.getElementById('schedTable').innerHTML='<tr><th>Date</th><th>Opponent</th><th>Time</th><th></th></tr>'+
+    TEAM.schedule.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="muted">${r[3]||''}</td></tr>`).join('');
+  document.getElementById('rosterTable').innerHTML='<tr><th>Player</th><th>Positions</th></tr>'+
+    TEAM.roster.map(r=>`<tr><td>${r[0]}</td><td class="muted">${r[1]}</td></tr>`).join('');
+}
+document.getElementById('editTeam').onclick=()=>{
+  const b=document.getElementById('teamEditBox');
+  if(b.innerHTML){b.innerHTML='';return;}
+  b.innerHTML=`<label class="f">SCHEDULE — one game per line: date, opponent, time, home/away</label>
+    <textarea id="tSched" rows="5">${TEAM.schedule.map(r=>r.join(', ')).join('\n')}</textarea>
+    <label class="f">ROSTER — one player per line: name, positions</label>
+    <textarea id="tRoster" rows="6">${TEAM.roster.map(r=>r.join(', ')).join('\n')}</textarea>
+    <div class="row" style="margin-top:10px"><button class="btn go" id="tSave">Save team</button></div>`;
+  document.getElementById('tSave').onclick=()=>{
+    TEAM.schedule=document.getElementById('tSched').value.split('\n').filter(l=>l.trim()).map(l=>l.split(',').map(s=>s.trim()));
+    TEAM.roster=document.getElementById('tRoster').value.split('\n').filter(l=>l.trim()).map(l=>l.split(',').map(s=>s.trim()));
+    store.set(LS+'team',JSON.stringify(TEAM)); b.innerHTML=''; drawTeam();
+  };
+};
+
+/* ------------------------------ editor ------------------------------ */
+function buildEditor(){
+  const opt=(v,t,sel)=>`<option value="${v}"${sel?' selected':''}>${t}</option>`;
+  document.getElementById('eSit').innerHTML=SITS.map(s=>opt(s.ball_id,s.label,s.ball_id===S.ball)).join('');
+  document.getElementById('eBases').innerHTML=[['*','Any runners']].concat(
+    ['_','1','2','3','12','13','23','123'].map(b=>[b,basesLabel(b)])).map(x=>opt(x[0],x[1],x[0]===S.bases)).join('');
+  document.getElementById('eOuts').innerHTML=[['*','Any outs'],['0','0 outs'],['1','1 out'],['2','2 outs']]
+    .map(x=>opt(x[0],x[1],x[0]===String(S.outs))).join('');
+  document.getElementById('ePos').innerHTML=POSLIST.map(p=>opt(p,p,false)).join('');
+  document.getElementById('eRole').innerHTML=Object.keys(ROLES).map(r=>opt(r,ROLES[r].t,false)).join('');
+  document.getElementById('eTarget').innerHTML=Object.keys(LM).map(k=>opt(k,k,false)).join('');
+  document.getElementById('cfgName').value=CFG.name;
+  document.getElementById('cfgSub').value=CFG.sub;
+  syncEditor(); stat();
+}
+function syncEditor(){
+  const sit=document.getElementById('eSit').value;
+  const b=document.getElementById('eBases').value, o=document.getElementById('eOuts').value;
+  const p=document.getElementById('ePos').value;
+  const a=resolve(sit,b==='*'?'_':b,o==='*'?0:o,false)[p];
+  document.getElementById('eRole').value=a.role;
+  document.getElementById('eTarget').value=a.target;
+  document.getElementById('eCue').value=a.cue||'';
+}
+['eSit','eBases','eOuts','ePos'].forEach(id=>document.getElementById(id).onchange=syncEditor);
+document.getElementById('eSave').onclick=()=>{
+  MYRULES.push({ball_id:document.getElementById('eSit').value,bases:document.getElementById('eBases').value,
+    outs:document.getElementById('eOuts').value,context:'*',pos:document.getElementById('ePos').value,
+    role:document.getElementById('eRole').value,target:document.getElementById('eTarget').value,
+    cue:document.getElementById('eCue').value,throw:''});
+  store.set(LS+'rules',JSON.stringify(MYRULES)); stat(); drawPlay();
+  document.getElementById('dataStat').innerHTML='<b style="color:var(--lime)">Saved.</b> '+document.getElementById('dataStat').innerHTML;
+};
+document.getElementById('eReset').onclick=()=>{ if(!confirm('Remove all of your saved changes?'))return;
+  MYRULES=[];store.del(LS+'rules');syncEditor();stat();drawPlay(); };
+document.getElementById('cfgSave').onclick=()=>{
+  CFG.name=document.getElementById('cfgName').value; CFG.sub=document.getElementById('cfgSub').value;
+  store.set(LS+'cfg',JSON.stringify(CFG)); applyCfg();
+};
+function applyCfg(){ document.getElementById('teamName').textContent=CFG.name;
+  document.getElementById('teamSub').textContent=CFG.sub; document.title=CFG.name+' — Where do I go?'; }
+function stat(){
+  document.getElementById('dataStat').innerHTML=
+    `${SITS.length} situations × 8 base states × 3 out counts = <b>${SITS.length*24}</b> playable situations, `+
+    `<b>${SITS.length*24*9}</b> individual assignments — built from ${BASE_RULES.length} rules plus ${MYRULES.length} of yours.`;
+}
+function download(name,text){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'})); a.download=name; a.click();
+}
+document.getElementById('expResp').onclick=()=>download('responsibilities.csv',
+  toCSV(BASE_RULES.concat(MYRULES),['ball_id','bases','outs','context','pos','role','target','cue','throw']));
+document.getElementById('expSit').onclick=()=>download('situations.csv',
+  toCSV(SITS,['ball_id','label','group','ball_type','ball_x','ball_y','teaching_point','tap','ball_from','set_bases','set_outs']));
+document.getElementById('impBtn').onclick=()=>document.getElementById('impFile').click();
+document.getElementById('impFile').onchange=e=>{
+  const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+  rd.onload=()=>{ try{
+      const rows=parseCSV(rd.result);
+      if(rows[0]&&'pos' in rows[0]){ BASE_RULES=rows; MYRULES=[]; store.del(LS+'rules'); }
+      else if(rows[0]&&'ball_x' in rows[0]){ SITS=rows; S.ball=SITS[0].ball_id; }
+      else { alert('That CSV needs either a "pos" column (responsibilities) or a "ball_x" column (situations).'); return; }
+      buildPicker(); buildEditor(); drawPlay(); stat();
+    }catch(err){ alert('Could not read that file: '+err.message); } };
+  rd.readAsText(f);
+};
+
+/* ------------------------------ wiring ------------------------------ */
+function syncOuts(){
+  [...document.getElementById('outsBox').children].forEach(x=>x.classList.toggle('on',+x.dataset.out<S.outs));
+}
+function syncDiamond(){
+  document.querySelectorAll('.bd-diamond button').forEach(x=>
+    x.setAttribute('aria-pressed',S.bases.includes(x.dataset.base)?'true':'false'));
+}
+function setSituation(id){
+  S.ball=id; const st=sitById(id);
+  if(st.set_bases){ S.bases=st.set_bases; syncDiamond(); }
+  if(st.set_outs!==''&&st.set_outs!=null){ S.outs=+st.set_outs; syncOuts(); }
+  buildPicker(); drawPlay();
+}
+document.querySelectorAll('.bd-diamond button').forEach(b=>b.onclick=()=>{
+  const k=b.dataset.base; let s=new Set(S.bases==='_'?[]:S.bases.split(''));
+  s.has(k)?s.delete(k):s.add(k);
+  S.bases=[...s].sort().join('')||'_';
+  syncDiamond(); drawPlay();
+});
+document.getElementById('outsBox').onclick=e=>{ const b=e.target.closest('button'); if(!b)return;
+  S.outs=(S.outs===+b.dataset.out+1)?+b.dataset.out:+b.dataset.out+1;
+  if(S.outs>2)S.outs=2;
+  [...document.getElementById('outsBox').children].forEach(x=>x.classList.toggle('on',+x.dataset.out<S.outs));
+  drawPlay(); };
+document.getElementById('infIn').onclick=e=>{ S.infIn=!S.infIn;
+  e.target.classList.toggle('on',S.infIn); e.target.setAttribute('aria-pressed',S.infIn); drawPlay(); };
+document.getElementById('btnRun').onclick=runPlay;
+document.getElementById('btnPP').onclick=()=>{
+  if(!PLAN) drawPlay();
+  if(PLAYING){ stopPlay(); return; }
+  if(PT>=PLAN.duration) PT=0;
+  PLAYING=true; lastNow=performance.now(); setPP(); raf=requestAnimationFrame(tick);
+};
+document.getElementById('scrub').oninput=e=>{
+  if(!PLAN) drawPlay();
+  stopPlay(); PT=(+e.target.value)/1000*PLAN.duration; renderAt(PLAN,PT);
+};
+document.getElementById('btnSlow').onclick=e=>{
+  RATE=(RATE===1)?.35:1;
+  e.target.classList.toggle('on',RATE!==1);
+  e.target.setAttribute('aria-pressed',RATE!==1?'true':'false');
+};
+document.getElementById('btnPick').onclick=()=>{ const b=document.getElementById('pickBox');
+  b.style.display=b.style.display==='none'?'block':'none'; };
+document.getElementById('pickBox').onclick=e=>{ const c=e.target.closest('[data-sit]'); if(!c)return;
+  setSituation(c.dataset.sit); document.getElementById('pickBox').style.display='none';
+  document.getElementById('svg').scrollIntoView({behavior:'smooth',block:'center'}); };
+document.getElementById('svg').addEventListener('click',e=>{
+  const g=e.target.closest('.player');
+  if(g){ S.me=(S.me===g.dataset.pos)?null:g.dataset.pos; buildMeChips(); drawPlay(); return; }
+  const[x,y]=svgPoint(document.getElementById('svg'),e);
+  const hit=nearestSituation(x,y); if(!hit) return;
+  setSituation(hit.ball_id); runPlay();
+});
+document.getElementById('qsvg').addEventListener('click',e=>{
+  const[x,y]=svgPoint(document.getElementById('qsvg'),e); answerQuiz(x,y,false); });
+document.getElementById('qNext').onclick=newQuestion;
+document.getElementById('qReveal').onclick=()=>answerQuiz(0,0,true);
+document.getElementById('qPosChips').onclick=e=>{ const c=e.target.closest('[data-qpos]'); if(!c)return;
+  Q.pos=c.dataset.qpos; Q.answered=false; drawQuiz(); };
+function buildTypeChips(){
+  document.getElementById('typeChips').innerHTML=TAPTYPES.map(t=>
+    `<button class="chip${S.tapType===t[0]?' on':''}" data-tt="${t[0]}">${t[1]}</button>`).join('');
+}
+document.getElementById('typeChips').onclick=e=>{ const c=e.target.closest('[data-tt]'); if(!c)return;
+  S.tapType=c.dataset.tt; buildTypeChips();
+  const cur=sitById(S.ball);
+  const hit=nearestSituation(+cur.ball_x,+cur.ball_y);
+  if(hit&&hit.ball_id!==S.ball){ setSituation(hit.ball_id); runPlay(); }
+};
+function buildMeChips(){
+  document.getElementById('meChips').innerHTML=POSLIST.map(p=>
+    `<button class="chip${S.me===p?' on':''}" data-me="${p}">${p}</button>`).join('')+
+    `<button class="chip${!S.me?' on':''}" data-me="">Everybody</button>`;
+}
+document.getElementById('meChips').onclick=e=>{ const c=e.target.closest('[data-me]'); if(!c)return;
+  S.me=c.dataset.me||null; buildMeChips(); drawPlay(); };
+document.getElementById('tabs').onclick=e=>{ const b=e.target.closest('button'); if(!b)return;
+  [...document.getElementById('tabs').children].forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.tab));
+  if(b.dataset.tab==='quiz'&&!Q.sit) newQuestion();
+  window.scrollTo({top:0}); };
+
+document.getElementById('legendBox').innerHTML=Object.keys(ROLES).map(r=>
+  `<div style="display:flex;gap:9px;align-items:center;padding:5px 0">
+    <span style="width:13px;height:13px;border-radius:50%;background:${ROLES[r].c};flex:0 0 auto"></span>
+    <b class="cond" style="font-size:15px">${ROLES[r].t}</b></div>`).join('');
+
+applyCfg(); buildPicker(); buildMeChips(); buildTypeChips(); buildEditor(); drawTeam(); drawPlay();
+</script>
+</body>
+</html>
