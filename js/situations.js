@@ -324,10 +324,21 @@
           const a = assign[p]; const col = ROLES[a.role] ? ROLES[a.role].c : 'var(--sit-mute)';
           const [x, y] = STARTS[p];
           const isMe = S.me === p; const dim = (S.me && !isMe) ? .3 : 1;
+          // data-hit is a transparent, oversized (r=34 vs the ~13.5 visible
+          // dot) tap target layered over each player -- on a phone the bare
+          // dot alone measured well under the ~44px touch-target minimum,
+          // so a tap that missed it by even a few px landed on the field
+          // background instead and silently re-picked the situation there
+          // (confusing: looked like nothing happened, or worse, changed the
+          // play) instead of selecting that player's job. pointer-events:
+          // all is required -- a transparent fill alone is NOT "painted"
+          // under SVG's default pointer-events:visiblePainted, so it
+          // wouldn't otherwise receive clicks at all.
           s += `<g class="sitPlayer" data-pos="${p}" opacity="${dim}">
             <ellipse data-sh="${p}" cx="${x}" cy="${y + (isMe ? 16 : 13.5) - 2}" rx="${isMe ? 14 : 12}" ry="4.5" fill="#06110c" opacity=".35"/>
             <circle class="sitPdot" data-dot="${p}" cx="${x}" cy="${y}" r="${isMe ? 16 : 13.5}" fill="${col}"/>
-            <text class="sitPtxt" data-txt="${p}" x="${x}" y="${y}">${POSN[p]}</text></g>`;
+            <text class="sitPtxt" data-txt="${p}" x="${x}" y="${y}">${POSN[p]}</text>
+            <circle data-hit="${p}" cx="${x}" cy="${y}" r="34" fill="transparent" pointer-events="all"/></g>`;
         });
         s += `<ellipse id="sitBallsh" cx="260" cy="415" rx="5" ry="2" fill="#06110c" opacity="0"/>` +
              `<circle id="sitBall" cx="260" cy="415" r="6" fill="#fff" stroke="#8c2f28" stroke-width="1.5" opacity="0"/>`;
@@ -447,10 +458,14 @@
           const k = Math.max(0, Math.min(1, t / m.dur)), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
           const x = m.from[0] + (m.to[0] - m.from[0]) * e, y = m.from[1] + (m.to[1] - m.from[1]) * e;
           const d = svg.querySelector('[data-dot="' + m.p + '"]'), tx = svg.querySelector('[data-txt="' + m.p + '"]');
-          const sh = svg.querySelector('[data-sh="' + m.p + '"]');
+          const sh = svg.querySelector('[data-sh="' + m.p + '"]'), hit = svg.querySelector('[data-hit="' + m.p + '"]');
           if (d) { d.setAttribute('cx', x); d.setAttribute('cy', y); }
           if (tx) { tx.setAttribute('x', x); tx.setAttribute('y', y); }
           if (sh) { sh.setAttribute('cx', x); sh.setAttribute('cy', y + (+d.getAttribute('r')) - 2); }
+          // Keeps the enlarged tap target (below) centered on the player's
+          // CURRENT position while the play is paused/scrubbed mid-animation,
+          // not just at the start position.
+          if (hit) { hit.setAttribute('cx', x); hit.setAttribute('cy', y); }
         });
         plan.runners.forEach((r, i) => {
           const el = svg.querySelector('[data-runner="' + i + '"]'); if (!el) return;
