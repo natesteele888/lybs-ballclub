@@ -1,0 +1,56 @@
+ball_id,label,group,ball_type,ball_x,ball_y,teaching_point,tap,ball_from,set_bases,set_outs,runners
+GB_P,Ground ball back to the pitcher,Ground balls,ground,260,352,"Comebackers are the most common play a pitcher makes. Field it, turn, and throw.",yes,PLATE,,,force
+GB_C,Chopper in front of the plate,Ground balls,ground,262,396,Catcher has to come out from behind the mask and make a barehand-or-glove play.,yes,PLATE,,,force
+GB_1B,Ground ball to first,Ground balls,ground,352,318,The pitcher covering first is the single most-missed play at this age.,yes,PLATE,,,force
+GB_2B,Ground ball to second,Ground balls,ground,312,262,,yes,PLATE,,,force
+GB_SS,Ground ball to short,Ground balls,ground,208,262,,yes,PLATE,,,force
+GB_3B,Ground ball to third,Ground balls,ground,168,318,,yes,PLATE,,,force
+GB_1B_HOLE,Ground ball in the hole at first,Ground balls,ground,378,288,"1B ranges right, so somebody else has to be at the bag — that's the pitcher.",yes,PLATE,,,force
+GB_SS_HOLE,Ground ball deep in the hole at short,Ground balls,ground,166,276,Long throw. Set your feet — a rushed throw here is two bases.,yes,PLATE,,,force
+GB_MIDDLE,Ground ball up the middle,Ground balls,ground,258,238,Both middle infielders break. Call it early and loud so you don't collide.,yes,PLATE,,,force
+GB_SLOW_3B,Slow roller down the third base line,Ground balls,ground,212,358,"Charge it. Barehand on the run, throw from where you are.",yes,PLATE,,,force
+BUNT_P,Bunt back to the pitcher,Bunts,bunt,260,376,,yes,PLATE,,,force
+BUNT_1B,Bunt down the first base line,Bunts,bunt,299,367,Second baseman must cover first — the first baseman is charging the ball.,yes,PLATE,,,force
+BUNT_3B,Bunt down the third base line,Bunts,bunt,221,367,Shortstop rotates to third. Nobody is home if he doesn't.,yes,PLATE,,,force
+POP_INF_L,Pop up on the left side of the infield,Pop ups,pop,176,288,The fielder going back has priority over the fielder coming in.,yes,PLATE,,,none
+POP_INF_R,Pop up on the right side of the infield,Pop ups,pop,344,288,,yes,PLATE,,,none
+POP_MIDDLE,Pop up over second base,Pop ups,pop,260,232,Center fielder beats both middle infielders to this ball. Let him have it.,yes,PLATE,,,none
+FOUL_POP_C,Foul pop behind the plate,Pop ups,pop,258,454,"Mask off, find the ball, then throw the mask the other way.",yes,PLATE,,,none
+FOUL_POP_1B,Foul pop down the first base line,Pop ups,pop,381,320,,yes,PLATE,,,none
+FOUL_POP_3B,Foul pop down the third base line,Pop ups,pop,139,320,,yes,PLATE,,,none
+FLY_LF,Fly ball to left field,Fly balls (caught),fly,108,204,,yes,PLATE,,,tag
+FLY_CF,Fly ball to center field,Fly balls (caught),fly,260,150,,yes,PLATE,,,tag
+FLY_RF,Fly ball to right field,Fly balls (caught),fly,412,204,Right fielder has the longest throw to third. Hit the cutoff.,yes,PLATE,,,tag
+SINGLE_LF,Base hit to left field,Base hits,hit,112,236,,yes,PLATE,,,single
+SINGLE_CF,Base hit to center field,Base hits,hit,260,186,,yes,PLATE,,,single
+SINGLE_RF,Base hit to right field,Base hits,hit,408,236,,yes,PLATE,,,single
+GAP_LC,Ball in the left-center gap,Extra base hits,gap,186,152,Two-man relay. The trail man saves a run when the relay throw gets away.,yes,PLATE,,,double
+GAP_RC,Ball in the right-center gap,Extra base hits,gap,336,152,,yes,PLATE,,,double
+LINE_LF,Double down the left field line,Extra base hits,gap,112,250,,yes,PLATE,,,double
+LINE_RF,Double down the right field line,Extra base hits,gap,408,250,,yes,PLATE,,,double
+OVER_CF,Ball over the center fielder's head,Extra base hits,gap,260,96,"Nobody panics. Get it in with two throws, not one heroic one.",yes,PLATE,,,double
+WILD_PITCH,Wild pitch or passed ball,Battery plays,loose,306,452,Pitcher covering the plate is the play nobody practices and everybody needs.,no,PLATE,,,wp
+STEAL_2B,Runner steals second,Battery plays,steal,260,452,Pitcher must get off the mound and out of the throwing lane.,no,PLATE,,,steal2
+STEAL_3B,Runner steals third,Battery plays,steal,260,452,,no,PLATE,,,steal3
+OVER_LF,Over the left fielder's head,Cutoffs & relays,gap,100,179,Two-man relay. The trail man exists because 11-year-olds throw the relay over the cutoff's head.,yes,PLATE,,,double
+CORNER_LF,Ball rolls into the left field corner,Cutoffs & relays,gap,78,210,Longest throw on the field. Nobody should try to make it in one.,yes,PLATE,,,double
+WALL_LC,Off the fence in left-center,Cutoffs & relays,gap,170,102,,yes,PLATE,,,double
+OVER_RF,Over the right fielder's head,Cutoffs & relays,gap,420,179,,yes,PLATE,,,double
+CORNER_RF,Ball rolls into the right field corner,Cutoffs & relays,gap,442,210,,yes,PLATE,,,double
+WALL_RC,Off the fence in right-center,Cutoffs & relays,gap,350,102,Second base is open on purpose. The trail man is the one who retreats to it.,yes,PLATE,,,double
+THROW_BEHIND_1B,Cut man throws behind the runner at first,Cutoffs & relays,hit,398,250,"This is why the second baseman covers first on a throw home. Free out, twice a season.",no,PLATE,2,,single
+THROW_BEHIND_2B,Cut man throws behind the runner at second,Cutoffs & relays,hit,116,244,Runners round second hard and stop watching the ball. The cut man is the only one who can see it.,no,PLATE,1,,single
+RD_1B_2B,Rundown between first and second,Rundowns,run,300,300,Run him BACK toward first. A runner retreating can't advance if you drop the ball.,no,BASE_2,1,,rundown
+RD_2B_3B,Rundown between second and third,Rundowns,run,222,300,Run him back toward second. Never chase him toward a base he wants.,no,BASE_3,2,,rundown
+RD_3B_HOME,Rundown between third and home,Rundowns,run,222,378,The one that decides games. Catcher runs him back to third; pitcher takes the plate.,no,PLATE,3,,rundown
+FT_THROW_THROUGH,First and third: throw through to second,First and third,steal,260,300,Use it when you're ahead or the run doesn't matter. You are trading a run for an out.,no,PLATE,13,,steal2
+FT_CUT,First and third: pitcher cuts the throw,First and third,steal,262,320,"Same look, same arm slot. The pitcher is the one making the decision, not the catcher.",no,PLATE,13,,steal2
+FT_LOOK_BACK,"First and third: look him back, give up the base",First and third,steal,272,402,The safest play and the hardest to teach. Giving up second beats giving up a run.,no,PLATE,13,,steal2
+PICK_1B,Pickoff at first,Pickoffs,pick,335,340,"You don't need velocity, you need surprise. Quick feet beat a big arm.",no,MOUND,1,,pickoff
+PICK_2B,Pickoff at second,Pickoffs,pick,260,265,"Timing play, not a look play. Count it out together so you arrive with the ball.",no,MOUND,2,,pickoff
+PICK_3B_BACK,Catcher back-picks at third,Pickoffs,pick,185,340,"High risk. Only with a big lead off the bag, and only on a clean catch.",no,PLATE,3,,pickoff
+D3K_TAG,"Strike three in the dirt, ball at your feet",Dropped third strike,loose,276,436,"If the ball is right there, tag him. A three-foot tag beats a ninety-foot throw every time.",no,PLATE,_,,force
+D3K_THROW,"Strike three in the dirt, throw to first",Dropped third strike,loose,302,448,"Step around the batter and throw from OUTSIDE the baseline, or you'll hit him in the back.",no,PLATE,_,,force
+D3K_BACKSTOP,Strike three gets all the way to the backstop,Dropped third strike,loose,314,462,Now it's a wild pitch AND a dropped third strike. Look at the other runners before you look at the batter.,no,PLATE,_,,contact
+D3K_LOADED,"Strike three in the dirt, bases loaded, two outs",Dropped third strike,loose,268,430,"Everybody is forced, including the batter. Step on the plate — do not throw anywhere.",no,PLATE,123,2,force
+SQUEEZE,Squeeze bunt with a runner on third,Bunts,bunt,246,386,"You have about two seconds. Everybody charges, the catcher clears a lane, nobody panics.",no,PLATE,3,,contact
