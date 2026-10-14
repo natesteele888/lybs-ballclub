@@ -66,7 +66,7 @@
     // already rendered would be a visible glitch, not just a state bug).
     // See index.html's window.__identityResolved for the full picture.
     if (window.__identityResolved) return;
-    const identity = window.Identity.getSession(teamId);
+    const identity = window.Identity.getSession(teamId, role);
     screenEl.classList.add('hide');
     if (identity) {
       identityScreenEl.classList.add('hide');
@@ -142,8 +142,8 @@
   // clears this device's remembered identity/session for the team and
   // reloads back to the login screen, so a coach/parent handing off a
   // shared device (or a player moving up a team) can start clean.
-  window.logOutOfApp = function (teamId) {
-    if (window.Identity && teamId) window.Identity.clear(teamId);
+  window.logOutOfApp = function (teamId, role) {
+    if (window.Identity && teamId) window.Identity.clear(teamId, role);
     if (window.signOutOfGate) window.signOutOfGate();
     if (window.__activeAuthMode === 'google' && window.googleAuth) window.googleAuth.signOut();
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}

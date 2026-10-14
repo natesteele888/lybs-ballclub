@@ -10,10 +10,23 @@
    call site working unchanged, nothing to rewrite at the call site.
    ============================================================ */
 (function () {
+  // Also escapes " and ' (the DOM textContent->innerHTML round-trip below
+  // only produces & < > on its own), so this is safe to interpolate into a
+  // quoted HTML attribute (value="${escapeHtml(x)}", data-x="${escapeHtml(x)}"),
+  // not just text-node content -- about 90 call sites across this app do
+  // exactly that with real user-entered text (a player/team/opponent name,
+  // an event title). A name containing a literal " used to close that
+  // attribute early and let the rest of the string be parsed as new HTML
+  // attributes on the real element -- confirmed as a real, working XSS
+  // path in js/league-events.js's event-edit form and (via a differently-
+  // shaped srcdoc attribute, since independently rewritten to assign
+  // .srcdoc as a DOM property instead) js/gamechanger.js. &quot;/&#39; render
+  // as plain "/' in text-node content, so this changes nothing for the
+  // (large majority) of call sites that only ever used this for text.
   window.escapeHtml = function escapeHtml(s) {
     const d = document.createElement('div');
     d.textContent = s || '';
-    return d.innerHTML;
+    return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   };
 
   // Each caller passes its own short prefix (the id's first chars, e.g.

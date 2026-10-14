@@ -268,7 +268,7 @@
       // is always our own; Crossbar link only when the league mirror
       // resolves this team. ----
       const cfg = window.TeamConfig.current();
-      const leagueMatch = window.LeagueTeams.find(cfg.shortName || cfg.name);
+      const leagueMatch = window.LeagueTeams.find(cfg.shortName || cfg.name, cfg.macLeagueDivisionId);
       let leagueRow = null, leagueRank = null, leagueTotal = null, leagueDivisionName = null;
       if (leagueMatch) {
         // TonightGames.ensureLoaded() already fetched and cached this exact
@@ -350,7 +350,7 @@
             </div>
           </div>
           <div class="pcStatRow" style="margin:12px 0 0;">${statTiles.join('')}</div>
-          ${leagueMatch ? `<a class="btn btnSmall" style="width:100%;margin-top:4px;" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
+          ${leagueMatch ? `<a class="btn btnSmall" style="width:100%;margin-top:4px;" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name, cfg.macLeagueDivisionId)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
         </div>
 
         ${tonightTicker.length ? `

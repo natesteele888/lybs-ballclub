@@ -10,25 +10,34 @@
    different teams' logins gets two independent identities, since a
    parent coaching one team and watching another shouldn't collide.
 
-   window.Identity.getSession()      -- {name, teamId, role} or null
+   window.Identity.getSession(teamId, role) -- {name, teamId, role} or null
    window.Identity.setSession(teamId, role, name)
-   window.Identity.clear(teamId)
+   window.Identity.clear(teamId, role)
    ============================================================ */
 (function () {
-  function key(teamId) { return `lybsIdentity_${teamId}`; }
+  // Scoped by role as well as team -- a team can have two different gate
+  // codes mapping to the same teamId but different roles (see
+  // team-registry.js's codeHashes, 'select'/player and 'select'/coach),
+  // so a shared device that's already remembered a name under one role
+  // used to silently reuse that same name when the OTHER role's code was
+  // entered next, with no re-prompt -- e.g. a coach seeing a parent's
+  // remembered name attached to everything they post. Same reasoning as
+  // the per-team scoping above: a coach and a parent on the same team are
+  // different hats one device might wear, same as two different teams.
+  function key(teamId, role) { return `lybsIdentity_${teamId}_${role}`; }
 
   window.Identity = {
-    getSession(teamId) {
-      try { return JSON.parse(localStorage.getItem(key(teamId)) || 'null'); }
+    getSession(teamId, role) {
+      try { return JSON.parse(localStorage.getItem(key(teamId, role)) || 'null'); }
       catch (e) { return null; }
     },
     setSession(teamId, role, name) {
       const session = { teamId, role, name: name.trim() };
-      try { localStorage.setItem(key(teamId), JSON.stringify(session)); } catch (e) {}
+      try { localStorage.setItem(key(teamId, role), JSON.stringify(session)); } catch (e) {}
       return session;
     },
-    clear(teamId) {
-      try { localStorage.removeItem(key(teamId)); } catch (e) {}
+    clear(teamId, role) {
+      try { localStorage.removeItem(key(teamId, role)); } catch (e) {}
     },
   };
 })();
