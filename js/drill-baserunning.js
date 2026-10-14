@@ -2,11 +2,14 @@
    Base-running stopwatch -- a new tool, not a port. lybs-reporting
    only has a generic stopwatch (start/stop/lap, no base presets, no
    per-player history by drill) -- this is the real thing: pick a
-   drill (home to 1st/2nd/3rd, or all the way around), pick a roster
-   player, time them, and build up every player's times across
-   drills so a coach can see who's eligible-fast at a glance, same
-   spirit as the Around the Horn timer but for one runner instead of
-   a team relay.
+   drill (home to 1st/2nd/3rd, or all the way around), pick a runner
+   (a roster player, or a free-typed name -- same `free_` id pattern
+   js/drill-ath.js's own free-player chips use, so the timer is never
+   blocked on the roster being populated, e.g. a guest or call-up
+   kid), time them, and build up every player's times across drills
+   so a coach can see who's eligible-fast at a glance, same spirit as
+   the Around the Horn timer but for one runner instead of a team
+   relay.
 
    Every recorded run is stored flat at
    teams/{teamId}/drills/baseRunningRuns = [{id, playerId, name,
@@ -115,8 +118,14 @@
           </div>
           <div class="sectionLabel" style="margin-top:16px;">Runner</div>
           <div class="drillChipRow">
-            ${roster.length ? roster.map(p => `<button class="drillChip ${ST.playerId === p.id ? 'drillChipOn' : ''}" data-player="${escapeHtml(p.id)}" data-name="${escapeHtml(p.name)}">${escapeHtml(p.name)}</button>`).join('') : '<span class="helpText">No players on the roster yet.</span>'}
+            ${ST.playerId && ST.playerId.startsWith('free_') ? `<span class="drillChip drillChipOn" data-removefree>${escapeHtml(ST.playerName)} &times;</span>` : ''}
+            ${roster.length ? roster.map(p => `<button class="drillChip ${ST.playerId === p.id ? 'drillChipOn' : ''}" data-player="${escapeHtml(p.id)}" data-name="${escapeHtml(p.name)}">${escapeHtml(p.name)}</button>`).join('') : '<span class="helpText">No players on the roster yet — add a name below.</span>'}
           </div>
+          <div class="drillAddRow">
+            <input class="drillFreeInput" id="brFreeName" list="brRosterList" placeholder="Add a name...">
+            <button class="btn btnGhost btnSmall" id="brAddFree">Add</button>
+          </div>
+          <datalist id="brRosterList">${roster.map(p => `<option value="${escapeHtml(p.name)}">`).join('')}</datalist>
           <button class="btn" id="brStart" style="width:100%;margin-top:18px;" ${ST.playerId ? '' : 'disabled'}>Start timing →</button>
           <div class="sectionLabel" style="margin-top:20px;">Team best &mdash; ${escapeHtml(DRILLS.find(d => d.id === ST.drillType).label)}</div>
           ${leaderboardHtml(ST.drillType)}`;
@@ -178,6 +187,18 @@
         });
         containerEl.querySelectorAll('[data-player]').forEach(btn => {
           btn.addEventListener('click', () => { ST.playerId = btn.dataset.player; ST.playerName = btn.dataset.name; refresh(); });
+        });
+        containerEl.querySelector('#brAddFree')?.addEventListener('click', () => {
+          const inp = containerEl.querySelector('#brFreeName');
+          const name = inp.value.trim();
+          if (!name) return;
+          ST.playerId = 'free_' + name.toLowerCase().replace(/\s+/g, '_');
+          ST.playerName = name;
+          refresh();
+        });
+        containerEl.querySelector('[data-removefree]')?.addEventListener('click', () => {
+          ST.playerId = null; ST.playerName = null;
+          refresh();
         });
         containerEl.querySelector('#brStart')?.addEventListener('click', () => {
           if (!ST.playerId) return;
