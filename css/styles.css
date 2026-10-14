@@ -805,7 +805,12 @@ a { color: var(--lybs-blue-bright); }
   display: flex; align-items: center; gap: 10px; flex: 1 1 0; min-width: 0; text-decoration: none;
   color: var(--text); border-radius: 8px; padding: 4px; margin: -4px;
 }
-a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
+/* .tonightTeamLink -- a resolved team opens the in-app Team Page (plain div,
+   data-team-nav, same convention as .gameResultTeamLink/.standingsTeamLink),
+   not an <a>; an unresolved one (no teamId) renders as the plain .tonightTeam
+   span above with nothing to tap. */
+.tonightTeamLink { cursor: pointer; }
+.tonightTeamLink:hover, .tonightTeamLink:active { background: rgba(76,106,235,0.12); }
 /* Sized up from 28px -- every one of these already sits in its own
    contained white chip (the logo art itself is a transparent PNG with
    no guaranteed edge treatment), so there's room to make that chip

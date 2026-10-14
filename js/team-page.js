@@ -49,8 +49,15 @@
         window.Archive.ensureLoaded(),
       ]);
 
-      const ourDivisionId = window.TeamConfig.current().macLeagueDivisionId;
-      const leagueMatch = window.LeagueTeams.find(opponentName, ourDivisionId); // {teamId, team, divisionId} | null
+      // opts.divisionId lets a caller that already knows the opponent's real
+      // division (js/tonight.js's league-wide "Tonight" ticker spans every
+      // division, not just ours) pass it through -- without this, every tap
+      // from a division other than our own fell back to searching OUR
+      // division's pool and silently failed to match at all (no standings
+      // row, no town, no "full schedule" link) despite the caller already
+      // having fully resolved the team.
+      const divisionId = opts.divisionId || window.TeamConfig.current().macLeagueDivisionId;
+      const leagueMatch = window.LeagueTeams.find(opponentName, divisionId); // {teamId, team, divisionId} | null
       const club = window.ClubLogos.find(opponentName); // {town, logoUrl} | null
       const badge = window.ClubLogos.badgeHtml(opponentName, 56);
 
@@ -95,7 +102,7 @@
               ${statTileHtml(escapeHtml(standingsRow.rf ?? '-'), 'Runs For')}
               ${statTileHtml(escapeHtml(standingsRow.ra ?? '-'), 'Runs Against')}
             </div>` : `<div class="helpText" style="margin-top:10px;">No current standings mirrored for this team.</div>`}
-          ${leagueMatch ? `<a class="btn" style="width:100%;margin-top:14px;" href="${window.LeagueTeams.teamUrl(opponentName, ourDivisionId)}" target="_blank" rel="noopener">Full schedule, roster &amp; coach contact on macleague.org</a>` : ''}
+          ${leagueMatch ? `<a class="btn" style="width:100%;margin-top:14px;" href="${window.LeagueTeams.teamUrl(opponentName, divisionId)}" target="_blank" rel="noopener">Full schedule, roster &amp; coach contact on macleague.org</a>` : ''}
         </div>
 
         ${theirFields.length ? `
