@@ -94,11 +94,22 @@
         if (!addingSignal) {
           return `<button class="btn btnSmall btnGhost" id="sigAddBtn" style="width:100%;margin-top:10px;">+ Add signal</button>`;
         }
+        // Stacked, not the usual single-line input-plus-button drillAddRow --
+        // that row has to fit an input AND a button; this one has to fit TWO
+        // inputs AND a button. At phone width flex-wrap alone just shrank
+        // the inputs down to an unreadable sliver instead of ever actually
+        // wrapping (plain text inputs have no natural minimum width to force
+        // it), so each field gets its own full-width row instead, matching
+        // the Label/Week-reference fields already above this one.
         return `
-          <div class="drillAddRow" style="margin-top:10px;flex-wrap:wrap;">
-            <input class="drillFreeInput" id="sigNameInput" placeholder="Signal, e.g. Touch cap" maxlength="40" autofocus>
-            <input class="drillFreeInput" id="sigDescInput" placeholder="What it means, e.g. Bunt" maxlength="80">
-            <button class="btn btnSmall" id="sigSaveBtn">Add</button>
+          <div style="margin-top:10px;">
+            <label class="drillFieldLabel">Signal
+              <input class="drillFreeInput" id="sigNameInput" placeholder="e.g. Touch cap" maxlength="40" autofocus>
+            </label>
+            <label class="drillFieldLabel" style="margin-top:8px;">What it means
+              <input class="drillFreeInput" id="sigDescInput" placeholder="e.g. Bunt" maxlength="80">
+            </label>
+            <button class="btn btnSmall" id="sigSaveBtn" style="width:100%;margin-top:10px;">Add</button>
           </div>`;
       }
 
