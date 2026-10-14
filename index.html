@@ -33,7 +33,7 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=155">
+<link rel="stylesheet" href="css/styles.css?v=156">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -137,6 +137,7 @@
   <div class="tabPanel" id="tab-signup"></div>
   <div class="tabPanel" id="tab-awards"></div>
   <div class="tabPanel" id="tab-equipment"></div>
+  <div class="tabPanel" id="tab-signals"></div>
   <div class="tabPanel" id="tab-access"></div>
   <div class="tabPanel" id="tab-calendar"></div>
   <div class="tabPanel" id="tab-catalog"></div>
@@ -219,7 +220,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261014g';</script>
+<script defer>window.BUILD_V = '20261014h';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -279,53 +280,54 @@
      silently change behavior underneath this app -- bump deliberately. -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-app-compat.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-auth-compat.min.js"></script>
-<script defer src="js/util.js?v=155"></script>
-<script defer src="js/backend.js?v=155"></script>
-<script defer src="js/team-registry.js?v=155"></script>
-<script defer src="js/cloud-auth.js?v=155"></script>
-<script defer src="js/google-auth.js?v=155"></script>
-<script defer src="js/team-config.js?v=155"></script>
-<script defer src="js/identity.js?v=155"></script>
-<script defer src="js/weather.js?v=155"></script>
-<script defer src="js/club-logos.js?v=155"></script>
-<script defer src="js/league-teams.js?v=155"></script>
-<script defer src="js/game-card.js?v=155"></script>
-<script defer src="js/pitch-smart.js?v=155"></script>
-<script defer src="js/tonight.js?v=155"></script>
-<script defer src="js/announcements.js?v=155"></script>
-<script defer src="js/league-events.js?v=155"></script>
-<script defer src="js/data-admin.js?v=155"></script>
-<script defer src="js/homepage.js?v=155"></script>
-<script defer src="js/league-info.js?v=155"></script>
-<script defer src="js/calendar-export.js?v=155"></script>
-<script defer src="js/schedule.js?v=155"></script>
-<script defer src="js/practices.js?v=155"></script>
-<script defer src="js/calendar-view.js?v=155"></script>
-<script defer src="js/roster.js?v=155"></script>
-<script defer src="js/drill-baserunning.js?v=155"></script>
-<script defer src="js/drill-ath.js?v=155"></script>
-<script defer src="js/drill-pitching.js?v=155"></script>
-<script defer src="js/depth-chart.js?v=155"></script>
-<script defer src="js/lineup-builder.js?v=155"></script>
-<script defer src="js/duty.js?v=155"></script>
-<script defer src="js/signup.js?v=155"></script>
-<script defer src="js/awards.js?v=155"></script>
-<script defer src="js/equipment.js?v=155"></script>
-<script defer src="js/team-access.js?v=155"></script>
-<script defer src="js/coach-notes.js?v=155"></script>
-<script defer src="js/player-benchmarks.js?v=155"></script>
-<script defer src="js/practice-plan.js?v=155"></script>
-<script defer src="js/play-diagram.js?v=155"></script>
-<script defer src="js/stats-import.js?v=155"></script>
-<script defer src="js/social-submit.js?v=155"></script>
-<script defer src="js/gamechanger.js?v=155"></script>
-<script defer src="js/rules.js?v=155"></script>
-<script defer src="js/practice-catalog.js?v=155"></script>
-<script defer src="js/standings.js?v=155"></script>
-<script defer src="js/calendar-family.js?v=155"></script>
-<script defer src="js/archive.js?v=155"></script>
-<script defer src="js/league-schedule.js?v=155"></script>
-<script defer src="js/team-page.js?v=155"></script>
+<script defer src="js/util.js?v=156"></script>
+<script defer src="js/backend.js?v=156"></script>
+<script defer src="js/team-registry.js?v=156"></script>
+<script defer src="js/cloud-auth.js?v=156"></script>
+<script defer src="js/google-auth.js?v=156"></script>
+<script defer src="js/team-config.js?v=156"></script>
+<script defer src="js/identity.js?v=156"></script>
+<script defer src="js/weather.js?v=156"></script>
+<script defer src="js/club-logos.js?v=156"></script>
+<script defer src="js/league-teams.js?v=156"></script>
+<script defer src="js/game-card.js?v=156"></script>
+<script defer src="js/pitch-smart.js?v=156"></script>
+<script defer src="js/tonight.js?v=156"></script>
+<script defer src="js/announcements.js?v=156"></script>
+<script defer src="js/league-events.js?v=156"></script>
+<script defer src="js/data-admin.js?v=156"></script>
+<script defer src="js/homepage.js?v=156"></script>
+<script defer src="js/league-info.js?v=156"></script>
+<script defer src="js/calendar-export.js?v=156"></script>
+<script defer src="js/schedule.js?v=156"></script>
+<script defer src="js/practices.js?v=156"></script>
+<script defer src="js/calendar-view.js?v=156"></script>
+<script defer src="js/roster.js?v=156"></script>
+<script defer src="js/drill-baserunning.js?v=156"></script>
+<script defer src="js/drill-ath.js?v=156"></script>
+<script defer src="js/drill-pitching.js?v=156"></script>
+<script defer src="js/depth-chart.js?v=156"></script>
+<script defer src="js/lineup-builder.js?v=156"></script>
+<script defer src="js/duty.js?v=156"></script>
+<script defer src="js/signup.js?v=156"></script>
+<script defer src="js/awards.js?v=156"></script>
+<script defer src="js/equipment.js?v=156"></script>
+<script defer src="js/signals.js?v=156"></script>
+<script defer src="js/team-access.js?v=156"></script>
+<script defer src="js/coach-notes.js?v=156"></script>
+<script defer src="js/player-benchmarks.js?v=156"></script>
+<script defer src="js/practice-plan.js?v=156"></script>
+<script defer src="js/play-diagram.js?v=156"></script>
+<script defer src="js/stats-import.js?v=156"></script>
+<script defer src="js/social-submit.js?v=156"></script>
+<script defer src="js/gamechanger.js?v=156"></script>
+<script defer src="js/rules.js?v=156"></script>
+<script defer src="js/practice-catalog.js?v=156"></script>
+<script defer src="js/standings.js?v=156"></script>
+<script defer src="js/calendar-family.js?v=156"></script>
+<script defer src="js/archive.js?v=156"></script>
+<script defer src="js/league-schedule.js?v=156"></script>
+<script defer src="js/team-page.js?v=156"></script>
 <script defer>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null, IS_BOARD = false;
@@ -381,7 +383,7 @@
   const NAV_CATEGORIES = [
     { id: 'home', label: 'Home', tabs: ['home'] },
     { id: 'schedule', label: 'Schedule', tabs: ['schedule', 'practices', 'gamechanger'] },
-    { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups', 'duty', 'signup', 'awards', 'equipment', 'access'] },
+    { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups', 'duty', 'signup', 'awards', 'equipment', 'signals', 'access'] },
     { id: 'standings', label: 'Standings', tabs: ['standings', 'seeding', 'stats', 'archive', 'fallSchedule'] },
     { id: 'league', label: 'League', tabs: ['league'] },
     { id: 'coaching', label: 'Coaching', tabs: ['coaching'] },
@@ -399,14 +401,14 @@
   const TAB_LABELS = {
     home: 'Home',
     schedule: 'Schedule', practices: 'Practices', calendar: 'My Calendar', gamechanger: 'GameChanger',
-    roster: 'Roster', standings: 'Standings', seeding: 'Seeding', stats: 'Stats', archive: 'History', fallSchedule: 'Fall Schedule', depth: 'Depth Chart', lineups: 'Lineups', duty: 'Snack Duty', signup: 'Sign-Up', awards: 'Awards', equipment: 'Equipment', access: 'Team Access',
+    roster: 'Roster', standings: 'Standings', seeding: 'Seeding', stats: 'Stats', archive: 'History', fallSchedule: 'Fall Schedule', depth: 'Depth Chart', lineups: 'Lineups', duty: 'Snack Duty', signup: 'Sign-Up', awards: 'Awards', equipment: 'Equipment', signals: 'Signal Library', access: 'Team Access',
     league: 'League', rules: 'Rules', pitching: 'Pitching', coaching: 'Coaching', leagueEvents: 'League Events', catalog: 'Practice Catalog', dataAdmin: 'Data Admin',
   };
   // Depth Chart and Lineups are roster-*editing* tools (no read-only mode
   // of their own), same access level they had nested inside the coach-only
   // Coaching tab before -- gating them individually here keeps that intact
   // now that they're top-level tabs a non-coach would otherwise also see.
-  const COACH_ONLY_TABS = new Set(['coaching', 'depth', 'lineups', 'access']);
+  const COACH_ONLY_TABS = new Set(['coaching', 'depth', 'lineups', 'signals', 'access']);
   // League Events management is org-wide, not team-scoped -- gated on
   // IS_BOARD (set in onIdentityReady), not canEdit(), which only ever
   // means "coach of the team currently being viewed."
@@ -919,6 +921,7 @@
     else if (name === 'signup') { const el = loadingEl('tab-signup'); window.SignUp.ensureLoaded(TEAM_ID).then(() => window.SignUp.render(el, TEAM_ID, { canEdit: canEdit(), viewerName: SESSION.name })); }
     else if (name === 'awards') { const el = loadingEl('tab-awards'); Promise.all([window.Roster.ensureLoaded(TEAM_ID), window.Awards.ensureLoaded(TEAM_ID)]).then(() => window.Awards.render(el, TEAM_ID, { canEdit: canEdit(), roster: window.Roster.getPlayers(TEAM_ID) })); }
     else if (name === 'equipment') { const el = loadingEl('tab-equipment'); window.Equipment.ensureLoaded(TEAM_ID).then(() => window.Equipment.render(el, TEAM_ID, { canEdit: canEdit(), viewerName: SESSION.name })); }
+    else if (name === 'signals') { const el = loadingEl('tab-signals'); window.Signals.ensureLoaded(TEAM_ID).then(() => window.Signals.render(el, TEAM_ID)); } // coach-only tab, see COACH_ONLY_TABS
     else if (name === 'access') { const el = loadingEl('tab-access'); window.TeamAccess.render(el, TEAM_ID, { inviterName: SESSION.name }); }
     else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
     else if (name === 'catalog') { const el = loadingEl('tab-catalog'); window.PracticeCatalog.ensureLoaded(IS_BOARD).then(() => window.PracticeCatalog.render(el, { teamId: TEAM_ID, canEdit: canEdit() })); }
@@ -957,7 +960,7 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script defer src="js/auth.js?v=155"></script>
+<script defer src="js/auth.js?v=156"></script>
 <!-- access-control.js also calls window.onIdentityReady, but only from
      inside an async googleAuth.onReady() callback, never at top-level
      script-execution time -- so unlike auth.js it doesn't strictly need to
@@ -965,12 +968,12 @@
      google-auth.js. Placed next to auth.js anyway since the two play the
      same role (driving entry into the app) for their respective sign-in
      paths. -->
-<script defer src="js/access-control.js?v=155"></script>
+<script defer src="js/access-control.js?v=156"></script>
 <!-- public-view.js wires up #publicViewLink/#publicViewBack -- needs
      TEAM_REGISTRY, LeagueInfo, Standings, and LeagueEvents to already
      exist, no ordering constraint relative to auth.js/access-control.js
      since it never touches onIdentityReady or the gated app shell at all. -->
-<script defer src="js/public-view.js?v=155"></script>
+<script defer src="js/public-view.js?v=156"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.

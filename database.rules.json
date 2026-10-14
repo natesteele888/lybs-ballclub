@@ -21,6 +21,7 @@
         "drills": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "signups": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).exists())" },
         "awards": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
+        "signalSets": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "equipment": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).exists())" },
         "pitcherDepth": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "practicePlans": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
