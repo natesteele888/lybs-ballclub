@@ -961,6 +961,23 @@ a { color: var(--lybs-blue-bright); }
 }
 .drillFreeInput:focus { outline: none; border-color: var(--lybs-blue-bright); box-shadow: 0 0 0 3px var(--glow); }
 
+/* Drill detail's Setup steps / Coaching points (js/practice-catalog.js) --
+   plain ordered/unordered lists, not .listRow/.ruleItem -- those are both
+   tap targets with their own hover/click affordance, wrong weight for a
+   few lines of read-only micro-copy sitting inside a detail screen that's
+   already mostly prose. Setup keeps real list numbers (the sequence
+   matters); Coaching points drops its own numbers for a cue icon instead,
+   since those read as a set, not a sequence. */
+.drillStepsList { margin: 6px 0 0; padding-left: 22px; font-size: 13.5px; color: var(--text); line-height: 1.6; }
+.drillStepsList li { margin-bottom: 4px; }
+.drillCoachingPoints { list-style: none; padding-left: 0; }
+.drillCoachingPoints li { padding-left: 24px; position: relative; }
+.drillCoachingPoints li::before { content: '💡'; position: absolute; left: 0; top: -1px; font-size: 12px; }
+/* A small corner flag on a drill's list row (js/practice-catalog.js's
+   drillRowHtml()) when it has a field diagram -- so "this one's got a
+   visual" is visible while browsing, not only discovered by opening it. */
+.drillDiagramFlag { font-size: 13px; opacity: 0.8; margin-left: 4px; }
+
 .athGroupPicker { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 10px 0 4px; }
 .athGroupBtn {
   width: 58px; height: 58px; border-radius: 14px; font-family: var(--font-display); font-size: 26px;

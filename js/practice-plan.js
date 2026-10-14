@@ -66,6 +66,7 @@
     return {
       id: uid('blk'), label: drill.title, minutes: drill.suggestedMinutes || 10,
       benchmarkIds: drill.benchmarkIds, drillRef: drill.drillRef, diagramRef: drill.diagramRef, drillId: drill.id,
+      equipment: drill.equipment,
     };
   }
   // planId falsy -> starts a fresh untitled plan (backs the catalog tab's
@@ -133,6 +134,12 @@
         const bById = benchmarksById();
         const chips = (block.benchmarkIds || []).map(id => bById[id]).filter(Boolean)
           .map(b => `<span class="badge badgeTbd">${escapeHtml(b.skill)}</span>`).join('');
+        // Equipment only -- the fuller setup-steps/coaching-points detail
+        // stays in the Drill Library's own detail screen (js/practice-
+        // catalog.js) rather than repeating in full here, where a plan
+        // with several blocks would otherwise turn into a wall of text; a
+        // coach packing a bag before practice is exactly who wants the
+        // quick equipment list right on the plan itself though.
         const diagram = block.diagramRef ? `
           <div class="depthField" style="max-width:220px;margin-top:8px;">${window.DepthChart.fieldSvg()}${(block.diagramRef.markers || []).map(m => `
             <div class="pdMarker" style="left:${m.x}%;top:${m.y}%;cursor:default;"><span class="pdMarkerDot"></span><span class="pdMarkerLabel">${escapeHtml(m.label)}</span></div>`).join('')}</div>` : '';
@@ -143,6 +150,7 @@
             <div class="listRowMain">
               <div class="listRowTitle">${escapeHtml(block.label)}</div>
               ${chips ? `<div class="drillChipRow" style="margin-top:4px;">${chips}</div>` : ''}
+              ${block.equipment && block.equipment.length ? `<div class="helpText" style="margin-top:4px;">Equipment: ${block.equipment.map(escapeHtml).join(', ')}</div>` : ''}
               ${diagram}
               ${jumpBtn}
             </div>
