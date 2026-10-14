@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LYBS Age Eligibility</title>
+<!--
+  Standalone embeddable widget -- NOT part of the main app shell (not
+  listed in sw.js's SHELL_FILES, not reachable from index.html's own
+  nav). Meant to be dropped into an external website (e.g. the public
+  LYBS site) via a plain <iframe>, same pattern this app already uses
+  for the GameChanger widget. Ports the "League Ages" tab's chart/
+  table/calculator (js/league-info.js's ageChartSvg()/eligibleDivisions())
+  rather than reusing that code directly, since this page has to stand
+  on its own with no app shell, no sign-in, and its own minimal CSS --
+  but it reads the SAME data/league-info.json this repo already
+  maintains (a relative fetch, so it only works served from this
+  repo's own origin), so the age cutoffs here never drift from the
+  in-app tab; no data is duplicated or hand-maintained a second time.
+
+  Fixed to a light theme on purpose -- this is meant to sit inside an
+  arbitrary external page, almost certainly light, not toggle with
+  this app's own dark/light preference.
+
+  Posts its own scrollHeight to the parent window on load and on
+  resize, so the embedding page's iframe can sv size itself instead of
+  guessing a fixed height -- see the embed snippet this page's own
+  comment at the bottom links back to.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F5F9;
+    --card: #FFFFFF;
+    --card-border: rgba(20, 24, 48, 0.12);
+    --sunken: rgba(20, 24, 48, 0.04);
+    --text: #13162E;
+    --text2: #555C78;
+    --text3: #7B8199;
+    --lybs-blue: #2E52E8;
+    --lybs-blue-deep: #1A2CBD;
+    --lybs-blue-bright: #4C6AEB;
+    --gold: #8A6914;
+    --accent-pink: #B3246F;
+    --font-display: 'Anton', 'Arial Narrow', sans-serif;
+    --font-label: 'Oswald', 'Arial Narrow', sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+    padding: 16px; -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, .cond { font-family: var(--font-display); font-weight: 400; margin: 0; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  .title { font-size: 22px; letter-spacing: 0.01em; }
+  .sub { color: var(--text2); font-size: 13.5px; margin-top: 4px; }
+  .card {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 12px;
+    padding: 16px; margin-top: 14px;
+  }
+  .sectionLabel {
+    font-family: var(--font-label); font-weight: 600; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text2); margin: 0 0 8px;
+  }
+  label.field { display: block; font-family: var(--font-label); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--text2); }
+  input[type="date"] {
+    margin-top: 6px; width: 100%; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--card-border); background: var(--sunken); color: var(--text);
+    font-family: var(--font-body); font-size: 15px;
+  }
+  .result { margin-top: 10px; }
+  .resultRow {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 10px 12px; border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 6px;
+  }
+  .resultTitle { font-weight: 600; font-size: 14px; }
+  .resultSub { color: var(--text2); font-size: 12.5px; }
+  .emptyState { color: var(--text3); font-size: 13.5px; padding: 6px 2px; }
+  .btn {
+    display: inline-block; background: linear-gradient(180deg, var(--lybs-blue-bright), var(--lybs-blue) 55%, var(--lybs-blue-deep));
+    color: #fff; border: none; border-radius: 10px; padding: 11px 16px; font-size: 13.5px; font-weight: 700;
+    font-family: var(--font-label); letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none;
+    text-align: center; cursor: pointer; width: 100%; margin-top: 10px;
+  }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 2px 0 10px; }
+  .legendItem {
+    display: flex; align-items: center; gap: 6px; font-family: var(--font-label); font-size: 11px;
+    letter-spacing: 0.05em; text-transform: uppercase; color: var(--text2);
+  }
+  .swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .chartWrap { overflow-x: auto; padding-bottom: 4px; }
+  .chartSvg { display: block; }
+  .chartTrackLabel { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--text2); }
+  .chartBarLabel { font-family: var(--font-label); font-size: 12.5px; font-weight: 600; }
+  .chartBarRange { font-family: var(--font-body); font-size: 10.5px; fill: var(--text2); }
+  .chartGrid { stroke: rgba(20, 24, 48, 0.08); stroke-width: 1; }
+  .chartAxisLine { stroke: rgba(20, 24, 48, 0.18); stroke-width: 1.5; }
+  .chartTick { font-family: var(--font-body); font-size: 10px; fill: var(--text3); text-anchor: middle; }
+  .chartCaption { font-size: 12px; color: var(--text3); margin-top: 6px; }
+  .yearTabs { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .yearTab {
+    font-family: var(--font-label); font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+    padding: 6px 12px; border-radius: 999px; border: 1px solid var(--card-border); background: var(--sunken);
+    color: var(--text2); cursor: pointer;
+  }
+  .yearTab.active { background: var(--lybs-blue); border-color: var(--lybs-blue); color: #fff; }
+  .cellsBody { margin-top: 14px; }
+  .cellRow {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 10px 2px; border-bottom: 1px solid var(--card-border); font-size: 14px;
+  }
+  .cellRow:last-child { border-bottom: none; }
+  .cellSub { color: var(--text2); font-size: 13px; }
+  .footNote { font-size: 11.5px; color: var(--text3); margin-top: 14px; text-align: center; }
+  .footNote a { color: var(--text3); }
+</style>
+</head>
+<body>
+<div class="wrap" id="root">
+  <div class="title cond">League Age Eligibility</div>
+  <div class="sub">Loading&hellip;</div>
+</div>
+<script>
+(function () {
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  function parseAgeDate(s) {
+    var m = (s || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    return m ? new Date(Number(m[3]), Number(m[1]) - 1, Number(m[2])) : null;
+  }
+  function fmtAgeDate(d) {
+    return (d.getMonth() + 1) + '/' + d.getDate() + '/' + String(d.getFullYear()).slice(-2);
+  }
+  function classifyDivision(name) {
+    if (/^t-ball/i.test(name)) return { sport: 'tball', label: name, color: '#8A6914' };
+    if (/^baseball\s+/i.test(name)) return { sport: 'baseball', label: name.replace(/^baseball\s+/i, ''), color: '#4C6AEB' };
+    if (/^softball\s+/i.test(name)) return { sport: 'softball', label: name.replace(/^softball\s+/i, ''), color: '#B3246F' };
+    return { sport: 'other', label: name, color: '#555C78' };
+  }
+  // Greedy interval packing -- see js/league-info.js's packRows for the
+  // full reasoning; ported verbatim.
+  function packRows(items) {
+    var rowEnds = [];
+    var placed = items.map(function (item) {
+      var row = -1;
+      for (var i = 0; i < rowEnds.length; i++) { if (rowEnds[i] <= item.start.getTime()) { row = i; break; } }
+      if (row === -1) { row = rowEnds.length; rowEnds.push(item.end.getTime()); }
+      else rowEnds[row] = item.end.getTime();
+      return Object.assign({}, item, { row: row });
+    });
+    return { placed: placed, rowCount: rowEnds.length };
+  }
+  function ageChartSvg(entries) {
+    var parsed = entries.map(function (e) {
+      var parts = (e.range || '').split(' to ');
+      return Object.assign({ range: e.range, division: e.division }, classifyDivision(e.division),
+        { start: parseAgeDate(parts[0]), end: parseAgeDate(parts[1]) });
+    }).filter(function (e) { return e.start && e.end; });
+    if (!parsed.length) return '';
+
+    var tracks = [
+      { title: 'Baseball & T-Ball', items: parsed.filter(function (e) { return e.sport === 'baseball' || e.sport === 'tball'; }) },
+      { title: 'Softball', items: parsed.filter(function (e) { return e.sport === 'softball'; }) },
+      { title: 'Other', items: parsed.filter(function (e) { return e.sport === 'other'; }) },
+    ].filter(function (t) { return t.items.length; });
+    tracks.forEach(function (t) { t.items.sort(function (a, b) { return a.start - b.start; }); });
+
+    var allDates = [];
+    parsed.forEach(function (e) { allDates.push(e.start, e.end); });
+    var minYear = Math.min.apply(null, allDates.map(function (d) { return d.getFullYear(); }));
+    var maxYear = Math.max.apply(null, allDates.map(function (d) { return d.getFullYear(); })) + 1;
+    var axisStart = new Date(minYear, 0, 1).getTime();
+    var axisEnd = new Date(maxYear, 0, 1).getTime();
+
+    var PX_PER_YEAR = 72, MARGIN_L = 14, MARGIN_R = 14;
+    var chartWidth = (maxYear - minYear) * PX_PER_YEAR;
+    var svgWidth = chartWidth + MARGIN_L + MARGIN_R;
+    function xOf(date) { return MARGIN_L + ((date.getTime() - axisStart) / (axisEnd - axisStart)) * chartWidth; }
+
+    var BAR_H = 42, ROW_GAP = 8, TRACK_GAP = 24, TRACK_LABEL_H = 20, TOP_PAD = 10, AXIS_H = 26;
+    var y = TOP_PAD;
+    var barsSvg = [];
+    tracks.forEach(function (track) {
+      var packed = packRows(track.items);
+      barsSvg.push('<text x="' + MARGIN_L + '" y="' + (y + 12) + '" class="chartTrackLabel">' + escapeHtml(track.title) + '</text>');
+      y += TRACK_LABEL_H;
+      packed.placed.forEach(function (item) {
+        var x1 = xOf(item.start), x2 = xOf(item.end);
+        var w = Math.max(2, x2 - x1);
+        var barY = y + item.row * (BAR_H + ROW_GAP);
+        barsSvg.push(
+          '<g>' +
+            '<rect x="' + x1 + '" y="' + barY + '" width="' + w + '" height="' + BAR_H + '" rx="10" style="fill:' + item.color + ';stroke:' + item.color + ';" fill-opacity="0.16" stroke-width="1.5"></rect>' +
+            '<text x="' + (x1 + 10) + '" y="' + (barY + 18) + '" class="chartBarLabel" style="fill:' + item.color + ';">' + escapeHtml(item.label) + '</text>' +
+            '<text x="' + (x1 + 10) + '" y="' + (barY + 33) + '" class="chartBarRange">' + escapeHtml(fmtAgeDate(item.start)) + '&ndash;' + escapeHtml(fmtAgeDate(item.end)) + '</text>' +
+          '</g>');
+      });
+      y += packed.rowCount * BAR_H + (packed.rowCount - 1) * ROW_GAP + TRACK_GAP;
+    });
+
+    var axisY = y - TRACK_GAP + 10;
+    var ticks = [];
+    for (var yr = minYear; yr <= maxYear; yr++) {
+      var x = xOf(new Date(yr, 0, 1));
+      ticks.push('<line x1="' + x + '" y1="' + TOP_PAD + '" x2="' + x + '" y2="' + axisY + '" class="chartGrid"></line>');
+      ticks.push('<text x="' + x + '" y="' + (axisY + 17) + '" class="chartTick">' + yr + '</text>');
+    }
+    var svgHeight = axisY + AXIS_H;
+
+    return (
+      '<div class="legend">' +
+        '<span class="legendItem"><span class="swatch" style="background:#4C6AEB;"></span>Baseball</span>' +
+        '<span class="legendItem"><span class="swatch" style="background:#8A6914;"></span>T-Ball</span>' +
+        '<span class="legendItem"><span class="swatch" style="background:#B3246F;"></span>Softball</span>' +
+      '</div>' +
+      '<div class="chartWrap">' +
+        '<svg class="chartSvg" viewBox="0 0 ' + svgWidth + ' ' + svgHeight + '" width="' + svgWidth + '" height="' + svgHeight + '">' +
+          ticks.join('') +
+          '<line x1="' + MARGIN_L + '" y1="' + axisY + '" x2="' + (svgWidth - MARGIN_R) + '" y2="' + axisY + '" class="chartAxisLine"></line>' +
+          barsSvg.join('') +
+        '</svg>' +
+      '</div>' +
+      '<div class="chartCaption">Birth date, left (older) to right (younger) &mdash; drag to scroll.</div>'
+    );
+  }
+
+  function render(data) {
+    var root = document.getElementById('root');
+    var leagueAges = data && data.leagueAges;
+    if (!leagueAges) {
+      root.innerHTML = '<div class="title cond">League Age Eligibility</div>' +
+        '<div class="card"><div class="emptyState">Age cutoff data isn’t available right now.</div></div>';
+      return;
+    }
+    var years = Object.keys(leagueAges).filter(function (k) { return /^\d{4}$/.test(k); }).sort();
+    if (!years.length) {
+      root.innerHTML = '<div class="title cond">League Age Eligibility</div>' +
+        '<div class="card"><div class="emptyState">Age cutoff data isn’t available right now.</div></div>';
+      return;
+    }
+    var thisYear = new Date().getFullYear();
+    var defaultYear = years.indexOf(String(thisYear)) !== -1 ? String(thisYear)
+      : (years.filter(function (y2) { return Number(y2) >= thisYear; })[0] || years[years.length - 1]);
+    var selectedYear = defaultYear;
+
+    function eligibleDivisions(dob, year) {
+      return leagueAges[year].map(function (a) {
+        var parts = (a.range || '').split(' to ');
+        return Object.assign({}, a, { start: parseAgeDate(parts[0]), end: parseAgeDate(parts[1]) });
+      }).filter(function (a) { return a.start && a.end && dob >= a.start && dob <= a.end; });
+    }
+
+    function paint() {
+      var yr = leagueAges[selectedYear];
+      var yearTabs = years.length > 1
+        ? '<div class="yearTabs">' + years.map(function (y2) {
+            return '<button type="button" class="yearTab' + (y2 === selectedYear ? ' active' : '') + '" data-year="' + y2 + '">' + y2 + '</button>';
+          }).join('') + '</div>'
+        : '';
+      root.innerHTML =
+        '<div class="title cond">League Age Eligibility</div>' +
+        '<div class="sub">' + escapeHtml(leagueAges.note || '') + '</div>' +
+        '<div class="card">' +
+          '<div class="sectionLabel">Am I eligible?</div>' +
+          '<label class="field">Birth date' +
+            '<input type="date" id="dobInput" max="' + new Date().toISOString().slice(0, 10) + '">' +
+          '</label>' +
+          '<div class="result" id="result"></div>' +
+        '</div>' +
+        '<div class="card">' +
+          '<div class="sectionLabel">' + escapeHtml(selectedYear) + ' Age Chart</div>' +
+          yearTabs +
+          ageChartSvg(yr) +
+        '</div>' +
+        '<div class="card">' +
+          '<div class="sectionLabel">' + escapeHtml(selectedYear) + ' Cutoff Dates</div>' +
+          '<div class="cellsBody">' +
+            yr.map(function (a) {
+              return '<div class="cellRow"><span>' + escapeHtml(a.division) + '</span><span class="cellSub">' + escapeHtml(a.range) + '</span></div>';
+            }).join('') +
+          '</div>' +
+        '</div>' +
+        '<div class="footNote">Mirrored from <a href="https://www.macleague.org" target="_blank" rel="noopener">macleague.org</a> &middot; ' + escapeHtml(data.source || '') + '</div>';
+
+      root.querySelectorAll('.yearTab').forEach(function (btn) {
+        btn.addEventListener('click', function () { selectedYear = btn.getAttribute('data-year'); paint(); reportHeight(); });
+      });
+      var input = document.getElementById('dobInput');
+      var resultEl = document.getElementById('result');
+      input.addEventListener('change', function () {
+        if (!input.value) { resultEl.innerHTML = ''; reportHeight(); return; }
+        var parts = input.value.split('-').map(Number);
+        var dob = new Date(parts[0], parts[1] - 1, parts[2]);
+        var matches = eligibleDivisions(dob, selectedYear);
+        resultEl.innerHTML = matches.length
+          ? matches.map(function (m) {
+              return '<div class="resultRow"><span class="resultTitle">' + escapeHtml(m.division) + '</span><span class="resultSub">' + escapeHtml(m.range) + '</span></div>';
+            }).join('') + '<a class="btn" href="https://lunenburgybs.com" target="_blank" rel="noopener">Register on lunenburgybs.com</a>'
+          : '<div class="emptyState">No ' + escapeHtml(selectedYear) + ' division matches that birth date.</div>';
+        reportHeight();
+      });
+      reportHeight();
+    }
+    paint();
+  }
+
+  // Lets an embedding page's iframe size itself to the actual content
+  // height instead of a guessed fixed number -- see this file's own
+  // header comment and the embed snippet it ships with.
+  var lastHeight = 0;
+  function reportHeight() {
+    requestAnimationFrame(function () {
+      var h = document.body.scrollHeight;
+      if (h !== lastHeight) {
+        lastHeight = h;
+        try { window.parent.postMessage({ lybsAgeEligibilityHeight: h }, '*'); } catch (e) {}
+      }
+    });
+  }
+  window.addEventListener('resize', reportHeight);
+
+  fetch('data/league-info.json?v=' + Date.now())
+    .then(function (r) { return r.json(); })
+    .then(render)
+    .catch(function () {
+      document.getElementById('root').innerHTML = '<div class="title cond">League Age Eligibility</div>' +
+        '<div class="card"><div class="emptyState">Couldn’t load age cutoff data &mdash; check your connection and reload.</div></div>';
+      reportHeight();
+    });
+})();
+</script>
+</body>
+</html>
