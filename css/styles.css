@@ -45,6 +45,7 @@
   --accent-blue: #AFC0FF;
   --accent-purple: #b98af0;
   --accent-cyan: #6ea8c9;
+  --accent-pink: #E8599E;
   /* RGB channel triplets (no rgba() wrapper) so rgba(var(--x-rgb), alpha)
      call sites each keep their own alpha while the color itself retheme
      in one place -- see the [data-theme="light"] block below. */
@@ -108,6 +109,7 @@
   --accent-blue: var(--lybs-blue-deep);
   --accent-purple: #7239b3;
   --accent-cyan: #266a86;
+  --accent-pink: #b3246f;
 }
 /* The login/identity screens keep their current dark, fixed-brand look
    (dramatic navy gradient background, same as always) in BOTH modes --

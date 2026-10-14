@@ -27,10 +27,18 @@
     return `${d.getMonth() + 1}/${d.getDate()}/${String(d.getFullYear()).slice(-2)}`;
   }
   function classifyDivision(name) {
-    if (/^t-ball/i.test(name)) return { sport: 'tball', label: name, color: '#E6B935' };
-    if (/^baseball\s+/i.test(name)) return { sport: 'baseball', label: name.replace(/^baseball\s+/i, ''), color: '#4C6AEB' };
-    if (/^softball\s+/i.test(name)) return { sport: 'softball', label: name.replace(/^softball\s+/i, ''), color: '#E8599E' };
-    return { sport: 'other', label: name, color: '#9AA3C2' };
+    // CSS custom properties, not literal hex -- these feed an SVG `fill`
+    // via inline style below, which (unlike a bare fill="#hex" attribute)
+    // resolves var() and re-renders live on a theme toggle, the same as
+    // every other light-mode-aware color in this app. The raw hex this
+    // used to be (#E6B935 gold, #E8599E pink) was never touched by this
+    // session's earlier light-mode sweeps since those only searched CSS
+    // `color:`/style strings, not SVG presentation attributes -- #E6B935
+    // was ~1.85:1 against a white chart background, effectively invisible.
+    if (/^t-ball/i.test(name)) return { sport: 'tball', label: name, color: 'var(--gold)' };
+    if (/^baseball\s+/i.test(name)) return { sport: 'baseball', label: name.replace(/^baseball\s+/i, ''), color: 'var(--lybs-blue-bright)' };
+    if (/^softball\s+/i.test(name)) return { sport: 'softball', label: name.replace(/^softball\s+/i, ''), color: 'var(--accent-pink)' };
+    return { sport: 'other', label: name, color: 'var(--text2)' };
   }
   // Greedy interval packing -- assigns each item (sorted by start) to the
   // first sub-row whose last-placed item has already ended, opening a new
@@ -88,8 +96,8 @@
         const barY = y + item.row * (BAR_H + ROW_GAP);
         barsSvg.push(`
           <g>
-            <rect x="${x1}" y="${barY}" width="${w}" height="${BAR_H}" rx="10" fill="${item.color}" fill-opacity="0.22" stroke="${item.color}" stroke-width="1.5"></rect>
-            <text x="${x1 + 10}" y="${barY + 18}" class="ageChartBarLabel" fill="${item.color}">${escapeHtml(item.label)}</text>
+            <rect x="${x1}" y="${barY}" width="${w}" height="${BAR_H}" rx="10" style="fill:${item.color};stroke:${item.color};" fill-opacity="0.22" stroke-width="1.5"></rect>
+            <text x="${x1 + 10}" y="${barY + 18}" class="ageChartBarLabel" style="fill:${item.color};">${escapeHtml(item.label)}</text>
             <text x="${x1 + 10}" y="${barY + 33}" class="ageChartBarRange">${escapeHtml(fmtAgeDate(item.start))}&ndash;${escapeHtml(fmtAgeDate(item.end))}</text>
           </g>`);
       });
@@ -107,9 +115,9 @@
 
     return `
       <div class="ageChartLegend">
-        <span class="ageChartLegendItem"><span class="ageChartSwatch" style="background:#4C6AEB;"></span>Baseball</span>
-        <span class="ageChartLegendItem"><span class="ageChartSwatch" style="background:#E6B935;"></span>T-Ball</span>
-        <span class="ageChartLegendItem"><span class="ageChartSwatch" style="background:#E8599E;"></span>Softball</span>
+        <span class="ageChartLegendItem"><span class="ageChartSwatch" style="background:var(--lybs-blue-bright);"></span>Baseball</span>
+        <span class="ageChartLegendItem"><span class="ageChartSwatch" style="background:var(--gold);"></span>T-Ball</span>
+        <span class="ageChartLegendItem"><span class="ageChartSwatch" style="background:var(--accent-pink);"></span>Softball</span>
       </div>
       <div class="ageChartWrap">
         <svg class="ageChartSvg" viewBox="0 0 ${svgWidth} ${svgHeight}" width="${svgWidth}" height="${svgHeight}">
