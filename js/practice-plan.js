@@ -19,12 +19,45 @@
    fields -- benchmarkIds/drillRef/diagramRef/drillId -- that
    blockRow() renders when present; a plain preset/custom block never
    has them and renders exactly as before.
+
+   "Generate a season plan" (buildSeasonPlan(), wired to the list
+   screen's own form) builds several of these plans at once from the
+   Drill Library instead of one at a time -- a coach enters weeks/
+   practices-per-week/minutes-per-practice/start date and gets back
+   one real, independently editable plan per practice, sequenced to
+   open with Warm-up, round-robin through this division's other
+   categories (specialized-position and team-coordinated categories
+   held back until later in the season -- see CATEGORY_STAGE) so
+   nothing gets neglected, lean foundational early and ease into
+   standard/advanced as the weeks go on, and close with a scrimmage
+   periodically. Purely additive -- it only ever creates new plans,
+   never touches or replaces existing ones.
    ============================================================ */
 (function () {
   const PRESETS = ['Warm-up / Stretch', 'Throwing', 'Infield/Outfield', 'Batting Practice', 'Base Running', 'Live BP / Scrimmage', 'Cool-down'];
   const TIER_ORDER = ['foundational', 'standard', 'advanced'];
   const TIER_LABEL = { foundational: 'Foundational', standard: 'Standard', advanced: 'Advanced' };
   const TOOL_LABEL = { ath: 'Around the Horn', baserunning: 'Base Running', pitching: 'Pitch Chart' };
+  // Season plan generator's category rotation -- roughly the order a
+  // practice naturally moves through (arm care before live reps, skill
+  // work before team concepts), filtered per division to whichever
+  // categories that division's drills actually use (T-Ball has no
+  // Pitching/Team Situational entries, for instance).
+  const CATEGORY_ROTATION_ORDER = ['Throwing', 'Catching', 'Ground Ball/Infield', 'Hitting', 'Base Running', 'Pitching', 'Catching concepts', 'Basic Positioning', 'Team Situational', 'Multi-Station'];
+  // How far into the season (0 = session 1) a category is even eligible to
+  // enter the rotation -- separate from the foundational/standard/advanced
+  // TIER pacing within a category, which only reorders drills already
+  // filtered to one division. Tier pacing alone isn't enough: a round-robin
+  // that touches every category starting session 1 can still hand a brand
+  // new team a team-coordinated concept (a relay, a cutoff) in week one
+  // just because its turn came up, even at that category's own easiest
+  // tier. Pitching/catcher-specific work (specialized positions, not every
+  // player) and Team Situational (relays, cutoffs, rundowns, bunt defense
+  // -- needs individual catch/throw/field reps already underway to mean
+  // anything) wait; everything else, including Multi-Station rotations
+  // (which just bundle whatever categories are already unlocked), is
+  // available from session 1. A category not listed here defaults to 0.
+  const CATEGORY_STAGE = { Pitching: 0.2, 'Catching concepts': 0.2, 'Team Situational': 0.4 };
 
   const cache = {}; // teamId -> plans[]
   const pending = {}; // teamId -> in-flight ensurePlans() promise
@@ -69,6 +102,125 @@
       equipment: drill.equipment,
     };
   }
+  function addDaysIso(iso, days) {
+    const d = new Date(iso + 'T00:00:00');
+    d.setDate(d.getDate() + days);
+    return d.toISOString().slice(0, 10);
+  }
+
+  // Season plan generator -- "balanced and gradual": every session opens
+  // with Warm-up, then rotates through this division's other categories
+  // in a fair round-robin (shift the one just used to the back of the
+  // queue) so nothing gets neglected and nothing repeats until everything
+  // else has had a turn, closing with a scrimmage periodically rather
+  // than every single time. Tier preference shifts foundational -> standard
+  // -> advanced across the arc of the season -- tier already encodes
+  // "build this before that" at the drill level (see this division's own
+  // drills in data/practice-catalog-seed.json), so this paces off tier
+  // instead of re-deriving a full prerequisite order from the benchmark
+  // graph, which only exists at the finer-grained benchmark level, not
+  // the drill level this planner actually schedules.
+  //
+  // Pure function (division/drills/opts in, an array of plan-shaped
+  // objects out) -- doesn't touch teamId or storage itself, same as
+  // blockFromDrill() above; the caller saves the result.
+  function buildSeasonPlan(division, drills, opts) {
+    const weeks = Math.max(1, Math.round(opts.weeks) || 1);
+    const practicesPerWeek = Math.max(1, Math.round(opts.practicesPerWeek) || 1);
+    const minutesPerPractice = Math.max(10, Math.round(opts.minutesPerPractice) || 60);
+    const startDate = opts.startDate || todayIso();
+
+    const byCategory = {};
+    drills.forEach(d => { (byCategory[d.category] = byCategory[d.category] || []).push(d); });
+    const warmupPool = byCategory['Warm-up'] || [];
+    const gamePool = byCategory['Game/Scrimmage'] || [];
+    const avgGameMinutes = gamePool.length ? gamePool.reduce((s, d) => s + (d.suggestedMinutes || 15), 0) / gamePool.length : 0;
+    // Categories this division actually has content for, ordered by stage
+    // first (CATEGORY_STAGE, unlisted = 0) then by CATEGORY_ROTATION_ORDER
+    // -- Array#sort is stable, so within the same stage the curriculum
+    // order above is preserved. `rotation` itself starts empty and fills
+    // in as the season unlocks each category (see the per-session loop
+    // below), rather than all at once up front.
+    const eligibleCategories = CATEGORY_ROTATION_ORDER
+      .filter(c => byCategory[c] && byCategory[c].length)
+      .sort((a, b) => (CATEGORY_STAGE[a] || 0) - (CATEGORY_STAGE[b] || 0));
+    const rotation = [];
+    const unlocked = new Set();
+
+    const usage = {}; // drillId -> times already used this season, for least-used-first picking
+    function pickLeastUsed(pool) {
+      if (!pool.length) return null;
+      return pool.slice().sort((a, b) => (usage[a.id] || 0) - (usage[b.id] || 0))[0];
+    }
+    function pickByTier(pool, tierPref) {
+      for (const tier of tierPref) {
+        const picked = pickLeastUsed(pool.filter(d => d.tier === tier));
+        if (picked) return picked;
+      }
+      return pickLeastUsed(pool); // no drill at any preferred tier -- take whatever this category has
+    }
+    function use(d) { usage[d.id] = (usage[d.id] || 0) + 1; return d; }
+
+    const totalSessions = weeks * practicesPerWeek;
+    const plans = [];
+    for (let s = 0; s < totalSessions; s++) {
+      const weekNum = Math.floor(s / practicesPerWeek) + 1;
+      const practiceNum = (s % practicesPerWeek) + 1;
+      // 0 on the very first session, ~1 on the last. A single-session
+      // "season" gets 0, not a mid-season blend -- a lone planned practice
+      // reads as day one, not a random sample of the whole arc, so it
+      // should default to the same foundational, nothing-unlocked-yet
+      // starting point every real season begins at.
+      const progress = totalSessions > 1 ? s / (totalSessions - 1) : 0;
+      const tierPref = progress < 0.34 ? ['foundational', 'standard']
+        : progress < 0.7 ? ['standard', 'foundational', 'advanced']
+        : ['standard', 'advanced'];
+      // Unlock any category whose stage threshold this session's progress
+      // has now reached, appending each to the back of the rotation queue
+      // in curriculum order the first time it qualifies.
+      eligibleCategories.forEach(c => {
+        if (!unlocked.has(c) && (CATEGORY_STAGE[c] || 0) <= progress) { unlocked.add(c); rotation.push(c); }
+      });
+      // One team's whole week closes with a scrimmage (the last practice
+      // of the week) if they practice more than once a week; a once-a-week
+      // team gets one every other week instead, so skill work still gets
+      // most sessions to itself.
+      const wantsClosingGame = gamePool.length > 0 && (practicesPerWeek > 1 ? practiceNum === practicesPerWeek : weekNum % 2 === 0);
+
+      const blocks = [];
+      let minutesUsed = 0;
+      if (warmupPool.length) {
+        const d = use(pickLeastUsed(warmupPool));
+        blocks.push(blockFromDrill(d));
+        minutesUsed += d.suggestedMinutes || 10;
+      }
+      while (rotation.length) {
+        const cat = rotation[0];
+        const d = pickByTier(byCategory[cat], tierPref);
+        const dMin = d ? (d.suggestedMinutes || 15) : 0;
+        const reserve = wantsClosingGame ? avgGameMinutes : 0;
+        if (!d || minutesUsed + dMin > minutesPerPractice - reserve) break;
+        rotation.push(rotation.shift()); // consumed this turn -- cycle to the back of the queue
+        use(d);
+        blocks.push(blockFromDrill(d));
+        minutesUsed += dMin;
+      }
+      if (wantsClosingGame) {
+        const d = pickLeastUsed(gamePool);
+        if (d) { use(d); blocks.push(blockFromDrill(d)); minutesUsed += d.suggestedMinutes || 15; }
+      }
+
+      const weekStartDay = (weekNum - 1) * 7;
+      const withinWeekDay = Math.floor((practiceNum - 1) * 7 / practicesPerWeek);
+      plans.push({
+        id: uid('pp'),
+        name: `Week ${weekNum}${practicesPerWeek > 1 ? ' · Practice ' + practiceNum : ''}`,
+        date: addDaysIso(startDate, weekStartDay + withinWeekDay),
+        blocks,
+      });
+    }
+    return plans;
+  }
   // planId falsy -> starts a fresh untitled plan (backs the catalog tab's
   // "+ Add to my Practice Plan" button, which has no plan already in
   // scope); a real id pushes onto that existing plan (backs both that
@@ -106,6 +258,8 @@
       let addingCustom = false;
       const defaultDivision = (window.TeamConfig.current() || {}).macLeagueDivisionName || null;
       let libFilter = { division: defaultDivision, tiers: new Set(TIER_ORDER), category: null, query: '' };
+      let genOpen = false;
+      const genForm = { weeks: 6, practicesPerWeek: 1, minutesPerPractice: 60, startDate: todayIso() };
 
       function listHtml() {
         const rows = plans.map(p => `
@@ -120,8 +274,40 @@
             <div class="drillHeroTitle">Practice Plan</div>
             <div class="drillHeroSub">Plan what to run and for how long.</div>
           </div>
-          <button class="btn" id="ppNew" style="width:100%;margin-bottom:14px;">+ New plan</button>
+          <button class="btn" id="ppNew" style="width:100%;margin-bottom:10px;">+ New plan</button>
+          <button class="btn btnGhost" id="ppGenToggle" style="width:100%;margin-bottom:14px;">${genOpen ? '&times; Cancel' : '✨ Generate a season plan'}</button>
+          ${genOpen ? generateFormHtml() : ''}
           <div class="listBody">${rows || '<div class="emptyState">No practice plans saved yet.</div>'}</div>`;
+      }
+
+      function generateFormHtml() {
+        const division = defaultDivision;
+        const totalSessions = (Number(genForm.weeks) || 0) * (Number(genForm.practicesPerWeek) || 0);
+        return `
+          <div class="drillCard" style="margin-bottom:14px;">
+            <div class="drillCardTitle">Generate a season plan</div>
+            <div class="helpText" style="margin:6px 0 12px;">
+              ${division ? `Builds ${escapeHtml(division)} practices` : 'Builds each practice'} starting with warm-up and
+              rotating through every skill category so nothing gets neglected, leaning foundational early and easing
+              into standard/advanced as the weeks go on, with a scrimmage worked in periodically. Creates one new
+              plan per practice -- nothing existing is touched, and every plan it creates is yours to edit or delete
+              afterward like any other.
+            </div>
+            <label class="drillFieldLabel">Weeks
+              <input class="drillFreeInput" type="number" min="1" max="30" id="genWeeks" value="${escapeHtml(String(genForm.weeks))}">
+            </label>
+            <label class="drillFieldLabel" style="margin-top:10px;">Practices per week
+              <input class="drillFreeInput" type="number" min="1" max="4" id="genPerWeek" value="${escapeHtml(String(genForm.practicesPerWeek))}">
+            </label>
+            <label class="drillFieldLabel" style="margin-top:10px;">Minutes per practice
+              <input class="drillFreeInput" type="number" min="20" max="180" step="5" id="genMinutes" value="${escapeHtml(String(genForm.minutesPerPractice))}">
+            </label>
+            <label class="drillFieldLabel" style="margin-top:10px;">Starting
+              <input class="drillFreeInput" type="date" id="genStart" value="${escapeHtml(genForm.startDate)}">
+            </label>
+            ${!division ? '<div class="helpText" style="margin-top:10px;color:var(--gold);">Set this team\'s MAC League division first (Team Access/setup) -- the generator needs to know which division\'s drills to pull from.</div>' : ''}
+            <button class="btn" id="genSubmit" style="width:100%;margin-top:14px;" ${division ? '' : 'disabled'}>Generate ${totalSessions || ''} practice${totalSessions === 1 ? '' : 's'}</button>
+          </div>`;
       }
 
       function benchmarksById() {
@@ -257,6 +443,27 @@
             addingCustom = false;
             refresh();
           });
+          containerEl.querySelector('#ppGenToggle').addEventListener('click', () => { genOpen = !genOpen; refresh(); });
+          const genSubmit = containerEl.querySelector('#genSubmit');
+          if (genSubmit) {
+            genSubmit.addEventListener('click', async btnEvt => {
+              genForm.weeks = Number(containerEl.querySelector('#genWeeks').value) || genForm.weeks;
+              genForm.practicesPerWeek = Number(containerEl.querySelector('#genPerWeek').value) || genForm.practicesPerWeek;
+              genForm.minutesPerPractice = Number(containerEl.querySelector('#genMinutes').value) || genForm.minutesPerPractice;
+              genForm.startDate = containerEl.querySelector('#genStart').value || genForm.startDate;
+              let addedCount = 0;
+              await withBusyButton(btnEvt.target, 'Generating...', async () => {
+                const drills = window.PracticeCatalog.getDrills().filter(d => d.division === defaultDivision);
+                const newPlans = buildSeasonPlan(defaultDivision, drills, genForm);
+                addedCount = newPlans.length;
+                plans.unshift(...newPlans);
+                await savePlans(teamId, plans);
+              });
+              genOpen = false;
+              window.showToast(`${addedCount} practice${addedCount === 1 ? '' : 's'} added`, 'info');
+              refresh();
+            });
+          }
           containerEl.querySelectorAll('.listRow').forEach(row => {
             row.addEventListener('click', () => { view = { mode: 'edit', id: row.dataset.id }; addingCustom = false; refresh(); });
           });
