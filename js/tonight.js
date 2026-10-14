@@ -9,15 +9,22 @@
    scripts/scrape-standings.mjs's parseTodayGames). Mounted on the
    Homepage tab.
 
-   Each team name links out to its own macleague.org team page
-   (full season schedule, no login needed) -- NOT to GameChanger.
+   Each team name opens the same in-app Team Page a game card's own
+   opponent link does (data-team-nav, routed by index.html's one
+   delegated handler) -- not an external macleague.org link. This
+   ticker spans every division, not just ours, so a resolved team
+   also carries its own data-team-division; js/team-page.js reads
+   that instead of assuming our own division when it re-resolves the
+   name, which used to silently fail (no standings, no town, no
+   "full schedule" link) for any team from a division other than
+   ours. The Team Page itself still has its own explicit, clearly
+   labeled "Full schedule, roster & coach contact on macleague.org"
+   link for whoever wants to go further -- NOT to GameChanger.
    GameChanger has no public directory to resolve an arbitrary
    opponent's page from just a name; the only GameChanger link this
    app can make is to our OWN configured team's widget (see
    js/gamechanger.js), which won't be true for the other ~30+ teams
-   across a league. The league's own team page is the honest
-   substitute: same "follow along" purpose, resolvable for every
-   team shown here since the page itself gave us the id.
+   across a league.
 
    "Watch live on GameChanger" only appears on a card where this
    app's own configured team (window.TeamConfig) is one of the two
@@ -46,13 +53,18 @@
   // W-L record right next to its name -- kept out of the shared right-hand
   // slot a real live/final score uses, so "0-0" next to an upcoming game
   // never reads as tonight's score. gameRowHtml() below never passes one.
-  function teamHtml(team, recordSuffix) {
+  //
+  // divisionId (optional) is this team's real division -- not necessarily
+  // ours, since this ticker spans every division. Passed through as
+  // data-team-division so js/team-page.js re-resolves the name against the
+  // right pool instead of silently assuming our own division.
+  function teamHtml(team, recordSuffix, divisionId) {
     if (!team) return '<span class="tonightTeamName">TBD</span>';
     const logo = team.logoUrl ? `<img class="tonightTeamLogo" src="${team.logoUrl}" alt="" loading="lazy">` : '';
     const suffix = recordSuffix ? `<span class="tonightTeamRecord">${escapeHtml(recordSuffix)}</span>` : '';
     const inner = `${logo}<span class="tonightTeamName">${escapeHtml(stripAgePrefix(team.name))}</span>${suffix}`;
     return team.teamId
-      ? `<a class="tonightTeam" href="https://www.macleague.org/team/${team.teamId}" target="_blank" rel="noopener" title="See ${escapeHtml(team.name)}'s full schedule on macleague.org">${inner}</a>`
+      ? `<div class="tonightTeam tonightTeamLink" data-team-nav="${escapeHtml(stripAgePrefix(team.name))}"${divisionId ? ` data-team-division="${escapeHtml(divisionId)}"` : ''} tabindex="0" role="button" title="See ${escapeHtml(team.name)}'s team page">${inner}</div>`
       : `<span class="tonightTeam">${inner}</span>`;
   }
 
@@ -114,7 +126,7 @@
       const recordSuffix = team.score == null ? recordFor(game.divisionId, team.teamId) : null;
       return `
         <div class="tonightMergedTeam ${played ? 'tonightMergedTeamFinal' : ''}">
-          ${teamHtml(team, recordSuffix)}
+          ${teamHtml(team, recordSuffix, game.divisionId)}
           ${right}
         </div>`;
     };
@@ -163,7 +175,12 @@
     // Single-game row -- {gameId, time, teams:[{teamId,name,logoUrl,score}, ...], location}
     // (old string-only todayGames entries, from before this shape existed,
     // render as plain text instead of breaking).
-    gameRowHtml(game) {
+    // divisionId (optional) -- js/standings.js's own "Today's games" section
+    // is already scoped to one division when it calls this; threaded
+    // through to teamHtml() the same way mergedCardHtml()'s game.divisionId
+    // is, so a tap here also resolves against the right division instead of
+    // silently assuming ours.
+    gameRowHtml(game, divisionId) {
       if (typeof game === 'string') return `<div class="detailRow">${escapeHtml(game)}</div>`;
       const [a, b] = game.teams || [];
       const hasScore = a && b && (a.score != null || b.score != null);
@@ -173,7 +190,7 @@
       return `
         <div class="tonightGameRow">
           ${game.time ? `<div class="tonightGameTime">${escapeHtml(game.time)}</div>` : ''}
-          <div class="tonightGameTeams">${teamHtml(a)}${middle}${teamHtml(b)}</div>
+          <div class="tonightGameTeams">${teamHtml(a, null, divisionId)}${middle}${teamHtml(b, null, divisionId)}</div>
           ${game.location ? `<div class="tonightGameLocation">${escapeHtml(game.location)}</div>` : ''}
         </div>`;
     },
