@@ -217,7 +217,7 @@
             say(ok ? 'Lineup copied.' : 'Could not copy automatically -- select and copy manually.', ok);
           });
           containerEl.querySelector('#luDelete').addEventListener('click', async () => {
-            if (!confirm('Delete this lineup?')) return;
+            if (!(await confirmModal('Delete this lineup?'))) return;
             lineups = lineups.filter(x => x.id !== l.id);
             await saveLineups(teamId, lineups);
             view = { mode: 'list' }; refresh();

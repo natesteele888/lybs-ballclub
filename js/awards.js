@@ -115,7 +115,7 @@
         });
         containerEl.querySelectorAll('[data-deleteaward]').forEach(btn => {
           btn.addEventListener('click', async () => {
-            if (!confirm('Remove this award category?')) return;
+            if (!(await confirmModal('Remove this award category?'))) return;
             const i = awards.findIndex(a => a.id === btn.dataset.deleteaward);
             if (i !== -1) awards.splice(i, 1);
             if (expanded === btn.dataset.deleteaward) expanded = null;

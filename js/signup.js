@@ -123,7 +123,7 @@
         containerEl.querySelector('#suBack').addEventListener('click', () => { openSheetId = null; refresh(); });
         const deleteBtn = containerEl.querySelector('#suDeleteSheet');
         if (deleteBtn) deleteBtn.addEventListener('click', async () => {
-          if (!confirm(`Delete "${sheet.title}" and everything on it?`)) return;
+          if (!(await confirmModal(`Delete "${sheet.title}" and everything on it?`))) return;
           cache[teamId] = sheets.filter(s => s.id !== sheet.id);
           await window.SignUp.save(teamId);
           openSheetId = null;
@@ -149,7 +149,7 @@
         });
         containerEl.querySelectorAll('[data-removeitem]').forEach(btn => {
           btn.addEventListener('click', async () => {
-            if (!confirm('Remove this item?')) return;
+            if (!(await confirmModal('Remove this item?'))) return;
             sheet.items = sheet.items.filter(i => i.id !== btn.dataset.removeitem);
             await window.SignUp.save(teamId);
             refresh();

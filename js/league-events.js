@@ -112,7 +112,7 @@
 
         containerEl.querySelectorAll('[data-del]').forEach(btn => {
           btn.addEventListener('click', async () => {
-            if (!confirm('Remove this league event?')) return;
+            if (!(await confirmModal('Remove this league event?'))) return;
             await window.LeagueEvents.deleteItem(btn.dataset.del);
             refresh();
           });
@@ -146,7 +146,7 @@
         if (cancelBtn) cancelBtn.addEventListener('click', () => { editingId = null; refresh(); });
         const deleteBtn = containerEl.querySelector('#leDeleteBtn');
         if (deleteBtn) deleteBtn.addEventListener('click', async () => {
-          if (!confirm('Delete this league event?')) return;
+          if (!(await confirmModal('Delete this league event?'))) return;
           await window.LeagueEvents.deleteItem(editingEvent.id);
           editingId = null;
           refresh();

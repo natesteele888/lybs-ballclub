@@ -117,7 +117,7 @@
         });
         containerEl.querySelectorAll('[data-deleteitem]').forEach(btn => {
           btn.addEventListener('click', async () => {
-            if (!confirm('Remove this item from the list?')) return;
+            if (!(await confirmModal('Remove this item from the list?'))) return;
             const i = items.findIndex(x => x.id === btn.dataset.deleteitem);
             if (i !== -1) items.splice(i, 1);
             await window.Equipment.save(teamId);

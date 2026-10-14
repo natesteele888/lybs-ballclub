@@ -205,7 +205,7 @@
         containerEl.querySelector('#pcBackFromHistory')?.addEventListener('click', () => { PC.state = 'setup'; refresh(); });
         containerEl.querySelectorAll('[data-del]').forEach(btn => {
           btn.addEventListener('click', async () => {
-            if (!confirm('Delete this pitch count session?')) return;
+            if (!(await confirmModal('Delete this pitch count session?'))) return;
             sessions.splice(Number(btn.dataset.del), 1);
             await saveSessions(teamId);
             refresh();

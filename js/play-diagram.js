@@ -170,7 +170,7 @@
               e.stopPropagation();
               const i = d.markers.findIndex(m => m.id === btn.dataset.marker);
               if (i === -1) return;
-              if (!confirm(`Remove "${d.markers[i].label}"?`)) return;
+              if (!(await confirmModal(`Remove "${d.markers[i].label}"?`))) return;
               d.markers.splice(i, 1);
               await saveDiagrams(teamId, diagrams);
               refresh();
@@ -185,7 +185,7 @@
             setTimeout(() => refresh(), 500);
           });
           containerEl.querySelector('#pdDelete').addEventListener('click', async () => {
-            if (!confirm('Delete this play diagram?')) return;
+            if (!(await confirmModal('Delete this play diagram?'))) return;
             diagrams = diagrams.filter(x => x.id !== d.id);
             await saveDiagrams(teamId, diagrams);
             view = { mode: 'list' }; refresh();

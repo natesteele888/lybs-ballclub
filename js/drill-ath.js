@@ -232,8 +232,8 @@
       function wire() {
         const back = () => { ST.state = 'setup'; ST.elapsedMs = 0; refresh(); };
         containerEl.querySelector('#athBack')?.addEventListener('click', back);
-        containerEl.querySelector('#athCancel')?.addEventListener('click', () => {
-          if (!ST.groups.some(g => g.attempts.length) || confirm('Cancel this session?')) back();
+        containerEl.querySelector('#athCancel')?.addEventListener('click', async () => {
+          if (!ST.groups.some(g => g.attempts.length) || (await confirmModal('Cancel this session?'))) back();
         });
         containerEl.querySelectorAll('.athGroupBtn').forEach(btn => {
           btn.addEventListener('click', () => { initGroups(Number(btn.dataset.n)); refresh(); });

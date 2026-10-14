@@ -41,10 +41,16 @@
   // Same redundant "12u "/"10u "/"8u " prefix js/standings.js strips --
   // every team in a division carries it, and the division picker right
   // above this list already says which division (hence bracket) it is.
-  function teamHtml(team) {
+  //
+  // recordSuffix (optional, mergedCardHtml only) renders a team's season
+  // W-L record right next to its name -- kept out of the shared right-hand
+  // slot a real live/final score uses, so "0-0" next to an upcoming game
+  // never reads as tonight's score. gameRowHtml() below never passes one.
+  function teamHtml(team, recordSuffix) {
     if (!team) return '<span class="tonightTeamName">TBD</span>';
     const logo = team.logoUrl ? `<img class="tonightTeamLogo" src="${team.logoUrl}" alt="" loading="lazy">` : '';
-    const inner = `${logo}<span class="tonightTeamName">${escapeHtml(stripAgePrefix(team.name))}</span>`;
+    const suffix = recordSuffix ? `<span class="tonightTeamRecord">${escapeHtml(recordSuffix)}</span>` : '';
+    const inner = `${logo}<span class="tonightTeamName">${escapeHtml(stripAgePrefix(team.name))}</span>${suffix}`;
     return team.teamId
       ? `<a class="tonightTeam" href="https://www.macleague.org/team/${team.teamId}" target="_blank" rel="noopener" title="See ${escapeHtml(team.name)}'s full schedule on macleague.org">${inner}</a>`
       : `<span class="tonightTeam">${inner}</span>`;
@@ -99,16 +105,16 @@
     const bWins = played && b.score > a.score;
     const teamLine = (team, lost) => {
       if (!team) return '<div class="tonightMergedTeam"><span class="tonightTeamName">TBD</span></div>';
-      let right = '';
-      if (team.score != null) {
-        right = `<span class="tonightFinalScore${lost ? ' tonightFinalScoreLoss' : ''}">${escapeHtml(team.score)}</span>`;
-      } else {
-        const rec = recordFor(game.divisionId, team.teamId);
-        right = rec ? `<span class="tonightMergedRight">${escapeHtml(rec)}</span>` : '';
-      }
+      // Only a real score occupies the right-hand slot now -- an unplayed
+      // game's record rides inline on the name instead (teamHtml's
+      // recordSuffix), so the slot never shows an ambiguous number pair.
+      const right = team.score != null
+        ? `<span class="tonightFinalScore${lost ? ' tonightFinalScoreLoss' : ''}">${escapeHtml(team.score)}</span>`
+        : '';
+      const recordSuffix = team.score == null ? recordFor(game.divisionId, team.teamId) : null;
       return `
         <div class="tonightMergedTeam ${played ? 'tonightMergedTeamFinal' : ''}">
-          ${teamHtml(team)}
+          ${teamHtml(team, recordSuffix)}
           ${right}
         </div>`;
     };

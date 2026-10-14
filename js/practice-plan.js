@@ -352,7 +352,7 @@
             setTimeout(() => refresh(), 500);
           });
           containerEl.querySelector('#ppDelete').addEventListener('click', async () => {
-            if (!confirm('Delete this practice plan?')) return;
+            if (!(await confirmModal('Delete this practice plan?'))) return;
             plans = plans.filter(x => x.id !== p.id);
             await savePlans(teamId, plans);
             view = { mode: 'list' }; refresh();

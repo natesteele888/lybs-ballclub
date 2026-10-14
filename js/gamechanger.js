@@ -131,7 +131,7 @@
         });
         const removeBtn = containerEl.querySelector('#gcRemoveBtn');
         if (removeBtn) removeBtn.addEventListener('click', async () => {
-          if (!confirm('Remove the GameChanger widget?')) return;
+          if (!(await confirmModal('Remove the GameChanger widget?'))) return;
           await window.GameChanger.remove(teamId);
           window.GameChanger.render(teamId, containerEl, opts);
         });
