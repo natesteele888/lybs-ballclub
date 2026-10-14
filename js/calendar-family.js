@@ -9,10 +9,10 @@
    buildICS()/downloadICS() themselves need no changes at all.
 
    "My teams" is just every team this device has ever logged into
-   -- found by scanning localStorage for identity.js's
-   lybsIdentity_{teamId} keys, so there's no separate picker to set
-   up first. A parent who's logged into both Select and (once it
-   exists) Majors B on the same phone sees both here automatically.
+   -- window.Identity.listTeamIds(), so there's no separate picker
+   to set up first. A parent who's logged into both Select and
+   (once it exists) Majors B on the same phone sees both here
+   automatically.
 
    This is explicitly NOT synced from GameChanger -- GameChanger
    has no feed to sync from (see gamechanger.js's header comment).
@@ -20,15 +20,6 @@
    is the authoritative source.
    ============================================================ */
 (function () {
-  function myTeamIds() {
-    const ids = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith('lybsIdentity_')) ids.push(k.slice('lybsIdentity_'.length));
-    }
-    return [...new Set(ids)];
-  }
-
   async function loadTeamEvents(teamId) {
     const config = (await window.TeamConfig.load(teamId)) || { shortName: teamId };
     const games = await window.Schedule.ensureLoaded(teamId);
@@ -48,7 +39,7 @@
 
   window.FamilyCalendar = {
     async render(containerEl, activeTeamId) {
-      let ids = myTeamIds();
+      let ids = window.Identity.listTeamIds();
       if (!ids.includes(activeTeamId)) ids.push(activeTeamId);
       containerEl.innerHTML = '<div class="emptyState">Loading your teams…</div>';
       const groups = await Promise.all(ids.map(loadTeamEvents));

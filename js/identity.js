@@ -31,6 +31,23 @@
       try { return JSON.parse(localStorage.getItem(key(teamId, role)) || 'null'); }
       catch (e) { return null; }
     },
+    // Every distinct team this device has ever signed into, for
+    // calendar-family.js's "every team I'm on" scan. Reads each session's
+    // own stored .teamId rather than slicing the lybsIdentity_{teamId}_{role}
+    // key string -- the key carries the role too, so naive slicing would
+    // return "select_parent" instead of "select".
+    listTeamIds() {
+      const ids = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || !k.startsWith('lybsIdentity_')) continue;
+        try {
+          const session = JSON.parse(localStorage.getItem(k) || 'null');
+          if (session && session.teamId) ids.push(session.teamId);
+        } catch (e) {}
+      }
+      return [...new Set(ids)];
+    },
     setSession(teamId, role, name) {
       const session = { teamId, role, name: name.trim() };
       try { localStorage.setItem(key(teamId, role), JSON.stringify(session)); } catch (e) {}
