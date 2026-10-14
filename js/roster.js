@@ -116,9 +116,10 @@
       }
     },
 
-    // opts.teamId is only used to mount Coach's Notes below the form (see
-    // js/coach-notes.js) -- optional, and skipped entirely for a brand-new
-    // player (no id yet to attach notes to).
+    // opts.teamId is only used to mount Benchmarks and Coach's Notes below
+    // the form (see js/player-benchmarks.js, js/coach-notes.js) -- optional,
+    // and both skipped entirely for a brand-new player (no id yet to attach
+    // either one to).
     renderForm(player, containerEl, opts) {
       opts = opts || {};
       containerEl.innerHTML = `
@@ -133,6 +134,7 @@
             ${player.id && opts.onDelete ? '<button class="btn btnDanger" id="deleteBtn">Delete</button>' : ''}
           </div>
         </div>
+        ${player.id && opts.teamId ? '<div id="rfBenchmarksSlot"></div>' : ''}
         ${player.id && opts.teamId ? '<div id="rfNotesSlot"></div>' : ''}`;
       containerEl.querySelector('#saveBtn').addEventListener('click', btnEvt => {
         const updated = Object.assign({}, player, {
@@ -146,6 +148,8 @@
       containerEl.querySelector('#cancelBtn').addEventListener('click', () => opts.onCancel && opts.onCancel());
       const deleteBtn = containerEl.querySelector('#deleteBtn');
       if (deleteBtn) deleteBtn.addEventListener('click', () => opts.onDelete(player.id));
+      const benchmarksSlot = containerEl.querySelector('#rfBenchmarksSlot');
+      if (benchmarksSlot) window.PlayerBenchmarks.render(benchmarksSlot, opts.teamId, player.id);
       const notesSlot = containerEl.querySelector('#rfNotesSlot');
       if (notesSlot) window.CoachNotes.render(notesSlot, opts.teamId, player.id);
     },
