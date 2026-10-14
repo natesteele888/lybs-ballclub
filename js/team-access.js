@@ -117,7 +117,7 @@
 
         containerEl.querySelectorAll('[data-revoke]').forEach(btn => {
           btn.addEventListener('click', async () => {
-            if (!confirm('Remove this person’s access to the team?')) return;
+            if (!(await confirmModal('Remove this person’s access to the team?'))) return;
             await window.dbPut(window.accessPath(teamId, btn.dataset.revoke), null);
             granted = await loadAccessList(teamId);
             refresh();

@@ -84,7 +84,7 @@
             </div>` : ''}`;
         containerEl.querySelectorAll('[data-del]').forEach(btn => {
           btn.addEventListener('click', async () => {
-            if (!confirm('Remove this announcement?')) return;
+            if (!(await confirmModal('Remove this announcement?'))) return;
             await window.Announcements.deleteItem(teamId, btn.dataset.del);
             refresh();
           });

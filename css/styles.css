@@ -817,6 +817,11 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   box-shadow: 0 3px 8px rgba(20,24,48,0.16);
 }
 .tonightTeamName { font-size: 14px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+/* A team's season record, inline right after its name (mergedCardHtml's
+   unplayed-game rows only) -- deliberately NOT in the card's right-hand
+   slot, which a real live/final score uses, so a record like "0-0" can
+   never read as tonight's score. */
+.tonightTeamRecord { font-size: 12px; font-weight: 500; color: var(--text3); margin-left: 6px; font-variant-numeric: tabular-nums; }
 .tonightVs, .tonightScore {
   font-family: var(--font-label); font-size: 12px; color: var(--text3); flex: 0 0 auto;
   letter-spacing: 0.04em; white-space: nowrap;
@@ -840,10 +845,6 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   letter-spacing: 0.06em; text-transform: uppercase;
 }
 .tonightMergedTeam { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.tonightMergedRight {
-  font-family: var(--font-label); font-size: 13px; font-weight: 700; color: var(--text2);
-  flex: 0 0 auto; font-variant-numeric: tabular-nums;
-}
 .tonightDivisionLabel { color: var(--accent-blue); font-weight: 700; }
 /* A finished game's card -- bigger/bolder team names and a big-score
    treatment matching .gameResultScore's look (same display font, white,
@@ -892,8 +893,8 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   width: 24px; height: 24px; border-radius: 7px; flex: 0 0 auto;
   display: flex; align-items: center; justify-content: center; font-size: 13px;
 }
-.homeEmptyState { color: var(--text2); font-size: 13px; padding: 24px 10px; text-align: center; line-height: 1.6; }
-.homeEmptyStateIcon { font-size: 22px; display: block; margin-bottom: 6px; opacity: 0.5; }
+.homeEmptyState { color: var(--text2); font-size: 13px; padding: 14px 10px; text-align: center; line-height: 1.4; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.homeEmptyStateIcon { font-size: 16px; opacity: 0.5; }
 .homeTicker {
   display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none;
   padding-bottom: 4px; margin-top: 10px; cursor: grab;
@@ -1133,9 +1134,8 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 }
 
 /* Share-to-social modal (topBarShareBtn) -- a bottom sheet on phones, a
-   centered dialog from tablet width up. The only modal in the app so far;
-   not generalized into a reusable component since nothing else needs one
-   yet. */
+   centered dialog from tablet width up. Also used by the generic info, map,
+   and confirm popups below -- same overlay/sheet shell, different body. */
 .appModalOverlay {
   position: fixed; inset: 0; background: rgba(3,3,3,0.72); z-index: 500;
   display: flex; align-items: flex-end; justify-content: center;
@@ -1161,6 +1161,9 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   .appModalSheet { border-radius: 16px; }
 }
 .mapModalFrame { width: 100%; height: 240px; border: 0; border-radius: 10px; display: block; background: rgba(var(--overlay-rgb),0.04); }
+.appConfirmBody { font-size: 14px; color: var(--text); line-height: 1.5; padding: 6px 2px 18px; }
+.appConfirmActions { display: flex; gap: 10px; }
+.appConfirmActions .btn { flex: 1; }
 
 /* Calendar view (Schedule tab -> Month/Week, js/calendar-view.js) */
 .calHeader { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 12px 0 10px; }

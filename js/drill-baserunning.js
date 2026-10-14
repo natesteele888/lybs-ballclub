@@ -184,8 +184,8 @@
           ST.state = 'idle'; ST.elapsedMs = 0; ST.newRecord = false;
           refresh();
         });
-        containerEl.querySelector('#brChange')?.addEventListener('click', () => {
-          if (ST.state === 'running' && !confirm('Stop timing and change runner/drill?')) return;
+        containerEl.querySelector('#brChange')?.addEventListener('click', async () => {
+          if (ST.state === 'running' && !(await confirmModal('Stop timing and change runner/drill?'))) return;
           cancelAnimationFrame(ST.raf);
           ST.state = 'setup'; ST.elapsedMs = 0;
           refresh();
