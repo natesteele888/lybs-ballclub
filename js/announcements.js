@@ -94,7 +94,7 @@
             const id = btn.dataset.edit;
             const current = window.Announcements.getItems(teamId).find(a => a.id === id);
             if (!current) return;
-            const text = prompt('Edit announcement:', current.text);
+            const text = await promptModal('Edit announcement:', current.text);
             if (!text || !text.trim()) return;
             await window.Announcements.editItem(teamId, id, text);
             refresh();

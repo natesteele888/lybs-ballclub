@@ -159,7 +159,7 @@
             // clear of the edges.
             const x = Math.round(Math.min(96, Math.max(4, rawX)) * 10) / 10;
             const y = Math.round(Math.min(96, Math.max(4, rawY)) * 10) / 10;
-            const label = prompt('Label for this spot (e.g. "Cutoff man"):');
+            const label = await promptModal('Label for this spot (e.g. "Cutoff man"):');
             if (!label || !label.trim()) return;
             d.markers.push({ id: uid('mk'), x, y, label: label.trim() });
             await saveDiagrams(teamId, diagrams);
