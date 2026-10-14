@@ -30,20 +30,36 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> players[]
+  const pending = {}; // teamId -> in-flight ensureLoaded() promise
   window.Roster = {
+    // Caches the in-flight fetch, not just the resolved value -- at least
+    // 8 separate tabs (overview, roster, pitching, depth, lineups, duty,
+    // awards, plus stats-import.js) each call this independently on render,
+    // so two near-simultaneous callers are routine. Without this, whichever
+    // dbGet resolved last would clobber cache[teamId] with a stale snapshot,
+    // silently losing anything saved in between (same pattern already used
+    // by awards.js/equipment.js/signup.js/practice-plan.js/play-diagram.js).
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      const players = await window.dbGet(window.teamPath(teamId, 'roster'));
-      // Deliberately no committed seed file here (unlike standings/rules/
-      // schedule, which seed from league-public data). A roster is real
-      // kids' names -- even reduced to first name + last initial, that
-      // shouldn't sit in this repo's (public) git history. The real roster
-      // only ever exists in Firebase, written by a coach through this tab
-      // or pushed by scripts/sync-roster-from-dashboard.mjs (which stages
-      // to a gitignored file for review, never a committed one). A fresh
-      // team with nothing in Firebase yet just starts with an empty roster.
-      cache[teamId] = Array.isArray(players) ? players : [];
-      return cache[teamId];
+      if (pending[teamId]) return pending[teamId];
+      pending[teamId] = (async () => {
+        try {
+          const players = await window.dbGet(window.teamPath(teamId, 'roster'));
+          // Deliberately no committed seed file here (unlike standings/rules/
+          // schedule, which seed from league-public data). A roster is real
+          // kids' names -- even reduced to first name + last initial, that
+          // shouldn't sit in this repo's (public) git history. The real roster
+          // only ever exists in Firebase, written by a coach through this tab
+          // or pushed by scripts/sync-roster-from-dashboard.mjs (which stages
+          // to a gitignored file for review, never a committed one). A fresh
+          // team with nothing in Firebase yet just starts with an empty roster.
+          cache[teamId] = Array.isArray(players) ? players : [];
+          return cache[teamId];
+        } finally {
+          delete pending[teamId];
+        }
+      })();
+      return pending[teamId];
     },
     getPlayers(teamId) {
       return (cache[teamId] || []).slice().sort((a, b) => (Number(a.number) || 0) - (Number(b.number) || 0));
