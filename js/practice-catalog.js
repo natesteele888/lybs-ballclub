@@ -155,6 +155,29 @@
         }).join('')}</div>`;
       }
 
+      // Equipment/Setup/Coaching points -- optional on older drills (not
+      // every drill in the seed has been through the content-expansion
+      // pass yet), so each of these renders nothing rather than an empty
+      // section header when the field's absent.
+      function equipmentChipsHtml(equipment) {
+        if (!equipment || !equipment.length) return '';
+        return `
+          <div class="sectionLabel" style="margin-top:14px;">Equipment</div>
+          <div class="drillChipRow" style="margin-top:4px;">${equipment.map(e => `<span class="badge badgeTbd">${escapeHtml(e)}</span>`).join('')}</div>`;
+      }
+      function setupStepsHtml(setup) {
+        if (!setup || !setup.length) return '';
+        return `
+          <div class="sectionLabel" style="margin-top:14px;">Setup</div>
+          <ol class="drillStepsList">${setup.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ol>`;
+      }
+      function coachingPointsHtml(points) {
+        if (!points || !points.length) return '';
+        return `
+          <div class="sectionLabel" style="margin-top:14px;">Coaching points</div>
+          <ul class="drillStepsList drillCoachingPoints">${points.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>`;
+      }
+
       function diagramPreviewHtml(diagramRef) {
         if (!diagramRef) return '';
         const markers = (diagramRef.markers || []).map(m => `
@@ -190,7 +213,7 @@
         return `
           <div class="listRow" data-drill="${escapeHtml(d.id)}">
             <div class="listRowMain">
-              <div class="listRowTitle">${escapeHtml(d.title)}</div>
+              <div class="listRowTitle">${escapeHtml(d.title)}${d.diagramRef ? '<span class="drillDiagramFlag" title="Has a field diagram">📐</span>' : ''}</div>
               <div class="listRowSub">${escapeHtml(d.division)} &middot; ${escapeHtml(d.category)} &middot; ${d.suggestedMinutes} min</div>
             </div>
             ${tierBadgeHtml(d.tier)}
@@ -215,7 +238,10 @@
           </div>
           ${d.citation ? `<div class="helpText" style="margin-bottom:10px;">${escapeHtml(d.citation)}</div>` : ''}
           ${benchmarkChipsHtml(d.benchmarkIds)}
+          ${equipmentChipsHtml(d.equipment)}
           ${diagramPreviewHtml(d.diagramRef)}
+          ${setupStepsHtml(d.setup)}
+          ${coachingPointsHtml(d.coachingPoints)}
           ${d.drillRef ? `<button class="btn btnGhost btnSmall" style="margin-top:12px;" data-jump-tool="${escapeHtml(d.drillRef.tool)}">Open in ${escapeHtml({ ath: 'Around the Horn', baserunning: 'Base Running', pitching: 'Pitch Chart' }[d.drillRef.tool] || d.drillRef.tool)} &rarr;</button>` : ''}
           ${canEdit && d.diagramRef ? `<button class="btn btnGhost btnSmall" style="margin-top:12px;margin-left:8px;" id="catAddDiagram">+ Add diagram to my Play Diagrams</button>` : ''}
           ${canEdit ? `<div id="catAddPlanSlot" style="margin-top:16px;"><button class="btn" id="catAddPlanBtn" style="width:100%;">+ Add to my Practice Plan</button></div>` : ''}`;
