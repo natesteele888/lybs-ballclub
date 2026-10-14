@@ -26,6 +26,22 @@
                        where that actually belongs, same substitute used
                        everywhere else in this app that touches a
                        coach's contact info.
+   0.5 Standings (abbreviated) -- the same division table js/standings.js's
+                       own Standings tab renders in full, just fewer columns
+                       (rank, team, W-L, PCT -- no GP/T/RF/RA/DIFF) since
+                       this is the glance version sitting right under the
+                       team card's own rank stat tile, not a second copy of
+                       the whole tab. Reads the exact same memoized
+                       TonightGames.ensureLoaded() result that stat tile
+                       already computes from, not a second fetch. Every
+                       row but our own routes in-app to that team's page
+                       (same data-team-nav the ticker/Full Scoreboard rows
+                       use); "View full standings" under the table jumps to
+                       the real Standings tab for the extended columns and
+                       today's games in that division. Only shown when this
+                       team actually resolves into the league standings
+                       mirror -- same gate the rank stat tile already uses,
+                       so there's nothing dangling when it doesn't.
    1. League Tonight (ticker) -- a horizontally scrollable strip
                        (drag-and-swipe, same as the nav bars, not an
                        auto-animating marquee -- a real marquee looks
@@ -116,6 +132,7 @@
   // the chip's tinted background with color-mix() rather than an alpha-hex
   // suffix, since that trick only works on a literal hex string.
   const SECTION_STYLE = {
+    standings: { icon: '🏆', color: 'var(--accent-pink)' },
     tonight: { icon: '🏟️', color: 'var(--lybs-blue-bright)' },
     announcements: { icon: '📣', color: 'var(--gold)' },
     leagueEvents: { icon: '🗓️', color: 'var(--accent-purple)' },
@@ -180,6 +197,24 @@
       if (dragged) { e.stopPropagation(); e.preventDefault(); }
       dragged = false;
     }, { capture: true, signal });
+  }
+
+  // Abbreviated standings row -- same markup/classes js/standings.js's own
+  // table uses (.standingsUsRow/.standingsTeamCell/.standingsTeamLink/
+  // .numCell), just fewer columns (no GP/T/RF/RA/DIFF) since this is the
+  // glance version, not the full table a tap on "View full standings"
+  // below leads to.
+  function miniStandingsRowHtml(r, i, divisionId) {
+    const record = `${r.w ?? '-'}-${r.l ?? '-'}${r.t && r.t !== '0' ? '-' + r.t : ''}`;
+    return `
+      <tr class="${r.isUs ? 'standingsUsRow' : ''}">
+        <td class="numCell">${i + 1}</td>
+        <td>${r.isUs
+          ? `<div class="standingsTeamCell">${window.ClubLogos.badgeHtml(r.team, 22)}${escapeHtml(stripAgePrefix(r.team))}</div>`
+          : `<div class="standingsTeamCell standingsTeamLink" data-team-nav="${escapeHtml(stripAgePrefix(r.team))}" data-team-division="${escapeHtml(divisionId)}" tabindex="0" role="button">${window.ClubLogos.badgeHtml(r.team, 22)}${escapeHtml(stripAgePrefix(r.team))}</div>`}</td>
+        <td class="numCell">${escapeHtml(record)}</td>
+        <td class="numCell">${escapeHtml(r.pct ?? '')}</td>
+      </tr>`;
   }
 
   function todayItemHtml(kind, item) {
@@ -269,20 +304,22 @@
       // resolves this team. ----
       const cfg = window.TeamConfig.current();
       const leagueMatch = window.LeagueTeams.find(cfg.shortName || cfg.name, cfg.macLeagueDivisionId);
-      let leagueRow = null, leagueRank = null, leagueTotal = null, leagueDivisionName = null;
+      let leagueRow = null, leagueRank = null, leagueTotal = null, leagueDivisionName = null, divisionRows = [];
       if (leagueMatch) {
         // TonightGames.ensureLoaded() already fetched and cached this exact
         // path in the Promise.all above -- this just reads the memoized
         // result (same pattern standings.js's own render() uses), not a
-        // second network round trip.
+        // second network round trip. divisionRows is kept around (not just
+        // the one row for the stat tile) to also drive the abbreviated
+        // standings section below.
         const standings = await window.TonightGames.ensureLoaded();
         const division = standings && standings.divisions && standings.divisions[leagueMatch.divisionId];
-        const rows = (division && division.rows) || [];
-        const idx = rows.findIndex(r => r.teamId === leagueMatch.teamId);
+        divisionRows = (division && division.rows) || [];
+        const idx = divisionRows.findIndex(r => r.teamId === leagueMatch.teamId);
         if (idx !== -1) {
-          leagueRow = rows[idx];
+          leagueRow = divisionRows[idx];
           leagueRank = idx + 1;
-          leagueTotal = rows.length;
+          leagueTotal = divisionRows.length;
           leagueDivisionName = division.name || null;
         }
       }
@@ -353,6 +390,16 @@
           ${leagueMatch ? `<a class="btn btnSmall" style="width:100%;margin-top:4px;" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name, cfg.macLeagueDivisionId)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
         </div>
 
+        ${divisionRows.length ? `
+          ${sectionHeaderHtml('standings', (leagueDivisionName ? leagueDivisionName + ' ' : '') + 'Standings')}
+          <div class="standingsTableWrap">
+            <table class="standingsTable">
+              <thead><tr><th class="numCell">#</th><th>Team</th><th class="numCell">W-L</th><th class="numCell">PCT</th></tr></thead>
+              <tbody>${divisionRows.map((r, i) => miniStandingsRowHtml(r, i, leagueMatch.divisionId)).join('')}</tbody>
+            </table>
+          </div>
+          <button class="btn btnSmall btnGhost" id="homeViewStandings" style="width:100%;margin-top:8px;">View full standings</button>` : ''}
+
         ${tonightTicker.length ? `
           ${sectionHeaderHtml('tonight', 'League Tonight')}
           <div class="helpText">Every MAC League game today, any division.</div>
@@ -399,6 +446,9 @@
         ${leagueNextDate && leagueNextGames.length ? `
           <div class="helpText" style="margin-top:12px;">MAC League &middot; ${escapeHtml(fmtDate(leagueNextDate))} &middot; every division, any town</div>
           <div class="homeTicker" id="homeUpcomingLeagueTicker">${leagueNextGames.map(window.LeagueSchedule.gameCardHtml).join('')}</div>` : ''}`;
+
+      const viewStandingsBtn = containerEl.querySelector('#homeViewStandings');
+      if (viewStandingsBtn) viewStandingsBtn.addEventListener('click', () => opts.onViewStandings && opts.onViewStandings());
 
       const tickerTonight = containerEl.querySelector('#homeTickerTonight');
       if (tickerTonight) enableDragScroll(tickerTonight, 'tonight');
