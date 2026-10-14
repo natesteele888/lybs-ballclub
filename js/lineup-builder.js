@@ -60,6 +60,18 @@
       let lineups = await ensureLineups(teamId);
       const roster = window.Roster.getPlayers(teamId);
       let view = { mode: 'list' };
+      // #luNew below adds the new lineup to `lineups` immediately (so the
+      // edit screen has something to point at) but doesn't persist it --
+      // that used to only happen implicitly, the first time something saved
+      // it. #luBack saved unconditionally, so backing out of a lineup with
+      // no name and no batter actually picked still wrote a real "Untitled
+      // lineup" record with no way to tell it apart from one meant to be
+      // kept (confirmed live: tap +New lineup, add a batter row, leave it
+      // unassigned, tap back -- a stray record is left behind every time).
+      // This tracks which ids are still in that pre-first-save state so
+      // Back can discard them instead, without changing how Back already
+      // behaves for a lineup that has real content or was saved before.
+      const unsavedIds = new Set();
 
       function listHtml() {
         const rows = lineups.map(l => `
@@ -138,6 +150,7 @@
           containerEl.querySelector('#luNew').addEventListener('click', () => {
             const l = { id: uid('lu'), name: '', date: new Date().toISOString().slice(0, 10), slots: [] };
             lineups.unshift(l);
+            unsavedIds.add(l.id);
             view = { mode: 'edit', id: l.id };
             refresh();
           });
@@ -151,7 +164,13 @@
           containerEl.querySelector('#luBack').addEventListener('click', async () => {
             l.name = containerEl.querySelector('#luName').value.trim();
             l.date = containerEl.querySelector('#luDate').value;
-            await saveLineups(teamId, lineups);
+            const hasContent = l.name || l.slots.some(s => s.playerId);
+            if (unsavedIds.has(l.id) && !hasContent) {
+              lineups = lineups.filter(x => x.id !== l.id);
+            } else {
+              unsavedIds.delete(l.id);
+              await saveLineups(teamId, lineups);
+            }
             view = { mode: 'list' }; refresh();
           });
           containerEl.querySelector('#luName').addEventListener('change', e => { l.name = e.target.value.trim(); });
@@ -191,6 +210,7 @@
           containerEl.querySelector('#luSave').addEventListener('click', async btnEvt => {
             l.name = containerEl.querySelector('#luName').value.trim();
             l.date = containerEl.querySelector('#luDate').value;
+            unsavedIds.delete(l.id);
             await saveLineups(teamId, lineups);
             btnEvt.target.textContent = 'Saved!';
             setTimeout(() => refresh(), 500);

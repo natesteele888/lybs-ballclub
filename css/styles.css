@@ -253,6 +253,13 @@ a { color: var(--lybs-blue-bright); }
 .btn:hover { filter: brightness(1.08); box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 10px 26px rgba(46,82,232,0.4); }
 .btn:active { transform: translateY(1px); }
 .btn:disabled { opacity: 0.45; cursor: default; filter: none; box-shadow: none; }
+/* .btn's own white-space:nowrap is right for every short label in this app,
+   but a couple of full-width buttons carry a long macleague.org link
+   sentence instead of a label -- confirmed at phone width the nowrap text
+   runs clean past the 375px viewport instead of wrapping, with no ellipsis,
+   cutting the label off mid-word. Opt those into wrapping instead of
+   loosening the shared rule every short button also relies on. */
+.btnWrap { white-space: normal; line-height: 1.3; }
 .btnGhost {
   background: rgba(180,187,191,0.06); border: 1px solid var(--card-border); color: var(--text);
   box-shadow: none;
@@ -696,6 +703,21 @@ a { color: var(--lybs-blue-bright); }
   .standingsTeamCell { gap: 6px; }
   .standingsTeamCell .clubBadge, .standingsTeamCell .fieldBadgeFallback { width: 24px !important; height: 24px !important; }
   .standingsTable td:first-child { max-width: 82px; }
+  /* .gameResultTeam is flex:1 1 0, so its own outer width is fixed by the
+     row's flex split and doesn't change no matter how the logo/gap/name
+     inside it are sized -- confirmed live (91px either way) -- so shrinking
+     the logo and gap hands their savings straight to .gameResultName's own
+     width. .gameResultName's 2-line clamp needs ~54px to fit a single long
+     word like "Lunenburg" without clipping mid-word; a first pass at 32px/
+     6px only cleared 53px, still short by a hair, so this goes a bit
+     further for real margin instead of the bare minimum. */
+  .gameResultLogo, .gameResultLogoFallback { width: 26px !important; height: 26px !important; }
+  /* Needs !important, not just the narrower selector match -- this rule
+     sits earlier in the file than .gameResultTeam's own base rule (gap:8px)
+     below, and confirmed live that an unqualified override here silently
+     lost to that later same-specificity rule regardless of this media
+     query's own narrower match. */
+  .gameResultTeam { gap: 5px !important; }
 }
 
 /* ---- MAC League club badges (hotlinked, see data/mac-league-clubs.json) ---- */
@@ -1012,7 +1034,11 @@ a { color: var(--lybs-blue-bright); }
   color: var(--pt-color);
 }
 .pcSpeedRow { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
-.pcSpeedRow .drillFreeInput { width: 90px; flex: 0 0 auto; }
+/* Measured live at 375px: the "mph (optional)" placeholder needs ~122px
+   (text + padding) to show in full, and the row has ~58px of slack past
+   the other two buttons' own widths -- 130px uses most of that without
+   crowding Log Pitch/Cancel. */
+.pcSpeedRow .drillFreeInput { width: 130px; flex: 0 0 auto; }
 .pcStatRow { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
 .pcStatTile { flex: 1; min-width: 78px; text-align: center; padding: 12px 8px; background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; }
 .pcStatValue { font-family: var(--font-display); font-size: 26px; }

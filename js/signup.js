@@ -109,7 +109,7 @@
           });
           const newBtn = containerEl.querySelector('#suNew');
           if (newBtn) newBtn.addEventListener('click', async () => {
-            const title = prompt('Sign-up sheet title (e.g. "End of Season Party"):');
+            const title = await promptModal('Sign-up sheet title (e.g. "End of Season Party"):');
             if (!title || !title.trim()) return;
             const newSheet = { id: uid('su'), title: title.trim(), items: [] };
             sheets.push(newSheet);

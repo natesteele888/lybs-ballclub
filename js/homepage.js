@@ -387,7 +387,7 @@
             </div>
           </div>
           <div class="pcStatRow" style="margin:12px 0 0;">${statTiles.join('')}</div>
-          ${leagueMatch ? `<a class="btn btnSmall" style="width:100%;margin-top:4px;" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name, cfg.macLeagueDivisionId)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
+          ${leagueMatch ? `<a class="btn btnSmall btnWrap" style="width:100%;margin-top:4px;" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name, cfg.macLeagueDivisionId)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
         </div>
 
         ${divisionRows.length ? `

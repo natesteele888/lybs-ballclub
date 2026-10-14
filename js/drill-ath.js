@@ -248,9 +248,9 @@
           });
         });
         containerEl.querySelectorAll('[data-rename]').forEach(btn => {
-          btn.addEventListener('click', () => {
+          btn.addEventListener('click', async () => {
             const gi = Number(btn.dataset.rename);
-            const name = prompt('Rename group:', ST.groups[gi].name);
+            const name = await promptModal('Rename group:', ST.groups[gi].name);
             if (name && name.trim()) { ST.groups[gi].name = name.trim(); refresh(); }
           });
         });
