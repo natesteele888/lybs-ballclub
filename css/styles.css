@@ -349,7 +349,11 @@ a { color: var(--lybs-blue-bright); }
 
 .tabBar {
   display: flex; overflow-x: auto; background: rgba(10,14,40,0.7); border-bottom: 1px solid var(--card-border);
-  position: sticky; top: 55px; z-index: 40; backdrop-filter: blur(8px);
+  /* .topBar's real rendered height (padding + content + its 1px border) is
+     59px, not the 55px this used to say -- measured live, not guessed --
+     so once both bars were stuck during scroll this one overlapped the
+     bottom slice of .topBar instead of sitting flush beneath it. */
+  position: sticky; top: 59px; z-index: 40; backdrop-filter: blur(8px);
   scrollbar-width: none; cursor: grab;
 }
 :root[data-theme="light"] .tabBar { background: rgba(255,255,255,0.75); }
@@ -783,11 +787,6 @@ a { color: var(--lybs-blue-bright); }
 .gameResultTeamLink .gameResultName { text-decoration: underline; text-decoration-color: rgba(180,187,191,0.35); text-underline-offset: 3px; }
 
 /* ---- Tonight in the League (Schedule tab homepage widget + Standings tab "Today's games") ---- */
-#tonightDivisionSelect {
-  padding: 10px 14px; border-radius: 10px; border: 1px solid var(--card-border);
-  background: rgba(var(--sunken-rgb),0.6); color: var(--text); font-size: 13px; font-family: var(--font-label);
-  text-transform: uppercase; letter-spacing: 0.04em; min-height: 40px;
-}
 .tonightGameRow {
   background: var(--card); border: 1px solid var(--card-border); border-radius: 12px;
   padding: 14px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;

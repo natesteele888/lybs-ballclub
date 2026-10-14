@@ -179,14 +179,14 @@
             <input class="drillFreeInput" id="ppLibSearch" placeholder="Search drills..." value="${escapeHtml(libFilter.query)}">
           </div>
           <div class="drillChipRow" style="margin-bottom:6px;">
-            ${divisions.map(d => `<button class="drillChip ${libFilter.division === d ? 'drillChipOn' : ''}" data-libdivision="${escapeHtml(d)}">${escapeHtml(d)}</button>`).join('')}
+            ${divisions.map(d => `<button class="drillChip ${libFilter.division === d ? 'drillChipOn' : ''}" data-libdivision="${escapeHtml(d)}" aria-pressed="${libFilter.division === d}">${escapeHtml(d)}</button>`).join('')}
           </div>
           <div class="drillChipRow" style="margin-bottom:6px;">
-            ${TIER_ORDER.map(t => `<button class="drillChip ${libFilter.tiers.has(t) ? 'drillChipOn' : ''}" data-libtier="${t}">${escapeHtml(TIER_LABEL[t])}</button>`).join('')}
+            ${TIER_ORDER.map(t => `<button class="drillChip ${libFilter.tiers.has(t) ? 'drillChipOn' : ''}" data-libtier="${t}" aria-pressed="${libFilter.tiers.has(t)}">${escapeHtml(TIER_LABEL[t])}</button>`).join('')}
           </div>
           <div class="drillChipRow" style="margin-bottom:10px;">
-            <button class="drillChip ${!libFilter.category ? 'drillChipOn' : ''}" data-libcategory="">All categories</button>
-            ${categories.map(c => `<button class="drillChip ${libFilter.category === c ? 'drillChipOn' : ''}" data-libcategory="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}
+            <button class="drillChip ${!libFilter.category ? 'drillChipOn' : ''}" data-libcategory="" aria-pressed="${!libFilter.category}">All categories</button>
+            ${categories.map(c => `<button class="drillChip ${libFilter.category === c ? 'drillChipOn' : ''}" data-libcategory="${escapeHtml(c)}" aria-pressed="${libFilter.category === c}">${escapeHtml(c)}</button>`).join('')}
           </div>
           <div class="listBody">${rows}</div>`;
       }

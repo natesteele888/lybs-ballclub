@@ -163,8 +163,12 @@
               ${leagueSectionHtml(selectedDate)}
             ` : '<div class="helpText">Tap a day to see what\'s on it.</div>'}
           </div>`;
-        containerEl.querySelector('#calPrev').addEventListener('click', () => { anchor = new Date(y, m - 1, 1); renderMonth(); });
-        containerEl.querySelector('#calNext').addEventListener('click', () => { anchor = new Date(y, m + 1, 1); renderMonth(); });
+        // Clear selectedDate on paging -- otherwise the day panel (and its
+        // "+Game"/"+Practice" buttons, which key off data-date) keeps
+        // pointing at a day from the month just left, with nothing on
+        // screen to show the mismatch.
+        containerEl.querySelector('#calPrev').addEventListener('click', () => { anchor = new Date(y, m - 1, 1); selectedDate = null; renderMonth(); });
+        containerEl.querySelector('#calNext').addEventListener('click', () => { anchor = new Date(y, m + 1, 1); selectedDate = null; renderMonth(); });
         containerEl.querySelectorAll('.calCell[data-date]').forEach(cell => {
           cell.addEventListener('click', () => { selectedDate = cell.dataset.date === selectedDate ? null : cell.dataset.date; renderMonth(); });
         });

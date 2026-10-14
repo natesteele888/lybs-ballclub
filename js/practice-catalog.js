@@ -175,7 +175,7 @@
 
       function tierFilterHtml() {
         return `<div class="drillChipRow" style="margin-bottom:12px;">
-          ${TIER_ORDER.map(t => `<button class="drillChip ${view.tiers.has(t) ? 'drillChipOn' : ''}" data-tiertoggle="${t}">${escapeHtml(TIER_LABEL[t])}</button>`).join('')}
+          ${TIER_ORDER.map(t => `<button class="drillChip ${view.tiers.has(t) ? 'drillChipOn' : ''}" data-tiertoggle="${t}" aria-pressed="${view.tiers.has(t)}">${escapeHtml(TIER_LABEL[t])}</button>`).join('')}
         </div>`;
       }
 

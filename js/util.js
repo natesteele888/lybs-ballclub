@@ -129,6 +129,11 @@
   // one piece neither that nor a bare `await dbPut(...)` was telling
   // anyone: whether it actually worked.
   window.showToast = function showToast(message, kind) {
+    // Stamped so index.html's unhandledrejection handler can tell a
+    // just-shown specific toast (like the ones below) apart from a truly
+    // uncaught failure, and skip piling a second, more generic toast on
+    // top of this one -- see that handler's own comment.
+    window.__lastToastAt = Date.now();
     let host = document.getElementById('toastHost');
     if (!host) {
       host = document.createElement('div');
