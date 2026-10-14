@@ -763,12 +763,17 @@ a { color: var(--lybs-blue-bright); }
 .gameResultPill.badgeL { background: linear-gradient(160deg, #e35858, #9a2b2b); color: #fff; box-shadow: 0 4px 14px rgba(227,88,88,0.3); }
 .gameResultPill.badgeT { background: linear-gradient(160deg, #e6b935, #a37c1a); color: #fff; box-shadow: 0 4px 14px rgba(230,185,53,0.3); }
 
-/* ---- Family calendar ---- */
+/* ---- Family calendar (also reused by js/player-benchmarks.js's checklist) ---- */
 .teamCheckList { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
 .teamCheckRow {
   display: flex; align-items: center; gap: 10px; font-size: 14px; background: var(--card);
   border: 1px solid var(--card-border); border-radius: 10px; padding: 10px 12px;
 }
+/* A benchmark whose same-division prerequisite isn't cleared yet -- dimmed
+   and its checkbox disabled, rather than hidden outright, so the ladder's
+   shape (what comes next) stays visible even before it's reachable. */
+.playerBenchmarkLocked { opacity: 0.45; }
+.playerBenchmarkLocked .teamCheck { cursor: not-allowed; }
 
 /* ---- Scrollbar polish (webkit) ---- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
