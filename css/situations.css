@@ -1,0 +1,127 @@
+/* ============================================================
+   Situations Trainer -- its own "Sandlot" design system, deliberately
+   NOT reskinned into LYBS's blue/navy branding (dugout chrome, daylight
+   field) per the lybs-situations skill's own explicit guidance. Every
+   token and class here is prefixed sit-/sit so nothing collides with
+   styles.css -- .card, .btn, .chip, .pill, .job, .page etc. all already
+   exist there with different meanings. Scoped entirely under
+   .situationsRoot; nothing here touches :root or any unprefixed class.
+   ============================================================ */
+.situationsRoot {
+  --sit-night: #0c1512; --sit-panel: #132420; --sit-panel2: #1a302a; --sit-line: #28453c;
+  --sit-grass: #3f8455; --sit-grass2: #4a9764; --sit-dirt: #b5794c; --sit-dirt2: #a3683f;
+  --sit-track: #965f3a; --sit-fence: #2c4438;
+  --sit-chalk: #f2f5f1; --sit-mute: #8fa89e;
+  --sit-amber: #ffc53d; --sit-cyan: #4fd1e0; --sit-violet: #b39aff; --sit-rose: #ff7b72;
+  --sit-lime: #8fe388; --sit-orange: #ff9a3d;
+  --sit-r: 10px;
+  font-family: 'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--sit-chalk);
+}
+:root[data-theme="light"] .situationsRoot {
+  --sit-night: #eef2ec; --sit-panel: #ffffff; --sit-panel2: #f3f7f1; --sit-line: #d2ddd3;
+  --sit-chalk: #10201a; --sit-mute: #56695f;
+}
+.situationsCond { font-family: 'Barlow Condensed', 'Barlow', sans-serif; font-weight: 700; letter-spacing: .01em; }
+.situationsRoot button { font-family: inherit; font-size: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+/* ---- scoreboard strip ---- */
+.sitBoard {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sit-night) 85%, black), var(--sit-panel));
+  border: 1px solid var(--sit-line); border-radius: var(--sit-r);
+  padding: 10px 12px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px;
+}
+.sitLbl { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; color: var(--sit-mute); letter-spacing: .14em; margin-bottom: 5px; }
+.sitDiamond { width: 46px; height: 46px; position: relative; flex: 0 0 auto; }
+.sitDiamond button {
+  position: absolute; width: 15px; height: 15px; transform: rotate(45deg);
+  border: 1.5px solid #5d7a6f; background: transparent; border-radius: 2px; transition: background .15s;
+}
+.sitDiamond button[aria-pressed="true"] { background: var(--sit-amber); border-color: var(--sit-amber); box-shadow: 0 0 9px rgba(255,197,61,.55); }
+.sitDiamond1 { right: 0; top: 15px; } .sitDiamond2 { left: 15px; top: 0; } .sitDiamond3 { left: 0; top: 15px; }
+.sitOuts { display: flex; gap: 6px; }
+.sitOuts button { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #5d7a6f; background: transparent; transition: background .15s; }
+.sitOuts button.on { background: var(--sit-rose); border-color: var(--sit-rose); box-shadow: 0 0 9px rgba(255,123,114,.5); }
+.sitGrow { flex: 1; }
+.sitPill {
+  border: 1px solid var(--sit-line); background: var(--sit-panel2); border-radius: 999px; padding: 5px 11px;
+  font-size: 12px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: .06em; color: var(--sit-mute);
+}
+.sitPill.on { background: var(--sit-amber); color: #111; border-color: var(--sit-amber); font-weight: 700; }
+
+/* ---- field ---- */
+.sitFieldwrap { position: relative; background: #0a1210; border: 1px solid var(--sit-line); border-radius: var(--sit-r); overflow: hidden; }
+.sitFieldSvg { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.sitPlayer { cursor: pointer; }
+.sitPdot { stroke: #12241c; stroke-width: 2.5; }
+.sitPtxt {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; fill: #0e1a16;
+  text-anchor: middle; dominant-baseline: central; pointer-events: none;
+}
+.sitRoute { fill: none; stroke-dasharray: 5 5; opacity: .75; }
+.sitHint { position: absolute; left: 10px; bottom: 8px; font-size: 11px; color: var(--sit-mute); font-family: 'Barlow Condensed', sans-serif; letter-spacing: .08em; }
+
+.sitPlaybar { display: flex; gap: 8px; margin: 10px 0; }
+.sitPlaybar button {
+  flex: 1; background: var(--sit-panel2); border: 1px solid var(--sit-line); border-radius: var(--sit-r);
+  padding: 11px; font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: .04em;
+}
+.sitPlaybar button.sitPrimary { background: var(--sit-amber); color: #111; border-color: var(--sit-amber); }
+.sitPlaybar button:active { transform: translateY(1px); }
+.sitTransport { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+.sitTransport #sitBtnPP {
+  background: var(--sit-panel2); border: 1px solid var(--sit-line); border-radius: 8px; padding: 8px 12px;
+  font-family: 'Barlow Condensed', sans-serif; font-size: 15px; min-width: 62px;
+}
+.sitTransport #sitScrub { flex: 1; accent-color: var(--sit-amber); min-width: 0; }
+.sitTransport #sitClock { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; color: var(--sit-mute); min-width: 36px; text-align: right; }
+.sitCalls { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; min-height: 1px; }
+.sitCall { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; padding: 5px 11px; border-radius: 999px; }
+.sitCall.sitOut { background: #2f6b44; color: #eafff0; }
+.sitCall.sitSafe { background: #6b3230; color: #ffecea; }
+.sitCall.sitNote { background: var(--sit-panel2); color: var(--sit-mute); border: 1px solid var(--sit-line); letter-spacing: .06em; }
+
+/* ---- job list ---- */
+.sitJobs { background: var(--sit-panel); border: 1px solid var(--sit-line); border-radius: var(--sit-r); padding: 2px 12px; margin-top: 8px; }
+.sitJob { display: flex; gap: 11px; align-items: flex-start; padding: 11px 0; border-bottom: 1px solid var(--sit-line); }
+.sitJob:last-child { border-bottom: none; }
+.sitJob.sitJobMe {
+  background: linear-gradient(90deg, rgba(255,197,61,.15), transparent);
+  margin: 0 -12px; padding-left: 12px; padding-right: 12px; border-radius: 6px;
+}
+.sitJob .sitNum { width: 30px; flex: 0 0 auto; text-align: center; }
+.sitJn {
+  display: flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; color: #0e1a16; margin: 0 auto;
+}
+.sitJp { display: block; font-size: 10px; color: var(--sit-mute); margin-top: 3px; font-family: 'Barlow Condensed', sans-serif; }
+.sitJob .sitBody { flex: 1; min-width: 0; }
+.sitJob .sitRole { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: .09em; margin-bottom: 1px; }
+.sitJob .sitCue { font-size: 14px; line-height: 1.4; color: #dce7e1; }
+:root[data-theme="light"] .sitJob .sitCue { color: var(--sit-chalk); }
+.sitJob.sitJobDim { opacity: .38; }
+
+.sitBigjob { background: var(--sit-panel); border: 1px solid var(--sit-line); border-left: 4px solid var(--sit-amber); border-radius: var(--sit-r); padding: 14px 15px; margin-bottom: 10px; }
+.sitBigjob .sitR { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; line-height: 1.1; color: var(--sit-amber); }
+.sitBigjob .sitC { font-size: 17px; margin-top: 5px; }
+
+/* ---- generic ---- */
+.sitCard { background: var(--sit-panel); border: 1px solid var(--sit-line); border-radius: var(--sit-r); padding: 13px 14px; margin-bottom: 9px; }
+.sitMuted { color: var(--sit-mute); font-size: 14px; }
+.sitChips { display: flex; flex-wrap: wrap; gap: 6px; }
+.sitChip { border: 1px solid var(--sit-line); background: var(--sit-panel); border-radius: 8px; padding: 7px 11px; font-size: 14px; }
+.sitChip.on { background: var(--sit-amber); color: #111; border-color: var(--sit-amber); font-weight: 600; }
+.sitInfoBtn {
+  border: 1px solid var(--sit-line); background: var(--sit-panel2); color: var(--sit-mute);
+  border-radius: 999px; padding: 6px 12px; font-size: 12px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: .06em;
+}
+
+/* ---- fundamentals info-modal content (rendered via window.openInfoModal) ---- */
+.sitFundamentals .sitCard { margin-bottom: 10px; }
+.sitFundamentals h3 { font-size: 16px; margin: 16px 0 8px; font-family: 'Barlow Condensed', sans-serif; }
+.sitFundamentals h3:first-child { margin-top: 0; }
+.sitFundamentals table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.sitFundamentals td, .sitFundamentals th { padding: 7px 6px; border-bottom: 1px solid var(--card-border); text-align: left; }
+.sitFundamentals th { font-family: var(--font-label); font-size: 11px; color: var(--text2); letter-spacing: .08em; }
+.sitLegendRow { display: flex; gap: 9px; align-items: center; padding: 5px 0; }
+.sitLegendDot { width: 13px; height: 13px; border-radius: 50%; flex: 0 0 auto; }
