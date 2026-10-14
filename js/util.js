@@ -32,6 +32,28 @@
     return (name || '').replace(/^\d{1,2}u\s+/i, '');
   };
 
+  // Turns one of league-info.json's leagueAges division names ("Baseball 8U
+  // Rookies", "Softball 12U Majors") into the short division name every
+  // OTHER division-keyed data file in this app already uses ("Rookies",
+  // "Majors") -- data/skill-benchmarks-seed.json, data/practice-catalog-
+  // seed.json, data/pitch-smart-rules.json, js/rules.js's
+  // PLAY_LEVEL_DIVISIONS, and js/team-registry.js's macLeagueDivisionName
+  // all use the short form; only league-info.json's own age-cutoff chart
+  // spells it out long, since that's literally what the league's own site
+  // calls each bracket. Not the same shape stripAgePrefix above handles --
+  // that one strips a team-NAME prefix like "12u Groton Dunstable"; this
+  // strips a division-NAME prefix like "Baseball 12U" ahead of the actual
+  // division word. "T-Ball" has no sport/age-band prefix and passes through
+  // unchanged. Route any division-name lookup that crosses between
+  // league-info.json and one of the short-form files through this, rather
+  // than comparing the two raw strings -- they never match as-is.
+  window.shortDivisionName = function shortDivisionName(longName) {
+    return (longName || '')
+      .replace(/^(?:Baseball|Softball)\s+/i, '')
+      .replace(/^\d+(?:\/\d+)?U\s+/i, '')
+      .trim();
+  };
+
   window.mapLink = function mapLink(address) {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || '')}`;
   };

@@ -15,13 +15,28 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> sheets[]
+  const pending = {}; // teamId -> in-flight ensureLoaded() promise
 
   window.SignUp = {
+    // Caches the in-flight fetch, not just the resolved value -- two
+    // near-simultaneous callers for the same team (e.g. the Home tab and
+    // the Sign-Up tab both loading around the same time) would otherwise
+    // each start their own dbGet, and whichever resolved second would
+    // clobber cache[teamId] with its own array instead of either one
+    // just awaiting the same fetch.
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      const data = await window.dbGet(window.teamPath(teamId, 'signups'));
-      cache[teamId] = Array.isArray(data) ? data : [];
-      return cache[teamId];
+      if (pending[teamId]) return pending[teamId];
+      pending[teamId] = (async () => {
+        try {
+          const data = await window.dbGet(window.teamPath(teamId, 'signups'));
+          cache[teamId] = Array.isArray(data) ? data : [];
+          return cache[teamId];
+        } finally {
+          delete pending[teamId];
+        }
+      })();
+      return pending[teamId];
     },
     async save(teamId) {
       await window.dbPut(window.teamPath(teamId, 'signups'), cache[teamId]);
@@ -143,13 +158,15 @@
         const addBtn = containerEl.querySelector('#suAddItem');
         const itemInput = containerEl.querySelector('#suItemInput');
         if (addBtn) {
-          addBtn.addEventListener('click', async () => {
+          addBtn.addEventListener('click', () => {
             const name = itemInput.value.trim();
             if (!name) return;
-            sheet.items.push({ id: uid('si'), name, claimedBy: null });
-            await window.SignUp.save(teamId);
-            itemInput.value = '';
-            refresh();
+            withBusyButton(addBtn, 'Adding...', async () => {
+              sheet.items.push({ id: uid('si'), name, claimedBy: null });
+              await window.SignUp.save(teamId);
+              itemInput.value = '';
+              refresh();
+            });
           });
           itemInput.addEventListener('keydown', e => { if (e.key === 'Enter') addBtn.click(); });
         }

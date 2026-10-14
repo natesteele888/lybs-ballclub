@@ -104,8 +104,10 @@
               createdAt: Date.now(),
             };
             await withBusyButton(saveBtn, 'Sending...', async () => {
-              await window.dbPut(window.invitePath(key, teamId), invite);
-              await window.dbPut(window.inviteByTeamPath(teamId, key), invite);
+              await window.dbUpdate({
+                [window.invitePath(key, teamId)]: invite,
+                [window.inviteByTeamPath(teamId, key)]: invite,
+              });
             });
             inviting = false;
             pending = await loadPendingInvites(teamId);
@@ -124,8 +126,10 @@
         containerEl.querySelectorAll('[data-uninvite]').forEach(btn => {
           btn.addEventListener('click', async () => {
             const key = btn.dataset.uninvite;
-            await window.dbPut(window.invitePath(key, teamId), null);
-            await window.dbPut(window.inviteByTeamPath(teamId, key), null);
+            await window.dbUpdate({
+              [window.invitePath(key, teamId)]: null,
+              [window.inviteByTeamPath(teamId, key)]: null,
+            });
             pending = await loadPendingInvites(teamId);
             refresh();
           });

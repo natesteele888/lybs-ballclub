@@ -82,6 +82,14 @@
        value at that path (or null).
      window.dbPut(path, value)      -- async, writes the whole
        value at that path (RTDB semantics: PUT replaces).
+     window.dbUpdate({path: value, ...}) -- async, writes several paths
+       in one atomic multi-location update (RTDB's PATCH-at-root
+       semantics) instead of several separate dbPut calls that could
+       leave one written and the others not if the connection drops
+       in between -- use this instead of multiple dbPuts whenever two
+       or more paths need to land together or not at all (e.g. an
+       invite written at both invites/{emailKey}/{teamId} and
+       invitesByTeam/{teamId}/{emailKey}).
    ============================================================ */
 (function () {
   // Flip this to your real Firebase Realtime Database URL once the
@@ -212,6 +220,32 @@
       });
       if (!res.ok) throw new Error(`dbPut ${path} failed: HTTP ${res.status}`);
       return value;
+    } catch (e) {
+      window.showToast("Couldn't save -- check your connection and try again.");
+      throw e;
+    }
+  };
+
+  // RTDB's own multi-location update: a PATCH to the database root whose
+  // body keys are full paths, applied atomically -- either every path
+  // lands or none do, unlike calling dbPut once per path (see this file's
+  // header comment for why that matters).
+  window.dbUpdate = async function (updates) {
+    if (isMock()) {
+      const db = loadMockDb();
+      Object.keys(updates).forEach(path => setAtPath(db, path, updates[path]));
+      saveMockDb(db);
+      return updates;
+    }
+    try {
+      const url = await window.firebaseAuthed(restUrl(''));
+      const res = await fetch(url, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) throw new Error(`dbUpdate failed: HTTP ${res.status}`);
+      return updates;
     } catch (e) {
       window.showToast("Couldn't save -- check your connection and try again.");
       throw e;

@@ -88,20 +88,30 @@
     // Already past the login screen (a gate-code login, or an earlier
     // call for this same user) -- don't re-enter on top of it. A device
     // with both a lingering gate session and a Google grant would
-    // otherwise race the two paths against each other.
+    // otherwise race the two paths against each other. This is only the
+    // cheap first check, before any awaits below -- window.__identityResolved
+    // (set by index.html's onIdentityReady) is re-checked again right
+    // before every side effect past that point, since the gate path can
+    // still win while this function is mid-await.
     const loginScreen = document.getElementById('loginScreen');
-    if (!loginScreen || loginScreen.classList.contains('hide')) return;
+    if (!loginScreen || loginScreen.classList.contains('hide') || window.__identityResolved) return;
 
     await window.dbPut(window.personPath(user.uid), { name: user.name, email: user.email });
     const grants = await resolveGrants(user.uid);
+    if (window.__identityResolved) return; // gate path won while the two awaits above were in flight
 
     if (grants.teams.length) {
       const grant = grants.teams[0];
       const identity = window.Identity.setSession(grant.teamId, grant.role, user.name);
       await window.TeamConfig.load(grant.teamId);
+      if (window.__identityResolved) return; // re-check -- TeamConfig.load() is itself async
       // Read by cloud-auth.js's getFirebaseIdToken() -- marks this as the
       // session every dbGet/dbPut should authenticate as from here on,
       // distinct from merely having a Google session available at all.
+      // Set only once onIdentityReady confirms THIS call actually won --
+      // setting it any earlier could flip the backend auth mode to
+      // 'google' even on the rare run where the gate path's own call
+      // lands in the gap between this check and the one just above.
       window.__activeAuthMode = 'google';
       loginScreen.classList.add('hide');
       window.onIdentityReady(grant.teamId, grant.role, identity, grants.board);
@@ -121,6 +131,7 @@
       if (teamId) {
         const identity = window.Identity.setSession(teamId, 'parent', user.name);
         await window.TeamConfig.load(teamId);
+        if (window.__identityResolved) return; // re-check -- TeamConfig.load() is itself async
         window.__activeAuthMode = 'google';
         loginScreen.classList.add('hide');
         window.onIdentityReady(teamId, 'parent', identity, true);

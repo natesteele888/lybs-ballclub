@@ -19,12 +19,28 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> diagrams[]
+  const pending = {}; // teamId -> in-flight ensureDiagrams() promise
 
+  // Caches the in-flight fetch itself, not just its resolved value --
+  // without `pending`, two near-simultaneous callers (e.g. opening the
+  // Play Diagrams sub-tab right as Practice Catalog's "Add diagram to my
+  // Play Diagrams" button fires) would each see cache[teamId] still
+  // unset and start their own dbGet, and whichever resolved second would
+  // clobber cache[teamId] with its own (now stale) array, silently
+  // dropping whatever the other call had just added and already saved.
   async function ensureDiagrams(teamId) {
     if (cache[teamId]) return cache[teamId];
-    const data = await window.dbGet(window.teamPath(teamId, 'playDiagrams'));
-    cache[teamId] = Array.isArray(data) ? data : [];
-    return cache[teamId];
+    if (pending[teamId]) return pending[teamId];
+    pending[teamId] = (async () => {
+      try {
+        const data = await window.dbGet(window.teamPath(teamId, 'playDiagrams'));
+        cache[teamId] = Array.isArray(data) ? data : [];
+        return cache[teamId];
+      } finally {
+        delete pending[teamId]; // on success this is now redundant with cache[teamId] short-circuiting future calls, but on failure it's what lets the next call retry instead of replaying this same rejection forever
+      }
+    })();
+    return pending[teamId];
   }
   // Takes the current array explicitly, rather than reading it back out of
   // cache, because the list gets reassigned (not just mutated) on delete --
