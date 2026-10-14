@@ -164,7 +164,7 @@
               <div class="listRowSub">${escapeHtml(f.town)} &middot; ${escapeHtml(f.address)}</div>
             </div>
             <div class="fieldRowLinks">
-              <button type="button" class="btn btnGhost btnTiny mapTriggerBtn" data-map-label="${escapeHtml(f.name)}" data-map-address="${escapeHtml(f.address)}">Map</button>
+              ${f.address ? `<button type="button" class="btn btnGhost btnTiny mapTriggerBtn" data-map-label="${escapeHtml(f.name)}" data-map-address="${escapeHtml(f.address)}">Map</button>` : ''}
               ${hasCoords ? `<a class="btn btnGhost btnTiny" href="${streetViewUrl(f.lat, f.lng)}" target="_blank" rel="noopener">Street View</a>` : ''}
             </div>
           </div>`;
@@ -188,7 +188,7 @@
       function renderDates() {
         const statusBadge = (status) => {
           if (status === 'current') return '<span class="badge badgeW">Current</span>';
-          if (status === 'draft') return '<span class="badge" style="background:rgba(180,187,191,0.15);color:#B4BBBF;border:1px solid rgba(180,187,191,0.3);">Draft</span>';
+          if (status === 'draft') return '<span class="badge" style="background:rgba(180,187,191,0.15);color:var(--lybs-silver);border:1px solid rgba(180,187,191,0.3);">Draft</span>';
           return '';
         };
         // Every item is "Label: value", except a handful whose value itself
@@ -300,7 +300,7 @@
           const rows = byTown[town].map(o => `
             <div class="listRow" style="cursor:default;">
               <div class="listRowMain"><div class="listRowTitle">${escapeHtml(o.name)}</div></div>
-              <span class="badge" style="background:rgba(76,106,235,0.15);color:#AFC0FF;border:1px solid rgba(76,106,235,0.3);">${escapeHtml(o.role)}</span>
+              <span class="badge" style="background:rgba(76,106,235,0.15);color:var(--accent-blue);border:1px solid rgba(76,106,235,0.3);">${escapeHtml(o.role)}</span>
             </div>`).join('');
           return `
             <div style="margin-bottom:16px;">

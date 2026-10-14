@@ -203,7 +203,7 @@
       function say(text, good) {
         const m = containerEl.querySelector('#ssMsg');
         m.textContent = text;
-        m.style.color = good ? '#5fd989' : '#ff8a8a';
+        m.style.color = good ? 'var(--status-green)' : 'var(--status-red)';
       }
 
       containerEl.querySelector('#ssCopy').addEventListener('click', async () => {

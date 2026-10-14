@@ -79,14 +79,14 @@
   // one. Default covers a category this map hasn't been taught yet (new
   // rulebook section added upstream) rather than rendering a blank icon.
   const CATEGORY_STYLE = {
-    'General Rules': { icon: '📋', color: '#9AA3C2' },
-    'Rookies Rules': { icon: '🌱', color: '#5fd989' },
-    'Minors Rules': { icon: '⚾', color: '#4C6AEB' },
-    'Majors Rules': { icon: '🏆', color: '#F0C84B' },
-    'Juniors & Seniors Rules': { icon: '🎓', color: '#b98af0' },
-    'Playoff Rules': { icon: '🔥', color: '#e35858' },
-    'All-Stars Information': { icon: '⭐', color: '#35c574' },
-    'Operating Guidelines': { icon: '⚙️', color: '#6ea8c9' },
+    'General Rules': { icon: '📋', color: 'var(--text2)' },
+    'Rookies Rules': { icon: '🌱', color: 'var(--status-green)' },
+    'Minors Rules': { icon: '⚾', color: 'var(--lybs-blue-bright)' },
+    'Majors Rules': { icon: '🏆', color: 'var(--gold)' },
+    'Juniors & Seniors Rules': { icon: '🎓', color: 'var(--accent-purple)' },
+    'Playoff Rules': { icon: '🔥', color: 'var(--status-red)' },
+    'All-Stars Information': { icon: '⭐', color: 'var(--status-green)' },
+    'Operating Guidelines': { icon: '⚙️', color: 'var(--accent-cyan)' },
   };
   function catStyle(cat) {
     return CATEGORY_STYLE[cat] || { icon: '📖', color: 'var(--lybs-blue-bright)' };
@@ -280,7 +280,7 @@
           const style = catStyle(cat);
           return `
             <div class="listRow" data-cat="${escapeHtml(cat)}">
-              <div class="rulesCatIcon" style="background:${style.color}22;color:${style.color};">${style.icon}</div>
+              <div class="rulesCatIcon" style="background:color-mix(in srgb, ${style.color} 13%, transparent);color:${style.color};">${style.icon}</div>
               <div class="listRowMain">
                 <div class="listRowTitle">${escapeHtml(cat)}</div>
                 <div class="listRowSub">${count} rule${count === 1 ? '' : 's'}</div>
@@ -293,7 +293,7 @@
           </div>
           ${pinnedCount ? `
             <div class="listRow" data-cat="__pinned">
-              <div class="rulesCatIcon" style="background:#F0C84B22;color:#F0C84B;">★</div>
+              <div class="rulesCatIcon" style="background:color-mix(in srgb, var(--gold) 13%, transparent);color:var(--gold);">★</div>
               <div class="listRowMain">
                 <div class="listRowTitle">Pinned</div>
                 <div class="listRowSub">${pinnedCount} rule${pinnedCount === 1 ? '' : 's'}</div>
@@ -349,7 +349,7 @@
           return `
             <div class="rulesSectionCard">
               <div class="listRow" data-section="${escapeHtml(key)}">
-                <div class="rulesCatIcon" style="background:${style.color}22;color:${style.color};">${sectionIcon(secName)}</div>
+                <div class="rulesCatIcon" style="background:color-mix(in srgb, ${style.color} 13%, transparent);color:${style.color};">${sectionIcon(secName)}</div>
                 <div class="listRowMain">
                   <div class="listRowTitle">${escapeHtml(secName)}</div>
                   <div class="listRowSub">${secCat !== category ? escapeHtml(secCat) + ' &middot; ' : ''}${rules.length} rule${rules.length === 1 ? '' : 's'}</div>
@@ -364,7 +364,7 @@
         containerEl.innerHTML = `
           <div class="sectionHeader">
             <button class="btn btnGhost btnSmall" id="rulesBackBtn">&larr; Categories</button>
-            <span class="badge rulesCurrentDivision" style="background:${currentStyle.color}22;color:${currentStyle.color};border:1px solid ${currentStyle.color}55;">${currentStyle.icon} ${escapeHtml(category)}</span>
+            <span class="badge rulesCurrentDivision" style="background:color-mix(in srgb, ${currentStyle.color} 13%, transparent);color:${currentStyle.color};border:1px solid color-mix(in srgb, ${currentStyle.color} 33%, transparent);">${currentStyle.icon} ${escapeHtml(category)}</span>
           </div>
           <div class="rulesSearchBar">
             <input id="rulesSearchInput" placeholder="Search rules -- e.g. 'balk', 'mercy', 'pitch count'" value="${escapeHtml(query)}">

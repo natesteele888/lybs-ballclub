@@ -109,24 +109,27 @@
   // One colored icon chip per section -- same icon-badge language as the
   // Rules tab's own CATEGORY_STYLE/.rulesCatIcon, scoped to this file (not
   // reusing rules.js's map directly, which is keyed by rulebook category
-  // names, not these section names). Colors are raw hex, not CSS vars --
-  // sectionHeaderHtml() appends an alpha suffix for the chip's tinted
-  // background, which only works on a literal hex string.
+  // names, not these section names). Colors are CSS var() references, not
+  // literal hex -- every one of these needs a different value in light
+  // mode, so the token itself carries the retheme instead of this map
+  // needing a parallel light-mode copy. sectionHeaderHtml() below builds
+  // the chip's tinted background with color-mix() rather than an alpha-hex
+  // suffix, since that trick only works on a literal hex string.
   const SECTION_STYLE = {
-    tonight: { icon: '🏟️', color: '#4C6AEB' },
-    announcements: { icon: '📣', color: '#F0C84B' },
-    leagueEvents: { icon: '🗓️', color: '#b98af0' },
-    volunteer: { icon: '🙋', color: '#5fd989' },
-    today: { icon: '📅', color: '#e35858' },
-    pitch: { icon: '🌀', color: '#6ea8c9' },
-    scoreboard: { icon: '📊', color: '#4C6AEB' },
-    upcoming: { icon: '⏭️', color: '#B4BBBF' },
+    tonight: { icon: '🏟️', color: 'var(--lybs-blue-bright)' },
+    announcements: { icon: '📣', color: 'var(--gold)' },
+    leagueEvents: { icon: '🗓️', color: 'var(--accent-purple)' },
+    volunteer: { icon: '🙋', color: 'var(--status-green)' },
+    today: { icon: '📅', color: 'var(--status-red)' },
+    pitch: { icon: '🌀', color: 'var(--accent-cyan)' },
+    scoreboard: { icon: '📊', color: 'var(--lybs-blue-bright)' },
+    upcoming: { icon: '⏭️', color: 'var(--lybs-silver)' },
   };
   function sectionHeaderHtml(key, label) {
     const s = SECTION_STYLE[key];
     return `
       <div class="sectionHeaderRow">
-        <span class="sectionIconChip" style="background:${s.color}22;color:${s.color};">${s.icon}</span>
+        <span class="sectionIconChip" style="background:color-mix(in srgb, ${s.color} 13%, transparent);color:${s.color};">${s.icon}</span>
         <div class="sectionLabel">${escapeHtml(label)}</div>
       </div>`;
   }
@@ -141,13 +144,27 @@
   // Same click-and-drag scroll as the nav bars (index.html keeps its own
   // copy too -- small enough, and these are deliberately self-contained
   // modules rather than reaching into index.html's closure for it).
-  function enableDragScroll(el) {
+  //
+  // Homepage.render() replaces containerEl.innerHTML (and so this
+  // function's `el`) on every single render of the Home tab, but the
+  // window-level pointermove/pointerup/pointercancel listeners below used
+  // to have nothing tearing them down -- switching back to Home repeatedly
+  // just kept stacking new ones forever, each still closing over its own
+  // now-detached ticker element. dragScrollControllers keys the two call
+  // sites (there are only ever two) so each new call aborts its own
+  // predecessor's listeners before attaching a fresh set.
+  const dragScrollControllers = {};
+  function enableDragScroll(el, key) {
+    if (dragScrollControllers[key]) dragScrollControllers[key].abort();
+    const controller = new AbortController();
+    dragScrollControllers[key] = controller;
+    const { signal } = controller;
     let down = false, dragged = false, startX = 0, startScroll = 0;
     el.addEventListener('pointerdown', e => {
       if (e.pointerType === 'touch') return;
       down = true; dragged = false;
       startX = e.clientX; startScroll = el.scrollLeft;
-    });
+    }, { signal });
     window.addEventListener('pointermove', e => {
       if (!down) return;
       const dx = e.clientX - startX;
@@ -155,14 +172,14 @@
       dragged = true;
       el.classList.add('dragging');
       el.scrollLeft = startScroll - dx;
-    });
+    }, { signal });
     function end() { down = false; el.classList.remove('dragging'); }
-    window.addEventListener('pointerup', end);
-    window.addEventListener('pointercancel', end);
+    window.addEventListener('pointerup', end, { signal });
+    window.addEventListener('pointercancel', end, { signal });
     el.addEventListener('click', e => {
       if (dragged) { e.stopPropagation(); e.preventDefault(); }
       dragged = false;
-    }, true);
+    }, { capture: true, signal });
   }
 
   function todayItemHtml(kind, item) {
@@ -350,7 +367,7 @@
           ? `<div class="listBody">${todayItems.map(x => todayItemHtml(x.kind, x.item)).join('')}</div>`
           : homeEmptyStateHtml('today', 'Nothing on the calendar for us today.')}
         ${uncheckedEquipment.length
-          ? `<div class="helpText" style="color:#F0C84B;margin-top:6px;">&#9888; Nobody has: ${uncheckedEquipment.map(e => escapeHtml(e.name)).join(', ')}</div>`
+          ? `<div class="helpText" style="color:var(--gold);margin-top:6px;">&#9888; Nobody has: ${uncheckedEquipment.map(e => escapeHtml(e.name)).join(', ')}</div>`
           : ''}
 
         ${todayGames.length ? `
@@ -370,15 +387,15 @@
                 </div>
               </div>`).join('')}</div>`
           : homeEmptyStateHtml('upcoming', 'Nothing else scheduled yet.')}
-        ${leagueNextDate ? `
+        ${leagueNextDate && leagueNextGames.length ? `
           <div class="helpText" style="margin-top:12px;">MAC League &middot; ${escapeHtml(fmtDate(leagueNextDate))} &middot; every division, any town</div>
           <div class="homeTicker" id="homeUpcomingLeagueTicker">${leagueNextGames.map(window.LeagueSchedule.gameCardHtml).join('')}</div>` : ''}`;
 
       const tickerTonight = containerEl.querySelector('#homeTickerTonight');
-      if (tickerTonight) enableDragScroll(tickerTonight);
+      if (tickerTonight) enableDragScroll(tickerTonight, 'tonight');
 
       const tickerUpcomingLeague = containerEl.querySelector('#homeUpcomingLeagueTicker');
-      if (tickerUpcomingLeague) enableDragScroll(tickerUpcomingLeague);
+      if (tickerUpcomingLeague) enableDragScroll(tickerUpcomingLeague, 'upcoming');
 
       const annSlot = containerEl.querySelector('#homeAnnSlot');
       if (annSlot) window.Announcements.render(annSlot, teamId, { canEdit: opts.canEdit, authorName: opts.authorName });

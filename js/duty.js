@@ -52,7 +52,7 @@
       opts = opts || {};
       const data = reconcile(teamId, roster);
       const sortedGames = (games || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-      const today = new Date().toISOString().slice(0, 10);
+      const today = todayIso();
 
       function playerName(id) {
         const p = roster.find(x => x.id === id);
