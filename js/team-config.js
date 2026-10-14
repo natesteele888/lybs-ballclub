@@ -19,13 +19,24 @@
       const fallback = (window.TEAM_REGISTRY && window.TEAM_REGISTRY.teams[teamId]) || current;
       try {
         const saved = await window.dbGet(window.teamPath(teamId, 'config'));
-        current = Object.assign({}, fallback, saved || {}, { teamId });
+        // colors merges separately -- the outer Object.assign is only one
+        // level deep, so a saved override naming just one of primary/
+        // secondary would otherwise replace the whole sub-object and drop
+        // the other color instead of just overriding the one named.
+        current = Object.assign({}, fallback, saved || {}, {
+          teamId,
+          colors: Object.assign({}, fallback.colors, saved && saved.colors),
+        });
       } catch (e) {
         console.error('Could not load team config, using bootstrap default:', e);
         current = Object.assign({}, fallback, { teamId });
       }
-      document.documentElement.style.setProperty('--team-primary', current.colors.primary);
-      document.documentElement.style.setProperty('--team-secondary', current.colors.secondary);
+      // Defaults to {} (and setProperty('', '') clears rather than throws)
+      // so a malformed override or an incomplete future bootstrap entry
+      // can't throw outside this function's own try/catch above.
+      const colors = current.colors || {};
+      document.documentElement.style.setProperty('--team-primary', colors.primary || '');
+      document.documentElement.style.setProperty('--team-secondary', colors.secondary || '');
       document.querySelectorAll('[data-team-name]').forEach(el => { el.textContent = current.name; });
       document.querySelectorAll('[data-team-short]').forEach(el => { el.textContent = current.shortName || current.name; });
       return current;

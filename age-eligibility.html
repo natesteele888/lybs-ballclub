@@ -264,7 +264,7 @@
       var yr = leagueAges[selectedYear];
       var yearTabs = years.length > 1
         ? '<div class="yearTabs">' + years.map(function (y2) {
-            return '<button type="button" class="yearTab' + (y2 === selectedYear ? ' active' : '') + '" data-year="' + y2 + '">' + y2 + '</button>';
+            return '<button type="button" class="yearTab' + (y2 === selectedYear ? ' active' : '') + '" data-year="' + y2 + '" aria-pressed="' + (y2 === selectedYear) + '">' + y2 + '</button>';
           }).join('') + '</div>'
         : '';
       root.innerHTML =
@@ -275,7 +275,7 @@
           '<label class="field">Birth date' +
             '<input type="date" id="dobInput" max="' + new Date().toISOString().slice(0, 10) + '">' +
           '</label>' +
-          '<div class="result" id="result"></div>' +
+          '<div class="result" id="result" aria-live="polite"></div>' +
         '</div>' +
         '<div class="card">' +
           '<div class="sectionLabel">' + escapeHtml(selectedYear) + ' Age Chart</div>' +
