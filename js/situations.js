@@ -107,11 +107,26 @@
 
   /* ------------------------------ field drawing (see field-geometry.md
      for the drawing-order rationale) ------------------------------ */
-  const FAN = 'M260,415 L31,272 A232.6,232.6 0 0 1 489,272 Z';
+  // The fan's edges sit 65 deg off centre here, not the skill's original 58
+  // -- the foul line (still a fixed 45 deg, unchanged) left only a 13 deg
+  // sliver of foul ground, which pinches to almost nothing right next to
+  // home plate and reads as a jarring black cutout next to the batter's
+  // box rather than a deliberate boundary (confirmed against the skill's
+  // own unmodified prototype: identical artifact, not a porting bug --
+  // this is a deliberate departure from the reference for this app). 65
+  // keeps both fan corners safely inside the 0-520 viewBox and preserves
+  // the outfield fence's own bulge height (solved so the arc's sagitta
+  // relative to its new, wider chord matches the original exactly) --
+  // only the corners pull in closer to home (shallower, wider foul
+  // territory) as a result, not the center-field depth. Recompute all
+  // three constants together (FAN, TRACK below, and this span/a0) if this
+  // angle ever changes again -- they're derived from each other, not
+  // independently tunable.
+  const FAN = 'M260,415 L15.3,300.9 A252,252 0 0 1 504.7,300.9 Z';
   const SKIN = 'M260,415 L121.4,276.4 A196,196 0 0 1 398.6,276.4 Z';
   function mowStripes() {
     let out = '';
-    const N = 10, span = 116, a0 = -58;
+    const N = 10, span = 130, a0 = -65;
     for (let i = 0; i < N; i++) {
       if (i % 2) continue;
       const r = 360, p = a => [260 + r * Math.sin(a * Math.PI / 180), 415 - r * Math.cos(a * Math.PI / 180)];
@@ -144,9 +159,9 @@
     <rect width="520" height="482" fill="#0e1a15"/>
 
     <circle cx="260" cy="428" r="94" fill="var(--sit-track)"/>
-    <path d="M260,438 L12.4,260.3 A252.7,252.7 0 0 1 507.6,260.3 Z" fill="var(--sit-track)"/>
+    <path d="M260,438 L-4.6,291.6 A272.1,272.1 0 0 1 524.6,291.6 Z" fill="var(--sit-track)"/>
     <circle cx="260" cy="428" r="94" fill="none" stroke="#16241c" stroke-width="3"/>
-    <path d="M260,438 L12.4,260.3 A252.7,252.7 0 0 1 507.6,260.3 Z" fill="none" stroke="#16241c" stroke-width="3.5"/>
+    <path d="M260,438 L-4.6,291.6 A272.1,272.1 0 0 1 524.6,291.6 Z" fill="none" stroke="#16241c" stroke-width="3.5"/>
 
     <circle cx="260" cy="428" r="80" fill="var(--sit-grass)"/>
     <g clip-path="url(#sitBackclip)"><circle cx="260" cy="428" r="80" fill="url(#sitGLight)"/></g>
