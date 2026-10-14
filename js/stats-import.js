@@ -303,7 +303,7 @@
                 <div class="lineupSlotNum" style="margin-right:10px;">${i + 1}</div>
                 <div class="listRowMain">
                   <div class="listRowTitle">${escapeHtml(r.name)}</div>
-                  ${!r.playerId ? '<div class="listRowSub" style="color:#F0C84B;">No roster match -- won\'t be saved</div>' : ''}
+                  ${!r.playerId ? '<div class="listRowSub" style="color:var(--gold);">No roster match -- won\'t be saved</div>' : ''}
                 </div>
                 <div class="listRowSub">${r.ops != null ? r.ops.toFixed(3) + ' OPS' : (r.avg != null ? r.avg.toFixed(3) + ' AVG' : '')}</div>
               </div>`).join('')}
@@ -335,7 +335,7 @@
                 ${data.battingImportedAt ? `Batting: ${escapeHtml(data.battingSource || 'file')} &middot; ${new Date(data.battingImportedAt).toLocaleString()}<br>` : ''}
                 ${data.pitchingImportedAt ? `Pitching: ${escapeHtml(data.pitchingSource || 'file')} &middot; ${new Date(data.pitchingImportedAt).toLocaleString()}` : ''}
               </div>` : (data && data.importedAt ? `<div class="helpText" style="margin-top:10px;">Last import: ${escapeHtml(data.source || 'file')} &middot; ${new Date(data.importedAt).toLocaleString()}</div>` : '')}
-              <div id="siErr" style="color:#ff8a8a;font-size:12.5px;margin-top:8px;"></div>
+              <div id="siErr" style="color:var(--status-red);font-size:12.5px;margin-top:8px;"></div>
             </div>` : ''}
           ${noStatsYet ? `<div class="emptyState">${opts.canEdit ? 'No stats imported yet.' : 'No stats imported yet -- check back once the coach uploads a GameChanger export.'}</div>` : ''}
           ${battingRows.length ? `<div class="sectionLabel" style="margin-top:18px;">Batting (${battingRows.length})</div>${cardsHtml(battingIns)}${tableHtml(battingRows, 'batting')}` : ''}

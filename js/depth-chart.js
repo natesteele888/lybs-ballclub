@@ -160,7 +160,7 @@
             <div class="drillHeroTitle">Depth Chart</div>
             <div class="drillHeroSub">Tap a position to rank who plays there.</div>
           </div>
-          ${banner ? `<div class="helpText" style="color:#F0C84B;margin-bottom:10px;">${escapeHtml(banner.name)} is now starting ${escapeHtml(banner.to)} -- moved out of starting ${escapeHtml(banner.from)}.</div>` : ''}
+          ${banner ? `<div class="helpText" style="color:var(--gold);margin-bottom:10px;">${escapeHtml(banner.name)} is now starting ${escapeHtml(banner.to)} -- moved out of starting ${escapeHtml(banner.from)}.</div>` : ''}
           <div class="depthField">
             ${fieldSvg()}
             ${POSITIONS.map(posCardHtml).join('')}

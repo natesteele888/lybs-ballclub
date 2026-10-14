@@ -82,7 +82,14 @@ exports.triggerStandingsSync = onRequest(
       return;
     }
 
-    const snap = await admin.database().ref(`boardMembers/${uid}`).get();
+    let snap;
+    try {
+      snap = await admin.database().ref(`boardMembers/${uid}`).get();
+    } catch (e) {
+      logger.error('boardMembers lookup failed', e);
+      res.status(503).json({ error: 'Could not verify authorization' });
+      return;
+    }
     if (snap.val() !== true) {
       res.status(403).json({ error: 'Not a board member' });
       return;

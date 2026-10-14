@@ -42,6 +42,9 @@
   --status-green: #5fd989;
   --status-red: #ff8a8a;
   --status-orange: #FF9A5A;
+  --accent-blue: #AFC0FF;
+  --accent-purple: #b98af0;
+  --accent-cyan: #6ea8c9;
   /* RGB channel triplets (no rgba() wrapper) so rgba(var(--x-rgb), alpha)
      call sites each keep their own alpha while the color itself retheme
      in one place -- see the [data-theme="light"] block below. */
@@ -102,6 +105,9 @@
   --status-green: #147a3c;
   --status-red: #9a2b2b;
   --status-orange: #a35a1a;
+  --accent-blue: var(--lybs-blue-deep);
+  --accent-purple: #7239b3;
+  --accent-cyan: #266a86;
 }
 /* The login/identity screens keep their current dark, fixed-brand look
    (dramatic navy gradient background, same as always) in BOTH modes --
@@ -287,13 +293,12 @@ a { color: var(--lybs-blue-bright); }
 .topBarLogo { height: 34px; width: auto; flex: 0 0 auto; filter: drop-shadow(0 2px 6px rgba(46,82,232,0.35)); }
 .topBarActions { display: flex; align-items: center; gap: 12px; flex: 0 1 auto; min-width: 0; }
 .topBarShareBtn {
-  background: rgba(76,106,235,0.14); border: 1px solid rgba(76,106,235,0.4); color: #AFC0FF;
+  background: rgba(76,106,235,0.14); border: 1px solid rgba(76,106,235,0.4); color: var(--accent-blue);
   font-family: var(--font-label); font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
   text-transform: uppercase; padding: 10px 14px; border-radius: 20px; cursor: pointer; white-space: nowrap;
   min-height: 36px; flex: 0 0 auto;
 }
 .topBarShareBtn:hover { background: rgba(76,106,235,0.24); }
-:root[data-theme="light"] .topBarShareBtn { color: var(--lybs-blue-deep); }
 .topBarThemeBtn {
   background: rgba(var(--overlay-rgb),0.08); border: 1px solid var(--card-border); color: var(--text);
   font-size: 15px; width: 36px; height: 36px; min-height: 36px; border-radius: 50%; cursor: pointer;
@@ -386,6 +391,7 @@ a { color: var(--lybs-blue-bright); }
   background: var(--card-border);
 }
 .dateSeasonCardCurrent::before { background: linear-gradient(90deg, #35c574, #5fd989); }
+:root[data-theme="light"] .dateSeasonCardCurrent::before { background: linear-gradient(90deg, #0f6e34, var(--status-green)); }
 .dateSeasonHeader { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
 .dateSeasonTitle {
   font-family: var(--font-display); font-weight: 400; font-size: 19px;
@@ -402,6 +408,7 @@ a { color: var(--lybs-blue-bright); }
   background: rgba(var(--sunken-rgb),0.35); border-left: 3px solid var(--lybs-blue-bright);
 }
 .dateSeasonCardCurrent .dateEventRow { border-left-color: #5fd989; }
+:root[data-theme="light"] .dateSeasonCardCurrent .dateEventRow { border-left-color: var(--status-green); }
 .dateChip { flex: 0 0 auto; width: 44px; text-align: center; }
 .dateChipMonth {
   font-family: var(--font-label); font-weight: 700; font-size: 10.5px; letter-spacing: 0.08em;
@@ -648,8 +655,7 @@ a { color: var(--lybs-blue-bright); }
 }
 .pinBtn.pinned { color: #FFD45F; text-shadow: 0 0 10px rgba(255,212,95,0.6); }
 :root[data-theme="light"] .pinBtn.pinned { color: var(--gold); text-shadow: none; }
-.active.btnGhost { background: rgba(76,106,235,0.15); border-color: rgba(76,106,235,0.4); color: #AFC0FF; }
-:root[data-theme="light"] .active.btnGhost { color: var(--lybs-blue-deep); }
+.active.btnGhost { background: rgba(76,106,235,0.15); border-color: rgba(76,106,235,0.4); color: var(--accent-blue); }
 
 /* ---- Standings ---- */
 .standingsTableWrap { overflow-x: auto; border-radius: 10px; }
@@ -836,8 +842,7 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   font-family: var(--font-label); font-size: 13px; font-weight: 700; color: var(--text2);
   flex: 0 0 auto; font-variant-numeric: tabular-nums;
 }
-.tonightDivisionLabel { color: #AFC0FF; font-weight: 700; }
-:root[data-theme="light"] .tonightDivisionLabel { color: var(--lybs-blue-deep); }
+.tonightDivisionLabel { color: var(--accent-blue); font-weight: 700; }
 /* A finished game's card -- bigger/bolder team names and a big-score
    treatment matching .gameResultScore's look (same display font, white,
    text-shadow), with the losing side dimmed instead of both scores
@@ -1064,10 +1069,9 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   border-radius: 10px; padding: 10px; margin-bottom: 8px; flex-wrap: wrap;
 }
 .lineupSlotNum {
-  width: 26px; height: 26px; border-radius: 50%; background: rgba(76,106,235,0.18); color: #AFC0FF;
+  width: 26px; height: 26px; border-radius: 50%; background: rgba(76,106,235,0.18); color: var(--accent-blue);
   font-family: var(--font-display); font-size: 14px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
 }
-:root[data-theme="light"] .lineupSlotNum { color: var(--lybs-blue-deep); }
 .lineupSlotSelect {
   padding: 9px 10px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(var(--sunken-rgb),0.6);
   color: var(--text); font-size: 13px; font-family: var(--font-body); min-height: 40px; flex: 1 1 140px; min-width: 0;
@@ -1118,6 +1122,12 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
   .gameResultCenter { gap: 4px; padding: 0 2px; }
   .gameResultScore { font-size: 21px; min-width: 24px; }
   .gameResultPill { padding: 3px 7px; font-size: 10px; }
+  /* Same specificity as the light-mode up-size rule above (3 class-level
+     selectors each) so source order can't be overridden by it on a narrow
+     light-mode screen -- without this, the 48px light-mode logos never
+     actually shrank to 32px here, silently keeping the too-wide layout
+     this whole block exists to fix. */
+  :root[data-theme="light"] .gameResultLogo, :root[data-theme="light"] .gameResultLogoFallback { width: 32px; height: 32px; }
 }
 
 /* Share-to-social modal (topBarShareBtn) -- a bottom sheet on phones, a
@@ -1204,10 +1214,9 @@ a.tonightTeam:hover, a.tonightTeam:active { background: rgba(76,106,235,0.12); }
 /* Standings -> Seeding (js/standings.js renderSeeding) */
 .seedNum {
   flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  background: rgba(76,106,235,0.16); border: 1px solid rgba(76,106,235,0.35); color: #AFC0FF;
+  background: rgba(76,106,235,0.16); border: 1px solid rgba(76,106,235,0.35); color: var(--accent-blue);
   font-family: var(--font-label); font-size: 12px; font-weight: 700;
 }
-:root[data-theme="light"] .seedNum { color: var(--lybs-blue-deep); }
 
 /* ---- Light effects -----------------------------------------------------
    Three tasteful additions to the existing system above, not a new one:

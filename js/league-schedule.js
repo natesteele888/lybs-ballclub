@@ -103,6 +103,7 @@
 
       function gamesHtml() {
         const week = cache.weeks[activeIdx];
+        if (!week.games.length) return '<div class="emptyState">No games captured for this week.</div>';
         return `<div class="tonightMergedList">${week.games.map(gameCardHtml).join('')}</div>`;
       }
 

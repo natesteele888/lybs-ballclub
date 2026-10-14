@@ -198,7 +198,7 @@
           containerEl.querySelector('#luShare').addEventListener('click', async () => {
             const text = shareText(l);
             const msg = containerEl.querySelector('#luShareMsg');
-            const say = (t, good) => { msg.textContent = t; msg.style.color = good ? '#5fd989' : '#ff8a8a'; };
+            const say = (t, good) => { msg.textContent = t; msg.style.color = good ? 'var(--status-green)' : 'var(--status-red)'; };
             if (navigator.share) {
               try { await navigator.share({ title: l.name || 'Lineup', text }); return; }
               catch (e) { if (e.name === 'AbortError') return; /* fall through to copy */ }

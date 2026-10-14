@@ -68,7 +68,7 @@
   // to today. Returns {eligible, eligibleOn (null if eligible now), dailyMax,
   // recentPitches (sum over the last calendar day pitched), reason}.
   function computeStatus(appearances, division, asOfDate) {
-    asOfDate = asOfDate || new Date().toISOString().slice(0, 10);
+    asOfDate = asOfDate || todayIso();
     const rules = rulesCache && rulesCache[division];
     if (!rules) return { eligible: true, eligibleOn: null, dailyMax: null, reason: 'No pitch-count table for this division.' };
     const sorted = (appearances || []).slice().sort((a, b) => a.date.localeCompare(b.date));
@@ -154,9 +154,9 @@
       .sort(byRankThen((a, b) => a.name.localeCompare(b.name)));
     return `
       ${unavailable.length
-        ? `<div class="sectionLabel" style="color:#ff8a8a;">Unavailable (${unavailable.length})</div>
+        ? `<div class="sectionLabel" style="color:var(--status-red);">Unavailable (${unavailable.length})</div>
            <div class="listBody">${unavailable.map(s => statusHtml(s.name, s.status, s.rank, teamLabel)).join('')}</div>`
-        : '<div class="emptyState" style="color:#5fd989;">Everyone\'s eligible right now.</div>'}
+        : '<div class="emptyState" style="color:var(--status-green);">Everyone\'s eligible right now.</div>'}
       ${eligible.length
         ? `<div class="sectionLabel" style="margin-top:14px;">Eligible (${eligible.length})</div>
            <div class="listBody">${eligible.map(s => statusHtml(s.name, s.status, s.rank, teamLabel)).join('')}</div>`
@@ -281,11 +281,11 @@
       });
     });
     if (!all.length) {
-      return '<div class="emptyState" style="color:#5fd989;">No one\'s unavailable across the teams we have data for.</div>';
+      return '<div class="emptyState" style="color:var(--status-green);">No one\'s unavailable across the teams we have data for.</div>';
     }
     all.sort((a, b) => (a.rank || 999) - (b.rank || 999) || (a.status.eligibleOn || '').localeCompare(b.status.eligibleOn || ''));
     return `
-      <div class="sectionLabel" style="color:#ff8a8a;">Unavailable Across the League (${all.length})</div>
+      <div class="sectionLabel" style="color:var(--status-red);">Unavailable Across the League (${all.length})</div>
       <div class="listBody">${all.map(s => statusHtml(s.name, s.status, s.rank, s.team)).join('')}</div>
       <button class="btn btnGhost btnTiny" id="pcUnavailInfoBtn" style="margin-top:10px;">&#9432; About this list</button>`;
   }
@@ -498,7 +498,7 @@
           body.innerHTML = eligibilityListHtml(byPitcher, opts.division, opts.asOfDate, rankMapFromOrder(order));
         }
         wireDepthEditor(depthSlot, {
-          order, canEdit: true,
+          order, canEdit: !!opts.canEdit,
           addOptions: (team.pitchers || []).map(p => p.name),
           suggestFrom: null,
           onSave: async (newOrder) => {
@@ -527,7 +527,7 @@
     // games marked on their column so eligibility reads directly against
     // the actual upcoming slate instead of a single yes/no badge.
     renderWeeklyCalendar(containerEl, games, division, weekStart) {
-      const start = weekStart || window.PitchSmart.startOfWeek(new Date().toISOString().slice(0, 10));
+      const start = weekStart || window.PitchSmart.startOfWeek(todayIso());
       const days = Array.from({ length: 7 }, (_, i) => addDays(start, i));
       const dayLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
       const gamesByDate = {};

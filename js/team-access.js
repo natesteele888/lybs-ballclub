@@ -84,7 +84,7 @@
               <input class="drillFreeInput" id="taEmailInput" type="email" placeholder="parent@example.com" autofocus>
               <button class="btn btnSmall" id="taInviteSave">Send</button>
             </div>
-            <div class="helpText" id="taInviteError" style="color:#ff8a8a;"></div>
+            <div class="helpText" id="taInviteError" style="color:var(--status-red);"></div>
           ` : `<button class="btn" id="taInviteBtn" style="width:100%;margin-top:14px;">+ Invite a parent</button>`}`;
 
         const inviteBtn = containerEl.querySelector('#taInviteBtn');

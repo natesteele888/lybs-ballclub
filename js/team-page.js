@@ -144,7 +144,7 @@
         </div>`).join('')}</div>` : '<div class="emptyState">No games on record against this team yet.</div>';
 
       const division = window.TeamConfig.current().macLeagueDivisionName || null;
-      window.PitchSmart.renderOpponentEligibility(containerEl.querySelector('#tpPitchSlot'), opponentName, division, new Date().toISOString().slice(0, 10));
+      window.PitchSmart.renderOpponentEligibility(containerEl.querySelector('#tpPitchSlot'), opponentName, division, todayIso());
 
       containerEl.querySelector('#tpBack').addEventListener('click', () => opts.onBack && opts.onBack());
     },

@@ -220,7 +220,7 @@
       const games = window.Schedule.getGames(teamId);
       const rec = window.Schedule.record(teamId);
       const recStr = rec.ties ? `${rec.wins}-${rec.losses}-${rec.ties}` : `${rec.wins}-${rec.losses}`;
-      const today = new Date().toISOString().slice(0, 10);
+      const today = todayIso();
       const ourName = (window.TeamConfig.current().shortName) || (window.TeamConfig.current().name) || 'Us';
       const rows = games.map(g => {
         const played = g.ourScore != null && g.oppScore != null;
@@ -277,8 +277,8 @@
               ${game.gameType === 'championship' ? '<span class="badge gameTypeBadge gameTypeChampionship">Championship</span>' : ''}
             </h3>
             <div class="detailRow">${escapeHtml(game.date || '')}${game.gameTime ? ' · ' + escapeHtml(game.gameTime) : ''}</div>
-            ${game.status === 'postponed' ? '<div class="detailRow" style="color:#F0C84B;"><b>Postponed</b> &mdash; edit the date once a makeup is set.</div>' : ''}
-            ${game.status === 'cancelled' ? '<div class="detailRow" style="color:#ff8a8a;"><b>Cancelled</b></div>' : ''}
+            ${game.status === 'postponed' ? '<div class="detailRow" style="color:var(--gold);"><b>Postponed</b> &mdash; edit the date once a makeup is set.</div>' : ''}
+            ${game.status === 'cancelled' ? '<div class="detailRow" style="color:var(--status-red);"><b>Cancelled</b></div>' : ''}
             ${game.location ? `<div class="detailRow"><a href="${mapLink(game.location)}" target="_blank" rel="noopener">${escapeHtml(game.location)}</a></div>` : ''}
             ${!played && theirLinkUrl ? `<div class="detailRow"><a href="${theirLinkUrl}" target="_blank" rel="noopener">${escapeHtml(game.opponent)}'s MAC League page</a> <span class="helpText" style="margin:0;display:inline;">&mdash; coach contact for weather/cancellation, straight from the league, not stored here</span></div>` : ''}
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}

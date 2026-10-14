@@ -51,10 +51,10 @@
   // the same division names, so a color means the same thing in both
   // tabs. T-Ball has no equivalent there -- new, distinct color.
   const DIVISION_STYLE = {
-    'T-Ball': { icon: '🧢', color: '#F2994A' },
-    'Rookies': { icon: '🌱', color: '#5fd989' },
-    'Minors': { icon: '⚾', color: '#4C6AEB' },
-    'Majors': { icon: '🏆', color: '#F0C84B' },
+    'T-Ball': { icon: '🧢', color: 'var(--status-orange)' },
+    'Rookies': { icon: '🌱', color: 'var(--status-green)' },
+    'Minors': { icon: '⚾', color: 'var(--lybs-blue-bright)' },
+    'Majors': { icon: '🏆', color: 'var(--gold)' },
   };
   const DIVISION_ORDER = ['T-Ball', 'Rookies', 'Minors', 'Majors'];
   function divStyle(division) {
@@ -62,18 +62,18 @@
   }
 
   const CATEGORY_STYLE = {
-    'Warm-up': { icon: '🔥', color: '#e67e22' },
-    'Throwing': { icon: '🎯', color: '#4C6AEB' },
-    'Catching': { icon: '🧤', color: '#5fd989' },
-    'Ground Ball/Infield': { icon: '⬇️', color: '#9AA3C2' },
-    'Hitting': { icon: '🏏', color: '#F0C84B' },
-    'Base Running': { icon: '🏃', color: '#35c574' },
-    'Pitching': { icon: '🌀', color: '#b98af0' },
-    'Catching concepts': { icon: '🛡️', color: '#6ea8c9' },
-    'Team Situational': { icon: '🧠', color: '#c77dff' },
-    'Basic Positioning': { icon: '📍', color: '#6ea8c9' },
-    'Game/Scrimmage': { icon: '🆚', color: '#e35858' },
-    'Multi-Station': { icon: '🔄', color: '#8891B0' },
+    'Warm-up': { icon: '🔥', color: 'var(--status-orange)' },
+    'Throwing': { icon: '🎯', color: 'var(--lybs-blue-bright)' },
+    'Catching': { icon: '🧤', color: 'var(--status-green)' },
+    'Ground Ball/Infield': { icon: '⬇️', color: 'var(--text2)' },
+    'Hitting': { icon: '🏏', color: 'var(--gold)' },
+    'Base Running': { icon: '🏃', color: 'var(--status-green)' },
+    'Pitching': { icon: '🌀', color: 'var(--accent-purple)' },
+    'Catching concepts': { icon: '🛡️', color: 'var(--accent-cyan)' },
+    'Team Situational': { icon: '🧠', color: 'var(--accent-purple)' },
+    'Basic Positioning': { icon: '📍', color: 'var(--accent-cyan)' },
+    'Game/Scrimmage': { icon: '🆚', color: 'var(--status-red)' },
+    'Multi-Station': { icon: '🔄', color: 'var(--text3)' },
   };
   function catStyle(category) {
     return CATEGORY_STYLE[category] || { icon: '📖', color: 'var(--lybs-blue-bright)' };
@@ -83,13 +83,13 @@
   const TIER_LABEL = { foundational: 'Foundational', standard: 'Standard', advanced: 'Advanced' };
 
   const SOURCE_BADGE = {
-    official: { label: 'Official source', color: '#5fd989' },
-    adapted: { label: 'Adapted', color: '#6ea8c9' },
-    'lybs-original': { label: 'Needs coach review', color: '#F0C84B' },
+    official: { label: 'Official source', color: 'var(--status-green)' },
+    adapted: { label: 'Adapted', color: 'var(--accent-cyan)' },
+    'lybs-original': { label: 'Needs coach review', color: 'var(--gold)' },
   };
   function sourceBadgeHtml(sourceType) {
     const s = SOURCE_BADGE[sourceType] || SOURCE_BADGE.adapted;
-    return `<span class="badge" style="background:${s.color}22;color:${s.color};border:1px solid ${s.color}55;">${escapeHtml(s.label)}</span>`;
+    return `<span class="badge" style="background:color-mix(in srgb, ${s.color} 13%, transparent);color:${s.color};border:1px solid color-mix(in srgb, ${s.color} 33%, transparent);">${escapeHtml(s.label)}</span>`;
   }
 
   async function loadShared(key, seedPath, extract, isBoard) {
@@ -209,7 +209,7 @@
             <div class="drillHeroSub">${escapeHtml(d.description)}</div>
           </div>
           <div class="drillChipRow" style="margin:6px 0 12px;">
-            <span class="rulesCatIcon" style="width:auto;height:auto;padding:4px 10px;border-radius:8px;background:${style.color}22;color:${style.color};font-size:12.5px;">${style.icon} ${escapeHtml(d.division)}</span>
+            <span class="rulesCatIcon" style="width:auto;height:auto;padding:4px 10px;border-radius:8px;background:color-mix(in srgb, ${style.color} 13%, transparent);color:${style.color};font-size:12.5px;">${style.icon} ${escapeHtml(d.division)}</span>
             ${tierBadgeHtml(d.tier)}
             ${sourceBadgeHtml(d.sourceType)}
           </div>
@@ -239,7 +239,7 @@
           const style = catStyle(cat);
           return `
             <div class="listRow" data-category="${escapeHtml(cat)}">
-              <div class="rulesCatIcon" style="background:${style.color}22;color:${style.color};">${style.icon}</div>
+              <div class="rulesCatIcon" style="background:color-mix(in srgb, ${style.color} 13%, transparent);color:${style.color};">${style.icon}</div>
               <div class="listRowMain">
                 <div class="listRowTitle">${escapeHtml(cat)}</div>
                 <div class="listRowSub">${count} drill${count === 1 ? '' : 's'}</div>
@@ -276,7 +276,7 @@
           const style = divStyle(div);
           return `
             <div class="listRow" data-division="${escapeHtml(div)}">
-              <div class="rulesCatIcon" style="background:${style.color}22;color:${style.color};">${style.icon}</div>
+              <div class="rulesCatIcon" style="background:color-mix(in srgb, ${style.color} 13%, transparent);color:${style.color};">${style.icon}</div>
               <div class="listRowMain">
                 <div class="listRowTitle">${escapeHtml(div)}</div>
                 <div class="listRowSub">${count} drill${count === 1 ? '' : 's'}</div>
