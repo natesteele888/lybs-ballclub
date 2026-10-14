@@ -60,6 +60,12 @@
 
   async function enterApp(teamId, role) {
     await window.TeamConfig.load(teamId);
+    // access-control.js's Google-resume path can win the race while the
+    // await above was in flight -- bail out before touching either screen
+    // (showing the "Who's this?" identity screen over an app shell that's
+    // already rendered would be a visible glitch, not just a state bug).
+    // See index.html's window.__identityResolved for the full picture.
+    if (window.__identityResolved) return;
     const identity = window.Identity.getSession(teamId);
     screenEl.classList.add('hide');
     if (identity) {

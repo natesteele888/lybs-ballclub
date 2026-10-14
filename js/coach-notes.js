@@ -57,13 +57,15 @@
                 <button class="btn btnTiny btnGhost" data-cndelete="${n.id}">&times;</button>
               </div>`).join('') : '<div class="emptyState">No notes yet.</div>'}
           </div>`;
-        containerEl.querySelector('#cnAdd').addEventListener('click', async () => {
+        containerEl.querySelector('#cnAdd').addEventListener('click', btnEvt => {
           const input = containerEl.querySelector('#cnInput');
           const text = (input.value || '').trim();
           if (!text) return;
-          notes.unshift({ id: 'cn_' + Math.random().toString(36).slice(2, 10), date: new Date().toISOString().slice(0, 10), text });
-          await save(teamId);
-          refresh();
+          withBusyButton(btnEvt.target, 'Adding...', async () => {
+            notes.unshift({ id: 'cn_' + Math.random().toString(36).slice(2, 10), date: todayIso(), text });
+            await save(teamId);
+            refresh();
+          });
         });
         containerEl.querySelectorAll('[data-cndelete]').forEach(btn => {
           btn.addEventListener('click', async () => {

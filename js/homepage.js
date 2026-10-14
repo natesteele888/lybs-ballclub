@@ -223,6 +223,9 @@
         window.PitchSmart.ensureLoaded(),
         window.LeagueEvents.ensureLoaded(),
         window.LeagueSchedule.ensureLoaded(),
+        window.Awards.ensureLoaded(teamId),
+        window.SignUp.ensureLoaded(teamId),
+        window.Equipment.ensureLoaded(teamId),
       ]);
 
       const today = todayStr();
@@ -268,7 +271,11 @@
       const leagueMatch = window.LeagueTeams.find(cfg.shortName || cfg.name);
       let leagueRow = null, leagueRank = null, leagueTotal = null, leagueDivisionName = null;
       if (leagueMatch) {
-        const standings = await window.dbGet(window.sharedPath('macLeagueStandings'));
+        // TonightGames.ensureLoaded() already fetched and cached this exact
+        // path in the Promise.all above -- this just reads the memoized
+        // result (same pattern standings.js's own render() uses), not a
+        // second network round trip.
+        const standings = await window.TonightGames.ensureLoaded();
         const division = standings && standings.divisions && standings.divisions[leagueMatch.divisionId];
         const rows = (division && division.rows) || [];
         const idx = rows.findIndex(r => r.teamId === leagueMatch.teamId);
@@ -298,15 +305,17 @@
       // Awards given this season -- a count, not a "leader" the way Game
       // Ball has one, since every category is normally won by someone
       // different (there's no single name to put next to it the same way).
-      const awardsData = await window.dbGet(window.teamPath(teamId, 'awards'));
-      const awardsGiven = (Array.isArray(awardsData) ? awardsData : []).filter(a => a.playerName).length;
+      // ensureLoaded() already fetched and cached this in the Promise.all
+      // above -- this just reads the memoized array, not a second round trip.
+      const awardsData = await window.Awards.ensureLoaded(teamId);
+      const awardsGiven = awardsData.filter(a => a.playerName).length;
 
       // Sign-Up items nobody's claimed yet -- the one thing on this whole
       // page that's a direct ask of whoever's reading it, not just
       // information, so it gets its own section instead of folding into a
       // stat tile the way Awards/Game Ball do.
-      const signupsData = await window.dbGet(window.teamPath(teamId, 'signups'));
-      const openSignupItems = (Array.isArray(signupsData) ? signupsData : [])
+      const signupsData = await window.SignUp.ensureLoaded(teamId);
+      const openSignupItems = signupsData
         .flatMap(s => (s.items || []).filter(i => !i.claimedBy).map(i => ({ name: i.name, sheetTitle: s.title })));
 
       // Equipment nobody's holding, checked only when it'd actually matter
@@ -314,8 +323,8 @@
       // noise, same reasoning Who Can Pitch Today already gates on todayGames.
       let uncheckedEquipment = [];
       if (todayItems.length) {
-        const equipmentData = await window.dbGet(window.teamPath(teamId, 'equipment'));
-        uncheckedEquipment = (Array.isArray(equipmentData) ? equipmentData : []).filter(e => !e.holderName);
+        const equipmentData = await window.Equipment.ensureLoaded(teamId);
+        uncheckedEquipment = equipmentData.filter(e => !e.holderName);
       }
 
       const statTiles = [

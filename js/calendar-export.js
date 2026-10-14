@@ -37,13 +37,30 @@
     return String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
   }
 
+  // RFC 5545 folding counts UTF-8 octets, not JS string length (UTF-16 code
+  // units) -- a plain .length/.slice on the string would cut a multi-byte
+  // character (an accented opponent name, an emoji in a note) in half right
+  // on the fold boundary and hand the importing calendar app a corrupted
+  // byte sequence instead of the character. Walk the UTF-8 bytes instead,
+  // and never end a chunk on a continuation byte (top two bits 10xxxxxx) --
+  // back off until the chunk boundary sits on an actual character start.
   function foldLine(line) {
-    if (line.length <= 75) return line;
-    let out = line.slice(0, 75);
-    let rest = line.slice(75);
-    while (rest.length) {
-      out += '\r\n ' + rest.slice(0, 74);
-      rest = rest.slice(74);
+    const bytes = new TextEncoder().encode(line);
+    if (bytes.length <= 75) return line;
+    const decoder = new TextDecoder('utf-8');
+    const chunkEnd = (start, maxLen) => {
+      let end = Math.min(start + maxLen, bytes.length);
+      while (end > start && end < bytes.length && (bytes[end] & 0xc0) === 0x80) end--;
+      return end;
+    };
+    let out = '';
+    let start = 0;
+    let maxLen = 75;
+    while (start < bytes.length) {
+      const end = chunkEnd(start, maxLen);
+      out += (start === 0 ? '' : '\r\n ') + decoder.decode(bytes.subarray(start, end));
+      start = end;
+      maxLen = 74;
     }
     return out;
   }

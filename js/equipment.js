@@ -19,13 +19,28 @@
   const PRESETS = ['Equipment Bag', "Catcher's Gear", 'Team Balls', 'Scorebook', 'First Aid Kit', 'Pop-Up Net'];
 
   const cache = {}; // teamId -> equipment[]
+  const pending = {}; // teamId -> in-flight ensureLoaded() promise
 
   window.Equipment = {
+    // Caches the in-flight fetch, not just the resolved value -- two
+    // near-simultaneous callers for the same team (e.g. the Home tab and
+    // the Equipment tab both loading around the same time) would otherwise
+    // each start their own dbGet, and whichever resolved second would
+    // clobber cache[teamId] with its own array instead of either one
+    // just awaiting the same fetch.
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      const data = await window.dbGet(window.teamPath(teamId, 'equipment'));
-      cache[teamId] = Array.isArray(data) ? data : [];
-      return cache[teamId];
+      if (pending[teamId]) return pending[teamId];
+      pending[teamId] = (async () => {
+        try {
+          const data = await window.dbGet(window.teamPath(teamId, 'equipment'));
+          cache[teamId] = Array.isArray(data) ? data : [];
+          return cache[teamId];
+        } finally {
+          delete pending[teamId];
+        }
+      })();
+      return pending[teamId];
     },
     async save(teamId) {
       await window.dbPut(window.teamPath(teamId, 'equipment'), cache[teamId]);
@@ -110,25 +125,28 @@
           });
         });
         containerEl.querySelectorAll('[data-addpreset]').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            items.push({ id: 'eq_' + Math.random().toString(36).slice(2, 10), name: btn.dataset.addpreset });
-            await window.Equipment.save(teamId);
-            refresh();
+          btn.addEventListener('click', btnEvt => {
+            withBusyButton(btnEvt.target, 'Adding...', async () => {
+              items.push({ id: 'eq_' + Math.random().toString(36).slice(2, 10), name: btn.dataset.addpreset });
+              await window.Equipment.save(teamId);
+              refresh();
+            });
           });
         });
         const customBtn = containerEl.querySelector('#eqAddCustom');
         if (customBtn) customBtn.addEventListener('click', () => { addingCustom = true; refresh(); });
         const customSave = containerEl.querySelector('#eqCustomSave');
         if (customSave) {
-          customSave.addEventListener('click', async () => {
+          customSave.addEventListener('click', btnEvt => {
             const input = containerEl.querySelector('#eqCustomInput');
             const name = (input.value || '').trim();
             addingCustom = false;
-            if (name) {
+            if (!name) { refresh(); return; }
+            withBusyButton(btnEvt.target, 'Adding...', async () => {
               items.push({ id: 'eq_' + Math.random().toString(36).slice(2, 10), name });
               await window.Equipment.save(teamId);
-            }
-            refresh();
+              refresh();
+            });
           });
         }
       }

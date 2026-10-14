@@ -17,13 +17,28 @@
   const PRESETS = ['MVP', "Coach's Award", 'Most Improved', 'Golden Glove', 'Best Hustle', 'Best Teammate', 'Rookie of the Year'];
 
   const cache = {}; // teamId -> awards[]
+  const pending = {}; // teamId -> in-flight ensureLoaded() promise
 
   window.Awards = {
+    // Caches the in-flight fetch, not just the resolved value -- two
+    // near-simultaneous callers for the same team (e.g. the Home tab and
+    // the Awards tab both loading around the same time) would otherwise
+    // each start their own dbGet, and whichever resolved second would
+    // clobber cache[teamId] with its own array instead of either one
+    // just awaiting the same fetch.
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      const data = await window.dbGet(window.teamPath(teamId, 'awards'));
-      cache[teamId] = Array.isArray(data) ? data : [];
-      return cache[teamId];
+      if (pending[teamId]) return pending[teamId];
+      pending[teamId] = (async () => {
+        try {
+          const data = await window.dbGet(window.teamPath(teamId, 'awards'));
+          cache[teamId] = Array.isArray(data) ? data : [];
+          return cache[teamId];
+        } finally {
+          delete pending[teamId];
+        }
+      })();
+      return pending[teamId];
     },
     async save(teamId) {
       await window.dbPut(window.teamPath(teamId, 'awards'), cache[teamId]);
@@ -129,25 +144,28 @@
           });
         });
         containerEl.querySelectorAll('[data-addpreset]').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            awards.push({ id: 'aw_' + Math.random().toString(36).slice(2, 10), category: btn.dataset.addpreset });
-            await window.Awards.save(teamId);
-            refresh();
+          btn.addEventListener('click', btnEvt => {
+            withBusyButton(btnEvt.target, 'Adding...', async () => {
+              awards.push({ id: 'aw_' + Math.random().toString(36).slice(2, 10), category: btn.dataset.addpreset });
+              await window.Awards.save(teamId);
+              refresh();
+            });
           });
         });
         const customBtn = containerEl.querySelector('#awardsAddCustom');
         if (customBtn) customBtn.addEventListener('click', () => { addingCustom = true; refresh(); });
         const customSave = containerEl.querySelector('#awardsCustomSave');
         if (customSave) {
-          customSave.addEventListener('click', async () => {
+          customSave.addEventListener('click', btnEvt => {
             const input = containerEl.querySelector('#awardsCustomInput');
             const name = (input.value || '').trim();
             addingCustom = false;
-            if (name) {
+            if (!name) { refresh(); return; }
+            withBusyButton(btnEvt.target, 'Adding...', async () => {
               awards.push({ id: 'aw_' + Math.random().toString(36).slice(2, 10), category: name });
               await window.Awards.save(teamId);
-            }
-            refresh();
+              refresh();
+            });
           });
         }
       }
