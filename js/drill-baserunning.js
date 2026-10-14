@@ -2,14 +2,20 @@
    Base-running stopwatch -- a new tool, not a port. lybs-reporting
    only has a generic stopwatch (start/stop/lap, no base presets, no
    per-player history by drill) -- this is the real thing: pick a
-   drill (home to 1st/2nd/3rd, or all the way around), pick a runner
-   (a roster player, or a free-typed name -- same `free_` id pattern
-   js/drill-ath.js's own free-player chips use, so the timer is never
-   blocked on the roster being populated, e.g. a guest or call-up
-   kid), time them, and build up every player's times across drills
-   so a coach can see who's eligible-fast at a glance, same spirit as
-   the Around the Horn timer but for one runner instead of a team
-   relay.
+   drill (home to 1st/2nd/3rd, or all the way around), optionally pick
+   a runner (a roster player, or a free-typed name -- same `free_` id
+   pattern js/drill-ath.js's own free-player chips use), time them,
+   and build up every player's times across drills so a coach can see
+   who's eligible-fast at a glance, same spirit as the Around the Horn
+   timer but for one runner instead of a team relay.
+
+   Picking a runner is deliberately NOT required to start the clock --
+   a coach lining kids up at home plate wants to start timing the
+   instant one takes off, not hunt through a roster list first. A run
+   saved with no runner picked is stored under playerId: null, name:
+   "Unassigned" rather than blocked or discarded; it still counts
+   toward that drill's team-best time, just not toward any one
+   player's own history.
 
    Every recorded run is stored flat at
    teams/{teamId}/drills/baseRunningRuns = [{id, playerId, name,
@@ -110,23 +116,23 @@
         return `
           <div class="drillHero">
             <div class="drillHeroTitle">Base Running</div>
-            <div class="drillHeroSub">Time any runner on the roster, home to 1st or all the way around.</div>
+            <div class="drillHeroSub">Time any runner, home to 1st or all the way around -- picking a name is optional.</div>
           </div>
           <div class="sectionLabel">Drill</div>
           <div class="drillChipRow">
             ${DRILLS.map(d => `<button class="drillChip ${ST.drillType === d.id ? 'drillChipOn' : ''}" data-drill="${d.id}">${d.label}</button>`).join('')}
           </div>
-          <div class="sectionLabel" style="margin-top:16px;">Runner</div>
+          <div class="sectionLabel" style="margin-top:16px;">Runner (optional)</div>
           <div class="drillChipRow">
             ${ST.playerId && ST.playerId.startsWith('free_') ? `<span class="drillChip drillChipOn" data-removefree>${escapeHtml(ST.playerName)} &times;</span>` : ''}
-            ${roster.length ? roster.map(p => `<button class="drillChip ${ST.playerId === p.id ? 'drillChipOn' : ''}" data-player="${escapeHtml(p.id)}" data-name="${escapeHtml(p.name)}">${escapeHtml(p.name)}</button>`).join('') : '<span class="helpText">No players on the roster yet — add a name below.</span>'}
+            ${roster.length ? roster.map(p => `<button class="drillChip ${ST.playerId === p.id ? 'drillChipOn' : ''}" data-player="${escapeHtml(p.id)}" data-name="${escapeHtml(p.name)}">${escapeHtml(p.name)}</button>`).join('') : '<span class="helpText">No players on the roster yet.</span>'}
           </div>
           <div class="drillAddRow">
             <input class="drillFreeInput" id="brFreeName" list="brRosterList" placeholder="Add a name...">
             <button class="btn btnGhost btnSmall" id="brAddFree">Add</button>
           </div>
           <datalist id="brRosterList">${roster.map(p => `<option value="${escapeHtml(p.name)}">`).join('')}</datalist>
-          <button class="btn" id="brStart" style="width:100%;margin-top:18px;" ${ST.playerId ? '' : 'disabled'}>Start timing →</button>
+          <button class="btn" id="brStart" style="width:100%;margin-top:18px;">Start timing →</button>
           <div class="sectionLabel" style="margin-top:20px;">Team best &mdash; ${escapeHtml(DRILLS.find(d => d.id === ST.drillType).label)}</div>
           ${leaderboardHtml(ST.drillType)}`;
       }
@@ -154,6 +160,7 @@
         const timeStr = ST.elapsedMs ? fmt(ST.elapsedMs) : '0.00s';
         const timeClass = s === 'running' ? 'athTimeRun' : s === 'stopped' ? 'athTimeStop' : s === 'accepted' ? 'athTimeAccept' : '';
         const drillLabel = DRILLS.find(d => d.id === ST.drillType).label;
+        const runnerLabel = ST.playerName || 'Unassigned';
         const personalBest = bestFor(runs, ST.playerId, ST.drillType);
 
         let controls = '';
@@ -171,12 +178,12 @@
         return `
           <div class="sectionHeader">
             <button class="btn btnGhost btnSmall" id="brChange">&larr; Change</button>
-            <div class="recordLine">${escapeHtml(ST.playerName)} &middot; ${escapeHtml(drillLabel)}</div>
+            <div class="recordLine">${escapeHtml(runnerLabel)} &middot; ${escapeHtml(drillLabel)}</div>
           </div>
           <div class="athTimerCard">
             <div class="athTimerDisplay ${timeClass}" id="brTimeEl">${timeStr}</div>
-            ${s === 'accepted' ? `<div class="athAcceptNote" style="color:${ST.newRecord ? GOLD : GREEN};">${ST.newRecord ? 'New team best! ' : 'Saved — '}${escapeHtml(ST.playerName)}'s best: ${fmtShort(bestFor(runs, ST.playerId, ST.drillType))}</div>` : ''}
-            ${personalBest && s !== 'accepted' ? `<div class="helpText">${escapeHtml(ST.playerName)}'s best: <b style="color:${GOLD};">${fmtShort(personalBest)}</b></div>` : ''}
+            ${s === 'accepted' ? `<div class="athAcceptNote" style="color:${ST.newRecord ? GOLD : GREEN};">${ST.newRecord ? 'New team best! ' : 'Saved — '}${escapeHtml(runnerLabel)}'s best: ${fmtShort(bestFor(runs, ST.playerId, ST.drillType))}</div>` : ''}
+            ${personalBest && s !== 'accepted' ? `<div class="helpText">${escapeHtml(runnerLabel)}'s best: <b style="color:${GOLD};">${fmtShort(personalBest)}</b></div>` : ''}
           </div>
           ${controls}`;
       }
@@ -201,7 +208,6 @@
           refresh();
         });
         containerEl.querySelector('#brStart')?.addEventListener('click', () => {
-          if (!ST.playerId) return;
           ST.state = 'idle'; ST.elapsedMs = 0; ST.newRecord = false;
           refresh();
         });
@@ -231,11 +237,12 @@
         containerEl.querySelector('#brRedo')?.addEventListener('click', () => { ST.elapsedMs = 0; ST.state = 'idle'; refresh(); });
         containerEl.querySelector('#brAccept')?.addEventListener('click', async () => {
           const prevDrillBest = drillBest(runs, ST.drillType);
-          runs.push({ id: uid('br'), playerId: ST.playerId, name: ST.playerName, drillType: ST.drillType, timeMs: ST.elapsedMs, date: new Date().toISOString().slice(0, 10) });
+          const runnerLabel = ST.playerName || 'Unassigned';
+          runs.push({ id: uid('br'), playerId: ST.playerId, name: runnerLabel, drillType: ST.drillType, timeMs: ST.elapsedMs, date: new Date().toISOString().slice(0, 10) });
           await saveRuns(teamId);
           ST.newRecord = prevDrillBest === null || ST.elapsedMs < prevDrillBest;
           ST.state = 'accepted'; ST.elapsedMs = 0;
-          if (ST.newRecord) { confetti(); showBanner('New team best!', `${ST.playerName}: ${fmtShort(runs[runs.length - 1].timeMs)}`); }
+          if (ST.newRecord) { confetti(); showBanner('New team best!', `${runnerLabel}: ${fmtShort(runs[runs.length - 1].timeMs)}`); }
           refresh();
         });
       }
