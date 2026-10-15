@@ -81,8 +81,18 @@
   --card-border: rgba(20, 24, 48, 0.12);
   --card-gradient-end: #EAECF4;
   --text: #13162E;
-  --text2: #555C78;
-  --text3: #7B8199;
+  /* --text2/--text3 were originally #555C78/#7B8199 -- both read as too
+     soft against a white/near-white card (6.6:1 and 3.9:1 against white
+     respectively; --text3 was flatly failing WCAG AA's 4.5:1 floor for
+     normal-size text, and it's what a dozen small UI labels use --
+     inactive tab labels, calendar weekday headers, game-result meta text,
+     age-chart tick labels -- exactly the "lots of text, soft and barely
+     legible" pattern a reader hits constantly in light mode). Darkened
+     both, same hue family, same two-tier ordering (text2 still reads as
+     the darker/more prominent of the pair), text2 now AAA (~7.3:1),
+     text3 now a clear AA pass with margin (~5.8:1) instead of failing. */
+  --text2: #4E5571;
+  --text3: #5E6480;
   --glow: rgba(46, 82, 232, 0.25);
   --overlay-rgb: 20, 24, 48;
   --sunken-rgb: 228, 231, 239;
@@ -98,8 +108,11 @@
      above -- but 13 call sites use it directly as the color for a small
      uppercase caption (section labels, form field labels, etc.), and its
      one fixed value (#B4BBBF, tuned for a dark page) is too low-contrast
-     against a light one. */
-  --lybs-silver: #6A7290;
+     against a light one. Darkened again alongside --text2/--text3 above
+     for the same reason -- the original #6A7290 only cleared AA's 4.5:1
+     floor by a hair (4.75:1), uncomfortably thin for an all-caps label
+     already fighting letter-spacing and a small size. */
+  --lybs-silver: #5A6180;
   /* Same contrast problem as --gold above, same fix shape: darker, more
      saturated versions of the same hue, tuned against a white card instead
      of a dark navy one. */
