@@ -1,15 +1,24 @@
 /* ============================================================
    Team Page -- an in-app profile for an opponent, reached by
-   tapping a team's logo/name on any game card (js/game-card.js's
-   data-team-nav, routed by index.html's one delegated handler).
+   tapping a team's logo/name on any game card (data-team-nav,
+   routed by index.html's one delegated handler).
 
-   Built entirely from data this app already has or can honestly
-   resolve -- no new scraping:
+   Built from data this app already has or can honestly resolve:
      - js/league-teams.js: which MAC League team this is, and their
        current standings row (from the same mirror the Standings tab
        reads, shared/macLeagueStandings).
      - js/club-logos.js: their town, for a badge and to look up home
        fields in data/league-info.json.
+     - js/team-details.js: their own full schedule, roster, and
+       coaching staff, mirrored from their own public macleague.org
+       page by scripts/scrape-team-details.mjs. Nathan: "this needs
+       to be there on the site - not click to go off site to
+       macleague site - bring the data from the public facing site.
+       When coaches info and names are not available there, then we
+       don't have them available on our side." -- that's exactly
+       what this renders: whatever that team has actually published
+       (and only that -- a coach with no phone/email listed there
+       just shows name+role here, never a guess), no more link-out.
      - js/pitch-smart.js: their pitch-count eligibility mirror, same
        renderer the pitching-preview slot on an upcoming game uses.
      - Our own records: every game this team's schedule or archive
@@ -20,12 +29,6 @@
    there's no API and no way to resolve an arbitrary opponent's
    specific game to GameChanger's system from here (confirmed
    multiple times this session: GameChanger has never offered one).
-   What a MAC League team page actually has beyond this (a rolling
-   week-ahead calendar, full staff contact) stays a link-out rather
-   than something re-scraped and duplicated here -- confirmed live
-   against a real team page that it's a 7-day rolling view, not a
-   season archive, so there's nothing honest to mirror beyond what
-   the standings job already captures.
    ============================================================ */
 (function () {
   function fmtDate(iso) {
@@ -47,6 +50,7 @@
         window.LeagueInfo.ensureLoaded(),
         window.Schedule.ensureLoaded(teamId),
         window.Archive.ensureLoaded(),
+        window.TeamDetails.ensureLoaded(),
       ]);
 
       // opts.divisionId lets a caller that already knows the opponent's real
@@ -77,6 +81,12 @@
         ? leagueInfo.facilities.filter(f => f.town === club.town)
         : [];
 
+      // Their own schedule/roster/staff, mirrored from their own public
+      // macleague.org page -- see this file's header comment. Only
+      // resolvable when LeagueTeams could match a team id, same as
+      // standingsRow above.
+      const details = leagueMatch ? window.TeamDetails.getTeam(leagueMatch.teamId) : null;
+
       // Every game we have on record against them -- current schedule plus
       // every archived season, our own history, not anyone else's.
       const ourGames = window.Schedule.getGames(teamId).filter(g => g.opponent === opponentName);
@@ -102,8 +112,44 @@
               ${statTileHtml(escapeHtml(standingsRow.rf ?? '-'), 'Runs For')}
               ${statTileHtml(escapeHtml(standingsRow.ra ?? '-'), 'Runs Against')}
             </div>` : `<div class="helpText" style="margin-top:10px;">No current standings mirrored for this team.</div>`}
-          ${leagueMatch ? `<a class="btn btnWrap" style="width:100%;margin-top:14px;" href="${window.LeagueTeams.teamUrl(opponentName, divisionId)}" target="_blank" rel="noopener">Full schedule, roster &amp; coach contact on macleague.org</a>` : ''}
         </div>
+
+        <div class="sectionLabel" style="margin-top:18px;">Coaching Staff</div>
+        ${details && details.staff.length ? `
+          <div class="listBody">
+            ${details.staff.map(s => `
+              <div class="listRow" style="cursor:default;">
+                <div class="listRowMain">
+                  <div class="listRowTitle">${escapeHtml(s.name || 'Unknown')}</div>
+                  <div class="listRowSub">${escapeHtml(s.role || '')}${s.phone ? ' &middot; ' + escapeHtml(s.phone) : ''}</div>
+                </div>
+                ${s.emailUrl ? `<a class="btn btnGhost btnTiny" href="${escapeHtml(s.emailUrl)}" target="_blank" rel="noopener">Email</a>` : ''}
+              </div>`).join('')}
+          </div>` : '<div class="emptyState">No coaching staff published yet.</div>'}
+
+        <div class="sectionLabel" style="margin-top:18px;">Full Schedule</div>
+        ${details && details.games.length ? `
+          <div class="listBody">
+            ${details.games.map(g => `
+              <div class="listRow" style="cursor:default;">
+                <div class="listRowMain">
+                  <div class="listRowTitle">${fmtDate(g.date)} &middot; ${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent || 'TBD')}</div>
+                  <div class="listRowSub">${escapeHtml(g.location || '')}</div>
+                </div>
+                ${g.result
+                  ? `<span class="badge ${g.result === 'W' ? 'badgeW' : g.result === 'L' ? 'badgeL' : 'badgeT'}">${g.ourScore}-${g.oppScore}</span>`
+                  : `<span class="badge badgeTbd">${escapeHtml(g.time || 'TBD')}</span>`}
+              </div>`).join('')}
+          </div>` : '<div class="emptyState">No schedule published yet.</div>'}
+
+        <div class="sectionLabel" style="margin-top:18px;">Roster</div>
+        ${details && details.roster.length ? `
+          <div class="listBody">
+            ${details.roster.map(p => `
+              <div class="listRow" style="cursor:default;">
+                <div class="listRowMain"><div class="listRowTitle">${escapeHtml(p.name || 'Unknown')}</div></div>
+              </div>`).join('')}
+          </div>` : '<div class="emptyState">No roster published yet.</div>'}
 
         ${theirFields.length ? `
           <div class="sectionLabel" style="margin-top:4px;">Home fields</div>

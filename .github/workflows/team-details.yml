@@ -1,0 +1,51 @@
+name: Mirror MAC League team details (schedule, roster, staff)
+
+# Runs once a day plus a manual "Run workflow" button for an admin -- NOT
+# on the same every-30-minutes cadence as standings.yml. A team's own
+# schedule/roster/coaching staff changes far less often than live scores,
+# and this job is much heavier (3 fetches per team, 5s apart, across every
+# team in the league -- roughly 8-9 minutes end to end) so running it that
+# often would be a lot of otherwise-pointless traffic against
+# macleague.org. See scripts/scrape-team-details.mjs for why this exists:
+# js/team-page.js used to link out to a team's own macleague.org page for
+# this instead of showing it in-app.
+#
+# Secrets needed (repo Settings -> Secrets and variables -> Actions):
+#   FIREBASE_DB_URL     e.g. https://lybs-ballclub-default-rtdb.firebaseio.com
+#   FIREBASE_DB_SECRET  the Realtime Database's legacy secret -- same one
+#                        standings.yml already uses, scoped by database
+#                        rules to also cover shared/macLeagueTeamDetails.
+#
+# data/standings-cache.json (where scrape-team-details.mjs reads its
+# default team-id list from) is gitignored -- never committed, only ever
+# written locally by whichever job just ran scrape-standings.mjs -- so
+# this job runs that first, in the SAME checkout, purely to regenerate
+# that file fresh; it isn't relying on standings.yml's own separate run
+# (a different, disposable runner) to have left anything behind.
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 11 * * *' # once a day, 7am ET (UTC-4)
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # Regenerates data/standings-cache.json in this runner's own checkout
+      # -- see the header comment above for why. Pushes to Firebase too,
+      # same as standings.yml's own run of this -- redundant but harmless,
+      # and one less thing to keep in sync between the two workflows.
+      - name: Scrape standings (for this job's own team-id list)
+        env:
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+        run: node scripts/scrape-standings.mjs
+      - name: Scrape and push team details
+        env:
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+        run: node scripts/scrape-team-details.mjs

@@ -1,0 +1,3534 @@
+{
+  "teams": {
+    "284619": {
+      "teamId": "284619",
+      "name": "12u Groton Dunstable",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Kevin Smith",
+          "role": "Head Coach",
+          "phone": "(617) 850-2080",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Rnov2-ioh0iLqjv32OeeYpz4YJb5I0pZpFtmjRq8yQ5MGPBHVqztynTbj5E59UG3n5seWLIg1i1cdW8TtpHAC6ZJ6a3QBFFcgUkKOk6Z1cI1ps=?to_name=Kevin+Smith"
+        },
+        {
+          "name": "Steve Donnelly",
+          "role": "Assistant Coach",
+          "phone": null,
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "12u Littleton",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "12u Bolton Green",
+          "time": null,
+          "ourScore": 12,
+          "oppScore": 8,
+          "result": "W",
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "12u Westford 1",
+          "time": null,
+          "ourScore": 11,
+          "oppScore": 10,
+          "result": "W",
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "12u Townsend Ashby",
+          "time": null,
+          "ourScore": 5,
+          "oppScore": 6,
+          "result": "L",
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "12u Maynard Stow 1",
+          "time": null,
+          "ourScore": 5,
+          "oppScore": 8,
+          "result": "L",
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "12u Bolton Blue",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "12u Westford 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "12u Pepperell",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:22:47.873Z"
+    },
+    "284620": {
+      "teamId": "284620",
+      "name": "12u Littleton",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Sean McDonough",
+          "role": "Head Coach",
+          "phone": "(978) 808-2624",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RpEGHFxi3f2iM-AUNUg2bOeIBxs3zEeA1tXJGLLmi7HK8112ZbZ19P_ErCFVKNg_ZJRciUIcNnOv3jocjrfK6jUJyeYG5GYlxGbfqX8n0BDl0E=?to_name=Sean+McDonough"
+        },
+        {
+          "name": "Jean Levasseur",
+          "role": "Head Coach",
+          "phone": "(774) 249-4958",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RpEbD0iwtkTYNQlFI3J8QkgF33Gd2_1OSlWTySCqEqgQcPPcmu0JtTr12XhW0KgHcZT1l1mkbI-qiuAffwpor0-dCIyDcnmjK-IiXQ2sKJQOy8=?to_name=Jean+Levasseur"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "12u Groton Dunstable",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "12u Maynard Stow 1",
+          "time": null,
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Shaker Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "12u Bolton Blue",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "12u Westford 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Shaker Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "12u Pepperell",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "12u Maynard Stow 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Shaker Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-24",
+          "homeAway": "Home",
+          "opponent": "12u Townsend Ashby",
+          "time": "3:45 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Shaker Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "12u Bolton Green",
+          "time": "6:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:24:18.982Z"
+    },
+    "284622": {
+      "teamId": "284622",
+      "name": "12u Townsend Ashby",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Bryan Williams",
+          "role": "Head Coach",
+          "phone": "(978) 337-5982",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RnSTSnSMKUsiY7i6rXRywffVePlGo71XqArATVT-iVtKhyz8BvAhVhBxaSqAQLTRovMxZazv0u2W_ILw03YlH4-vM3fsjYPOZDkFSizGM-ZIdM=?to_name=Bryan+Williams"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "12u Westford 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "12u Pepperell",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-09-30",
+          "homeAway": "Home",
+          "opponent": "12u Westford 1",
+          "time": "4:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "12u Groton Dunstable",
+          "time": null,
+          "ourScore": 6,
+          "oppScore": 5,
+          "result": "W",
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "12u Maynard Stow 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "12u Maynard Stow 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-24",
+          "homeAway": "Away",
+          "opponent": "12u Littleton",
+          "time": "3:45 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Shaker Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "12u Bolton Blue",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:22:26.049Z"
+    },
+    "284623": {
+      "teamId": "284623",
+      "name": "12u Westford 1",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Andrea Nelson",
+          "role": "Head Coach",
+          "phone": "(530) 902-2805",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RoVXwwoWHbvrSPYTxDXE58wJU5FqS1g8jfrzXvlqFDdL15YthInYeNCHFa8v4LS4SrIVeFsBj1b2RmFckYBYgvewqg7anfz3MI_4C0rpVcFrCY=?to_name=Andrea+Nelson"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "12u Bolton Green",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "12u Groton Dunstable",
+          "time": null,
+          "ourScore": 10,
+          "oppScore": 11,
+          "result": "L",
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-09-30",
+          "homeAway": "Away",
+          "opponent": "12u Townsend Ashby",
+          "time": "4:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "12u Maynard Stow 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "12u Bolton Blue",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "12u Westford 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "12u Pepperell",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "12u Maynard Stow 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:23:33.407Z"
+    },
+    "284624": {
+      "teamId": "284624",
+      "name": "12u Westford 2",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Mark Rudenko",
+          "role": "Head Coach",
+          "phone": "(781) 724-3010",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RqGb6q1QaVwpOALTCB00hsW8f0i057-eMVcGYSGNcEX0Zlfk_iirxB88A1KMpa40Svfv5TBzzSf4fx_MDDVqaxbrmf9EqYghmNpFU08s5FHIpU=?to_name=Mark+Rudenko"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "12u Townsend Ashby",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "12u Pepperell",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "12u Maynard Stow 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "12u Littleton",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Shaker Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "12u Bolton Green",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "12u Westford 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "12u Groton Dunstable",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "12u Maynard Stow 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:25:25.618Z"
+    },
+    "284629": {
+      "teamId": "284629",
+      "name": "10u GD Ghost Peppers",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Steve Sulprizio",
+          "role": "Head Coach",
+          "phone": "(617) 438-8245",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RktK45Um8Y_D8rDecQiXGV7d4zNfGCyfrZk5g5lKA90OGBVnscwWH1ENHuw1WNwmOK1KYwdA4ksI7xDEQyGN6hSLYQVwCyMw-s-iwGp8C74ZeY=?to_name=Steve+Sulprizio"
+        },
+        {
+          "name": "Anthony Lopez",
+          "role": "Assistant Coach",
+          "phone": null,
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Yellow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "10u Harvard Trojans",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "10u Maynard Stow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "10u Westford 2",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Green",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "10u Pepperell",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "10u Westford 1",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G6",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:19:40.087Z"
+    },
+    "284630": {
+      "teamId": "284630",
+      "name": "10u GD Dogmen",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "David Tully",
+          "role": "Head Coach",
+          "phone": "(508) 320-3012",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Rj4KbLFiW-VdjmgKzTlcXifOU6sJXaw4c7KnaX6tZruFuyQIQPZoGV2hbdgHLrb7QCIlcZCqUqeRx3zympv8EQyaZrMsFmM4gElZH-4rWV4toY=?to_name=David+Tully"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Green",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "10u Westford 1",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "10u GD Poison Apples",
+          "time": null,
+          "ourScore": 5,
+          "oppScore": 11,
+          "result": "L",
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "10u Littleton Navy",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "10u Townsend Ashby",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Yellow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "10u Maynard Stow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:18:47.255Z"
+    },
+    "284631": {
+      "teamId": "284631",
+      "name": "10u GD Poison Apples",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Kevin Smith",
+          "role": "Head Coach",
+          "phone": "(617) 850-2080",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RiEV18nNmPitvtq6Kk9kU7a4HqK6robHIHioMzcbqPR3r-FoCdmMZ8vMJdfQNlyqxy3hZi5K5w9_QgNdcqDVdHalyF9gR3oA5CMTXvKwZmpLL4=?to_name=Kevin+Smith"
+        },
+        {
+          "name": "Ben Cook",
+          "role": "Assistant Coach",
+          "phone": null,
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "10u Pepperell",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Blue",
+          "time": null,
+          "ourScore": 16,
+          "oppScore": 2,
+          "result": "W",
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "10u Harvard Huskies",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "10u GD Dogmen",
+          "time": null,
+          "ourScore": 11,
+          "oppScore": 5,
+          "result": "W",
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "10u Littleton Gold",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "10u Harvard Trojans",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Green",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:16:51.215Z"
+    },
+    "284633": {
+      "teamId": "284633",
+      "name": "10u Littleton Navy",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Ross McSweeney",
+          "role": "Head Coach",
+          "phone": "(617) 719-7321",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Riwb0dLLqC7CzYw0v7VOeaGC7w_YX5uwG7seSTxml13Ke76wtmqqFOv7tk36WP9xyFGmYcKIKKVyTXsykayPAU_zkXVUGde2d1Wu3nNOZR9AkE=?to_name=Ross+McSweeney"
+        },
+        {
+          "name": "Todd Richardson",
+          "role": "Assistant Coach",
+          "phone": "(508) 667-6411",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RiwS51dybUew031wlqKLuSTNoIWynAPyHGeqNgBrKlE0ZoHeBMLgJ_aiR_AjGy8eVbd3sa4HGYm8KUe7HgWaSpCFpNwE_WGY9SS_xnLHulBCLI=?to_name=Todd+Richardson"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "10u Westford 2",
+          "time": null,
+          "ourScore": 9,
+          "oppScore": 4,
+          "result": "W",
+          "location": "Westford Field G4",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "10u Pepperell",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Blue",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "10u Harvard Huskies",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "10u GD Dogmen",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "10u Littleton Gold",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "10u Harvard Trojans",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:17:37.358Z"
+    },
+    "284634": {
+      "teamId": "284634",
+      "name": "10u Townsend Ashby",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Matthew Kirby",
+          "role": "Head Coach",
+          "phone": "(978) 852-8253",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Rias-GVj2EtGkMAW4EG5574NsUMd01HQHWU6Oh1hK08LdMRrZCtGbf9X0CiGceMz5tWXEPMJBCbY-tn74DHsVXk1_5-JXmfCKXD_A_sJ5V4G4Q=?to_name=Matthew+Kirby"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "10u Maynard Stow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "10u Westford 2",
+          "time": null,
+          "ourScore": 14,
+          "oppScore": 7,
+          "result": "W",
+          "location": "Westford Field G4",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "10u Pepperell",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Blue",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "10u Harvard Huskies",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 2",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "10u GD Dogmen",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "10u Littleton Gold",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "10u Harvard Trojans",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:17:13.773Z"
+    },
+    "284635": {
+      "teamId": "284635",
+      "name": "10u Westford 1",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "patrick mulroy",
+          "role": "Head Coach",
+          "phone": "(978) 302-9177",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Rmmer33XpcoZPi6oGyLHdgjQz9Wrki1Rt7HIboe2GyOXWuQ7cll46zst_L1o8xSTcLBOxBhh17R9kso82ZzxpZHZDO5A-J1UfdSBrE8d-EhXSc=?to_name=patrick+mulroy"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Blue",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "10u Harvard Huskies",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G6",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "10u GD Dogmen",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "10u Littleton Gold",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G4",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "10u Harvard Trojans",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Green",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "10u GD Ghost Peppers",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G6",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:21:41.890Z"
+    },
+    "284636": {
+      "teamId": "284636",
+      "name": "10u Westford 2",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Samuel Hummer",
+          "role": "Head Coach",
+          "phone": null,
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "10u Littleton Navy",
+          "time": null,
+          "ourScore": 4,
+          "oppScore": 9,
+          "result": "L",
+          "location": "Westford Field G4",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "10u Townsend Ashby",
+          "time": null,
+          "ourScore": 7,
+          "oppScore": 14,
+          "result": "L",
+          "location": "Westford Field G4",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Yellow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "10u Maynard Stow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G6",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "10u GD Ghost Peppers",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "10u Pepperell",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Blue",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "10u Harvard Huskies",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G4",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:18:01.430Z"
+    },
+    "284640": {
+      "teamId": "284640",
+      "name": "8u GD Ghost Peppers",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Adam Cole",
+          "role": "Head Coach",
+          "phone": "(978) 223-3806",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Rfq2uF9e7I5HiaoTCghiFtDglVV1DrpcFXBZp95iJutZDObbPOcsE6xT0jmDRO_L5x1qT48T9zEPi6NaREW4TeQIfzeGGwfIPi-Z7ZLHDW7tAo=?to_name=Adam+Cole"
+        },
+        {
+          "name": "Matthew Grimard",
+          "role": "Assistant Coach",
+          "phone": null,
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "8u Harvard",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "8u GD Poison Apples",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "8u Bolton Green",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP1/far-left",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "8u Townsend Ashby",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "8u Pepperell",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP1/far-left",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "8u Littleton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP1/far-left",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "8u Bolton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP1/far-left",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "8u GD Howlers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:14:17.573Z"
+    },
+    "284641": {
+      "teamId": "284641",
+      "name": "8u GD Howlers",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Stephanie Santos",
+          "role": "Head Coach",
+          "phone": "(978) 987-0121",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RgAhPTHCAJNNWqOto7jMnfwBrGk-urDoVDwGprZD9GByQ2jk7W1ClPtzfxyfnGrFNtCs3Sys5tOUHqpWYJ-bIGSOIIAA06dkU8KFpMUrxglk_w=?to_name=Stephanie+Santos"
+        },
+        {
+          "name": "Nick Hollis",
+          "role": "Assistant Coach",
+          "phone": null,
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "8u Bolton Green",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "8u Townsend Ashby",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "8u Pepperell",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "8u Littleton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "8u Bolton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "8u Harvard",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "8u Littleton Navy",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "8u GD Ghost Peppers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:14:39.798Z"
+    },
+    "284643": {
+      "teamId": "284643",
+      "name": "8u Littleton Gold",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Brendan Meehan",
+          "role": "Head Coach",
+          "phone": null,
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "8u Pepperell",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "8u Harvard",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "8u Bolton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "8u GD Howlers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "8u Littleton Navy",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "8u GD Ghost Peppers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP1/far-left",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "8u GD Poison Apples",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "8u Bolton Green",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:15:46.265Z"
+    },
+    "284645": {
+      "teamId": "284645",
+      "name": "8u Townsend Ashby",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Jacob Powlovich",
+          "role": "Head Coach",
+          "phone": "(336) 587-7407",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RhuEqIxFZRdNcunQ8XrNSznnmVyxYDracKyXhm0nkO2EbkZUlZ0m1h_Z1PZUFeRpx8Ishz7rj-bEwmBmalOYvBick73QmMxjPPYCh1HNYdtSDQ=?to_name=Jacob+Powlovich"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "8u Bolton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "8u GD Howlers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-03",
+          "homeAway": "Home",
+          "opponent": "8u Littleton Navy",
+          "time": "2:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Spaulding Field 2 (Main)",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Spaulding%20Field%20311%20Main%20St%20Townsend%20MA%2001469"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "8u GD Ghost Peppers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "8u Bolton Green",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-24",
+          "homeAway": "Away",
+          "opponent": "8u GD Poison Apples",
+          "time": "12:30 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "8u Harvard",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "8u Pepperell",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:16:29.194Z"
+    },
+    "284652": {
+      "teamId": "284652",
+      "name": "8u GD Poison Apples",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Linda Tully",
+          "role": "Head Coach",
+          "phone": "(978) 302-4886",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RgXdZttNwPvlS9HIZKBafnYuOhU__kHXxAQpsZdHI0e10J2x9tBdrenTDQDZsJpNcLFFCkzAzVwGHXGEwXteelKyTjVchHn4M6F2WdUyLMCMP0=?to_name=Linda+Tully"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "8u GD Ghost Peppers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "8u Harvard",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "8u Bolton Green",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "8u Pepperell",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-24",
+          "homeAway": "Home",
+          "opponent": "8u Townsend Ashby",
+          "time": "12:30 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "8u Littleton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "8u Bolton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:15:02.374Z"
+    },
+    "284653": {
+      "teamId": "284653",
+      "name": "12u Pepperell",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Christopher Fantasia",
+          "role": "Head Coach",
+          "phone": null,
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "12u Bolton Blue",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "12u Westford 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "12u Townsend Ashby",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "12u Maynard Stow 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "12u Littleton",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "12u Bolton Green",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "12u Westford 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "12u Groton Dunstable",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:25:03.236Z"
+    },
+    "284654": {
+      "teamId": "284654",
+      "name": "12u Maynard Stow 1",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Michael Grenier",
+          "role": "Head Coach",
+          "phone": "(617) 293-4733",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Rm9QPYWS6Z9AHxAKHP7sUzV03B4zvV5856Fj-EvAs_krtILN3KO_xZl78QI8-vLxzIT6Jq6ypaZ4aWeM1Sn1uaRFrgFMixP1ZF2dHVGo12T9bw=?to_name=Michael+Grenier"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "12u Maynard Stow 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "12u Littleton",
+          "time": null,
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Shaker Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "12u Bolton Green",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "12u Westford 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "12u Groton Dunstable",
+          "time": null,
+          "ourScore": 8,
+          "oppScore": 5,
+          "result": "W",
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "12u Townsend Ashby",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "12u Bolton Blue",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "12u Westford 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:22:03.720Z"
+    },
+    "284655": {
+      "teamId": "284655",
+      "name": "12u Maynard Stow 2",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Adam Whelan",
+          "role": "Head Coach",
+          "phone": "(508) 364-2118",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RpaQxDCB8GWgx_AyGfkpmmf-o8Te7bpwvWmNK_-bQqzT2-kDlADSzKwlyg7Nc8dIY92Y2H0zOv3St0jdHjtOxWAZrdry5WbmVZ4DklRZXwPo_JYUPXsZHnaP6XMs5lpZjTB?to_name=Adam+Whelan"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "12u Maynard Stow 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "12u Bolton Blue",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "12u Westford 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "12u Pepperell",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "12u Townsend Ashby",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "12u Littleton",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Shaker Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "12u Bolton Green",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "12u Westford 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:24:41.019Z"
+    },
+    "284656": {
+      "teamId": "284656",
+      "name": "12u Bolton Blue",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Shad Bauer",
+          "role": "Head Coach",
+          "phone": "(518) 265-6150",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RothmAE5VTtnsrCEEfc6LoKIOon_dmh5LyV5v20qUeTF-5TuZSfLEoK3M48Nta3NwErsOjAV4WIkY3xF_1Y7rVp41HUPWhGo5JlMkl8t_FM77c=?to_name=Shad+Bauer"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "12u Pepperell",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "12u Maynard Stow 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "12u Littleton",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "12u Bolton Green",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "12u Westford 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "12u Groton Dunstable",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "12u Maynard Stow 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "12u Townsend Ashby",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:23:56.362Z"
+    },
+    "284657": {
+      "teamId": "284657",
+      "name": "12u Bolton Green",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Adam Trussell",
+          "role": "Head Coach",
+          "phone": "(978) 621-5190",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Rn_yPpTfRw0zbih1CYzJf5heUYfsgwLMfJobVhZdfoWdCF8Zop-yEcDelP5GwovUa4ykHxN3w04p0jiQG7y5aK5RYx-IwI9eRwKZJK48LKUBIw=?to_name=Adam+Trussell"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "12u Westford 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "12u Groton Dunstable",
+          "time": null,
+          "ourScore": 8,
+          "oppScore": 12,
+          "result": "L",
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "12u Maynard Stow 1",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "12u Bolton Blue",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "12u Westford 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G5",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "12u Pepperell",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "12u Maynard Stow 2",
+          "time": "3:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "12u Littleton",
+          "time": "6:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:23:09.966Z"
+    },
+    "284658": {
+      "teamId": "284658",
+      "name": "10u Bolton Green",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "John Daelhousen",
+          "role": "Head Coach",
+          "phone": "(978) 273-6330",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RkOXk1PjYVKzNEdIYIdTCQQVux4m6X7sncyLKvDPJdPv1o9P4sDeD0o38CxfApE5jFfFx1QjY47Cdex1-S3PP6068M4w-EroX05XJMeWxFVpWA=?to_name=John+Daelhousen"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "10u Harvard Huskies",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "10u GD Dogmen",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "10u Littleton Gold",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "10u Harvard Trojans",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "10u GD Ghost Peppers",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "10u Westford 1",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "10u GD Poison Apples",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:19:10.884Z"
+    },
+    "284659": {
+      "teamId": "284659",
+      "name": "10u Bolton Blue",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Jason Graham",
+          "role": "Head Coach",
+          "phone": "(603) 702-0522",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RjghMnbtuJ-6H1b7gfN4vV9xmX3V2BPGVpM0-BIPghjUpzpfKOS3pqXRn42ec7Ls9yS6VZI-DLYcAAN3ad5dvHvFbb1vjWE2JQXlISBhLFxKVs=?to_name=Jason+Graham"
+        },
+        {
+          "name": "Joe Cerrone",
+          "role": "Assistant Coach",
+          "phone": null,
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "10u Westford 1",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "10u GD Poison Apples",
+          "time": null,
+          "ourScore": 2,
+          "oppScore": 16,
+          "result": "L",
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "10u Littleton Navy",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "10u Townsend Ashby",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Yellow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "10u Maynard Stow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "10u Westford 2",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "10u Pepperell",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:18:24.895Z"
+    },
+    "284661": {
+      "teamId": "284661",
+      "name": "10u Harvard Trojans",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Dan Van Schalkwyk",
+          "role": "Head Coach",
+          "phone": "(978) 833-3270",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RlaqG1X89vaZycvmGiXkIlIfZjZkn7xQvaROM3dmt-TvHCdFZtQOrjtt1WvD59iTu1WrqHSO14_epxXTXsDxkyuvSKWsyj3e3hkdHoUclQgcmA=?to_name=Dan+Van+Schalkwyk"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "10u Littleton Gold",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "10u GD Ghost Peppers",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Green",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "10u Westford 1",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "10u GD Poison Apples",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "10u Littleton Navy",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "10u Townsend Ashby",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:20:26.403Z"
+    },
+    "284662": {
+      "teamId": "284662",
+      "name": "10u Harvard Huskies",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Chris Mayo",
+          "role": "Head Coach",
+          "phone": "(978) 289-3572",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RlDmuV1ADC5Qg9BtG_4xkiq_Q5HJ4JXsVHxeqZwAwR_l_Yrd-G7u0gQiW584g0nAUsa_Ctd7d0xD_unel2QhdqMwqseJXhIB-BcFBxGOn6t65I=?to_name=Chris+Mayo"
+        },
+        {
+          "name": "Brian King",
+          "role": "Assistant Coach",
+          "phone": "(774) 364-1887",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RlDlPg3LRPDnl5B5HvblFHRzuuoq4JZi-wRdNzazDx_yqHkoHBbbQPI01NXutoOGiPuMQNLXQ_3-x6bBuxe0P3e1D0h_De8pA0rtgQ91fdZy1w=?to_name=Brian+King"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Green",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "10u Westford 1",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G6",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "10u GD Poison Apples",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "10u Littleton Navy",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "10u Townsend Ashby",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 2",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Yellow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "10u Maynard Stow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 2",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "10u Westford 2",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G4",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:20:03.587Z"
+    },
+    "284663": {
+      "teamId": "284663",
+      "name": "10u Maynard Stow",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Jimmy Dillon",
+          "role": "Head Coach",
+          "phone": "(978) 808-4644",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Rl5R_cArF2YHcJJ807U7mPGlO_4iI_KVcPFYYISkIPEntQe-2doUYMVP_0VaV9PU8cyXJLavFOSPN-WXN2vBXKAj9vlPwoeJDb6JrH-2WX_KzU=?to_name=Jimmy+Dillon"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "10u Townsend Ashby",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Yellow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "10u GD Ghost Peppers",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "10u Westford 2",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G6",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "10u Pepperell",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Blue",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "10u Harvard Huskies",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 2",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "10u GD Dogmen",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:20:56.570Z"
+    },
+    "284664": {
+      "teamId": "284664",
+      "name": "8u Harvard",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Brian King",
+          "role": "Head Coach",
+          "phone": "(774) 364-1887",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RgtKS2YQ19SWtGCCXgxntx-4szmJpOBjdpMpuYAwLbrV4AXKns3XmgHb_X4I39-9HG7s4rXYIh5A3RGlrOwD_tda8zQYZ84zo0elOU3Qojnhn0=?to_name=Brian+King"
+        },
+        {
+          "name": "Brandon Simes",
+          "role": "Assistant Coach",
+          "phone": "(978) 387-3083",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RgtkxwNIe_eo0sTTbmd4QijI4z2MWC3zZ45dbekueHo7Jz32akU00lLJV3IGmtzUoGua0VWc5BOCPdX7Zl90ss6w5izR1YZL8ImW2HJFDMffio=?to_name=Brandon+Simes"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "8u GD Ghost Peppers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "8u Littleton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "8u GD Poison Apples",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "8u Bolton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "8u Bolton Green",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "8u GD Howlers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "8u Townsend Ashby",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "8u Littleton Navy",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:15:24.850Z"
+    },
+    "284665": {
+      "teamId": "284665",
+      "name": "8u Pepperell",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Brenna Conlon",
+          "role": "Head Coach",
+          "phone": "(781) 264-3673",
+          "emailUrl": null
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "8u Littleton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "8u Bolton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "8u GD Howlers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "8u Littleton Navy",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "8u GD Ghost Peppers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP1/far-left",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "8u GD Poison Apples",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "8u Bolton Green",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "8u Townsend Ashby",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:16:08.159Z"
+    },
+    "284666": {
+      "teamId": "284666",
+      "name": "10u Pepperell",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Shaun Shattuck",
+          "role": "Head Coach",
+          "phone": null,
+          "emailUrl": null
+        },
+        {
+          "name": "Michael Cicero",
+          "role": "Assistant Coach",
+          "phone": "(860) 614-5222",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RmQBKmw3th2lmal3nF5wfMJAidZPbEPis72u9ZcRSMpHAnyjKgBei8Hx8WJDMzAKGwVhVVZ3Jm1rVcmzcuje_Ema1F1fhexOEVqcoaCeaNFtIk=?to_name=Michael+Cicero"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "10u GD Poison Apples",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "10u Littleton Navy",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "10u Townsend Ashby",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Yellow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "10u Maynard Stow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "10u Westford 2",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "10u GD Ghost Peppers",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Blue",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:21:19.432Z"
+    },
+    "284667": {
+      "teamId": "284667",
+      "name": "8u Bolton Gold",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Dan Schpero",
+          "role": "Head Coach",
+          "phone": "(860) 614-4419",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0Re7oUQXjicFzWb8klyV4_D4k3g4ZdR5ZKlCvNwoClO_gou2udQ8pJ-quuNGkyDwGoNgZysxJDx9L2LGPVn5E0owvJZM2w8PJ75uKAd9ODdUj0U=?to_name=Dan+Schpero"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Away",
+          "opponent": "8u Townsend Ashby",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "8u Pepperell",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "8u Littleton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "8u Harvard",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "8u GD Howlers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP4/left-lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "8u Littleton Navy",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "8u GD Ghost Peppers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP1/far-left",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "8u GD Poison Apples",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:13:31.694Z"
+    },
+    "284668": {
+      "teamId": "284668",
+      "name": "8u Bolton Green",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Ben Conroy",
+          "role": "Head Coach",
+          "phone": null,
+          "emailUrl": null
+        },
+        {
+          "name": "Michael Coviello",
+          "role": "Assistant Coach",
+          "phone": null,
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0RfT8-SBJ2mewPN1B3LfMBXjddIiqHhFXM-VzvRSnxwaY29n61y5dy_dySC6FzHyjq-emMXEDIZqcWq0Darlm3o3QDK58slVJpmp1Nr37r-KxEmDLMCGQxlj8_u1a133YZ9t?to_name=Michael+Coviello"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "8u GD Howlers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Home",
+          "opponent": "8u Littleton Navy",
+          "time": "5:30 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Away",
+          "opponent": "8u GD Ghost Peppers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP1/far-left",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Home",
+          "opponent": "8u GD Poison Apples",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "8u Harvard",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "8u Townsend Ashby",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Townsend Craven Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Craven%20Field%2015%20New%20Fitchburg%20Rd%20Townsend%20MA%2001474"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "8u Pepperell",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "8u Littleton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:13:55.389Z"
+    },
+    "284632": {
+      "teamId": "284632",
+      "name": "10u Littleton Gold",
+      "season": "2026 Fall",
+      "staff": [],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "10u Harvard Trojans",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "10u Bolton Green",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "10u Westford 1",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Westford Field G4",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Westford%20-%20Graniteville%20Fields%2013%20River%20St%20Westford%20MA%2001886"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "10u GD Poison Apples",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Away",
+          "opponent": "10u Littleton Navy",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "10u Townsend Ashby",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton Couper Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shaker%20School%2035%20Shaker%20Ln%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Yellow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:26:17.419Z"
+    },
+    "284660": {
+      "teamId": "284660",
+      "name": "10u Bolton Yellow",
+      "season": "2026 Fall",
+      "staff": [],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-13",
+          "homeAway": "Home",
+          "opponent": "10u GD Ghost Peppers",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton IL Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "10u Maynard Stow",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Maynard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maynard%20-%20DJ%27s%20Field%201%20Tiger%20Dr%20Maynard%20MA%2001754"
+        },
+        {
+          "date": "2026-09-27",
+          "homeAway": "Home",
+          "opponent": "10u Westford 2",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "10u Pepperell",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Away",
+          "opponent": "10u Bolton Blue",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "10u Harvard Huskies",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Away",
+          "opponent": "10u GD Dogmen",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Groton CP2/middle",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Groton%20-%20Cow%20Pond%2099%20Cow%20Pond%20Brook%20Rd%20Groton%20MA%2001450"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Home",
+          "opponent": "10u Littleton Gold",
+          "time": "12:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        }
+      ],
+      "fetchedAt": "2026-10-15T18:25:54.851Z"
+    }
+  },
+  "scrapedAt": "2026-10-15T18:26:17.419Z"
+}

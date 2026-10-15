@@ -100,6 +100,24 @@
     });
   }
 
+  // Opponent's coach contact for an upcoming game -- straight from
+  // js/team-details.js's mirror of their own public macleague.org page
+  // (name/role, plus phone/email ONLY when that team's own page actually
+  // publishes them), not a link out to go read it there. Same fire-and-
+  // forget-after-the-main-render pattern as renderPitchingSlot/
+  // loadWeatherInto just below/above.
+  async function renderTheirContactSlot(opponentName, slotEl) {
+    await Promise.all([window.LeagueTeams.ensureLoaded(), window.TeamDetails.ensureLoaded()]);
+    const match = window.LeagueTeams.find(opponentName, window.TeamConfig.current().macLeagueDivisionId);
+    const details = match ? window.TeamDetails.getTeam(match.teamId) : null;
+    if (!slotEl.isConnected) return; // the coach already navigated away
+    if (!details || !details.staff.length) { slotEl.innerHTML = ''; return; }
+    slotEl.innerHTML = `
+      <div class="detailRow" style="display:flex;flex-direction:column;gap:4px;">
+        ${details.staff.map(s => `<div>${escapeHtml(s.name || 'Unknown')}${s.role ? ' &middot; ' + escapeHtml(s.role) : ''}${s.phone ? ' &middot; ' + escapeHtml(s.phone) : ''}${s.emailUrl ? ` &middot; <a href="${escapeHtml(s.emailUrl)}" target="_blank" rel="noopener">Email</a>` : ''}</div>`).join('')}
+      </div>`;
+  }
+
   // Upcoming game (no score yet): pitcher-availability preview for both
   // sides. Completed game: shows/logs our own pitch counts for that game --
   // see js/pitch-smart.js for the eligibility math these feed into.
@@ -269,7 +287,6 @@
       const editing = !!opts.editing;
       if (!editing) {
         const played = game.ourScore != null && game.oppScore != null;
-        const theirLinkUrl = window.LeagueTeams.teamUrl(game.opponent, window.TeamConfig.current().macLeagueDivisionId);
         containerEl.innerHTML = `
           <div class="detailCard">
             <h3><span class="standingsTeamLink" data-team-nav="${escapeHtml(game.opponent || '')}" tabindex="0" role="button" title="See ${escapeHtml(game.opponent || 'this team')}'s team page">${window.ClubLogos.badgeHtml(game.opponent, 26)}${game.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(game.opponent || 'TBD')}</span>
@@ -280,7 +297,7 @@
             ${game.status === 'postponed' ? '<div class="detailRow" style="color:var(--gold);"><b>Postponed</b> &mdash; edit the date once a makeup is set.</div>' : ''}
             ${game.status === 'cancelled' ? '<div class="detailRow" style="color:var(--status-red);"><b>Cancelled</b></div>' : ''}
             ${game.location ? `<div class="detailRow"><a href="${mapLink(game.location)}" target="_blank" rel="noopener">${escapeHtml(game.location)}</a></div>` : ''}
-            ${!played && theirLinkUrl ? `<div class="detailRow"><a href="${theirLinkUrl}" target="_blank" rel="noopener">${escapeHtml(game.opponent)}'s MAC League page</a> <span class="helpText" style="margin:0;display:inline;">&mdash; coach contact for weather/cancellation, straight from the league, not stored here</span></div>` : ''}
+            ${!played && game.opponent ? '<div id="theirContactSlot"></div>' : ''}
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}
             ${game.notes ? `<div class="detailRow">${escapeHtml(game.notes)}</div>` : ''}
             <div id="weatherSlot"></div>
@@ -298,6 +315,8 @@
         const weatherSlot = containerEl.querySelector('#weatherSlot');
         if (weatherSlot && game.location && game.date) window.loadWeatherInto(weatherSlot, game.location, game.date, game.gameTime);
         renderPitchingSlot(teamId, game, containerEl.querySelector('#pitchingSlot'), opts);
+        const contactSlot = containerEl.querySelector('#theirContactSlot');
+        if (contactSlot) renderTheirContactSlot(game.opponent, contactSlot);
         if (!played) wireRsvp(containerEl, game, opts.viewerName, updated => window.Schedule.saveGame(teamId, updated), opts.onItemChange);
         if (!played && game.homeAway === 'Away') wireCarpool(containerEl, game, opts.viewerName, updated => window.Schedule.saveGame(teamId, updated), opts.onItemChange);
         if (played) wireGameBall(containerEl, teamId, game, opts);
