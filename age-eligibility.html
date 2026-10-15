@@ -55,9 +55,8 @@
     font-family: var(--font-body); font-size: 15px; line-height: 1.5;
     padding: 16px; -webkit-font-smoothing: antialiased;
   }
-  h1, h2, .cond { font-family: var(--font-display); font-weight: 400; margin: 0; }
+  h1, h2 { font-family: var(--font-display); font-weight: 400; margin: 0; }
   .wrap { max-width: 760px; margin: 0 auto; }
-  .title { font-size: 22px; letter-spacing: 0.01em; }
   .sub { color: var(--text2); font-size: 13.5px; margin-top: 4px; }
   .card {
     background: var(--card); border: 1px solid var(--card-border); border-radius: 12px;
@@ -123,7 +122,6 @@
 </head>
 <body>
 <div class="wrap" id="root">
-  <div class="title cond">League Age Eligibility</div>
   <div class="sub">Loading&hellip;</div>
 </div>
 <script>
@@ -238,14 +236,12 @@
     var root = document.getElementById('root');
     var leagueAges = data && data.leagueAges;
     if (!leagueAges) {
-      root.innerHTML = '<div class="title cond">League Age Eligibility</div>' +
-        '<div class="card"><div class="emptyState">Age cutoff data isn’t available right now.</div></div>';
+      root.innerHTML = '<div class="card"><div class="emptyState">Age cutoff data isn’t available right now.</div></div>';
       return;
     }
     var years = Object.keys(leagueAges).filter(function (k) { return /^\d{4}$/.test(k); }).sort();
     if (!years.length) {
-      root.innerHTML = '<div class="title cond">League Age Eligibility</div>' +
-        '<div class="card"><div class="emptyState">Age cutoff data isn’t available right now.</div></div>';
+      root.innerHTML = '<div class="card"><div class="emptyState">Age cutoff data isn’t available right now.</div></div>';
       return;
     }
     var thisYear = new Date().getFullYear();
@@ -268,10 +264,8 @@
           }).join('') + '</div>'
         : '';
       root.innerHTML =
-        '<div class="title cond">League Age Eligibility</div>' +
-        '<div class="sub">' + escapeHtml(leagueAges.note || '') + '</div>' +
         '<div class="card">' +
-          '<div class="sectionLabel">Am I eligible?</div>' +
+          '<div class="sectionLabel">Which division is my child eligible for?</div>' +
           '<label class="field">Birth date' +
             '<input type="date" id="dobInput" max="' + new Date().toISOString().slice(0, 10) + '">' +
           '</label>' +
@@ -328,13 +322,18 @@
     });
   }
   window.addEventListener('resize', reportHeight);
+  // Google Fonts swap in after the initial layout (Anton/Oswald/Inter all
+  // load async via the <link> in <head>) and can reflow text just enough
+  // to change scrollHeight after the last reportHeight() call already
+  // fired -- without this, an embedding iframe can be left a few px short
+  // and show its own scrollbar until the next resize/interaction.
+  if (window.document.fonts && document.fonts.ready) document.fonts.ready.then(reportHeight);
 
   fetch('data/league-info.json?v=' + Date.now())
     .then(function (r) { return r.json(); })
     .then(render)
     .catch(function () {
-      document.getElementById('root').innerHTML = '<div class="title cond">League Age Eligibility</div>' +
-        '<div class="card"><div class="emptyState">Couldn’t load age cutoff data &mdash; check your connection and reload.</div></div>';
+      document.getElementById('root').innerHTML = '<div class="card"><div class="emptyState">Couldn’t load age cutoff data &mdash; check your connection and reload.</div></div>';
       reportHeight();
     });
 })();
