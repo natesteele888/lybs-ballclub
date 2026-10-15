@@ -134,6 +134,22 @@
     return `<div class="gameResultLogoFallback">${escapeHtml(letter)}</div>`;
   }
 
+  // Wraps a side's logo+name in data-team-nav (same attribute, same
+  // index.html delegated handler, as every other team badge in this app)
+  // so tapping it opens that team's own Team Page -- except whichever
+  // side is us, same "no link to ourselves" rule js/game-card.js's own
+  // "our" side already follows, since there's no Team Page for this app's
+  // own configured team to open. reverse mirrors the hero's right-hand
+  // side (name then badge, book-ended toward the card's edge) the same
+  // way js/game-card.js's own theirTeamBlock does.
+  function sideTeamHtml(side, divisionId, extraClass, reverse) {
+    const badge = sideBadgeHtml(side);
+    const name = `<div class="gameResultName">${escapeHtml(side.name || 'TBD')}</div>`;
+    const inner = reverse ? name + badge : badge + name;
+    if (isOurTeam(side.name)) return `<div class="gameResultTeam ${extraClass || ''}">${inner}</div>`;
+    return `<div class="gameResultTeam gameResultTeamLink ${extraClass || ''}" data-team-nav="${escapeHtml(side.name || '')}"${divisionId ? ` data-team-division="${escapeHtml(divisionId)}"` : ''} title="See ${escapeHtml(side.name || 'this team')}'s team page" tabindex="0" role="button">${inner}</div>`;
+  }
+
   function heroHtml(m) {
     const topRight = m.final ? 'Final' : (m.time || '');
     const [a, b] = m.sides;
@@ -150,16 +166,18 @@
           <div class="gameResultMeta">${escapeHtml(topRight)}</div>
         </div>
         <div class="gameResultRow">
-          <div class="gameResultTeam">${sideBadgeHtml(a)}<div class="gameResultName">${escapeHtml(a.name || 'TBD')}</div></div>
+          ${sideTeamHtml(a, m.divisionId)}
           ${centerHtml}
-          <div class="gameResultTeam gameResultTeamRight"><div class="gameResultName">${escapeHtml(b.name || 'TBD')}</div>${sideBadgeHtml(b)}</div>
+          ${sideTeamHtml(b, m.divisionId, 'gameResultTeamRight', true)}
         </div>
         ${m.location ? `<div class="helpText" style="margin:10px 0 0;text-align:center;">${escapeHtml(m.location)}</div>` : ''}
       </div>`;
   }
 
-  function standingsBlockHtml(side, row, rank, total, divisionName) {
+  function standingsBlockHtml(side, divisionId, row, rank, total, divisionName) {
     const badge = sideBadgeHtml(side);
+    const mine = isOurTeam(side.name);
+    const headerAttrs = mine ? '' : `data-team-nav="${escapeHtml(side.name || '')}"${divisionId ? ` data-team-division="${escapeHtml(divisionId)}"` : ''} title="See ${escapeHtml(side.name || 'this team')}'s team page" tabindex="0" role="button"`;
     const statsHtml = row
       ? `<div class="pcStatRow" style="margin:10px 0 0;">
            ${statTileHtml(`${escapeHtml(String(row.w ?? '-'))}-${escapeHtml(String(row.l ?? '-'))}${row.t && row.t !== '0' ? '-' + escapeHtml(String(row.t)) : ''}`, 'Record')}
@@ -169,7 +187,7 @@
       : `<div class="helpText" style="margin:10px 0 0;">No current standings mirrored for this team.</div>`;
     return `
       <div class="drillCard" style="margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:10px;">${badge}<div class="listRowTitle">${escapeHtml(side.name || 'TBD')}</div></div>
+        <div class="${mine ? '' : 'standingsTeamLink'}" style="display:flex;align-items:center;gap:10px;${mine ? '' : 'cursor:pointer;'}" ${headerAttrs}>${badge}<div class="listRowTitle">${escapeHtml(side.name || 'TBD')}</div></div>
         ${statsHtml}
       </div>`;
   }
@@ -229,7 +247,7 @@
         </div>
         ${heroHtml(m)}
         <div class="sectionLabel" style="margin-top:18px;">Standings</div>
-        ${resolvedSides.map(({ side, row, rank }) => standingsBlockHtml(side, row, rank, rows.length, divisionName)).join('')}
+        ${resolvedSides.map(({ side, row, rank }) => standingsBlockHtml(side, m.divisionId, row, rank, rows.length, divisionName)).join('')}
         ${m.sides.map((side, i) => `
           <div class="sectionLabel" style="margin-top:8px;">${escapeHtml(side.name || 'Team')}'s Recent Form</div>
           ${recentFormHtml(side, ourRecent)}`).join('')}

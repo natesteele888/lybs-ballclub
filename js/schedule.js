@@ -243,7 +243,7 @@
           : g.gameType === 'championship' ? '<span class="badge gameTypeBadge gameTypeChampionship">Championship</span>' : '';
         return `<div class="listRow" data-id="${escapeHtml(g.id)}" style="${g.status === 'cancelled' ? 'opacity:0.55;' : ''}">
           <div class="listRowMain">
-            <div class="listRowTitle">${window.ClubLogos.badgeHtml(g.opponent, 18)}${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent || 'TBD')} ${typeBadge}</div>
+            <div class="listRowTitle"><span class="standingsTeamLink" data-team-nav="${escapeHtml(g.opponent || '')}" tabindex="0" role="button" title="See ${escapeHtml(g.opponent || 'this team')}'s team page">${window.ClubLogos.badgeHtml(g.opponent, 18)}${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent || 'TBD')}</span> ${typeBadge}</div>
             <div class="listRowSub">${escapeHtml(g.date || '')}${g.gameTime ? ' · ' + escapeHtml(g.gameTime) : ''}${g.location ? ' · ' + escapeHtml(g.location) : ''}</div>
           </div>
           ${statusBadge}${tbdBadge}
@@ -272,7 +272,7 @@
         const theirLinkUrl = window.LeagueTeams.teamUrl(game.opponent, window.TeamConfig.current().macLeagueDivisionId);
         containerEl.innerHTML = `
           <div class="detailCard">
-            <h3>${window.ClubLogos.badgeHtml(game.opponent, 26)}${game.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(game.opponent || 'TBD')}
+            <h3><span class="standingsTeamLink" data-team-nav="${escapeHtml(game.opponent || '')}" tabindex="0" role="button" title="See ${escapeHtml(game.opponent || 'this team')}'s team page">${window.ClubLogos.badgeHtml(game.opponent, 26)}${game.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(game.opponent || 'TBD')}</span>
               ${game.gameType === 'playoff' ? '<span class="badge gameTypeBadge gameTypePlayoff">Playoff</span>' : ''}
               ${game.gameType === 'championship' ? '<span class="badge gameTypeBadge gameTypeChampionship">Championship</span>' : ''}
             </h3>
