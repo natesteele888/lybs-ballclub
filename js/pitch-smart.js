@@ -340,11 +340,7 @@
       const data = await window.dbGet(window.sharedPath('pitchSmart'));
       const team = data && data[opponentName];
       if (!team || !team.pitchers || !team.pitchers.length) {
-        containerEl.innerHTML = `
-          <div class="emptyState">
-            No MAC League pitch count data mirrored for ${escapeHtml(opponentName)} yet.<br>
-            <span class="helpText">This mirrors from macleague.org once Spring pitch-count reporting is active -- see scripts/scrape-pitchsmart.mjs.</span>
-          </div>`;
+        containerEl.innerHTML = `<div class="emptyState">No pitch count data mirrored for ${escapeHtml(opponentName)} yet.</div>`;
         return;
       }
       const byPitcher = {};
@@ -487,11 +483,7 @@
         const team = data[selected] || {};
         const order = Array.isArray(team.depthOrder) ? team.depthOrder : [];
         if (!team.pitchers || !team.pitchers.length) {
-          body.innerHTML = `
-            <div class="emptyState">
-              No MAC League pitch count data mirrored for ${escapeHtml(selected)} yet.<br>
-              <span class="helpText">This mirrors from macleague.org once Spring pitch-count reporting is active.</span>
-            </div>`;
+          body.innerHTML = `<div class="emptyState">No pitch count data mirrored for ${escapeHtml(selected)} yet.</div>`;
         } else {
           const byPitcher = {};
           team.pitchers.forEach(p => { byPitcher[p.name] = p.appearances; });
