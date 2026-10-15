@@ -284,7 +284,8 @@
             }).join('') +
           '</div>' +
         '</div>' +
-        '<div class="footNote">Mirrored from <a href="https://www.macleague.org" target="_blank" rel="noopener">macleague.org</a> &middot; ' + escapeHtml(data.source || '') + '</div>';
+        '<div class="footNote">Mirrored from <a href="https://www.macleague.org" target="_blank" rel="noopener">macleague.org</a> &middot; ' + escapeHtml(data.source || '') + '</div>' +
+        '<div class="footNote">Our registration process will automatically attempt to place your player in the right division. If it seems wrong, please reach out to us at: <a href="mailto:info@lunenburgybs.com">info@lunenburgybs.com</a></div>';
 
       root.querySelectorAll('.yearTab').forEach(function (btn) {
         btn.addEventListener('click', function () { selectedYear = btn.getAttribute('data-year'); paint(); reportHeight(); });
