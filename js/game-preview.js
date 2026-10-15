@@ -38,6 +38,19 @@
    rather than dressed up as a "Last 5" list that would imply a game
    log this app doesn't have.
 
+   Pitching Status (who's eligible/unavailable to pitch THIS game,
+   not just today) reuses js/pitch-smart.js's same daily-max/rest-day
+   calculator team-page.js and the Pitching tab already use, computed
+   as of the game's own date (today for a js/tonight.js game, the
+   real calendar date for a js/league-schedule.js one, days out) --
+   same honest-degrade split as Recent Form: our own side reads real
+   logged pitch counts, the other side reads shared/pitchSmart, which
+   is an honest empty state for every team today (Spring-only
+   reporting on macleague.org's end -- see that file's own header).
+   Filled in after the rest of the page is already on screen, same
+   fire-and-forget-after-render pattern js/team-page.js's own
+   #tpPitchSlot already uses.
+
    window.GamePreview.render(containerEl, source, opts)
      source -- a raw game object from TonightGames.gameById() or
        LeagueSchedule.getGamesForDate()[idx] (see normalize() below)
@@ -56,7 +69,7 @@
   const DIVISION_NAME_TO_ID = { Rookies: '33694', Minors: '33695', Majors: '33696' };
 
   // Normalizes either raw shape into one common shape:
-  // {divisionId, divisionName, time, location, final,
+  // {divisionId, divisionName, date, time, location, final,
   //  sides: [{name, teamId, logoUrl, score}, {..}]}
   function normalize(source) {
     if (source && Array.isArray(source.teams)) {
@@ -68,6 +81,9 @@
       return {
         divisionId: source.divisionId || null,
         divisionName: source.divisionName || null,
+        // js/tonight.js only ever carries TODAY's games (see its own header
+        // comment) -- it has no date field of its own to read.
+        date: todayIso(),
         time: source.time || null,
         location: source.location || null,
         final: sides.length === 2 && sides[0].score != null && sides[1].score != null,
@@ -78,6 +94,11 @@
     return {
       divisionId,
       divisionName: source.division || null,
+      // index.html's click handler stamps this on before calling render() --
+      // js/league-schedule.js's own entries carry no date of their own
+      // (the date lives in which getGamesForDate(iso) array they came
+      // from), so there's nothing to read here without that.
+      date: source.date || null,
       time: source.from || null,
       location: source.location || null,
       final: false,
@@ -212,8 +233,35 @@
         ${m.sides.map((side, i) => `
           <div class="sectionLabel" style="margin-top:8px;">${escapeHtml(side.name || 'Team')}'s Recent Form</div>
           ${recentFormHtml(side, ourRecent)}`).join('')}
+        ${m.sides.map((side, i) => `
+          <div class="sectionLabel" style="margin-top:8px;">${escapeHtml(side.name || 'Team')}'s Pitching Status</div>
+          <div id="gpPitchSlot${i}"></div>`).join('')}
       `;
       containerEl.querySelector('#gpBack').addEventListener('click', () => opts.onBack && opts.onBack());
+
+      // Who's eligible to pitch this game, same daily-max/rest-day
+      // calculator (js/pitch-smart.js) team-page.js and the Pitching tab
+      // already use -- filled in after the rest of the page is already on
+      // screen, same fire-and-forget-after-render pattern team-page.js's
+      // own #tpPitchSlot uses, not awaited above. Our own side reads real
+      // logged pitch counts (window.Schedule); the other side reads
+      // shared/pitchSmart, which degrades to an honest empty state when
+      // nothing's mirrored for them (see renderOpponentEligibility's own
+      // header comment -- true for every team today, Spring-only data).
+      const asOfDate = m.date || todayIso();
+      window.PitchSmart.ensureLoaded().then(() => {
+        m.sides.forEach((side, i) => {
+          const slot = containerEl.querySelector(`#gpPitchSlot${i}`);
+          if (!slot) return; // the coach already navigated away
+          if (isOurTeam(side.name)) {
+            window.PitchSmart.renderOurEligibility(slot, ourGames, divisionName, asOfDate, cfg.teamId);
+          } else if (side.name) {
+            window.PitchSmart.renderOpponentEligibility(slot, side.name, divisionName, asOfDate);
+          } else {
+            slot.innerHTML = '<div class="emptyState">Team not identified.</div>';
+          }
+        });
+      });
     },
   };
 })();
