@@ -879,6 +879,13 @@ a { color: var(--lybs-blue-bright); }
   background: var(--card); border: 1px solid var(--card-border); border-radius: 12px;
   padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;
 }
+/* [data-game-nav] only -- stamped onto a card/row by js/tonight.js when
+   it carries a real gameId (see that file's own comment); the old
+   string-only todayGames entries never get this attribute, so they stay
+   visually inert too, not just functionally. */
+.tonightMergedCard[data-game-nav], .tonightGameRow[data-game-nav] { cursor: pointer; transition: background .15s; }
+.tonightMergedCard[data-game-nav]:hover, .tonightMergedCard[data-game-nav]:active,
+.tonightGameRow[data-game-nav]:hover, .tonightGameRow[data-game-nav]:active { background: rgba(76,106,235,0.12); }
 /* Single child now (time or the Final tag) -- the division used to sit
    here too as a .tonightLeagueChip badge, but a pill up top read as
    disconnected from the teams it described; it's a bold label on the
@@ -1252,10 +1259,16 @@ a { color: var(--lybs-blue-bright); }
 .calDotPractice { background: #E6B935; }
 .calDotLeague { background: #8A93B8; }
 .calDayPanel { margin-top: 14px; }
-/* Read-only MAC League rows (js/calendar-view.js) -- nothing to tap, so no
-   pointer cursor or hover lift, unlike our own editable .listRow entries. */
+/* Read-only MAC League rows (js/calendar-view.js) -- nothing to EDIT, so no
+   hover lift the way our own editable .listRow entries get (that reads as
+   "tap to open for editing," which this never is) -- but still tappable
+   for a read-only Game Preview (js/game-preview.js), hence the [data-game-
+   nav] pointer-cursor override just below rather than cursor:default for
+   every row regardless. */
 .listRowReadonly { cursor: default; }
 .listRowReadonly:hover { border-color: var(--card-border); transform: none; box-shadow: none; }
+.listRowReadonly[data-game-nav] { cursor: pointer; transition: background .15s; }
+.listRowReadonly[data-game-nav]:hover, .listRowReadonly[data-game-nav]:active { background: rgba(76,106,235,0.12); }
 .rsvpRow { display: flex; gap: 8px; margin-top: 6px; }
 .calAddRow { display: flex; gap: 8px; margin-top: 10px; }
 .calWeekList { display: flex; flex-direction: column; gap: 10px; }
