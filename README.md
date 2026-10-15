@@ -8,6 +8,26 @@ No build step: open `index.html` (or run a static server) and it runs. Runs enti
 
 - **Schedule / Practices / Roster** -- CRUD tabs, coach-editable, read-only for everyone else.
 - **GameChanger widget** -- paste the Scoreboard Widget snippet from `web.gc.com -> Tools -> Create Scoreboard Widget`; it renders in a sandboxed iframe. Display-only -- GameChanger has no API, so this is never a data source for the calendar or anything else.
+- **Age eligibility embed** -- `age-eligibility.html` is a standalone page (not part of the app shell, no sign-in) that ports the League Ages tab's chart/calculator so it can be dropped into an external site (e.g. `lunenburgybs.com`) via a plain `<iframe>`. It reads the same `data/league-info.json` this repo already maintains, so the cutoffs never drift from the in-app tab, and posts its own content height to the parent window on load/resize (`{lybsAgeEligibilityHeight}`) so the iframe can size itself instead of guessing a fixed number. Embed snippet:
+  ```html
+  <iframe
+    id="lybs-age-eligibility"
+    src="https://natesteele888.github.io/lybs-ballclub/age-eligibility.html"
+    title="LYBS Age Eligibility"
+    loading="lazy"
+    style="width:100%;max-width:760px;border:0;display:block;"
+    height="600"></iframe>
+  <script>
+    window.addEventListener('message', function (e) {
+      if (e.origin !== 'https://natesteele888.github.io') return;
+      if (e.data && typeof e.data.lybsAgeEligibilityHeight === 'number') {
+        var f = document.getElementById('lybs-age-eligibility');
+        if (f) f.style.height = e.data.lybsAgeEligibilityHeight + 'px';
+      }
+    });
+  </script>
+  ```
+  The `height="600"` attribute is just a fallback shown before the first resize message arrives -- the script above takes over immediately after.
 - **MAC League standings** -- mirrored from `macleague.org` by `scripts/scrape-standings.mjs`, run on a schedule (`.github/workflows/standings.yml`), never fetched live from the browser. See that script's header comment for why.
 - **Rules search & save** -- MAC League's full set of rulebooks (`data/rules-seed.json`, pulled from `macleague.org/coaching-resources/...`, last refreshed for the 2026 season -- see that file's `season`/`fetchedAt` fields): Rookies, Minors, Majors, Juniors & Seniors each have their own rules (they genuinely differ), plus General, Playoff, Operating Guidelines and All-Stars Information that apply more broadly. Searchable, filterable by division (a division's rules + General show together, since the league's own rules are written that way), with a per-device "pin for quick reference." Rules get amended mid-season -- several entries carry the league's own "(Updated .../changed on ...)" notes -- so re-pull this each offseason at minimum.
 - **My Calendar** -- downloads an `.ics` file combining every team this device has logged into. Built from our own Schedule/Practices data, not synced from GameChanger (no feed exists to sync from).
@@ -82,5 +102,5 @@ Carries forward the same discipline as the `lybs-reporting` dashboard: roster en
 
 ## Not built yet
 
-- **Practice Catalog full buildout** -- Phase 1 (a flat, atomic drill library per division -- T-Ball/Rookies/Minors/Majors, each drill tiered foundational/standard/advanced -- plus the skill-benchmark ladder, pulled into a coach's own Practice Plan via its embedded Drill Library picker) is built, but still reached only by directly calling `switchTab('catalog')` -- deliberately left out of `index.html`'s `NAV_CATEGORIES` (the Resources entry still only lists `['rules', 'calendar']`) while content coverage is thin, so it's not actually live for a real user yet. Phase 2 -- the rest of a full season's worth of drills per division/category, a board admin-edit UI, and surfacing the tab in the nav once there's enough content -- is a content-authoring project, not an integration; see `data/practice-catalog-seed.json`/`data/skill-benchmarks-seed.json` for sourcing and citations.
+- **Practice Catalog nav entry** -- the drill library itself is no longer thin: all 49 drills (T-Ball/Rookies/Minors/Majors, each tiered foundational/standard/advanced) carry equipment/setup steps/coaching points, 40 of the 49 have a field-position diagram, and Practice Plan's own "Generate a season plan" builds a full multi-week plan from this content in one pass (foundational-to-advanced pacing, specialized/team-coordinated categories held back until later in the season -- see `js/practice-plan.js`'s `CATEGORY_STAGE`). Still reached only by directly calling `switchTab('catalog')`, though -- deliberately left out of `index.html`'s `NAV_CATEGORIES` (the Resources entry still only lists `['rules', 'calendar']`). What's left is the integration, not the content: surface the tab in the nav, and decide whether a board admin-edit UI is worth building or whether re-running the same authoring pass that built this content is enough when it needs updating. See `data/practice-catalog-seed.json`/`data/skill-benchmarks-seed.json` for sourcing and citations.
 - **Cross-platform communication sync** (Facebook/website/GameChanger) -- `lybs-reporting` already has a manual-approval photo/caption pipeline for the league's Facebook page; a single team would want a lighter version of that, not a new system.
