@@ -277,14 +277,6 @@
         "range": "5/1/2013 to 4/30/2015"
       },
       {
-        "division": "Baseball 15/16U Juniors",
-        "range": "5/1/2009 to 4/30/2013"
-      },
-      {
-        "division": "Baseball 18U Seniors",
-        "range": "5/1/2007 to 4/30/2010"
-      },
-      {
         "division": "Softball 8U Rookies",
         "range": "9/1/2016 to 8/31/2019"
       },
@@ -295,10 +287,6 @@
       {
         "division": "Softball 12U Majors",
         "range": "9/1/2012 to 8/31/2014"
-      },
-      {
-        "division": "Softball 16U Juniors",
-        "range": "9/1/2008 to 8/31/2012"
       }
     ],
     "2027": [
@@ -319,14 +307,6 @@
         "range": "5/1/2014 to 4/30/2016"
       },
       {
-        "division": "Baseball 15/16U Juniors",
-        "range": "5/1/2010 to 4/30/2014"
-      },
-      {
-        "division": "Baseball 18U Seniors",
-        "range": "5/1/2008 to 4/30/2011"
-      },
-      {
         "division": "Softball 8U Rookies",
         "range": "9/1/2017 to 8/31/2020"
       },
@@ -337,13 +317,9 @@
       {
         "division": "Softball 12U Majors",
         "range": "9/1/2013 to 8/31/2015"
-      },
-      {
-        "division": "Softball 16U Juniors",
-        "range": "9/1/2009 to 8/31/2013"
       }
     ],
-    "note": "Age cutoff date ranges MAC League uses to assign divisions. Softball's determination date is August 31st of the prior year, not the current year. Younger kids may move up without approval; moving an older kid down needs MAC, Babe Ruth, and insurance-carrier approval."
+    "note": "Age cutoff date ranges MAC League uses to assign divisions. Softball's determination date is August 31st of the prior year, not the current year. Younger kids may move up without approval; moving an older kid down needs MAC, Babe Ruth, and insurance-carrier approval. MAC League's own League Ages page (the source below) also lists Baseball 15/16U Juniors, Baseball 18U Seniors, and Softball 16U Juniors -- regional age brackets other MAC League towns use, not divisions LYBS itself fields teams for (12U Majors is the highest level LYBS offers, in both sports), so they're left out of this chart on purpose rather than missing by omission."
   },
   "seasons": [
     {
