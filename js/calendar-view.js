@@ -65,13 +65,21 @@
   function rowHtml(entry) { return entry.kind === 'game' ? gameRowHtml(entry) : practiceRowHtml(entry); }
 
   // Read-only MAC League games for a date, from js/league-schedule.js.
-  // Deliberately not merged into byDate/rowHtml: these aren't ours to open,
-  // edit, or delete, and rowHtml's data-kind is what wireRows uses to
-  // dispatch taps -- a league row carries neither, so it only ever renders,
-  // never wires.
-  function leagueRowHtml(g) {
+  // Deliberately not merged into byDate/rowHtml: these aren't ours to
+  // edit or delete, and rowHtml's data-kind is what wireRows uses to
+  // dispatch an edit-open tap -- a league row carries neither. They ARE
+  // tappable for a read-only js/game-preview.js, though -- data-game-nav
+  // + data-game-date/data-game-idx (this file's own LeagueSchedule rows
+  // have no stable id of their own, unlike a real js/schedule.js game, so
+  // the pair re-resolves the exact live entry via
+  // LeagueSchedule.getGamesForDate(date)[idx] rather than threading the
+  // whole object through the DOM -- same "pass enough to re-fetch, not
+  // the data itself" convention js/tonight.js's data-game-id uses).
+  // index.html's delegated [data-game-nav] handler does the actual
+  // re-resolve + open; this file only renders and stamps the identity.
+  function leagueRowHtml(g, iso, idx) {
     return `
-      <div class="listRow listRowReadonly">
+      <div class="listRow listRowReadonly" data-game-nav="1" data-game-date="${escapeHtml(iso)}" data-game-idx="${idx}" tabindex="0" role="button" title="Game preview">
         <div class="listRowMain">
           <div class="listRowTitle">${escapeHtml(g.home)} vs ${escapeHtml(g.away)}</div>
           <div class="listRowSub">${escapeHtml(g.division)}${g.from ? ' &middot; ' + escapeHtml(g.from) : ''}${g.location ? ' &middot; ' + escapeHtml(g.location) : ''}</div>
@@ -83,7 +91,7 @@
     const games = window.LeagueSchedule.getGamesForDate(iso);
     if (!games.length) return '';
     return `<div class="sectionLabel" style="margin-top:14px;">MAC League</div>
-      <div class="listBody">${games.map(leagueRowHtml).join('')}</div>`;
+      <div class="listBody">${games.map((g, idx) => leagueRowHtml(g, iso, idx)).join('')}</div>`;
   }
 
   function wireRows(root, opts) {

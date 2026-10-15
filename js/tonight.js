@@ -40,6 +40,16 @@
    below) stays separately in use by js/standings.js's "Today's
    games" section, which is already scoped to one division and
    doesn't need a league chip.
+
+   Tapping a card anywhere else (not a team name, not Watch Live)
+   opens js/game-preview.js's full matchup/standings/recent-form
+   view -- data-game-nav + data-game-id/data-game-division, routed
+   by index.html's own delegated handler (same shape as data-team-
+   nav, just a sibling attribute rather than reusing it, since "see
+   this team's own page" and "preview this specific game" are two
+   different taps on the same card). Only stamped when game.gameId
+   exists -- the old string-only todayGames entries (pre-dating this
+   shape) stay fully inert, same as they always have been.
    ============================================================ */
 (function () {
   let cache = null; // shared/macLeagueStandings contents
@@ -130,8 +140,14 @@
           ${right}
         </div>`;
     };
+    // data-game-nav/data-game-id/data-game-division let a tap anywhere on
+    // the card that ISN'T a more specific control (a team name/logo, or
+    // the Watch button) open the full Game Preview (js/game-preview.js) --
+    // index.html's delegated handler re-resolves the live game object via
+    // gameById() below rather than this card carrying its own data, same
+    // "pass an id, resolve fresh" convention data-team-nav already uses.
     return `
-      <div class="tonightMergedCard ${played ? 'tonightMergedCardFinal' : ''}">
+      <div class="tonightMergedCard ${played ? 'tonightMergedCardFinal' : ''}" ${game.gameId ? `data-game-nav="1" data-game-id="${escapeHtml(game.gameId)}" data-game-division="${escapeHtml(game.divisionId || '')}" tabindex="0" role="button" title="Game preview"` : ''}>
         <div class="tonightMergedTop">
           ${played ? '<span class="tonightFinalTag">Final</span>' : (game.time ? `<span class="tonightMergedTime">${escapeHtml(game.time)}</span>` : '')}
         </div>
@@ -188,11 +204,24 @@
         ? `<span class="tonightScore">${escapeHtml(a.score ?? '-')} &ndash; ${escapeHtml(b.score ?? '-')}</span>`
         : '<span class="tonightVs">vs</span>';
       return `
-        <div class="tonightGameRow">
+        <div class="tonightGameRow" ${game.gameId ? `data-game-nav="1" data-game-id="${escapeHtml(game.gameId)}" data-game-division="${escapeHtml(divisionId || '')}" tabindex="0" role="button" title="Game preview"` : ''}>
           ${game.time ? `<div class="tonightGameTime">${escapeHtml(game.time)}</div>` : ''}
           <div class="tonightGameTeams">${teamHtml(a, null, divisionId)}${middle}${teamHtml(b, null, divisionId)}</div>
           ${game.location ? `<div class="tonightGameLocation">${escapeHtml(game.location)}</div>` : ''}
         </div>`;
+    },
+
+    // Re-resolves a live game object from shared/macLeagueStandings by the
+    // same {gameId, divisionId} pair mergedCardHtml()/gameRowHtml() stamp
+    // onto their data-game-id/data-game-division attributes -- index.html's
+    // delegated [data-game-nav] handler calls this rather than threading
+    // the whole game object through the DOM. Sync: only ever called after
+    // a tap, by which point ensureLoaded() has long since resolved (these
+    // rows don't exist on screen until it has).
+    gameById(gameId, divisionId) {
+      if (!gameId) return null;
+      return window.TonightGames.allTodayGames(divisionId ? [divisionId] : null)
+        .find(g => typeof g !== 'string' && g.gameId === gameId) || null;
     },
 
     // Every game today across the given division ids (default: every known
