@@ -283,10 +283,17 @@
       root.innerHTML = '<div class="card"><div class="emptyState">Age cutoff data isn’t available right now.</div></div>';
       return;
     }
-    var thisYear = new Date().getFullYear();
-    var defaultYear = years.indexOf(String(thisYear)) !== -1 ? String(thisYear)
-      : (years.filter(function (y2) { return Number(y2) >= thisYear; })[0] || years[years.length - 1]);
-    var selectedYear = defaultYear;
+    // Defaults to the newest year this file has data for, not whatever
+    // the calendar says today -- by the back half of a calendar year its
+    // own season is already wrapping up (see data/league-info.json's own
+    // "seasons" entries: 2026 Fall's own conclusion date, next spring's
+    // registration already open well before this file's committed each
+    // fall), so a visitor checking eligibility is almost always asking
+    // about the upcoming season, not the one about to end. This stays
+    // correct with no further changes as long as whoever maintains this
+    // file keeps adding next year's row ahead of time the way it already
+    // does -- same yearly upkeep pattern as the rest of this data.
+    var selectedYear = years[years.length - 1];
     // Lives across repaints (year-tab switches, a changed birth date) so
     // paint() can be the one place that renders both the result card AND
     // the chart's "you are here" marker from the same value, instead of
