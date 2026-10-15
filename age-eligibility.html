@@ -23,9 +23,9 @@
   this app's own dark/light preference.
 
   Posts its own scrollHeight to the parent window on load and on
-  resize, so the embedding page's iframe can sv size itself instead of
-  guessing a fixed height -- see the embed snippet this page's own
-  comment at the bottom links back to.
+  resize, so the embedding page's iframe can size itself instead of
+  guessing a fixed height -- see README.md's "Age eligibility embed"
+  entry for the ready-to-paste <iframe> + listener snippet.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -316,7 +316,7 @@
 
   // Lets an embedding page's iframe size itself to the actual content
   // height instead of a guessed fixed number -- see this file's own
-  // header comment and the embed snippet it ships with.
+  // header comment and README.md's "Age eligibility embed" entry.
   var lastHeight = 0;
   function reportHeight() {
     requestAnimationFrame(function () {
