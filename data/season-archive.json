@@ -15,91 +15,450 @@
           "opponent": "GD",
           "homeAway": "Home",
           "result": "L",
-          "score": "3-7"
+          "score": "3-7",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                1,
+                1,
+                0,
+                0,
+                1
+              ],
+              "runs": 3,
+              "hits": 13,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                1,
+                1,
+                0,
+                3,
+                2,
+                0,
+                0
+              ],
+              "runs": 7,
+              "hits": 12,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-04-29",
           "opponent": "12A Pepperell - Boyce",
           "homeAway": "Home",
           "result": "W",
-          "score": "10-2"
+          "score": "10-2",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                1,
+                1,
+                3,
+                5
+              ],
+              "runs": 10,
+              "hits": 11,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                1,
+                1,
+                0
+              ],
+              "runs": 2,
+              "hits": 3,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-05-08",
           "opponent": "Bolton Majors A",
           "homeAway": "Away",
           "result": "L",
-          "score": "0-7"
+          "score": "0-7",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 0,
+              "hits": 3,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                6,
+                1
+              ],
+              "runs": 7,
+              "hits": 4,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-13",
           "opponent": "Littleton Majors-A",
           "homeAway": "Home",
           "result": "W",
-          "score": "5-1"
+          "score": "5-1",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                0,
+                0,
+                0,
+                2
+              ],
+              "runs": 5,
+              "hits": 7,
+              "errors": 2
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ],
+              "runs": 1,
+              "hits": 1,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-05-15",
           "opponent": "Townsend Ashby",
           "homeAway": "Away",
           "result": "L",
-          "score": "4-12"
+          "score": "4-12",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                0,
+                0,
+                3,
+                0,
+                0
+              ],
+              "runs": 4,
+              "hits": 13,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                0,
+                2,
+                3,
+                0,
+                7
+              ],
+              "runs": 12,
+              "hits": 8,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-18",
           "opponent": "Maynard-Stowe",
           "homeAway": "Home",
           "result": "L",
-          "score": "2-5"
+          "score": "2-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              "runs": 2,
+              "hits": 0,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                1,
+                1,
+                2,
+                1,
+                0
+              ],
+              "runs": 5,
+              "hits": 7,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-20",
           "opponent": "Ayer-Shirley Major 70s A",
           "homeAway": "Home",
           "result": "L",
-          "score": "5-11"
+          "score": "5-11",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                0,
+                0,
+                2,
+                0,
+                3
+              ],
+              "runs": 5,
+              "hits": 7,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                4,
+                7,
+                0
+              ],
+              "runs": 11,
+              "hits": 10,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-22",
           "opponent": "Groton Dunstable Majors A",
           "homeAway": "Away",
           "result": "W",
-          "score": "9-3"
+          "score": "9-3",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                0,
+                2,
+                1,
+                2,
+                4
+              ],
+              "runs": 9,
+              "hits": 8,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                2,
+                0,
+                0,
+                1,
+                0,
+                0
+              ],
+              "runs": 3,
+              "hits": 5,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-27",
           "opponent": "12A Pepperell - Boyce",
           "homeAway": "Away",
           "result": "W",
-          "score": "17-9"
+          "score": "17-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                2,
+                7,
+                0,
+                1,
+                3
+              ],
+              "runs": 17,
+              "hits": 10,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                4,
+                1,
+                3,
+                1
+              ],
+              "runs": 9,
+              "hits": 12,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-05-28",
           "opponent": "Bolton Majors A",
           "homeAway": "Away",
           "result": "L",
-          "score": "4-13"
+          "score": "4-13",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                0,
+                0,
+                0,
+                2,
+                0
+              ],
+              "runs": 4,
+              "hits": 9,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                4,
+                1,
+                3,
+                3,
+                2
+              ],
+              "runs": 13,
+              "hits": 8,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-06-01",
           "opponent": "Maynard-Stowe",
           "homeAway": "Home",
           "result": "W",
-          "score": "9-5"
+          "score": "9-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                2,
+                0,
+                2,
+                4
+              ],
+              "runs": 9,
+              "hits": 7,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                0,
+                4,
+                0,
+                0
+              ],
+              "runs": 5,
+              "hits": 13,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-05",
           "opponent": "Littleton Majors-A",
           "homeAway": "Away",
           "result": "L",
-          "score": "7-8"
+          "score": "7-8",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                1,
+                0,
+                0,
+                4,
+                0
+              ],
+              "runs": 7,
+              "hits": 10,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                2,
+                0,
+                4,
+                0,
+                0,
+                2
+              ],
+              "runs": 8,
+              "hits": 12,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-09",
           "opponent": "Groton Dunstable Majors A",
           "homeAway": "Home",
           "result": "L",
-          "score": "1-5"
+          "score": "1-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 1,
+              "hits": 7,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                3,
+                0,
+                2
+              ],
+              "runs": 5,
+              "hits": 8,
+              "errors": 0
+            }
+          }
         }
       ]
     },
@@ -115,119 +474,571 @@
           "opponent": "TBD",
           "homeAway": "Home",
           "result": "L",
-          "score": "7-13"
+          "score": "7-13",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                1,
+                1,
+                0,
+                4
+              ],
+              "runs": 7,
+              "hits": 2,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                3,
+                0,
+                1,
+                4,
+                5
+              ],
+              "runs": 13,
+              "hits": 9,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-04-27",
           "opponent": "GD 12U Cardinals",
           "homeAway": "Away",
           "result": "W",
-          "score": "16-5"
+          "score": "16-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                1,
+                4,
+                5,
+                5
+              ],
+              "runs": 16,
+              "hits": 9,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                2,
+                3,
+                0,
+                0,
+                0
+              ],
+              "runs": 5,
+              "hits": 7,
+              "errors": 3
+            }
+          }
         },
         {
           "date": "2026-05-01",
           "opponent": "Pepperell",
           "homeAway": "Home",
           "result": "W",
-          "score": "13-5"
+          "score": "13-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                5,
+                1,
+                5,
+                1,
+                1
+              ],
+              "runs": 13,
+              "hits": 8,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                4,
+                0,
+                0,
+                0,
+                1
+              ],
+              "runs": 5,
+              "hits": 3,
+              "errors": 6
+            }
+          }
         },
         {
           "date": "2026-05-04",
           "opponent": "TAYBS Majors Gold",
           "homeAway": "Away",
           "result": "L",
-          "score": "8-9"
+          "score": "8-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                0,
+                0,
+                2,
+                2,
+                3
+              ],
+              "runs": 8,
+              "hits": 7,
+              "errors": 5
+            },
+            "theirs": {
+              "innings": [
+                4,
+                0,
+                0,
+                1,
+                2,
+                2
+              ],
+              "runs": 9,
+              "hits": 10,
+              "errors": 2
+            }
+          }
         },
         {
           "date": "2026-05-08",
           "opponent": "GD 12U Brewers",
           "homeAway": "Home",
           "result": "L",
-          "score": "5-6"
+          "score": "5-6",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                0,
+                1,
+                0,
+                4,
+                0
+              ],
+              "runs": 5,
+              "hits": 9,
+              "errors": 5
+            },
+            "theirs": {
+              "innings": [
+                3,
+                0,
+                0,
+                1,
+                1,
+                1
+              ],
+              "runs": 6,
+              "hits": 7,
+              "errors": 2
+            }
+          }
         },
         {
           "date": "2026-05-11",
           "opponent": "Ayer-Shirley Majors Panthers",
           "homeAway": "Home",
           "result": "W",
-          "score": "17-1"
+          "score": "17-1",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                5,
+                5,
+                5,
+                2
+              ],
+              "runs": 17,
+              "hits": 14,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "runs": 1,
+              "hits": 3,
+              "errors": 4
+            }
+          }
         },
         {
           "date": "2026-05-15",
           "opponent": "Lunenburg Black Majors",
           "homeAway": "Away",
           "result": "W",
-          "score": "12-10"
+          "score": "12-10",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                3,
+                2,
+                0,
+                5,
+                0
+              ],
+              "runs": 12,
+              "hits": 10,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                3,
+                0,
+                5,
+                0,
+                0,
+                2
+              ],
+              "runs": 10,
+              "hits": 6,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-05-20",
           "opponent": "Dodgers",
           "homeAway": "Away",
           "result": "L",
-          "score": "8-15"
+          "score": "8-15",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                3,
+                1,
+                1,
+                3,
+                0
+              ],
+              "runs": 8,
+              "hits": 5,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                3,
+                1,
+                5,
+                1,
+                5
+              ],
+              "runs": 15,
+              "hits": 10,
+              "errors": 2
+            }
+          }
         },
         {
           "date": "2026-05-22",
           "opponent": "GD 12U Cardinals",
           "homeAway": "Home",
           "result": "W",
-          "score": "14-13"
+          "score": "14-13",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                5,
+                0,
+                3,
+                4,
+                1,
+                1
+              ],
+              "runs": 14,
+              "hits": 10,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                0,
+                3,
+                2,
+                0,
+                3,
+                5
+              ],
+              "runs": 13,
+              "hits": 10,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-26",
           "opponent": "Pepperell",
           "homeAway": "Away",
           "result": "W",
-          "score": "20-4"
+          "score": "20-4",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                5,
+                5,
+                5,
+                5
+              ],
+              "runs": 20,
+              "hits": 12,
+              "errors": 2
+            },
+            "theirs": {
+              "innings": [
+                0,
+                1,
+                2,
+                1
+              ],
+              "runs": 4,
+              "hits": 0,
+              "errors": 9
+            }
+          }
         },
         {
           "date": "2026-05-30",
           "opponent": "TAYBS Majors Gold",
           "homeAway": "Away",
           "result": "W",
-          "score": "9-6"
+          "score": "9-6",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                1,
+                2,
+                1,
+                3
+              ],
+              "runs": 9,
+              "hits": 7,
+              "errors": 2
+            },
+            "theirs": {
+              "innings": [
+                0,
+                1,
+                3,
+                2,
+                0
+              ],
+              "runs": 6,
+              "hits": 7,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-03",
           "opponent": "GD 12U Brewers",
           "homeAway": "Home",
           "result": "W",
-          "score": "18-17"
+          "score": "18-17",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                5,
+                0,
+                5,
+                2,
+                3
+              ],
+              "runs": 18,
+              "hits": 20,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                2,
+                3,
+                5,
+                0,
+                4,
+                3
+              ],
+              "runs": 17,
+              "hits": 17,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-06-05",
           "opponent": "Lunenburg Black Majors",
           "homeAway": "Home",
           "result": "L",
-          "score": "9-21"
+          "score": "9-21",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                0,
+                5,
+                3,
+                0
+              ],
+              "runs": 9,
+              "hits": 11,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                4,
+                5,
+                2,
+                5,
+                5
+              ],
+              "runs": 21,
+              "hits": 14,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-11",
           "opponent": "Dodgers",
           "homeAway": "Home",
           "result": "W",
-          "score": "8-3"
+          "score": "8-3",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                2,
+                3,
+                0,
+                0
+              ],
+              "runs": 8,
+              "hits": 5,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                1,
+                0,
+                0,
+                1
+              ],
+              "runs": 3,
+              "hits": 6,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-15",
           "opponent": "GD 12U Brewers",
           "homeAway": "Away",
           "result": "W",
-          "score": "11-2"
+          "score": "11-2",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                1,
+                1,
+                4,
+                2,
+                3
+              ],
+              "runs": 11,
+              "hits": 7,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                2,
+                0,
+                0
+              ],
+              "runs": 2,
+              "hits": 4,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-06-17",
           "opponent": "GD 12U Cardinals",
           "homeAway": "Home",
           "result": "W",
-          "score": "13-12"
+          "score": "13-12",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                3,
+                0,
+                2,
+                2,
+                2
+              ],
+              "runs": 13,
+              "hits": 8,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                2,
+                0,
+                4,
+                3,
+                3,
+                0
+              ],
+              "runs": 12,
+              "hits": 11,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-19",
           "opponent": "Lancaster Majors Red",
           "homeAway": "Away",
           "result": "L",
-          "score": "0-10"
+          "score": "0-10",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 0,
+              "hits": 1,
+              "errors": 2
+            },
+            "theirs": {
+              "innings": [
+                4,
+                1,
+                1,
+                4
+              ],
+              "runs": 10,
+              "hits": 9,
+              "errors": 0
+            }
+          }
         }
       ]
     },
@@ -243,91 +1054,432 @@
           "opponent": "Ayer-Shirley Majors Panthers",
           "homeAway": "Away",
           "result": "W",
-          "score": "16-0"
+          "score": "16-0",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                5,
+                6,
+                0,
+                5
+              ],
+              "runs": 16,
+              "hits": 10,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 0,
+              "hits": 1,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-01",
           "opponent": "Dodgers",
           "homeAway": "Away",
           "result": "W",
-          "score": "13-9"
+          "score": "13-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                5,
+                5,
+                1,
+                2,
+                0
+              ],
+              "runs": 13,
+              "hits": 7,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                5,
+                2,
+                0,
+                0,
+                2
+              ],
+              "runs": 9,
+              "hits": 3,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-04",
           "opponent": "GD 12U Cardinals",
           "homeAway": "Home",
           "result": "W",
-          "score": "16-9"
+          "score": "16-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                5,
+                1,
+                5,
+                1,
+                4
+              ],
+              "runs": 16,
+              "hits": 11,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                3,
+                2,
+                0,
+                4,
+                0,
+                0
+              ],
+              "runs": 9,
+              "hits": 10,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-05-13",
           "opponent": "GD 12U Brewers",
           "homeAway": "Away",
           "result": "L",
-          "score": "11-12"
+          "score": "11-12",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                5,
+                0,
+                0,
+                3,
+                1
+              ],
+              "runs": 11,
+              "hits": 7,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                2,
+                5,
+                1,
+                4,
+                0
+              ],
+              "runs": 12,
+              "hits": 7,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-15",
           "opponent": "Lunenburg Majors Blue",
           "homeAway": "Home",
           "result": "L",
-          "score": "10-12"
+          "score": "10-12",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                0,
+                5,
+                0,
+                0,
+                2
+              ],
+              "runs": 10,
+              "hits": 8,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                2,
+                3,
+                2,
+                0,
+                5,
+                0
+              ],
+              "runs": 12,
+              "hits": 10,
+              "errors": 2
+            }
+          }
         },
         {
           "date": "2026-05-18",
           "opponent": "TAYBS Majors Gold",
           "homeAway": "Home",
           "result": "L",
-          "score": "5-12"
+          "score": "5-12",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                0,
+                1,
+                1,
+                1,
+                0
+              ],
+              "runs": 5,
+              "hits": 4,
+              "errors": 4
+            },
+            "theirs": {
+              "innings": [
+                2,
+                0,
+                1,
+                5,
+                0,
+                4
+              ],
+              "runs": 12,
+              "hits": 5,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-05-22",
           "opponent": "Ayer-Shirley Majors Panthers",
           "homeAway": "Away",
           "result": "W",
-          "score": "17-5"
+          "score": "17-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                3,
+                5,
+                5
+              ],
+              "runs": 17,
+              "hits": 14,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                1,
+                4,
+                0
+              ],
+              "runs": 5,
+              "hits": 7,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-27",
           "opponent": "Dodgers",
           "homeAway": "Home",
           "result": "W",
-          "score": "15-7"
+          "score": "15-7",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                5,
+                1,
+                3,
+                2,
+                4
+              ],
+              "runs": 15,
+              "hits": 10,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                2,
+                5,
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 7,
+              "hits": 5,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-29",
           "opponent": "GD 12U Cardinals",
           "homeAway": "Home",
           "result": "W",
-          "score": "11-1"
+          "score": "11-1",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                3,
+                2,
+                3,
+                3
+              ],
+              "runs": 11,
+              "hits": 10,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                1,
+                0
+              ],
+              "runs": 1,
+              "hits": 3,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-02",
           "opponent": "12U Pepperell - Fisher",
           "homeAway": "Home",
           "result": "W",
-          "score": "18-9"
+          "score": "18-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                5,
+                5,
+                5,
+                3
+              ],
+              "runs": 18,
+              "hits": 16,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                4,
+                2,
+                3,
+                0,
+                0
+              ],
+              "runs": 9,
+              "hits": 7,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-04",
           "opponent": "12U Pepperell - Fisher",
           "homeAway": "Away",
           "result": "W",
-          "score": "14-3"
+          "score": "14-3",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                0,
+                5,
+                5,
+                0
+              ],
+              "runs": 14,
+              "hits": 6,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                0,
+                1,
+                1,
+                1
+              ],
+              "runs": 3,
+              "hits": 2,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-05",
           "opponent": "Lunenburg Majors Blue",
           "homeAway": "Away",
           "result": "W",
-          "score": "21-9"
+          "score": "21-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                5,
+                2,
+                4,
+                6
+              ],
+              "runs": 21,
+              "hits": 14,
+              "errors": 2
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                5,
+                3,
+                0
+              ],
+              "runs": 9,
+              "hits": 9,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-06-10",
           "opponent": "GD 12U Cardinals",
           "homeAway": "Home",
           "result": "L",
-          "score": "9-12"
+          "score": "9-12",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                2,
+                0,
+                3,
+                2,
+                2
+              ],
+              "runs": 9,
+              "hits": 6,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                2,
+                3,
+                0,
+                0,
+                4,
+                3
+              ],
+              "runs": 12,
+              "hits": 20,
+              "errors": 0
+            }
+          }
         }
       ]
     },
@@ -343,98 +1495,473 @@
           "opponent": "Lunenburg Minors (Black)",
           "homeAway": "Home",
           "result": "T",
-          "score": "6-6"
+          "score": "6-6",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                1,
+                4,
+                0
+              ],
+              "runs": 6,
+              "hits": 2,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                2,
+                0,
+                4,
+                0
+              ],
+              "runs": 6,
+              "hits": 3,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-04-28",
           "opponent": "Minors Party Animals",
           "homeAway": "Away",
           "result": "W",
-          "score": "9-4"
+          "score": "9-4",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                2,
+                0,
+                3,
+                4,
+                0
+              ],
+              "runs": 9,
+              "hits": 7,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                0,
+                0,
+                1,
+                2
+              ],
+              "runs": 4,
+              "hits": 2,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-02",
           "opponent": "TAYBS Black",
           "homeAway": "Home",
           "result": "W",
-          "score": "9-5"
+          "score": "9-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                0,
+                4,
+                2,
+                0
+              ],
+              "runs": 9,
+              "hits": 5,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                0,
+                3,
+                2
+              ],
+              "runs": 5,
+              "hits": 7,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-07",
           "opponent": "Pepperell Pythons (Minors 1)",
           "homeAway": "Home",
           "result": "L",
-          "score": "9-12"
+          "score": "9-12",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                4,
+                0,
+                2,
+                0,
+                3
+              ],
+              "runs": 9,
+              "hits": 2,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                1,
+                2,
+                4,
+                4,
+                0,
+                1
+              ],
+              "runs": 12,
+              "hits": 6,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-12",
           "opponent": "TAYBS Black",
           "homeAway": "Home",
           "result": "T",
-          "score": "9-9"
+          "score": "9-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                0,
+                1,
+                0,
+                3,
+                4
+              ],
+              "runs": 9,
+              "hits": 1,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                3,
+                4,
+                2
+              ],
+              "runs": 9,
+              "hits": 10,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-17",
           "opponent": "GD 10U Space Potatoes",
           "homeAway": "Home",
           "result": "W",
-          "score": "13-5"
+          "score": "13-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                4,
+                3,
+                4
+              ],
+              "runs": 13,
+              "hits": 4,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                2,
+                2
+              ],
+              "runs": 5,
+              "hits": 5,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-19",
           "opponent": "Minors Party Animals",
           "homeAway": "Home",
           "result": "L",
-          "score": "10-13"
+          "score": "10-13",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                1,
+                4,
+                4,
+                0
+              ],
+              "runs": 10,
+              "hits": 6,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                4,
+                4,
+                4,
+                1,
+                0
+              ],
+              "runs": 13,
+              "hits": 3,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-21",
           "opponent": "GD 10U Space Potatoes",
           "homeAway": "Home",
           "result": "L",
-          "score": "7-12"
+          "score": "7-12",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                1,
+                1,
+                0,
+                2,
+                0
+              ],
+              "runs": 7,
+              "hits": 5,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                4,
+                2,
+                2,
+                0,
+                4,
+                0,
+                0
+              ],
+              "runs": 12,
+              "hits": 10,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-26",
           "opponent": "Rockhounds",
           "homeAway": "Away",
           "result": "L",
-          "score": "7-10"
+          "score": "7-10",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                2,
+                2,
+                0,
+                1,
+                0
+              ],
+              "runs": 7,
+              "hits": 3,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                1,
+                4,
+                4
+              ],
+              "runs": 10,
+              "hits": 10,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-28",
           "opponent": "Pepperell Pythons (Minors 1)",
           "homeAway": "Away",
           "result": "L",
-          "score": "8-9"
+          "score": "8-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                0,
+                0,
+                4,
+                3,
+                0
+              ],
+              "runs": 8,
+              "hits": 2,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                2,
+                4,
+                2
+              ],
+              "runs": 9,
+              "hits": 5,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-01",
           "opponent": "Rockhounds",
           "homeAway": "Away",
           "result": "W",
-          "score": "10-6"
+          "score": "10-6",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                0,
+                0,
+                2,
+                4,
+                0
+              ],
+              "runs": 10,
+              "hits": 5,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 6,
+              "hits": 2,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-04",
           "opponent": "Minors Party Animals",
           "homeAway": "Away",
           "result": "T",
-          "score": "13-13"
+          "score": "13-13",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                3,
+                4,
+                2,
+                0
+              ],
+              "runs": 13,
+              "hits": 8,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                4,
+                4,
+                5
+              ],
+              "runs": 13,
+              "hits": 7,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-06-06",
           "opponent": "TAYBS Black",
           "homeAway": "Away",
           "result": "L",
-          "score": "4-14"
+          "score": "4-14",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                0,
+                2,
+                0,
+                0
+              ],
+              "runs": 4,
+              "hits": 3,
+              "errors": 2
+            },
+            "theirs": {
+              "innings": [
+                4,
+                4,
+                4,
+                2,
+                0
+              ],
+              "runs": 14,
+              "hits": 11,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-08",
           "opponent": "Minors Party Animals",
           "homeAway": "Away",
           "result": "L",
-          "score": "3-8"
+          "score": "3-8",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 3,
+              "hits": 5,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                4,
+                0,
+                2,
+                0,
+                2
+              ],
+              "runs": 8,
+              "hits": 3,
+              "errors": 1
+            }
+          }
         }
       ]
     },
@@ -450,105 +1977,505 @@
           "opponent": "Lunenburg Blueknights Minors (Blue)",
           "homeAway": "Away",
           "result": "T",
-          "score": "6-6"
+          "score": "6-6",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                0,
+                4,
+                0
+              ],
+              "runs": 6,
+              "hits": 3,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                1,
+                4,
+                0
+              ],
+              "runs": 6,
+              "hits": 2,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-04-28",
           "opponent": "TAYBS Minors Gold",
           "homeAway": "Home",
           "result": "W",
-          "score": "9-8"
+          "score": "9-8",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                1,
+                4,
+                1
+              ],
+              "runs": 9,
+              "hits": 7,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                4,
+                4,
+                0
+              ],
+              "runs": 8,
+              "hits": 3,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-04-30",
           "opponent": "GD Minors Disco Turkeys",
           "homeAway": "Home",
           "result": "L",
-          "score": "6-12"
+          "score": "6-12",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                0,
+                2,
+                0,
+                2
+              ],
+              "runs": 6,
+              "hits": 3,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                1,
+                4,
+                4,
+                2
+              ],
+              "runs": 12,
+              "hits": 11,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-05",
           "opponent": "Ayer-Shirley Minors Maroon",
           "homeAway": "Home",
           "result": "L",
-          "score": "3-9"
+          "score": "3-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 3,
+              "hits": 4,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                0,
+                4,
+                0,
+                4
+              ],
+              "runs": 9,
+              "hits": 11,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-08",
           "opponent": "GD 10U Flying Squirrels",
           "homeAway": "Home",
           "result": "T",
-          "score": "4-4"
+          "score": "4-4",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0
+              ],
+              "runs": 4,
+              "hits": 3,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                1,
+                3,
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 4,
+              "hits": 3,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-11",
           "opponent": "GD Minors Disco Turkeys",
           "homeAway": "Away",
           "result": "L",
-          "score": "5-13"
+          "score": "5-13",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                1,
+                0,
+                0,
+                0,
+                2
+              ],
+              "runs": 5,
+              "hits": 4,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                4,
+                4,
+                0,
+                1,
+                4
+              ],
+              "runs": 13,
+              "hits": 4,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-16",
           "opponent": "Pepperell Minors",
           "homeAway": "Home",
           "result": "W",
-          "score": "14-8"
+          "score": "14-8",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                4,
+                4,
+                1,
+                3
+              ],
+              "runs": 14,
+              "hits": 5,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                1,
+                2,
+                4
+              ],
+              "runs": 8,
+              "hits": 6,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-19",
           "opponent": "TAYBS Minors Gold",
           "homeAway": "Away",
           "result": "L",
-          "score": "6-10"
+          "score": "6-10",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                0,
+                0,
+                2,
+                0
+              ],
+              "runs": 6,
+              "hits": 6,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                4,
+                3,
+                0,
+                3
+              ],
+              "runs": 10,
+              "hits": 7,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-21",
           "opponent": "GD 10U Flying Squirrels",
           "homeAway": "Away",
           "result": "W",
-          "score": "15-10"
+          "score": "15-10",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                4,
+                4,
+                4,
+                1
+              ],
+              "runs": 15,
+              "hits": 8,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                2,
+                0,
+                4,
+                4,
+                0
+              ],
+              "runs": 10,
+              "hits": 7,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-26",
           "opponent": "Pepperell Minors",
           "homeAway": "Away",
           "result": "W",
-          "score": "13-5"
+          "score": "13-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                0,
+                4,
+                1,
+                5
+              ],
+              "runs": 13,
+              "hits": 7,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                2,
+                0,
+                3
+              ],
+              "runs": 5,
+              "hits": 2,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-05-28",
           "opponent": "Ayer-Shirley Minors Maroon",
           "homeAway": "Home",
           "result": "L",
-          "score": "8-17"
+          "score": "8-17",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                2,
+                0,
+                0,
+                2,
+                0
+              ],
+              "runs": 8,
+              "hits": 8,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                2,
+                1,
+                2,
+                2,
+                0,
+                10
+              ],
+              "runs": 17,
+              "hits": 14,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-02",
           "opponent": "GD Minors Disco Turkeys",
           "homeAway": "Away",
           "result": "W",
-          "score": "5-4"
+          "score": "5-4",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                0,
+                0,
+                0,
+                3,
+                0
+              ],
+              "runs": 5,
+              "hits": 3,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                1,
+                1,
+                1,
+                0,
+                1,
+                0
+              ],
+              "runs": 4,
+              "hits": 9,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-05",
           "opponent": "TAYBS Minors Gold",
           "homeAway": "Away",
           "result": "L",
-          "score": "4-9"
+          "score": "4-9",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                1,
+                2,
+                0,
+                0,
+                0
+              ],
+              "runs": 4,
+              "hits": 7,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                4,
+                3,
+                0,
+                1,
+                1
+              ],
+              "runs": 9,
+              "hits": 5,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-08",
           "opponent": "GD 10U Flying Squirrels",
           "homeAway": "Home",
           "result": "W",
-          "score": "7-5"
+          "score": "7-5",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                3,
+                0,
+                0,
+                1
+              ],
+              "runs": 7,
+              "hits": 5,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                2,
+                0,
+                2,
+                0,
+                1,
+                0
+              ],
+              "runs": 5,
+              "hits": 7,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-06-10",
           "opponent": "GD Minors Disco Turkeys",
           "homeAway": "Away",
           "result": "L",
-          "score": "6-7"
+          "score": "6-7",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                0,
+                2,
+                0,
+                0,
+                3
+              ],
+              "runs": 6,
+              "hits": 5,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                3,
+                4,
+                0
+              ],
+              "runs": 7,
+              "hits": 8,
+              "errors": 0
+            }
+          }
         }
       ]
     },
@@ -564,56 +2491,282 @@
           "opponent": "North Middlesex 11u All Stars",
           "homeAway": "Home",
           "result": "W",
-          "score": "3-1"
+          "score": "3-1",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                0,
+                1,
+                0,
+                0
+              ],
+              "runs": 3,
+              "hits": 6,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                0,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 1,
+              "hits": 2,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-06-25",
           "opponent": "NAYB All-stars 11U",
           "homeAway": "Home",
           "result": "W",
-          "score": "9-2"
+          "score": "9-2",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                2,
+                0,
+                4,
+                1,
+                2
+              ],
+              "runs": 9,
+              "hits": 8,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              "runs": 2,
+              "hits": 5,
+              "errors": 2
+            }
+          }
         },
         {
           "date": "2026-06-26",
           "opponent": "11u North Central All Stars",
           "homeAway": "Away",
           "result": "W",
-          "score": "13-10"
+          "score": "13-10",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                6,
+                2,
+                0,
+                0,
+                0,
+                1,
+                4
+              ],
+              "runs": 13,
+              "hits": 11,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                6,
+                0,
+                0,
+                3,
+                0,
+                0,
+                1
+              ],
+              "runs": 10,
+              "hits": 10,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-06-27",
           "opponent": "NAYB All-stars 11U",
           "homeAway": "Home",
           "result": "W",
-          "score": "2-1"
+          "score": "2-1",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1
+              ],
+              "runs": 2,
+              "hits": 5,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+              ],
+              "runs": 1,
+              "hits": 5,
+              "errors": 0
+            }
+          }
         },
         {
           "date": "2026-07-10",
           "opponent": "11u North Central All Stars",
           "homeAway": "Away",
           "result": "W",
-          "score": "5-1"
+          "score": "5-1",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                3,
+                0,
+                1,
+                1,
+                0,
+                0
+              ],
+              "runs": 5,
+              "hits": 9,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ],
+              "runs": 1,
+              "hits": 5,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-07-11",
           "opponent": "Marlboro Panthers 11U",
           "homeAway": "Home",
           "result": "W",
-          "score": "5-3"
+          "score": "5-3",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                4,
+                1,
+                0,
+                0,
+                0
+              ],
+              "runs": 5,
+              "hits": 9,
+              "errors": 0
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                3
+              ],
+              "runs": 3,
+              "hits": 6,
+              "errors": 1
+            }
+          }
         },
         {
           "date": "2026-07-11",
           "opponent": "Sutton 11U",
           "homeAway": "Away",
           "result": "L",
-          "score": "8-15"
+          "score": "8-15",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                1,
+                0,
+                5,
+                0,
+                1,
+                1
+              ],
+              "runs": 8,
+              "hits": 9,
+              "errors": 3
+            },
+            "theirs": {
+              "innings": [
+                3,
+                1,
+                0,
+                0,
+                11
+              ],
+              "runs": 15,
+              "hits": 15,
+              "errors": 3
+            }
+          }
         },
         {
           "date": "2026-07-12",
           "opponent": "Greenfield Ducks 2026 11U",
           "homeAway": "Home",
           "result": "L",
-          "score": "2-3"
+          "score": "2-3",
+          "lineScore": {
+            "ours": {
+              "innings": [
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "runs": 2,
+              "hits": 8,
+              "errors": 1
+            },
+            "theirs": {
+              "innings": [
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1
+              ],
+              "runs": 3,
+              "hits": 3,
+              "errors": 0
+            }
+          }
         }
       ]
     }
