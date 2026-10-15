@@ -798,6 +798,14 @@ a { color: var(--lybs-blue-bright); }
 .gameResultPill.badgeL { background: linear-gradient(160deg, #e35858, #9a2b2b); color: #fff; box-shadow: 0 4px 14px rgba(227,88,88,0.3); }
 .gameResultPill.badgeT { background: linear-gradient(160deg, #e6b935, #a37c1a); color: #fff; box-shadow: 0 4px 14px rgba(230,185,53,0.3); }
 
+/* ---- Line score (js/game-card.js's optional opts.lineScore -- real
+   GameChanger inning-by-inning runs + final R/H/E, History tab only) ---- */
+.lineScoreTable { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
+.lineScoreTable th, .lineScoreTable td { text-align: center; font-size: 11px; padding: 3px 2px; color: var(--text2); }
+.lineScoreTable th { font-family: var(--font-label); font-weight: 700; color: var(--lybs-silver); text-transform: uppercase; letter-spacing: 0.04em; }
+.lineScoreTeam { text-align: left !important; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lineScoreTotal { font-weight: 700; color: var(--text); border-left: 1px solid var(--card-border); }
+
 /* ---- Family calendar (also reused by js/player-benchmarks.js's checklist) ---- */
 .teamCheckList { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
 .teamCheckRow {

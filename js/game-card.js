@@ -25,6 +25,17 @@
    'regular') only shows a badge for the non-default cases -- a
    clean card for the common case, a clear flag for the ones that
    matter more.
+
+   opts.lineScore (optional) -- {ours: {innings:[...], runs, hits,
+   errors}, theirs: {innings:[...], runs, hits, errors}}, the shape
+   scripts/enrich-archive-linescores.mjs writes onto an archived
+   game. Only js/archive.js's History tab supplies this today (the
+   live Schedule tab has no GameChanger team-id plumbing wired to a
+   game still in progress this season) -- any other caller just
+   omits it and gets the card exactly as before. Inning-by-inning
+   runs + final runs/hits/errors, nothing more (no full box score,
+   no recap -- both sit behind a GameChanger login; confirmed live,
+   see that script's own header comment).
    ============================================================ */
 (function () {
   function logoOrFallback(name, logoUrl) {
@@ -39,8 +50,35 @@
     return '';
   }
 
+  // One row per side, innings padded out to whichever side batted in more
+  // of them (the home team skips its last at-bat when already trailing
+  // going in, so the two arrays are legitimately different lengths --
+  // confirmed live against a real game).
+  function lineScoreTableHtml(lineScore, ourName, theirName) {
+    const ours = lineScore.ours || {}, theirs = lineScore.theirs || {};
+    const ourInnings = ours.innings || [], theirInnings = theirs.innings || [];
+    const inningCount = Math.max(ourInnings.length, theirInnings.length);
+    const headCells = Array.from({ length: inningCount }, (_, i) => `<th>${i + 1}</th>`).join('');
+    const row = (name, innings, runs, hits, errors) => `
+      <tr>
+        <td class="lineScoreTeam">${escapeHtml(name || '')}</td>
+        ${Array.from({ length: inningCount }, (_, i) => `<td>${innings[i] != null ? innings[i] : ''}</td>`).join('')}
+        <td class="lineScoreTotal">${runs ?? '-'}</td>
+        <td class="lineScoreTotal">${hits ?? '-'}</td>
+        <td class="lineScoreTotal">${errors ?? '-'}</td>
+      </tr>`;
+    return `
+      <table class="lineScoreTable">
+        <thead><tr><th></th>${headCells}<th>R</th><th>H</th><th>E</th></tr></thead>
+        <tbody>
+          ${row(ourName, ourInnings, ours.runs, ours.hits, ours.errors)}
+          ${row(theirName, theirInnings, theirs.runs, theirs.hits, theirs.errors)}
+        </tbody>
+      </table>`;
+  }
+
   // opts: { date, homeAway, ourName, ourScore, theirName, theirLogoUrl,
-  //   theirScore, result, gameType }
+  //   theirScore, result, gameType, lineScore? }
   window.GameCard = {
     resultHtml(opts) {
       const pillClass = opts.result === 'W' ? 'badgeW' : (opts.result === 'L' ? 'badgeL' : 'badgeT');
@@ -70,6 +108,7 @@
             </div>
             ${theirTeamHtml}
           </div>
+          ${opts.lineScore ? lineScoreTableHtml(opts.lineScore, opts.ourName, opts.theirName) : ''}
         </div>`;
     },
   };

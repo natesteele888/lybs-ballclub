@@ -42,6 +42,11 @@
             theirLogoUrl: club ? club.logoUrl : null,
             result: g.result,
             gameType: g.gameType,
+            // Real GameChanger inning-by-inning line score, when
+            // scripts/enrich-archive-linescores.mjs found a match for this
+            // game -- not every archived game has one (gcTeamId is only
+            // set for teams whose GameChanger page was ever looked up).
+            lineScore: g.lineScore,
           });
         }).join('');
       }
