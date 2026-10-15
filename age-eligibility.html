@@ -44,6 +44,7 @@
     --lybs-blue-bright: #4C6AEB;
     --gold: #8A6914;
     --accent-pink: #B3246F;
+    --marker: #1F8A4E;
     --font-display: 'Anton', 'Arial Narrow', sans-serif;
     --font-label: 'Oswald', 'Arial Narrow', sans-serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -102,6 +103,23 @@
   .chartAxisLine { stroke: rgba(20, 24, 48, 0.18); stroke-width: 1.5; }
   .chartTick { font-family: var(--font-body); font-size: 10px; fill: var(--text3); text-anchor: middle; }
   .chartCaption { font-size: 12px; color: var(--text3); margin-top: 6px; }
+  /* "You are here" marker -- drawn over the bars once a birth date is
+     entered (see ageChartSvg()'s dob param), so a parent can see at a
+     glance which bar(s) their child's birth date actually falls inside,
+     not just read the result text above. */
+  .chartMarkerLine { stroke: var(--marker); stroke-width: 2; stroke-dasharray: 4 3; }
+  .chartMarkerFlag { fill: var(--marker); }
+  .chartMarkerCaption { color: var(--marker); font-weight: 600; }
+  /* This is now the page's own de-facto headline -- the "League Age
+     Eligibility" title that used to sit above it was removed once this
+     page became an embed sitting under a host page's own title (see
+     README.md's "Age eligibility embed" entry), so this question needs
+     real heading weight of its own rather than reading as just another
+     small section label. */
+  .bigQuestion {
+    font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.15;
+    letter-spacing: 0.01em; color: var(--text); margin: 0 0 12px;
+  }
   .yearTabs { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
   .yearTab {
     font-family: var(--font-label); font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
@@ -139,6 +157,10 @@
   function fmtAgeDate(d) {
     return (d.getMonth() + 1) + '/' + d.getDate() + '/' + String(d.getFullYear()).slice(-2);
   }
+  function fmtIsoDate(d) {
+    var m = String(d.getMonth() + 1), day = String(d.getDate());
+    return d.getFullYear() + '-' + (m.length < 2 ? '0' + m : m) + '-' + (day.length < 2 ? '0' + day : day);
+  }
   function classifyDivision(name) {
     if (/^t-ball/i.test(name)) return { sport: 'tball', label: name, color: '#8A6914' };
     if (/^baseball\s+/i.test(name)) return { sport: 'baseball', label: name.replace(/^baseball\s+/i, ''), color: '#4C6AEB' };
@@ -158,7 +180,7 @@
     });
     return { placed: placed, rowCount: rowEnds.length };
   }
-  function ageChartSvg(entries) {
+  function ageChartSvg(entries, dob) {
     var parsed = entries.map(function (e) {
       var parts = (e.range || '').split(' to ');
       return Object.assign({ range: e.range, division: e.division }, classifyDivision(e.division),
@@ -215,6 +237,20 @@
     }
     var svgHeight = axisY + AXIS_H;
 
+    // "You are here" marker -- only drawn once a birth date is entered and
+    // only when it actually falls somewhere on the visible axis (an older
+    // sibling born well before minYear, say, just doesn't get a line rather
+    // than one pinned to the edge pretending to mean something).
+    var markerSvg = '';
+    if (dob && dob.getTime() >= axisStart && dob.getTime() < axisEnd) {
+      var mx = xOf(dob);
+      markerSvg =
+        '<g class="chartMarker">' +
+          '<line x1="' + mx + '" y1="0" x2="' + mx + '" y2="' + axisY + '" class="chartMarkerLine"></line>' +
+          '<polygon points="' + (mx - 6) + ',0 ' + (mx + 6) + ',0 ' + mx + ',9" class="chartMarkerFlag"></polygon>' +
+        '</g>';
+    }
+
     return (
       '<div class="legend">' +
         '<span class="legendItem"><span class="swatch" style="background:#4C6AEB;"></span>Baseball</span>' +
@@ -226,9 +262,12 @@
           ticks.join('') +
           '<line x1="' + MARGIN_L + '" y1="' + axisY + '" x2="' + (svgWidth - MARGIN_R) + '" y2="' + axisY + '" class="chartAxisLine"></line>' +
           barsSvg.join('') +
+          markerSvg +
         '</svg>' +
       '</div>' +
-      '<div class="chartCaption">Birth date, left (older) to right (younger) &mdash; drag to scroll.</div>'
+      '<div class="chartCaption">Birth date, left (older) to right (younger) &mdash; drag to scroll.' +
+        (markerSvg ? ' <span class="chartMarkerCaption">&#9679; your child’s birth date</span>' : '') +
+      '</div>'
     );
   }
 
@@ -248,12 +287,31 @@
     var defaultYear = years.indexOf(String(thisYear)) !== -1 ? String(thisYear)
       : (years.filter(function (y2) { return Number(y2) >= thisYear; })[0] || years[years.length - 1]);
     var selectedYear = defaultYear;
+    // Lives across repaints (year-tab switches, a changed birth date) so
+    // paint() can be the one place that renders both the result card AND
+    // the chart's "you are here" marker from the same value, instead of
+    // the old split where the date input's own change handler quietly
+    // patched just the result div and left the chart alone.
+    var selectedDob = null;
 
     function eligibleDivisions(dob, year) {
       return leagueAges[year].map(function (a) {
         var parts = (a.range || '').split(' to ');
         return Object.assign({}, a, { start: parseAgeDate(parts[0]), end: parseAgeDate(parts[1]) });
       }).filter(function (a) { return a.start && a.end && dob >= a.start && dob <= a.end; });
+    }
+
+    // After a repaint, scroll the chart's own drag-to-scroll strip so the
+    // marker (if any) is actually in view instead of possibly off to the
+    // side of a chart wider than the card -- entering an older sibling's
+    // birth date shouldn't require also knowing to drag the chart to find
+    // where it landed.
+    function scrollMarkerIntoView() {
+      var marker = document.querySelector('.chartMarkerLine');
+      var wrap = document.querySelector('.chartWrap');
+      if (!marker || !wrap) return;
+      var mx = Number(marker.getAttribute('x1'));
+      wrap.scrollLeft = Math.max(0, mx - wrap.clientWidth / 2);
     }
 
     function paint() {
@@ -263,18 +321,28 @@
             return '<button type="button" class="yearTab' + (y2 === selectedYear ? ' active' : '') + '" data-year="' + y2 + '" aria-pressed="' + (y2 === selectedYear) + '">' + y2 + '</button>';
           }).join('') + '</div>'
         : '';
+      var resultHtml = '';
+      if (selectedDob) {
+        var matches = eligibleDivisions(selectedDob, selectedYear);
+        resultHtml = matches.length
+          ? matches.map(function (m) {
+              return '<div class="resultRow"><span class="resultTitle">' + escapeHtml(m.division) + '</span><span class="resultSub">' + escapeHtml(m.range) + '</span></div>';
+            }).join('') + '<a class="btn" href="https://lunenburgybs.com" target="_blank" rel="noopener">Register on lunenburgybs.com</a>'
+          : '<div class="emptyState">No ' + escapeHtml(selectedYear) + ' division matches that birth date.</div>';
+      }
       root.innerHTML =
         '<div class="card">' +
-          '<div class="sectionLabel">Which division is my child eligible for?</div>' +
+          '<div class="bigQuestion">Which division is my child eligible for?</div>' +
           '<label class="field">Birth date' +
-            '<input type="date" id="dobInput" max="' + new Date().toISOString().slice(0, 10) + '">' +
+            '<input type="date" id="dobInput" max="' + new Date().toISOString().slice(0, 10) + '"' +
+              (selectedDob ? ' value="' + fmtIsoDate(selectedDob) + '"' : '') + '>' +
           '</label>' +
-          '<div class="result" id="result" aria-live="polite"></div>' +
+          '<div class="result" id="result" aria-live="polite">' + resultHtml + '</div>' +
         '</div>' +
         '<div class="card">' +
           '<div class="sectionLabel">' + escapeHtml(selectedYear) + ' Age Chart</div>' +
           yearTabs +
-          ageChartSvg(yr) +
+          ageChartSvg(yr, selectedDob) +
         '</div>' +
         '<div class="card">' +
           '<div class="sectionLabel">' + escapeHtml(selectedYear) + ' Cutoff Dates</div>' +
@@ -288,22 +356,15 @@
         '<div class="footNote">Our registration process will automatically attempt to place your player in the right division. If it seems wrong, please reach out to us at: <a href="mailto:info@lunenburgybs.com">info@lunenburgybs.com</a></div>';
 
       root.querySelectorAll('.yearTab').forEach(function (btn) {
-        btn.addEventListener('click', function () { selectedYear = btn.getAttribute('data-year'); paint(); reportHeight(); });
+        btn.addEventListener('click', function () { selectedYear = btn.getAttribute('data-year'); paint(); });
       });
-      var input = document.getElementById('dobInput');
-      var resultEl = document.getElementById('result');
-      input.addEventListener('change', function () {
-        if (!input.value) { resultEl.innerHTML = ''; reportHeight(); return; }
-        var parts = input.value.split('-').map(Number);
-        var dob = new Date(parts[0], parts[1] - 1, parts[2]);
-        var matches = eligibleDivisions(dob, selectedYear);
-        resultEl.innerHTML = matches.length
-          ? matches.map(function (m) {
-              return '<div class="resultRow"><span class="resultTitle">' + escapeHtml(m.division) + '</span><span class="resultSub">' + escapeHtml(m.range) + '</span></div>';
-            }).join('') + '<a class="btn" href="https://lunenburgybs.com" target="_blank" rel="noopener">Register on lunenburgybs.com</a>'
-          : '<div class="emptyState">No ' + escapeHtml(selectedYear) + ' division matches that birth date.</div>';
-        reportHeight();
+      document.getElementById('dobInput').addEventListener('change', function (e) {
+        if (!e.target.value) { selectedDob = null; paint(); return; }
+        var parts = e.target.value.split('-').map(Number);
+        selectedDob = new Date(parts[0], parts[1] - 1, parts[2]);
+        paint();
       });
+      scrollMarkerIntoView();
       reportHeight();
     }
     paint();
