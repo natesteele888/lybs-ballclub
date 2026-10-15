@@ -220,12 +220,15 @@
   function todayItemHtml(kind, item) {
     if (kind === 'game') {
       const played = item.ourScore != null && item.oppScore != null;
+      const badge = window.ClubLogos.badgeHtml(item.opponent, 28) || '<div class="fieldBadgeFallback" style="width:28px;height:28px;font-size:13px;">' + escapeHtml((item.opponent || '?').charAt(0).toUpperCase()) + '</div>';
       return `
         <div class="listRow" style="cursor:default;">
-          ${window.ClubLogos.badgeHtml(item.opponent, 28) || '<div class="fieldBadgeFallback" style="width:28px;height:28px;font-size:13px;">' + escapeHtml((item.opponent || '?').charAt(0).toUpperCase()) + '</div>'}
-          <div class="listRowMain">
-            <div class="listRowTitle">${item.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(item.opponent || 'TBD')}</div>
-            <div class="listRowSub">${escapeHtml(item.gameTime || '')}${item.location ? ' &middot; ' + escapeHtml(item.location) : ''}</div>
+          <div class="standingsTeamLink" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;" data-team-nav="${escapeHtml(item.opponent || '')}" tabindex="0" role="button" title="See ${escapeHtml(item.opponent || 'this team')}'s team page">
+            ${badge}
+            <div class="listRowMain">
+              <div class="listRowTitle">${item.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(item.opponent || 'TBD')}</div>
+              <div class="listRowSub">${escapeHtml(item.gameTime || '')}${item.location ? ' &middot; ' + escapeHtml(item.location) : ''}</div>
+            </div>
           </div>
           ${played ? `<span class="badge ${item.ourScore > item.oppScore ? 'badgeW' : item.ourScore < item.oppScore ? 'badgeL' : 'badgeT'}">${item.ourScore}-${item.oppScore}</span>`
             : item.status === 'postponed' ? '<span class="badge badgeTbd">Postponed</span>'

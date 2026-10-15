@@ -33,10 +33,10 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=176">
+<link rel="stylesheet" href="css/styles.css?v=177">
 <!-- Situations Trainer's own scoped "Sandlot" design system -- deliberately
      separate from styles.css, see css/situations.css's own header comment. -->
-<link rel="stylesheet" href="css/situations.css?v=176">
+<link rel="stylesheet" href="css/situations.css?v=177">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -248,7 +248,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261015d';</script>
+<script defer>window.BUILD_V = '20261015e';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -308,56 +308,57 @@
      silently change behavior underneath this app -- bump deliberately. -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-app-compat.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-auth-compat.min.js"></script>
-<script defer src="js/util.js?v=176"></script>
-<script defer src="js/backend.js?v=176"></script>
-<script defer src="js/team-registry.js?v=176"></script>
-<script defer src="js/cloud-auth.js?v=176"></script>
-<script defer src="js/google-auth.js?v=176"></script>
-<script defer src="js/team-config.js?v=176"></script>
-<script defer src="js/identity.js?v=176"></script>
-<script defer src="js/weather.js?v=176"></script>
-<script defer src="js/club-logos.js?v=176"></script>
-<script defer src="js/league-teams.js?v=176"></script>
-<script defer src="js/game-card.js?v=176"></script>
-<script defer src="js/pitch-smart.js?v=176"></script>
-<script defer src="js/tonight.js?v=176"></script>
-<script defer src="js/announcements.js?v=176"></script>
-<script defer src="js/league-events.js?v=176"></script>
-<script defer src="js/data-admin.js?v=176"></script>
-<script defer src="js/homepage.js?v=176"></script>
-<script defer src="js/league-info.js?v=176"></script>
-<script defer src="js/calendar-export.js?v=176"></script>
-<script defer src="js/schedule.js?v=176"></script>
-<script defer src="js/practices.js?v=176"></script>
-<script defer src="js/calendar-view.js?v=176"></script>
-<script defer src="js/roster.js?v=176"></script>
-<script defer src="js/drill-baserunning.js?v=176"></script>
-<script defer src="js/drill-ath.js?v=176"></script>
-<script defer src="js/drill-pitching.js?v=176"></script>
-<script defer src="js/depth-chart.js?v=176"></script>
-<script defer src="js/lineup-builder.js?v=176"></script>
-<script defer src="js/duty.js?v=176"></script>
-<script defer src="js/signup.js?v=176"></script>
-<script defer src="js/awards.js?v=176"></script>
-<script defer src="js/equipment.js?v=176"></script>
-<script defer src="js/signals.js?v=176"></script>
-<script defer src="js/team-access.js?v=176"></script>
-<script defer src="js/coach-notes.js?v=176"></script>
-<script defer src="js/player-benchmarks.js?v=176"></script>
-<script defer src="js/practice-plan.js?v=176"></script>
-<script defer src="js/play-diagram.js?v=176"></script>
-<script defer src="js/stats-import.js?v=176"></script>
-<script defer src="js/social-submit.js?v=176"></script>
-<script defer src="js/gamechanger.js?v=176"></script>
-<script defer src="js/rules.js?v=176"></script>
-<script defer src="js/practice-catalog.js?v=176"></script>
-<script defer src="js/situations.js?v=176"></script>
-<script defer src="js/standings.js?v=176"></script>
-<script defer src="js/calendar-family.js?v=176"></script>
-<script defer src="js/archive.js?v=176"></script>
-<script defer src="js/league-schedule.js?v=176"></script>
-<script defer src="js/team-page.js?v=176"></script>
-<script defer src="js/game-preview.js?v=176"></script>
+<script defer src="js/util.js?v=177"></script>
+<script defer src="js/nav-history.js?v=177"></script>
+<script defer src="js/backend.js?v=177"></script>
+<script defer src="js/team-registry.js?v=177"></script>
+<script defer src="js/cloud-auth.js?v=177"></script>
+<script defer src="js/google-auth.js?v=177"></script>
+<script defer src="js/team-config.js?v=177"></script>
+<script defer src="js/identity.js?v=177"></script>
+<script defer src="js/weather.js?v=177"></script>
+<script defer src="js/club-logos.js?v=177"></script>
+<script defer src="js/league-teams.js?v=177"></script>
+<script defer src="js/game-card.js?v=177"></script>
+<script defer src="js/pitch-smart.js?v=177"></script>
+<script defer src="js/tonight.js?v=177"></script>
+<script defer src="js/announcements.js?v=177"></script>
+<script defer src="js/league-events.js?v=177"></script>
+<script defer src="js/data-admin.js?v=177"></script>
+<script defer src="js/homepage.js?v=177"></script>
+<script defer src="js/league-info.js?v=177"></script>
+<script defer src="js/calendar-export.js?v=177"></script>
+<script defer src="js/schedule.js?v=177"></script>
+<script defer src="js/practices.js?v=177"></script>
+<script defer src="js/calendar-view.js?v=177"></script>
+<script defer src="js/roster.js?v=177"></script>
+<script defer src="js/drill-baserunning.js?v=177"></script>
+<script defer src="js/drill-ath.js?v=177"></script>
+<script defer src="js/drill-pitching.js?v=177"></script>
+<script defer src="js/depth-chart.js?v=177"></script>
+<script defer src="js/lineup-builder.js?v=177"></script>
+<script defer src="js/duty.js?v=177"></script>
+<script defer src="js/signup.js?v=177"></script>
+<script defer src="js/awards.js?v=177"></script>
+<script defer src="js/equipment.js?v=177"></script>
+<script defer src="js/signals.js?v=177"></script>
+<script defer src="js/team-access.js?v=177"></script>
+<script defer src="js/coach-notes.js?v=177"></script>
+<script defer src="js/player-benchmarks.js?v=177"></script>
+<script defer src="js/practice-plan.js?v=177"></script>
+<script defer src="js/play-diagram.js?v=177"></script>
+<script defer src="js/stats-import.js?v=177"></script>
+<script defer src="js/social-submit.js?v=177"></script>
+<script defer src="js/gamechanger.js?v=177"></script>
+<script defer src="js/rules.js?v=177"></script>
+<script defer src="js/practice-catalog.js?v=177"></script>
+<script defer src="js/situations.js?v=177"></script>
+<script defer src="js/standings.js?v=177"></script>
+<script defer src="js/calendar-family.js?v=177"></script>
+<script defer src="js/archive.js?v=177"></script>
+<script defer src="js/league-schedule.js?v=177"></script>
+<script defer src="js/team-page.js?v=177"></script>
+<script defer src="js/game-preview.js?v=177"></script>
 <script defer>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null, IS_BOARD = false;
@@ -559,6 +560,19 @@
     });
   }
 
+  // Whatever panel is on screen right now -- 'team'/'gamePreview' included,
+  // unlike lastNavTab (which only ever tracks the last REAL nav tab, by
+  // design -- see its own comment). Reading this just before opening a
+  // Team Page or Game Preview panel, instead of always closing back to
+  // lastNavTab, is what makes a drill-down FROM one of those (a team
+  // logo tapped inside Game Preview, opening Team Page on top of it)
+  // close back to the one just underneath instead of jumping straight
+  // past it to whatever real tab started the whole chain.
+  function currentPanelName() {
+    const el = document.querySelector('.tabPanel.active');
+    return el ? el.id.replace(/^tab-/, '') : lastNavTab;
+  }
+
   function switchTab(name) {
     renderNav(name);
     document.querySelectorAll('.tabPanel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
@@ -591,11 +605,21 @@
     // division, not just ours, and already knows the real one; see
     // js/team-page.js's own header comment on why this matters.
     const divisionId = el.dataset.teamDivision || undefined;
+    const returnTo = currentPanelName();
     switchTab('team');
+    // Same close function either way the page leaves -- its own in-app
+    // Back button (which also tells NavHistory this entry's already
+    // handled) or a real browser/hardware Back press (NavHistory's own
+    // popstate listener calls it instead) -- see js/nav-history.js.
+    // Closes to returnTo (captured above, BEFORE switching), not always
+    // lastNavTab -- this Team Page might have been opened from Game
+    // Preview, not a real tab, and should close back to that.
+    const closeTeamPage = () => switchTab(returnTo);
     window.TeamPage.render(document.getElementById('tab-team'), TEAM_ID, opponentName, {
-      onBack: () => switchTab(lastNavTab),
+      onBack: () => { window.NavHistory.consumeTop(); closeTeamPage(); },
       divisionId,
     });
+    window.NavHistory.push(closeTeamPage);
   }, true);
   // [data-team-nav] elements are plain divs (tabindex="0" role="button" in
   // their own render() calls) with no native keyboard activation of their
@@ -644,10 +668,16 @@
       ? window.TonightGames.gameById(el.dataset.gameId, el.dataset.gameDivision || undefined)
       : Object.assign({}, (window.LeagueSchedule.getGamesForDate(el.dataset.gameDate) || [])[Number(el.dataset.gameIdx)], { date: el.dataset.gameDate });
     if (!source || (!source.home && !source.teams)) return; // stale DOM outlived the data it was rendered from -- no-op rather than opening a blank preview
+    const returnTo = currentPanelName();
     switchTab('gamePreview');
+    // Same closer-reused-both-ways pattern as the Team Page handler above
+    // -- see js/nav-history.js. Closes to returnTo, not always
+    // lastNavTab, same reasoning as closeTeamPage's own comment.
+    const closeGamePreview = () => switchTab(returnTo);
     window.GamePreview.render(document.getElementById('tab-gamePreview'), source, {
-      onBack: () => switchTab(lastNavTab),
+      onBack: () => { window.NavHistory.consumeTop(); closeGamePreview(); },
     });
+    window.NavHistory.push(closeGamePreview);
   }, true);
   // Same keyboard-activation mirror as [data-team-nav]'s own, just below it.
   document.addEventListener('keydown', e => {
@@ -1092,7 +1122,7 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script defer src="js/auth.js?v=176"></script>
+<script defer src="js/auth.js?v=177"></script>
 <!-- access-control.js also calls window.onIdentityReady, but only from
      inside an async googleAuth.onReady() callback, never at top-level
      script-execution time -- so unlike auth.js it doesn't strictly need to
@@ -1100,12 +1130,12 @@
      google-auth.js. Placed next to auth.js anyway since the two play the
      same role (driving entry into the app) for their respective sign-in
      paths. -->
-<script defer src="js/access-control.js?v=176"></script>
+<script defer src="js/access-control.js?v=177"></script>
 <!-- public-view.js wires up #publicViewLink/#publicViewBack -- needs
      TEAM_REGISTRY, LeagueInfo, Standings, and LeagueEvents to already
      exist, no ordering constraint relative to auth.js/access-control.js
      since it never touches onIdentityReady or the gated app shell at all. -->
-<script defer src="js/public-view.js?v=176"></script>
+<script defer src="js/public-view.js?v=177"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.
