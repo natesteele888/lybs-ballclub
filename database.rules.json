@@ -34,6 +34,7 @@
       "seasonArchive": { ".read": "auth != null", ".write": "auth != null" },
       "macLeagueStandings": { ".read": "auth != null", ".write": "auth != null" },
       "pitchSmart": { ".read": "auth != null", ".write": "auth != null" },
+      "macLeagueTeamDetails": { ".read": "auth != null", ".write": "auth != null" },
       "practiceCatalog": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" },
       "skillBenchmarks": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" },
       "situationRules": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" }
