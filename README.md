@@ -8,26 +8,7 @@ No build step: open `index.html` (or run a static server) and it runs. Runs enti
 
 - **Schedule / Practices / Roster** -- CRUD tabs, coach-editable, read-only for everyone else.
 - **GameChanger widget** -- paste the Scoreboard Widget snippet from `web.gc.com -> Tools -> Create Scoreboard Widget`; it renders in a sandboxed iframe. Display-only -- GameChanger has no API, so this is never a data source for the calendar or anything else.
-- **Age eligibility embed** -- `age-eligibility.html` is a standalone page (not part of the app shell, no sign-in) that ports the League Ages tab's chart/calculator so it can be dropped into an external site (e.g. `lunenburgybs.com`) via a plain `<iframe>`. It reads the same `data/league-info.json` this repo already maintains, so the cutoffs never drift from the in-app tab, and posts its own content height to the parent window on load/resize (`{lybsAgeEligibilityHeight}`) so the iframe can size itself instead of guessing a fixed number. Embed snippet:
-  ```html
-  <iframe
-    id="lybs-age-eligibility"
-    src="https://natesteele888.github.io/lybs-ballclub/age-eligibility.html"
-    title="LYBS Age Eligibility"
-    loading="lazy"
-    style="width:100%;max-width:760px;border:0;display:block;"
-    height="600"></iframe>
-  <script>
-    window.addEventListener('message', function (e) {
-      if (e.origin !== 'https://natesteele888.github.io') return;
-      if (e.data && typeof e.data.lybsAgeEligibilityHeight === 'number') {
-        var f = document.getElementById('lybs-age-eligibility');
-        if (f) f.style.height = e.data.lybsAgeEligibilityHeight + 'px';
-      }
-    });
-  </script>
-  ```
-  The `height="600"` attribute is just a fallback shown before the first resize message arrives -- the script above takes over immediately after.
+- **Age eligibility embed** -- `age-eligibility.html` is a standalone page (not part of the app shell, no sign-in) that ports the League Ages tab's chart/calculator so it can be dropped into an external site via a plain `<iframe>` -- live today on `lunenburgybs.com`'s Find My Division page. See **[AGE-ELIGIBILITY.md](AGE-ELIGIBILITY.md)** for what it does, the data/governance nuances (Babe Ruth vs. MAC League, the divisions deliberately left out), the current embed snippet, and the yearly upkeep it needs.
 - **MAC League standings** -- mirrored from `macleague.org` by `scripts/scrape-standings.mjs`, run on a schedule (`.github/workflows/standings.yml`), never fetched live from the browser. See that script's header comment for why.
 - **Rules search & save** -- MAC League's full set of rulebooks (`data/rules-seed.json`, pulled from `macleague.org/coaching-resources/...`, last refreshed for the 2026 season -- see that file's `season`/`fetchedAt` fields): Rookies, Minors, Majors, Juniors & Seniors each have their own rules (they genuinely differ), plus General, Playoff, Operating Guidelines and All-Stars Information that apply more broadly. Searchable, filterable by division (a division's rules + General show together, since the league's own rules are written that way), with a per-device "pin for quick reference." Rules get amended mid-season -- several entries carry the league's own "(Updated .../changed on ...)" notes -- so re-pull this each offseason at minimum.
 - **My Calendar** -- downloads an `.ics` file combining every team this device has logged into. Built from our own Schedule/Practices data, not synced from GameChanger (no feed exists to sync from).
