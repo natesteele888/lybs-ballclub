@@ -287,6 +287,10 @@
       {
         "division": "Softball 12U Majors",
         "range": "9/1/2012 to 8/31/2014"
+      },
+      {
+        "division": "Softball 16U Juniors",
+        "range": "9/1/2008 to 8/31/2012"
       }
     ],
     "2027": [
@@ -317,9 +321,13 @@
       {
         "division": "Softball 12U Majors",
         "range": "9/1/2013 to 8/31/2015"
+      },
+      {
+        "division": "Softball 16U Juniors",
+        "range": "9/1/2009 to 8/31/2013"
       }
     ],
-    "note": "Age cutoff date ranges MAC League uses to assign divisions. Softball's determination date is August 31st of the prior year, not the current year. Younger kids may move up without approval; moving an older kid down needs MAC, Babe Ruth, and insurance-carrier approval. MAC League's own League Ages page (the source below) also lists Baseball 15/16U Juniors, Baseball 18U Seniors, and Softball 16U Juniors -- regional age brackets other MAC League towns use, not divisions LYBS itself fields teams for (12U Majors is the highest level LYBS offers, in both sports), so they're left out of this chart on purpose rather than missing by omission."
+    "note": "Age cutoff date ranges MAC League uses to assign divisions. Softball's determination date is August 31st of the prior year, not the current year. Younger kids may move up without approval; moving an older kid down needs MAC, Babe Ruth, and insurance-carrier approval. MAC League's own League Ages page (the source below) also lists Baseball 15/16U Juniors and Baseball 18U Seniors -- regional age brackets other MAC League towns use, not divisions LYBS itself fields baseball teams for (12U Majors is the highest level of baseball LYBS offers; softball runs through 16U Juniors) -- so those two are left out of this chart on purpose rather than missing by omission."
   },
   "seasons": [
     {
