@@ -22,15 +22,18 @@
 
    "Generate a season plan" (buildSeasonPlan(), wired to the list
    screen's own form) builds several of these plans at once from the
-   Drill Library instead of one at a time -- a coach enters weeks/
-   practices-per-week/minutes-per-practice/start date and gets back
-   one real, independently editable plan per practice, sequenced to
-   open with Warm-up, round-robin through this division's other
-   categories (specialized-position and team-coordinated categories
-   held back until later in the season -- see CATEGORY_STAGE) so
-   nothing gets neglected, lean foundational early and ease into
-   standard/advanced as the weeks go on, and close with a scrimmage
-   periodically. Purely additive -- it only ever creates new plans,
+   Drill Library instead of one at a time -- a coach picks a level of
+   play (defaults to this team's own division when the catalog has it,
+   but isn't locked to it -- planning for a call-up group, a clinic, or
+   just next year is a real case) and enters weeks/practices-per-week/
+   minutes-per-practice/start date, and gets back one real,
+   independently editable plan per practice, sequenced to open with
+   Warm-up, round-robin through that level's other categories
+   (specialized-position and team-coordinated categories held back
+   until later in the season -- see CATEGORY_STAGE) so nothing gets
+   neglected, lean foundational early and ease into standard/advanced
+   as the weeks go on, and close with a scrimmage periodically. Purely
+   additive -- it only ever creates new plans,
    never touches or replaces existing ones.
    ============================================================ */
 (function () {
@@ -259,7 +262,20 @@
       const defaultDivision = (window.TeamConfig.current() || {}).macLeagueDivisionName || null;
       let libFilter = { division: defaultDivision, tiers: new Set(TIER_ORDER), category: null, query: '' };
       let genOpen = false;
-      const genForm = { weeks: 6, practicesPerWeek: 1, minutesPerPractice: 60, startDate: todayIso() };
+      // Divisions the catalog actually has drills for, in the order they
+      // appear there (T-Ball/Rookies/Minors/Majors, same curriculum order
+      // data/practice-catalog-seed.json is written in) -- not a hardcoded
+      // list here, so this never drifts out of sync with the catalog.
+      const genDivisions = [...new Set(window.PracticeCatalog.getDrills().map(d => d.division))];
+      const genForm = {
+        weeks: 6, practicesPerWeek: 1, minutesPerPractice: 60, startDate: todayIso(),
+        // Default to this team's own division when the catalog actually has
+        // content for it; otherwise fall back to whichever division comes
+        // first rather than leaving the generator unusable. A coach building
+        // for a different level than their own team (a call-up group, a
+        // clinic, planning ahead for next year) just picks a different chip.
+        division: (defaultDivision && genDivisions.includes(defaultDivision)) ? defaultDivision : (genDivisions[0] || null),
+      };
 
       function listHtml() {
         const rows = plans.map(p => `
@@ -281,7 +297,7 @@
       }
 
       function generateFormHtml() {
-        const division = defaultDivision;
+        const division = genForm.division;
         const totalSessions = (Number(genForm.weeks) || 0) * (Number(genForm.practicesPerWeek) || 0);
         return `
           <div class="drillCard" style="margin-bottom:14px;">
@@ -292,6 +308,10 @@
               into standard/advanced as the weeks go on, with a scrimmage worked in periodically. Creates one new
               plan per practice -- nothing existing is touched, and every plan it creates is yours to edit or delete
               afterward like any other.
+            </div>
+            <label class="drillFieldLabel">Level of play</label>
+            <div class="drillChipRow" style="margin-bottom:10px;">
+              ${genDivisions.map(d => `<button class="drillChip ${division === d ? 'drillChipOn' : ''}" data-gendivision="${escapeHtml(d)}" aria-pressed="${division === d}">${escapeHtml(d)}</button>`).join('') || '<span class="helpText">No drill library loaded yet.</span>'}
             </div>
             <label class="drillFieldLabel">Weeks
               <input class="drillFreeInput" type="number" min="1" max="30" id="genWeeks" value="${escapeHtml(String(genForm.weeks))}">
@@ -305,7 +325,6 @@
             <label class="drillFieldLabel" style="margin-top:10px;">Starting
               <input class="drillFreeInput" type="date" id="genStart" value="${escapeHtml(genForm.startDate)}">
             </label>
-            ${!division ? '<div class="helpText" style="margin-top:10px;color:var(--gold);">Set this team\'s MAC League division first (Team Access/setup) -- the generator needs to know which division\'s drills to pull from.</div>' : ''}
             <button class="btn" id="genSubmit" style="width:100%;margin-top:14px;" ${division ? '' : 'disabled'}>Generate ${totalSessions || ''} practice${totalSessions === 1 ? '' : 's'}</button>
           </div>`;
       }
@@ -444,6 +463,9 @@
             refresh();
           });
           containerEl.querySelector('#ppGenToggle').addEventListener('click', () => { genOpen = !genOpen; refresh(); });
+          containerEl.querySelectorAll('[data-gendivision]').forEach(btn => {
+            btn.addEventListener('click', () => { genForm.division = btn.dataset.gendivision; refresh(); });
+          });
           const genSubmit = containerEl.querySelector('#genSubmit');
           if (genSubmit) {
             genSubmit.addEventListener('click', async btnEvt => {
@@ -453,8 +475,8 @@
               genForm.startDate = containerEl.querySelector('#genStart').value || genForm.startDate;
               let addedCount = 0;
               await withBusyButton(btnEvt.target, 'Generating...', async () => {
-                const drills = window.PracticeCatalog.getDrills().filter(d => d.division === defaultDivision);
-                const newPlans = buildSeasonPlan(defaultDivision, drills, genForm);
+                const drills = window.PracticeCatalog.getDrills().filter(d => d.division === genForm.division);
+                const newPlans = buildSeasonPlan(genForm.division, drills, genForm);
                 addedCount = newPlans.length;
                 plans.unshift(...newPlans);
                 await savePlans(teamId, plans);
