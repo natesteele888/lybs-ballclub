@@ -1,7 +1,7 @@
 {
   "source": "USA Baseball American Development Model (Activate/Discover stages) + Youth Baseball Skills Matrix's Daily Practice Organization Outline + this app's own data/pitch-smart-rules.json. T-Ball and Rookies/Coach-Pitch content is adapted from Little League University's official diagrammed curricula (littleleague.org/downloads/tee-ball-program, littleleague.org/downloads/coach-pitch-12-week-program). Minors content is assembled from ADM + the Skills Matrix. Majors content has no official published curriculum anywhere (Little League's own site confirms the gap) -- those drills are sourceType 'lybs-original' and need LYBS coach review before being treated as settled.",
   "season": "2026",
-  "note": "Flat, atomic drill library -- a coach picks individual drills and builds their own practice, rather than adopting a pre-made weekly plan. Each drill is tagged with a 'tier' (foundational/standard/advanced) WITHIN its division: foundational is what a player new to that level needs, advanced is a stretch for players already ahead, standard is the typical mid-season expectation. Tier lives on the drill, not the team -- this app's roster has no field for a player's prior experience, so a coach judges their own team's makeup and filters to the tier(s) that fit (e.g. a team with a few new-to-Majors players and some returners might want Foundational + Standard visible together). 'category' values are drawn from data/skill-benchmarks-seed.json's own category vocabulary, plus 'Game/Scrimmage' and 'Multi-Station' for closing activities and multi-coach station rotations. Phase 1 -- migrated from the prior pre-built-practice version, not a full buildout. Phase 2 (2026) -- every drill now also carries equipment/setup/coachingPoints, and 40 of 49 drills have a diagramRef (skipped for pure warm-up/conditioning and closing-game/scrimmage drills, where a field diagram wouldn't add anything). Same sourcing discipline as Phase 1 -- this new content follows the same citation/sourceType honesty already established per drill, not new citations of its own.",
+  "note": "Flat, atomic drill library -- a coach picks individual drills and builds their own practice, rather than adopting a pre-made weekly plan. Each drill is tagged with a 'tier' (foundational/standard/advanced) WITHIN its division: foundational is what a player new to that level needs, advanced is a stretch for players already ahead, standard is the typical mid-season expectation. Tier lives on the drill, not the team -- this app's roster has no field for a player's prior experience, so a coach judges their own team's makeup and filters to the tier(s) that fit (e.g. a team with a few new-to-Majors players and some returners might want Foundational + Standard visible together). 'category' values are drawn from data/skill-benchmarks-seed.json's own category vocabulary, plus 'Game/Scrimmage' and 'Multi-Station' for closing activities and multi-coach station rotations. Phase 1 -- migrated from the prior pre-built-practice version, not a full buildout. Phase 2 (2026) -- every drill now also carries equipment/setup/coachingPoints, and 40 of 49 drills have a diagramRef (skipped for pure warm-up/conditioning and closing-game/scrimmage drills, where a field diagram wouldn't add anything). Same sourcing discipline as Phase 1 -- this new content follows the same citation/sourceType honesty already established per drill, not new citations of its own. 2026-10: added five T-Ball drills (Run the Bases, Team Throwing Drill, Hit the Bucket, Fielding Drill, Left/Center/Right Field) sourced from LYBS's own T-Ball Coaches Resource Hub (lunenburgybs.com/coaching-resources/t-ball-coaches-resource-hub/165055) -- the same Little League University material this file's T-Ball content already cites, not a new source. Introduces Ground Ball/Infield and Basic Positioning as real T-Ball categories for the first time (previously only folded into the 3-station rotation / absent entirely).",
   "categories": [
     "Warm-up",
     "Throwing",
@@ -2148,6 +2148,241 @@
         "Let plays develop — this is the time to apply what was drilled, not to over-coach every pitch.",
         "Flag situational mistakes briefly between innings rather than stopping play mid-at-bat."
       ]
+    },
+    {
+      "id": "drill-tball-run-the-bases",
+      "division": "T-Ball",
+      "tier": "standard",
+      "category": "Base Running",
+      "title": "Run the Bases",
+      "description": "Run the full basepath in order -- home to first to second to third to home, not just through first.",
+      "suggestedMinutes": 15,
+      "benchmarkIds": [
+        "run-bases-tball"
+      ],
+      "sourceType": "official",
+      "citation": "Adapted from Little League University's Tee Ball Program, via LYBS's own T-Ball Coaches Resource Hub (lunenburgybs.com/coaching-resources/t-ball-coaches-resource-hub/165055)",
+      "equipment": [
+        "Bases"
+      ],
+      "setup": [
+        "Line players up single file at home plate.",
+        "One at a time, each runner sprints around all the bases in order -- 1st, 2nd, 3rd, then home.",
+        "Station a coach at 2nd and 3rd to cue the runner to keep going instead of stopping.",
+        "Rotate the next runner in once the previous one touches home.",
+        "Repeat for 2-3 full sets."
+      ],
+      "coachingPoints": [
+        "Full speed the whole way around, not just out of the box.",
+        "Touch each base cleanly on the way by -- no cutting corners.",
+        "Keep the line moving so nobody's just standing around waiting."
+      ],
+      "diagramRef": {
+        "title": "Run the bases circuit",
+        "note": "Full lap -- home to 1st to 2nd to 3rd to home",
+        "markers": [
+          {
+            "id": "mk1",
+            "x": 50,
+            "y": 87,
+            "label": "Start/finish (home)"
+          },
+          {
+            "id": "mk2",
+            "x": 63,
+            "y": 40,
+            "label": "Coach cues runner on"
+          }
+        ]
+      }
+    },
+    {
+      "id": "drill-tball-team-throwing",
+      "division": "T-Ball",
+      "tier": "standard",
+      "category": "Throwing",
+      "title": "Team Throwing Drill",
+      "description": "Small-group throwing-accuracy stations at a target -- a hula hoop or marked zone -- instead of just partner catch.",
+      "suggestedMinutes": 15,
+      "benchmarkIds": [
+        "throw-grip"
+      ],
+      "sourceType": "official",
+      "citation": "Adapted from Little League University's Tee Ball Program, via LYBS's own T-Ball Coaches Resource Hub (lunenburgybs.com/coaching-resources/t-ball-coaches-resource-hub/165055)",
+      "equipment": [
+        "Hula hoops or cones (targets)",
+        "Balls",
+        "Buckets"
+      ],
+      "setup": [
+        "Set up a few hula hoops or marked target zones a short, consistent distance away.",
+        "Split players into small groups, one target per group.",
+        "Each player takes turns throwing at their group's target.",
+        "Collect balls into a bucket between rounds and reset the group.",
+        "Rotate groups to a different target after a few rounds for variety."
+      ],
+      "coachingPoints": [
+        "Same 4-seam grip and overhand motion as regular partner catch.",
+        "Aim matters here -- encourage throwing AT the target, not just throwing.",
+        "Keep the distance short and consistent so the accuracy challenge stays realistic for this age."
+      ],
+      "diagramRef": {
+        "title": "Team throwing targets",
+        "markers": [
+          {
+            "id": "mk1",
+            "x": 30,
+            "y": 45,
+            "label": "Target group A"
+          },
+          {
+            "id": "mk2",
+            "x": 65,
+            "y": 50,
+            "label": "Target group B"
+          }
+        ]
+      }
+    },
+    {
+      "id": "drill-tball-hit-the-bucket",
+      "division": "T-Ball",
+      "tier": "foundational",
+      "category": "Throwing",
+      "title": "Hit the Bucket",
+      "description": "A circle game where players throw at a bucket in the middle -- a fun, low-pressure way to build throwing accuracy.",
+      "suggestedMinutes": 10,
+      "benchmarkIds": [
+        "throw-grip"
+      ],
+      "sourceType": "official",
+      "citation": "Adapted from Little League University's Tee Ball Program, via LYBS's own T-Ball Coaches Resource Hub (lunenburgybs.com/coaching-resources/t-ball-coaches-resource-hub/165055)",
+      "equipment": [
+        "A bucket",
+        "Soft-toss balls"
+      ],
+      "setup": [
+        "Set a bucket in the middle of an open area.",
+        "Have players form a circle around it, spaced a few feet back.",
+        "Each player takes a turn tossing a ball toward the bucket, trying to get it in or close.",
+        "Collect the balls and pass them back around for another round.",
+        "Keep it light -- cheer good throws, no pressure on misses."
+      ],
+      "coachingPoints": [
+        "Watch for a step toward the target on the throw, not just an arm flick.",
+        "Encourage an overhand motion even in this game format.",
+        "This is meant to be fun first -- accuracy comes from reps, not corrections."
+      ],
+      "diagramRef": {
+        "title": "Hit the Bucket circle",
+        "markers": [
+          {
+            "id": "mk1",
+            "x": 50,
+            "y": 55,
+            "label": "Bucket target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "drill-tball-fielding",
+      "division": "T-Ball",
+      "tier": "standard",
+      "category": "Ground Ball/Infield",
+      "title": "Fielding Drill",
+      "description": "Two-line ground ball fielding -- proper technique for getting in front of a rolled ball, standalone from the station rotation.",
+      "suggestedMinutes": 15,
+      "benchmarkIds": [
+        "field-tball-grounder"
+      ],
+      "sourceType": "official",
+      "citation": "Adapted from Little League University's Tee Ball Program, via LYBS's own T-Ball Coaches Resource Hub (lunenburgybs.com/coaching-resources/t-ball-coaches-resource-hub/165055)",
+      "equipment": [
+        "Tee balls",
+        "Cones (to mark lines)"
+      ],
+      "setup": [
+        "Set up two lines of players facing a coach, a cone marking each line's spot.",
+        "Coach rolls a ball to the first player in each line.",
+        "Player shuffles in front of the ball, fields it with two hands, staying low.",
+        "Player rolls or tosses the ball back, then jogs to the back of the line.",
+        "Repeat for several rounds, gradually widening the roll left and right."
+      ],
+      "coachingPoints": [
+        "Glove down and out in front, not reaching off to the side.",
+        "Stay low the whole time -- bend the knees, not the waist.",
+        "Two hands on every rep, even an easy one."
+      ],
+      "diagramRef": {
+        "title": "Fielding lines",
+        "markers": [
+          {
+            "id": "mk1",
+            "x": 40,
+            "y": 50,
+            "label": "Fielding line A"
+          },
+          {
+            "id": "mk2",
+            "x": 60,
+            "y": 50,
+            "label": "Fielding line B"
+          }
+        ]
+      }
+    },
+    {
+      "id": "drill-tball-outfield-positions",
+      "division": "T-Ball",
+      "tier": "standard",
+      "category": "Basic Positioning",
+      "title": "Left, Center, Right Field",
+      "description": "Walks players through where left field, center field, and right field actually are, building outfield awareness early.",
+      "suggestedMinutes": 10,
+      "benchmarkIds": [
+        "position-basics-tball"
+      ],
+      "sourceType": "official",
+      "citation": "Adapted from Little League University's Tee Ball Program, via LYBS's own T-Ball Coaches Resource Hub (lunenburgybs.com/coaching-resources/t-ball-coaches-resource-hub/165055)",
+      "equipment": [
+        "Cones (3)"
+      ],
+      "setup": [
+        "Place one cone each at left field, center field, and right field.",
+        "Walk the group to each cone, naming the position out loud as you go.",
+        "Have players practice jogging out to the correct spot when you call out a position.",
+        "Mix up the calls so players aren't just following the kid in front of them.",
+        "Finish with everyone starting at home and sprinting to whichever spot is called."
+      ],
+      "coachingPoints": [
+        "Use the same position names every time (left/center/right) so they stick.",
+        "Watch for players following a teammate instead of actually locating their own spot.",
+        "Keep it playful -- a quick game format works better than a lecture at this age."
+      ],
+      "diagramRef": {
+        "title": "Outfield positions",
+        "markers": [
+          {
+            "id": "mk1",
+            "x": 26,
+            "y": 22,
+            "label": "Left field"
+          },
+          {
+            "id": "mk2",
+            "x": 50,
+            "y": 12,
+            "label": "Center field"
+          },
+          {
+            "id": "mk3",
+            "x": 75,
+            "y": 22,
+            "label": "Right field"
+          }
+        ]
+      }
     }
   ]
 }
