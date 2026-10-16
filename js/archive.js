@@ -28,14 +28,23 @@
 
     render(containerEl) {
       let expanded = null; // team name currently expanded (names are unique in this dataset)
+      // Index (within that team's own games[]) of whichever single game's
+      // line score is showing -- Nathan: "I want the line score to be
+      // visible upon clicking onto the game," not every game in a 13-17
+      // game season all expanded at once by default. Index, not a date/
+      // opponent key, since a doubleheader can repeat both on the same
+      // team. Reset whenever a different team is opened (below) so
+      // switching teams never leaves some OTHER team's game looking
+      // expanded underneath a freshly opened one.
+      let expandedGame = null;
 
       function renderGames(t) {
         if (t.scheduleNote) return `<div class="helpText">${escapeHtml(t.scheduleNote)}</div>`;
         if (!t.games || !t.games.length) return '<div class="emptyState">No games recorded.</div>';
-        return t.games.map(g => {
+        return t.games.map((g, i) => {
           const [ourScore, theirScore] = (g.score || '').split('-').map(s => s.trim());
           const club = window.ClubLogos.find(g.opponent);
-          return window.GameCard.resultHtml({
+          const card = window.GameCard.resultHtml({
             date: g.date, homeAway: g.homeAway,
             ourName: t.name, ourScore: ourScore != null ? ourScore : '-',
             theirName: g.opponent, theirScore: theirScore != null ? theirScore : '-',
@@ -46,8 +55,22 @@
             // scripts/enrich-archive-linescores.mjs found a match for this
             // game -- not every archived game has one (gcTeamId is only
             // set for teams whose GameChanger page was ever looked up).
-            lineScore: g.lineScore,
+            // Only rendered for whichever game is currently expanded --
+            // hasLineScore still flags every OTHER one so its card can
+            // hint that tapping it does something.
+            lineScore: expandedGame === i ? g.lineScore : null,
+            hasLineScore: !!g.lineScore,
           });
+          // data-game-idx, not a click handler wired here directly --
+          // GameCard's own opponent-logo link already needs to keep
+          // working inside this (same nested-interactive-element pattern
+          // js/schedule.js's own .gameResultCardWrap already relies on:
+          // data-team-nav's capture-phase handler stops its own clicks
+          // from ever reaching this wrapper's bubble-phase listener,
+          // wired once after the whole list renders, below).
+          return g.lineScore
+            ? `<div class="archiveGameWrap" data-game-idx="${i}" style="cursor:pointer;">${card}</div>`
+            : card;
         }).join('');
       }
 
@@ -76,6 +99,14 @@
         containerEl.querySelectorAll('.archiveTeamHeader').forEach(el => {
           el.addEventListener('click', () => {
             expanded = expanded === el.dataset.id ? null : el.dataset.id;
+            expandedGame = null; // a game expanded under the PREVIOUS team shouldn't still look expanded under this one
+            renderList();
+          });
+        });
+        containerEl.querySelectorAll('.archiveGameWrap').forEach(el => {
+          el.addEventListener('click', () => {
+            const idx = Number(el.dataset.gameIdx);
+            expandedGame = expandedGame === idx ? null : idx;
             renderList();
           });
         });
