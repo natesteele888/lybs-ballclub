@@ -296,10 +296,10 @@
             <div class="detailRow">${escapeHtml(game.date || '')}${game.gameTime ? ' · ' + escapeHtml(game.gameTime) : ''}</div>
             ${game.status === 'postponed' ? '<div class="detailRow" style="color:var(--gold);"><b>Postponed</b> &mdash; edit the date once a makeup is set.</div>' : ''}
             ${game.status === 'cancelled' ? '<div class="detailRow" style="color:var(--status-red);"><b>Cancelled</b></div>' : ''}
-            ${game.location ? `<div class="detailRow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-              ${escapeHtml(game.location)}
-              <button type="button" class="btn btnGhost btnTiny mapTriggerBtn" data-map-label="${escapeHtml(game.location)}" data-map-address="${escapeHtml(game.location)}">View on Map</button>
-            </div>` : ''}
+            ${game.location ? `
+            <div class="detailRow">${escapeHtml(game.location)}</div>
+            <iframe class="inlineMapFrame" src="https://maps.google.com/maps?q=${encodeURIComponent(game.location)}&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map"></iframe>
+            <a class="btn btnGhost btnSmall" style="width:100%;margin:8px 0 12px;" href="${mapLink(game.location)}" target="_blank" rel="noopener">Open in Maps</a>` : ''}
             ${!played && game.opponent ? '<div id="theirContactSlot"></div>' : ''}
             ${(game.ourScore != null && game.oppScore != null) ? `<div class="detailRow"><b>Final: ${game.ourScore}-${game.oppScore}</b></div>` : ''}
             ${game.notes ? `<div class="detailRow">${escapeHtml(game.notes)}</div>` : ''}
@@ -317,13 +317,6 @@
           </div>`;
         const weatherSlot = containerEl.querySelector('#weatherSlot');
         if (weatherSlot && game.location && game.date) window.loadWeatherInto(weatherSlot, game.location, game.date, game.gameTime);
-        // Same embedded-map popup (window.openMapModal) js/league-info.js's
-        // Facilities list already uses, rather than this row's old plain
-        // link-out -- same "View on Map" wording and embedded-pin
-        // experience the ASL Bengals app's own upcoming-game screen has.
-        containerEl.querySelectorAll('.mapTriggerBtn').forEach(el => {
-          el.addEventListener('click', () => window.openMapModal(el.dataset.mapLabel, el.dataset.mapAddress));
-        });
         renderPitchingSlot(teamId, game, containerEl.querySelector('#pitchingSlot'), opts);
         const contactSlot = containerEl.querySelector('#theirContactSlot');
         if (contactSlot) renderTheirContactSlot(game.opponent, contactSlot);
