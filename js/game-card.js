@@ -36,6 +36,15 @@
    runs + final runs/hits/errors, nothing more (no full box score,
    no recap -- both sit behind a GameChanger login; confirmed live,
    see that script's own header comment).
+
+   opts.hasLineScore (optional) -- Nathan: "I want the line score to
+   be visible upon clicking onto the game," so js/archive.js only
+   ever passes the real opts.lineScore data for whichever ONE game
+   is currently expanded, never all of them at once. This flag is
+   true for every OTHER game that has a line score available but
+   isn't expanded right now, so the card can hint that tapping it
+   does something instead of looking identical to a game with no
+   line score at all.
    ============================================================ */
 (function () {
   function logoOrFallback(name, logoUrl) {
@@ -109,6 +118,7 @@
             ${theirTeamHtml}
           </div>
           ${opts.lineScore ? lineScoreTableHtml(opts.lineScore, opts.ourName, opts.theirName) : ''}
+          ${!opts.lineScore && opts.hasLineScore ? '<div class="helpText" style="margin-top:8px;text-align:center;">Tap for line score</div>' : ''}
         </div>`;
     },
   };
