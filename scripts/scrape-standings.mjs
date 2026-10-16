@@ -93,6 +93,32 @@ function parseStandingsTable(html) {
   return { name: nameMatch ? nameMatch[1].trim().replace(/\s*-\s*Standings$/i, '') : null, rows, tableFound: !!tableMatch };
 }
 
+// The site's own "jump to another team" <select>-adjacent dropdown menu
+// (<ul class="dropdown-menu"><li><a href="/team/{id}">{name}</a></li>...)
+// lists every real team in the league, including ones with no row in the
+// standings table itself. Real, confirmed live bug this exists to fix:
+// a team can have real games on its own /team/{id}/games page and still
+// have no standings row at all (confirmed live, 2026-10-15: "8u Littleton
+// Navy," team 289743, plays real games but the Rookies /standings table's
+// own <table> genuinely only lists 9 teams, not 10) -- scripts/scrape-
+// team-details.mjs used to read ONLY the standings rows for its own list
+// of which teams to scrape, so a team in exactly this situation never got
+// scraped at all. This directory is the complete list that doesn't have
+// that gap. Every division's own page carries the SAME full-league
+// dropdown (not scoped to just that division), so parsing it once per
+// division fetch and deduping across all of them in main() below is
+// redundant but harmless -- cheaper than a fourth fetch just for this.
+function parseTeamDirectory(html) {
+  const seen = new Set();
+  const teams = [];
+  for (const m of html.matchAll(/<li><a href="\/team\/(\d+)">\s*([^<]+?)\s*<\/a><\/li>/g)) {
+    if (seen.has(m[1])) continue;
+    seen.add(m[1]);
+    teams.push({ teamId: m[1], team: m[2].trim() });
+  }
+  return teams;
+}
+
 // Today's Games lives on the bare division page, one "scorebox" table per
 // game (verified against a live in-season page -- 2026-10-03, Rookies
 // division, a real 2:00 PM game -- not just the off-season empty state).
@@ -145,12 +171,14 @@ async function fetchDivision(divisionId) {
   const standingsHtml = await standingsRes.text();
   const { name: standingsName, rows, tableFound } = parseStandingsTable(standingsHtml);
   if (!tableFound) throw new Error(`Division ${divisionId}: couldn't find the standings table -- page structure may have changed`);
+  const teamDirectory = parseTeamDirectory(standingsHtml);
 
   return {
     divisionId,
     name: standingsName || (nameMatch ? nameMatch[1].trim() : `Division ${divisionId}`),
     rows,
     todayGames,
+    teamDirectory,
     fetchedAt: new Date().toISOString(),
   };
 }
@@ -169,7 +197,21 @@ async function main() {
     }
   }
 
-  const result = { divisions, scrapedAt: new Date().toISOString() };
+  // Deduped union of every division's own teamDirectory -- see that
+  // function's header comment for why this exists (a real team can have
+  // no standings row of its own). scripts/scrape-team-details.mjs reads
+  // this for its own "which teams to scrape" list instead of flattening
+  // divisions[].rows, which is exactly the list that was missing this
+  // class of team in the first place.
+  const seenTeamIds = new Set();
+  const allTeams = [];
+  Object.values(divisions).forEach(d => (d.teamDirectory || []).forEach(t => {
+    if (seenTeamIds.has(t.teamId)) return;
+    seenTeamIds.add(t.teamId);
+    allTeams.push(t);
+  }));
+
+  const result = { divisions, allTeams, scrapedAt: new Date().toISOString() };
 
   const outPath = new URL('../data/standings-cache.json', import.meta.url);
   await mkdir(dirname(fileURLToPath(outPath)), { recursive: true });

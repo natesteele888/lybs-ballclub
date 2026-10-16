@@ -59,9 +59,26 @@
     return cache;
   }
 
-  // Best token-overlap match, minimum 1 shared meaningful token. Ties or no
-  // overlap -> null, so a game card just renders as plain text instead of
+  // Best token-overlap match, requiring EVERY one of the search's own
+  // tokens to be covered, not just one shared word. Ties or incomplete
+  // coverage -> null, so a game card renders as plain text instead of
   // guessing wrong.
+  //
+  // A real bug this "at least 1 shared token" used to let through:
+  // searching "8u Littleton Navy" (a real team with no standings row of
+  // its own, confirmed live on macleague.org -- a team can have real
+  // games and no standings row, both fetched the same way but genuinely
+  // different data) against this division's pool scored 1 ("littleton")
+  // against "8u Littleton Gold" -- a COMPLETELY DIFFERENT real team --
+  // and that single shared town word was enough to confidently return
+  // Gold's own teamId/standings/schedule mislabeled as Navy's. The old
+  // header comment's "zero wrong matches" claim was true against the
+  // roster it was checked against at the time; it stopped being true the
+  // moment a second same-town team with no standings row existed to
+  // collide with. Requiring full coverage means "littleton" alone is no
+  // longer enough when the needle also has "navy" and the candidate's own
+  // tokens don't -- a real but incomplete overlap now correctly resolves
+  // to null (honest "not found") instead of a wrong team's real data.
   //
   // divisionId, when given, narrows the search to just that division
   // before scoring. Every real caller is resolving a name against OUR OWN
@@ -73,9 +90,7 @@
   // those identically-tokenized rows tie against EACH OTHER and resolve to
   // null, not just against a genuinely different team. Verified against
   // the real 2026 roster: narrowing to the caller's own division took the
-  // resolve rate from 24% to 82% with zero wrong matches either way (the
-  // tie-guard already prevented misattribution; this is purely about
-  // fewer false ties).
+  // resolve rate from 24% to 82%.
   function find(name, divisionId) {
     if (!cache || !cache.length || !name) return null;
     const pool = divisionId ? cache.filter(r => r.divisionId === divisionId) : cache;
@@ -88,7 +103,11 @@
       if (score > bestScore) { best = row; bestScore = score; tie = false; }
       else if (score === bestScore && score > 0) tie = true;
     }
-    if (!best || bestScore < 1 || tie) return null;
+    // bestScore can only reach needle.size by covering every one of the
+    // needle's own tokens at least once (duplicate tokens in a row can
+    // push score past needle.size, never short of it) -- >= here, not
+    // ===, so that over-count still counts as full coverage.
+    if (!best || bestScore < needle.size || tie) return null;
     return best;
   }
 

@@ -204,6 +204,17 @@ async function defaultTeamIds() {
   } catch (e) {
     throw new Error(`No team ids given and couldn't read ${fileURLToPath(cachePath)} to find every known team -- run scrape-standings.mjs first, or pass explicit team ids.`);
   }
+  // Prefers allTeams (scrape-standings.mjs's own team-directory union,
+  // see that script's parseTeamDirectory) over flattening divisions[].rows
+  // -- a real team can have no standings row of its own (confirmed live:
+  // "8u Littleton Navy," team 289743, has real games but the Rookies
+  // standings table only lists 9 of the division's real 10 teams), and
+  // rows is exactly where that team would silently go missing from this
+  // list. Falls back to rows for a standings-cache.json written before
+  // allTeams existed, rather than erroring on an otherwise-usable file.
+  if (Array.isArray(data.allTeams) && data.allTeams.length) {
+    return data.allTeams.map(t => t.teamId).filter(Boolean);
+  }
   const ids = [];
   Object.values(data.divisions || {}).forEach(div => (div.rows || []).forEach(r => { if (r.teamId) ids.push(r.teamId); }));
   return ids;
