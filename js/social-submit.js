@@ -34,7 +34,7 @@
   const FORM_TOKEN = 'lybs-field-2027';
   // Paste the deployed Apps Script /exec URL here once that one shared setup
   // step (lybs-reporting's apps-script/Code.gs header, step 4-5) is done.
-  const ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_URL';
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwj5OT5Ftcam6HvgVIYdpGFYP07-A7a1GN97IT18ICnspB6B54PlgpiYJAZhup_5A8X7Q/exec';
 
   function sid() { return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10); }
 
