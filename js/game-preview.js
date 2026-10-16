@@ -1,8 +1,9 @@
 /* ============================================================
    Game Preview -- tap any league game, not just our own, to see the
-   matchup, each side's current standing, and recent form. Reached
-   from js/tonight.js's "Tonight in the League" ticker (Home tab +
-   Standings tab's "Today's games") and js/calendar-view.js's
+   matchup, the game's own location on a map, each side's last 5
+   results, pitching eligibility, and the full league standings.
+   Reached from js/tonight.js's "Tonight in the League" ticker (Home
+   tab + Standings tab's "Today's games") and js/calendar-view.js's
    read-only "MAC League" rows on the Schedule tab's Month/Week
    views -- both of those used to be dead taps (tonight.js's team
    names already opened js/team-page.js; everything else on the card
@@ -27,23 +28,25 @@
        name match, same as every other opponent-name lookup already
        in this codebase.
 
-   Recent form is an honest degrade, not a guess. This app has no
-   league-wide, per-team game log to draw on -- only (a) today's
-   single-day snapshot in the standings mirror, overwritten on every
-   scrape, (b) a scoreless forward-looking schedule, (c) our own
-   team's own schedule/history, which only ever covers games against
-   us specifically. So: the side that's this app's own configured
-   team gets its real last-5 (any opponent) from window.Schedule;
-   the other side gets its standings line only, labeled honestly
-   rather than dressed up as a "Last 5" list that would imply a game
-   log this app doesn't have.
+   Last 5 (Nathan: "instead of full cards with record pct. and
+   place, I just want to see the results from their last 5 games...
+   date, opponent and result with link to their full schedules")
+   reads real per-game results, not a guess: our own configured
+   team from window.Schedule (its own live schedule, any opponent),
+   any other team from js/team-details.js's mirror of their own
+   public macleague.org schedule (scripts/scrape-team-details.mjs --
+   that's what makes a real "last 5" possible for an arbitrary
+   opponent at all; before that script existed this section could
+   only degrade to "not tracked here"). "Full Team Schedule" links
+   to that team's own Team Page, which already has the complete
+   version of this same list.
 
    Pitching Status (who's eligible/unavailable to pitch THIS game,
    not just today) reuses js/pitch-smart.js's same daily-max/rest-day
    calculator team-page.js and the Pitching tab already use, computed
    as of the game's own date (today for a js/tonight.js game, the
    real calendar date for a js/league-schedule.js one, days out) --
-   same honest-degrade split as Recent Form: our own side reads real
+   same honest-degrade split as Last 5: our own side reads real
    logged pitch counts, the other side reads shared/pitchSmart, which
    is an honest empty state for every team today (Spring-only
    reporting on macleague.org's end -- see that file's own header).
@@ -51,17 +54,17 @@
    fire-and-forget-after-render pattern js/team-page.js's own
    #tpPitchSlot already uses.
 
+   League Standings is the full division table (not just these two
+   teams), same shared/macLeagueStandings mirror, same table
+   markup/classes js/standings.js's own render() builds -- Nathan:
+   "then a look at the overall league standings."
+
    window.GamePreview.render(containerEl, source, opts)
      source -- a raw game object from TonightGames.gameById() or
        LeagueSchedule.getGamesForDate()[idx] (see normalize() below)
      opts.onBack() -- required, same contract as TeamPage.render
    ============================================================ */
 (function () {
-  function ordinal(n) {
-    const s = ['th', 'st', 'nd', 'rd'], v = n % 100;
-    return n + (s[(v - 20) % 10] || s[v] || s[0]);
-  }
-
   // js/tonight.js's own division-id map, duplicated rather than shared --
   // that file keeps it private, and reversing it (name -> id, for the
   // scoreless js/league-schedule.js shape, which only ever carries a
@@ -174,40 +177,95 @@
       </div>`;
   }
 
-  function standingsBlockHtml(side, divisionId, row, rank, total, divisionName) {
-    const badge = sideBadgeHtml(side);
-    const mine = isOurTeam(side.name);
-    const headerAttrs = mine ? '' : `data-team-nav="${escapeHtml(side.name || '')}"${divisionId ? ` data-team-division="${escapeHtml(divisionId)}"` : ''} title="See ${escapeHtml(side.name || 'this team')}'s team page" tabindex="0" role="button"`;
-    const statsHtml = row
-      ? `<div class="pcStatRow" style="margin:10px 0 0;">
-           ${statTileHtml(`${escapeHtml(String(row.w ?? '-'))}-${escapeHtml(String(row.l ?? '-'))}${row.t && row.t !== '0' ? '-' + escapeHtml(String(row.t)) : ''}`, 'Record')}
-           ${statTileHtml(escapeHtml(row.pct ?? '-'), 'PCT')}
-           ${rank != null ? statTileHtml(ordinal(rank), `of ${total}${divisionName ? ' &middot; ' + escapeHtml(divisionName) : ''}`) : ''}
-         </div>`
-      : `<div class="helpText" style="margin:10px 0 0;">No current standings mirrored for this team.</div>`;
+  // Always-visible embed, same as js/schedule.js's own upcoming-game
+  // detail view (.inlineMapFrame) -- Nathan: "the google map of the
+  // location should also appear here under the game header." Only ever
+  // one of these on this page, same reasoning that file's own header
+  // comment gives for not gating it behind a tap the way js/league-
+  // info.js's Facilities list (many addresses at once) still does.
+  function mapHtml(location) {
+    if (!location) return '';
     return `
-      <div class="drillCard" style="margin-bottom:10px;">
-        <div class="${mine ? '' : 'standingsTeamLink'}" style="display:flex;align-items:center;gap:10px;${mine ? '' : 'cursor:pointer;'}" ${headerAttrs}>${badge}<div class="listRowTitle">${escapeHtml(side.name || 'TBD')}</div></div>
-        ${statsHtml}
+      <div class="sectionLabel" style="margin-top:18px;">Location</div>
+      <iframe class="inlineMapFrame" src="https://maps.google.com/maps?q=${encodeURIComponent(location)}&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map"></iframe>
+      <a class="btn btnGhost btnSmall" style="width:100%;margin:8px 0 0;" href="${mapLink(location)}" target="_blank" rel="noopener">Open in Maps</a>`;
+  }
+
+  // "10/15" -- compact, no year (every game on this list is the same
+  // season, so the year is redundant context a tight 3-column table
+  // doesn't have room for -- team-page.js's own fmtDate() spells out
+  // "Oct 15, 2026" for its single full-width list; this is deliberately
+  // shorter for a 3-up table, same shape as the ESPN-style reference
+  // Nathan pointed at).
+  function fmtShortDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso + 'T00:00:00');
+    return `${d.getMonth() + 1}/${d.getDate()}`;
+  }
+
+  // Up to 5 real completed games (any opponent), newest first -- `games`
+  // is already that exact slice by the time this is called (window.
+  // Schedule's own games for our side, js/team-details.js's mirror for
+  // anyone else). data-team-nav on "Full Team Schedule" reuses the exact
+  // attribute/handler every other team link on this page already does;
+  // skipped for our own side since there's no Team Page for ourselves to
+  // send it to (the live Schedule tab is already one nav tap away).
+  function last5Html(side, divisionId, games) {
+    const mine = isOurTeam(side.name);
+    const body = !games || !games.length
+      ? '<div class="emptyState">No recent results available.</div>'
+      : `<div class="standingsTableWrap">
+           <table class="standingsTable">
+             <thead><tr><th>Date</th><th>Opp</th><th class="numCell">Result</th></tr></thead>
+             <tbody>
+               ${games.map(g => `
+                 <tr>
+                   <td>${escapeHtml(fmtShortDate(g.date))}</td>
+                   <td>${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(stripAgePrefix(g.opponent || 'TBD'))}</td>
+                   <td class="numCell ${g.result === 'W' ? 'diffPos' : g.result === 'L' ? 'diffNeg' : ''}">${escapeHtml(g.result || '')} ${escapeHtml(String(g.ourScore ?? ''))}-${escapeHtml(String(g.oppScore ?? ''))}</td>
+                 </tr>`).join('')}
+             </tbody>
+           </table>
+         </div>`;
+    return `
+      <div class="drillCard" style="margin-bottom:12px;">
+        <div class="drillCardTitle">${escapeHtml(side.name || 'TBD')}'s Last 5</div>
+        ${body}
+        ${!mine ? `<div style="text-align:center;margin-top:10px;"><span class="standingsTeamLink" style="cursor:pointer;color:var(--accent-blue);font-weight:600;" data-team-nav="${escapeHtml(side.name || '')}"${divisionId ? ` data-team-division="${escapeHtml(divisionId)}"` : ''} tabindex="0" role="button">Full Team Schedule</span></div>` : ''}
       </div>`;
   }
 
-  function recentFormHtml(side, ourRecentGames) {
-    const mine = isOurTeam(side.name);
-    if (!mine) {
-      return `<div class="helpText" style="margin:6px 0 16px;">Recent results for ${escapeHtml(side.name || 'this team')} aren't tracked here -- see their standings above.</div>`;
-    }
-    if (!ourRecentGames.length) {
-      return '<div class="helpText" style="margin:6px 0 16px;">No completed games yet this season.</div>';
-    }
-    return `<div class="listBody" style="margin-bottom:16px;">${ourRecentGames.map(g => `
-      <div class="listRow" style="cursor:default;">
-        <div class="listRowMain">
-          <div class="listRowTitle">${g.homeAway === 'Away' ? '@' : 'vs'} ${escapeHtml(g.opponent || 'TBD')}</div>
-          <div class="listRowSub">${escapeHtml(g.date || '')}</div>
-        </div>
-        <span class="badge ${g.ourScore > g.oppScore ? 'badgeW' : g.ourScore < g.oppScore ? 'badgeL' : 'badgeT'}">${g.ourScore}-${g.oppScore}</span>
-      </div>`).join('')}</div>`;
+  // Full division table, not just these two teams -- same markup/classes
+  // js/standings.js's own render() builds (.standingsTableWrap/
+  // .standingsTable/.standingsTeamCell/.numCell/.standingsUsRow), kept
+  // leaner (Team/W/L/PCT only, no GP/T/RF/RA/DIFF) since this is a
+  // supplementary section on a page that's mostly about one specific
+  // game, not the dedicated Standings tab. Both matchup teams highlighted
+  // the same way standings.js highlights "us" -- there's no single "us"
+  // in an arbitrary league-wide matchup, but there are two teams worth
+  // calling out against the rest of the division.
+  function fullStandingsHtml(rows, highlightIds, divisionName) {
+    if (!rows.length) return '<div class="emptyState">No standings mirrored for this division.</div>';
+    const body = rows.map(r => {
+      const mine = highlightIds.includes(r.teamId);
+      return `
+        <tr class="${mine ? 'standingsUsRow' : ''}">
+          <td>${mine
+            ? `<div class="standingsTeamCell">${window.ClubLogos.badgeHtml(r.team, 22)}${escapeHtml(stripAgePrefix(r.team))}</div>`
+            : `<div class="standingsTeamCell standingsTeamLink" data-team-nav="${escapeHtml(stripAgePrefix(r.team))}" tabindex="0" role="button">${window.ClubLogos.badgeHtml(r.team, 22)}${escapeHtml(stripAgePrefix(r.team))}</div>`}</td>
+          <td class="numCell">${escapeHtml(r.w ?? '')}</td>
+          <td class="numCell">${escapeHtml(r.l ?? '')}</td>
+          <td class="numCell">${escapeHtml(r.pct ?? '')}</td>
+        </tr>`;
+    }).join('');
+    return `
+      <div class="helpText" style="margin-bottom:8px;">${escapeHtml(divisionName || '')}</div>
+      <div class="standingsTableWrap">
+        <table class="standingsTable">
+          <thead><tr><th>Team</th><th class="numCell">W</th><th class="numCell">L</th><th class="numCell">PCT</th></tr></thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>`;
   }
 
   window.GamePreview = {
@@ -220,6 +278,7 @@
       await Promise.all([
         window.ClubLogos.ensureLoaded(),
         window.LeagueTeams.ensureLoaded(),
+        window.TeamDetails.ensureLoaded(),
         cfg.teamId ? window.Schedule.ensureLoaded(cfg.teamId) : Promise.resolve(),
       ]);
 
@@ -231,14 +290,24 @@
       const resolvedSides = await Promise.all(m.sides.map(async side => {
         const teamId = await resolveTeamId(side, m.divisionId);
         const idx = teamId ? rows.findIndex(r => r.teamId === teamId) : -1;
-        return { side, row: idx !== -1 ? rows[idx] : null, rank: idx !== -1 ? idx + 1 : null };
+        return { side, teamId, row: idx !== -1 ? rows[idx] : null, rank: idx !== -1 ? idx + 1 : null };
       }));
 
       const ourGames = cfg.teamId ? window.Schedule.getGames(cfg.teamId) : [];
-      const ourRecent = ourGames
-        .filter(g => g.ourScore != null && g.oppScore != null)
-        .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
-        .slice(0, 5);
+      const last5For = ({ side, teamId }) => {
+        if (isOurTeam(side.name)) {
+          return ourGames
+            .filter(g => g.ourScore != null && g.oppScore != null)
+            .map(g => ({ date: g.date, homeAway: g.homeAway, opponent: g.opponent, result: g.ourScore > g.oppScore ? 'W' : g.ourScore < g.oppScore ? 'L' : 'T', ourScore: g.ourScore, oppScore: g.oppScore }))
+            .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+            .slice(0, 5);
+        }
+        const details = teamId ? window.TeamDetails.getTeam(teamId) : null;
+        return ((details && details.games) || [])
+          .filter(g => g.result)
+          .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+          .slice(0, 5);
+      };
 
       containerEl.innerHTML = `
         <div class="sectionHeader">
@@ -246,14 +315,14 @@
           <div class="recordLine">Game Preview</div>
         </div>
         ${heroHtml(m)}
-        <div class="sectionLabel" style="margin-top:18px;">Standings</div>
-        ${resolvedSides.map(({ side, row, rank }) => standingsBlockHtml(side, m.divisionId, row, rank, rows.length, divisionName)).join('')}
-        ${m.sides.map((side, i) => `
-          <div class="sectionLabel" style="margin-top:8px;">${escapeHtml(side.name || 'Team')}'s Recent Form</div>
-          ${recentFormHtml(side, ourRecent)}`).join('')}
+        ${mapHtml(m.location)}
+        <div class="sectionLabel" style="margin-top:18px;">Last 5</div>
+        ${resolvedSides.map(rs => last5Html(rs.side, m.divisionId, last5For(rs))).join('')}
         ${m.sides.map((side, i) => `
           <div class="sectionLabel" style="margin-top:8px;">${escapeHtml(side.name || 'Team')}'s Pitching Status</div>
           <div id="gpPitchSlot${i}"></div>`).join('')}
+        <div class="sectionLabel" style="margin-top:18px;">League Standings</div>
+        ${fullStandingsHtml(rows, resolvedSides.map(rs => rs.teamId).filter(Boolean), divisionName)}
       `;
       containerEl.querySelector('#gpBack').addEventListener('click', () => opts.onBack && opts.onBack());
 
