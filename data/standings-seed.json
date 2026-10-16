@@ -122,33 +122,168 @@
           "isUs": false
         }
       ],
-      "todayGames": [
+      "todayGames": [],
+      "teamDirectory": [
         {
-          "gameId": "9376460",
-          "time": "2:00 PM",
-          "teams": [
-            {
-              "logoUrl": "https://crossbar.s3.amazonaws.com:443/organizations/585/uploads/d8e4a6f4-59c2-4a01-814b-80fcf344aec8.png?versionId=92iuL4BmqOSj8j99eUzkK5X1px2OkVGO",
-              "teamId": "289743",
-              "name": "8u Littleton Navy",
-              "score": null
-            },
-            {
-              "logoUrl": "https://crossbar.s3.amazonaws.com:443/organizations/585/uploads/e2d7b22c-c833-41f5-9ed0-21072d7f87d6.png?versionId=QHHlOCyVy9gpHpLipfBmZ0tQIQjN9x7V",
-              "teamId": "284645",
-              "name": "8u Townsend Ashby",
-              "score": null
-            }
-          ],
-          "location": "Spaulding Field 2 (Main)"
+          "teamId": "284667",
+          "team": "8u Bolton Gold"
+        },
+        {
+          "teamId": "284668",
+          "team": "8u Bolton Green"
+        },
+        {
+          "teamId": "284640",
+          "team": "8u GD Ghost Peppers"
+        },
+        {
+          "teamId": "284641",
+          "team": "8u GD Howlers"
+        },
+        {
+          "teamId": "284652",
+          "team": "8u GD Poison Apples"
+        },
+        {
+          "teamId": "284664",
+          "team": "8u Harvard"
+        },
+        {
+          "teamId": "284643",
+          "team": "8u Littleton Gold"
+        },
+        {
+          "teamId": "289743",
+          "team": "8u Littleton Navy"
+        },
+        {
+          "teamId": "284665",
+          "team": "8u Pepperell"
+        },
+        {
+          "teamId": "284645",
+          "team": "8u Townsend Ashby"
+        },
+        {
+          "teamId": "284659",
+          "team": "10u Bolton Blue"
+        },
+        {
+          "teamId": "284658",
+          "team": "10u Bolton Green"
+        },
+        {
+          "teamId": "284660",
+          "team": "10u Bolton Yellow"
+        },
+        {
+          "teamId": "284630",
+          "team": "10u GD Dogmen"
+        },
+        {
+          "teamId": "284629",
+          "team": "10u GD Ghost Peppers"
+        },
+        {
+          "teamId": "284631",
+          "team": "10u GD Poison Apples"
+        },
+        {
+          "teamId": "284662",
+          "team": "10u Harvard Huskies"
+        },
+        {
+          "teamId": "284661",
+          "team": "10u Harvard Trojans"
+        },
+        {
+          "teamId": "284632",
+          "team": "10u Littleton Gold"
+        },
+        {
+          "teamId": "284633",
+          "team": "10u Littleton Navy"
+        },
+        {
+          "teamId": "284663",
+          "team": "10u Maynard Stow"
+        },
+        {
+          "teamId": "284666",
+          "team": "10u Pepperell"
+        },
+        {
+          "teamId": "284634",
+          "team": "10u Townsend Ashby"
+        },
+        {
+          "teamId": "284635",
+          "team": "10u Westford 1"
+        },
+        {
+          "teamId": "284636",
+          "team": "10u Westford 2"
+        },
+        {
+          "teamId": "284656",
+          "team": "12u Bolton Blue"
+        },
+        {
+          "teamId": "284657",
+          "team": "12u Bolton Green"
+        },
+        {
+          "teamId": "284619",
+          "team": "12u Groton Dunstable"
+        },
+        {
+          "teamId": "284620",
+          "team": "12u Littleton"
+        },
+        {
+          "teamId": "284654",
+          "team": "12u Maynard Stow 1"
+        },
+        {
+          "teamId": "284655",
+          "team": "12u Maynard Stow 2"
+        },
+        {
+          "teamId": "284653",
+          "team": "12u Pepperell"
+        },
+        {
+          "teamId": "284622",
+          "team": "12u Townsend Ashby"
+        },
+        {
+          "teamId": "284623",
+          "team": "12u Westford 1"
+        },
+        {
+          "teamId": "284624",
+          "team": "12u Westford 2"
         }
       ],
-      "fetchedAt": "2026-10-04T00:10:19.724Z"
+      "fetchedAt": "2026-10-16T01:13:34.416Z"
     },
     "33695": {
       "divisionId": "33695",
       "name": "Minors",
       "rows": [
+        {
+          "teamId": "284631",
+          "team": "10u GD Poison Apples",
+          "gp": "2",
+          "w": "2",
+          "l": "0",
+          "t": "0",
+          "pct": "1.000",
+          "rf": "27",
+          "ra": "7",
+          "diff": "+20",
+          "isUs": false
+        },
         {
           "teamId": "284634",
           "team": "10u Townsend Ashby",
@@ -173,19 +308,6 @@
           "rf": "9",
           "ra": "4",
           "diff": "+5",
-          "isUs": false
-        },
-        {
-          "teamId": "284631",
-          "team": "10u GD Poison Apples",
-          "gp": "1",
-          "w": "1",
-          "l": "0",
-          "t": "0",
-          "pct": "1.000",
-          "rf": "16",
-          "ra": "2",
-          "diff": "+14",
           "isUs": false
         },
         {
@@ -215,6 +337,19 @@
           "isUs": false
         },
         {
+          "teamId": "284630",
+          "team": "10u GD Dogmen",
+          "gp": "1",
+          "w": "0",
+          "l": "1",
+          "t": "0",
+          "pct": ".000",
+          "rf": "5",
+          "ra": "11",
+          "diff": "-6",
+          "isUs": false
+        },
+        {
           "teamId": "284658",
           "team": "10u Bolton Green",
           "gp": "0",
@@ -230,19 +365,6 @@
         {
           "teamId": "284660",
           "team": "10u Bolton Yellow",
-          "gp": "0",
-          "w": "0",
-          "l": "0",
-          "t": "0",
-          "pct": ".000",
-          "rf": "0",
-          "ra": "0",
-          "diff": "0",
-          "isUs": false
-        },
-        {
-          "teamId": "284630",
-          "team": "10u GD Dogmen",
           "gp": "0",
           "w": "0",
           "l": "0",
@@ -346,23 +468,191 @@
         }
       ],
       "todayGames": [],
-      "fetchedAt": "2026-10-04T00:10:32.030Z"
+      "teamDirectory": [
+        {
+          "teamId": "284667",
+          "team": "8u Bolton Gold"
+        },
+        {
+          "teamId": "284668",
+          "team": "8u Bolton Green"
+        },
+        {
+          "teamId": "284640",
+          "team": "8u GD Ghost Peppers"
+        },
+        {
+          "teamId": "284641",
+          "team": "8u GD Howlers"
+        },
+        {
+          "teamId": "284652",
+          "team": "8u GD Poison Apples"
+        },
+        {
+          "teamId": "284664",
+          "team": "8u Harvard"
+        },
+        {
+          "teamId": "284643",
+          "team": "8u Littleton Gold"
+        },
+        {
+          "teamId": "289743",
+          "team": "8u Littleton Navy"
+        },
+        {
+          "teamId": "284665",
+          "team": "8u Pepperell"
+        },
+        {
+          "teamId": "284645",
+          "team": "8u Townsend Ashby"
+        },
+        {
+          "teamId": "284659",
+          "team": "10u Bolton Blue"
+        },
+        {
+          "teamId": "284658",
+          "team": "10u Bolton Green"
+        },
+        {
+          "teamId": "284660",
+          "team": "10u Bolton Yellow"
+        },
+        {
+          "teamId": "284630",
+          "team": "10u GD Dogmen"
+        },
+        {
+          "teamId": "284629",
+          "team": "10u GD Ghost Peppers"
+        },
+        {
+          "teamId": "284631",
+          "team": "10u GD Poison Apples"
+        },
+        {
+          "teamId": "284662",
+          "team": "10u Harvard Huskies"
+        },
+        {
+          "teamId": "284661",
+          "team": "10u Harvard Trojans"
+        },
+        {
+          "teamId": "284632",
+          "team": "10u Littleton Gold"
+        },
+        {
+          "teamId": "284633",
+          "team": "10u Littleton Navy"
+        },
+        {
+          "teamId": "284663",
+          "team": "10u Maynard Stow"
+        },
+        {
+          "teamId": "284666",
+          "team": "10u Pepperell"
+        },
+        {
+          "teamId": "284634",
+          "team": "10u Townsend Ashby"
+        },
+        {
+          "teamId": "284635",
+          "team": "10u Westford 1"
+        },
+        {
+          "teamId": "284636",
+          "team": "10u Westford 2"
+        },
+        {
+          "teamId": "284656",
+          "team": "12u Bolton Blue"
+        },
+        {
+          "teamId": "284657",
+          "team": "12u Bolton Green"
+        },
+        {
+          "teamId": "284619",
+          "team": "12u Groton Dunstable"
+        },
+        {
+          "teamId": "284620",
+          "team": "12u Littleton"
+        },
+        {
+          "teamId": "284654",
+          "team": "12u Maynard Stow 1"
+        },
+        {
+          "teamId": "284655",
+          "team": "12u Maynard Stow 2"
+        },
+        {
+          "teamId": "284653",
+          "team": "12u Pepperell"
+        },
+        {
+          "teamId": "284622",
+          "team": "12u Townsend Ashby"
+        },
+        {
+          "teamId": "284623",
+          "team": "12u Westford 1"
+        },
+        {
+          "teamId": "284624",
+          "team": "12u Westford 2"
+        }
+      ],
+      "fetchedAt": "2026-10-16T01:13:47.005Z"
     },
     "33696": {
       "divisionId": "33696",
       "name": "Majors",
       "rows": [
         {
-          "teamId": "284619",
-          "team": "12u Groton Dunstable",
+          "teamId": "284654",
+          "team": "12u Maynard Stow 1",
           "gp": "1",
           "w": "1",
           "l": "0",
           "t": "0",
           "pct": "1.000",
-          "rf": "12",
-          "ra": "8",
-          "diff": "+4",
+          "rf": "8",
+          "ra": "5",
+          "diff": "+3",
+          "isUs": false
+        },
+        {
+          "teamId": "284622",
+          "team": "12u Townsend Ashby",
+          "gp": "1",
+          "w": "1",
+          "l": "0",
+          "t": "0",
+          "pct": "1.000",
+          "rf": "6",
+          "ra": "5",
+          "diff": "+1",
+          "isUs": false
+        },
+        {
+          "teamId": "284619",
+          "team": "12u Groton Dunstable",
+          "gp": "4",
+          "w": "2",
+          "l": "2",
+          "t": "0",
+          "pct": ".500",
+          "rf": "33",
+          "ra": "32",
+          "diff": "+1",
           "isUs": false
         },
         {
@@ -376,6 +666,19 @@
           "rf": "8",
           "ra": "12",
           "diff": "-4",
+          "isUs": false
+        },
+        {
+          "teamId": "284623",
+          "team": "12u Westford 1",
+          "gp": "1",
+          "w": "0",
+          "l": "1",
+          "t": "0",
+          "pct": ".000",
+          "rf": "10",
+          "ra": "11",
+          "diff": "-1",
           "isUs": false
         },
         {
@@ -394,19 +697,6 @@
         {
           "teamId": "284620",
           "team": "12u Littleton",
-          "gp": "0",
-          "w": "0",
-          "l": "0",
-          "t": "0",
-          "pct": ".000",
-          "rf": "0",
-          "ra": "0",
-          "diff": "0",
-          "isUs": false
-        },
-        {
-          "teamId": "284654",
-          "team": "12u Maynard Stow 1",
           "gp": "0",
           "w": "0",
           "l": "0",
@@ -444,32 +734,6 @@
           "isUs": false
         },
         {
-          "teamId": "284622",
-          "team": "12u Townsend Ashby",
-          "gp": "0",
-          "w": "0",
-          "l": "0",
-          "t": "0",
-          "pct": ".000",
-          "rf": "0",
-          "ra": "0",
-          "diff": "0",
-          "isUs": false
-        },
-        {
-          "teamId": "284623",
-          "team": "12u Westford 1",
-          "gp": "0",
-          "w": "0",
-          "l": "0",
-          "t": "0",
-          "pct": ".000",
-          "rf": "0",
-          "ra": "0",
-          "diff": "0",
-          "isUs": false
-        },
-        {
           "teamId": "284624",
           "team": "12u Westford 2",
           "gp": "0",
@@ -484,8 +748,292 @@
         }
       ],
       "todayGames": [],
-      "fetchedAt": "2026-10-04T00:10:44.280Z"
+      "teamDirectory": [
+        {
+          "teamId": "284667",
+          "team": "8u Bolton Gold"
+        },
+        {
+          "teamId": "284668",
+          "team": "8u Bolton Green"
+        },
+        {
+          "teamId": "284640",
+          "team": "8u GD Ghost Peppers"
+        },
+        {
+          "teamId": "284641",
+          "team": "8u GD Howlers"
+        },
+        {
+          "teamId": "284652",
+          "team": "8u GD Poison Apples"
+        },
+        {
+          "teamId": "284664",
+          "team": "8u Harvard"
+        },
+        {
+          "teamId": "284643",
+          "team": "8u Littleton Gold"
+        },
+        {
+          "teamId": "289743",
+          "team": "8u Littleton Navy"
+        },
+        {
+          "teamId": "284665",
+          "team": "8u Pepperell"
+        },
+        {
+          "teamId": "284645",
+          "team": "8u Townsend Ashby"
+        },
+        {
+          "teamId": "284659",
+          "team": "10u Bolton Blue"
+        },
+        {
+          "teamId": "284658",
+          "team": "10u Bolton Green"
+        },
+        {
+          "teamId": "284660",
+          "team": "10u Bolton Yellow"
+        },
+        {
+          "teamId": "284630",
+          "team": "10u GD Dogmen"
+        },
+        {
+          "teamId": "284629",
+          "team": "10u GD Ghost Peppers"
+        },
+        {
+          "teamId": "284631",
+          "team": "10u GD Poison Apples"
+        },
+        {
+          "teamId": "284662",
+          "team": "10u Harvard Huskies"
+        },
+        {
+          "teamId": "284661",
+          "team": "10u Harvard Trojans"
+        },
+        {
+          "teamId": "284632",
+          "team": "10u Littleton Gold"
+        },
+        {
+          "teamId": "284633",
+          "team": "10u Littleton Navy"
+        },
+        {
+          "teamId": "284663",
+          "team": "10u Maynard Stow"
+        },
+        {
+          "teamId": "284666",
+          "team": "10u Pepperell"
+        },
+        {
+          "teamId": "284634",
+          "team": "10u Townsend Ashby"
+        },
+        {
+          "teamId": "284635",
+          "team": "10u Westford 1"
+        },
+        {
+          "teamId": "284636",
+          "team": "10u Westford 2"
+        },
+        {
+          "teamId": "284656",
+          "team": "12u Bolton Blue"
+        },
+        {
+          "teamId": "284657",
+          "team": "12u Bolton Green"
+        },
+        {
+          "teamId": "284619",
+          "team": "12u Groton Dunstable"
+        },
+        {
+          "teamId": "284620",
+          "team": "12u Littleton"
+        },
+        {
+          "teamId": "284654",
+          "team": "12u Maynard Stow 1"
+        },
+        {
+          "teamId": "284655",
+          "team": "12u Maynard Stow 2"
+        },
+        {
+          "teamId": "284653",
+          "team": "12u Pepperell"
+        },
+        {
+          "teamId": "284622",
+          "team": "12u Townsend Ashby"
+        },
+        {
+          "teamId": "284623",
+          "team": "12u Westford 1"
+        },
+        {
+          "teamId": "284624",
+          "team": "12u Westford 2"
+        }
+      ],
+      "fetchedAt": "2026-10-16T01:13:59.008Z"
     }
   },
-  "scrapedAt": "2026-10-04T00:10:44.280Z"
+  "allTeams": [
+    {
+      "teamId": "284667",
+      "team": "8u Bolton Gold"
+    },
+    {
+      "teamId": "284668",
+      "team": "8u Bolton Green"
+    },
+    {
+      "teamId": "284640",
+      "team": "8u GD Ghost Peppers"
+    },
+    {
+      "teamId": "284641",
+      "team": "8u GD Howlers"
+    },
+    {
+      "teamId": "284652",
+      "team": "8u GD Poison Apples"
+    },
+    {
+      "teamId": "284664",
+      "team": "8u Harvard"
+    },
+    {
+      "teamId": "284643",
+      "team": "8u Littleton Gold"
+    },
+    {
+      "teamId": "289743",
+      "team": "8u Littleton Navy"
+    },
+    {
+      "teamId": "284665",
+      "team": "8u Pepperell"
+    },
+    {
+      "teamId": "284645",
+      "team": "8u Townsend Ashby"
+    },
+    {
+      "teamId": "284659",
+      "team": "10u Bolton Blue"
+    },
+    {
+      "teamId": "284658",
+      "team": "10u Bolton Green"
+    },
+    {
+      "teamId": "284660",
+      "team": "10u Bolton Yellow"
+    },
+    {
+      "teamId": "284630",
+      "team": "10u GD Dogmen"
+    },
+    {
+      "teamId": "284629",
+      "team": "10u GD Ghost Peppers"
+    },
+    {
+      "teamId": "284631",
+      "team": "10u GD Poison Apples"
+    },
+    {
+      "teamId": "284662",
+      "team": "10u Harvard Huskies"
+    },
+    {
+      "teamId": "284661",
+      "team": "10u Harvard Trojans"
+    },
+    {
+      "teamId": "284632",
+      "team": "10u Littleton Gold"
+    },
+    {
+      "teamId": "284633",
+      "team": "10u Littleton Navy"
+    },
+    {
+      "teamId": "284663",
+      "team": "10u Maynard Stow"
+    },
+    {
+      "teamId": "284666",
+      "team": "10u Pepperell"
+    },
+    {
+      "teamId": "284634",
+      "team": "10u Townsend Ashby"
+    },
+    {
+      "teamId": "284635",
+      "team": "10u Westford 1"
+    },
+    {
+      "teamId": "284636",
+      "team": "10u Westford 2"
+    },
+    {
+      "teamId": "284656",
+      "team": "12u Bolton Blue"
+    },
+    {
+      "teamId": "284657",
+      "team": "12u Bolton Green"
+    },
+    {
+      "teamId": "284619",
+      "team": "12u Groton Dunstable"
+    },
+    {
+      "teamId": "284620",
+      "team": "12u Littleton"
+    },
+    {
+      "teamId": "284654",
+      "team": "12u Maynard Stow 1"
+    },
+    {
+      "teamId": "284655",
+      "team": "12u Maynard Stow 2"
+    },
+    {
+      "teamId": "284653",
+      "team": "12u Pepperell"
+    },
+    {
+      "teamId": "284622",
+      "team": "12u Townsend Ashby"
+    },
+    {
+      "teamId": "284623",
+      "team": "12u Westford 1"
+    },
+    {
+      "teamId": "284624",
+      "team": "12u Westford 2"
+    }
+  ],
+  "scrapedAt": "2026-10-16T01:13:59.009Z"
 }

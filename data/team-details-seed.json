@@ -3528,7 +3528,101 @@
         }
       ],
       "fetchedAt": "2026-10-15T18:25:54.851Z"
+    },
+    "289743": {
+      "teamId": "289743",
+      "name": "8u Littleton Navy",
+      "season": "2026 Fall",
+      "staff": [
+        {
+          "name": "Gary Nigg",
+          "role": "Head Coach",
+          "phone": "(978) 995-3372",
+          "emailUrl": "https://www.macleague.org/email/gAAAAABq0XphmlsMclylb_dWQihaCbX6dW64xSGUeyLfiVtYnNeRfQlrYScPTds7SRfunHAZVeEK9W7cHX3P6PLAUKLiE-D3o5NmAPVSIzjW4-1rqqwZuEU=?to_name=Gary+Nigg"
+        }
+      ],
+      "roster": [],
+      "games": [
+        {
+          "date": "2026-09-20",
+          "homeAway": "Away",
+          "opponent": "8u Bolton Green",
+          "time": "5:30 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Bolton Capital Field",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bolton%20-%20Ballfields%2020%20Wattaquadock%20Hill%20Rd%20Bolton%20MA%2001740"
+        },
+        {
+          "date": "2026-10-03",
+          "homeAway": "Away",
+          "opponent": "8u Townsend Ashby",
+          "time": "2:00 PM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Spaulding Field 2 (Main)",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Townsend%20-%20Spaulding%20Field%20311%20Main%20St%20Townsend%20MA%2001469"
+        },
+        {
+          "date": "2026-10-04",
+          "homeAway": "Away",
+          "opponent": "8u Pepperell",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Pepperell Field 1/lights",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pepperell%20-%20Bartelson%20Fields%2015%20Jersey%20St%20Pepperell%20MA%2001463"
+        },
+        {
+          "date": "2026-10-11",
+          "homeAway": "Home",
+          "opponent": "8u Littleton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-18",
+          "homeAway": "Home",
+          "opponent": "8u Bolton Gold",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-10-25",
+          "homeAway": "Home",
+          "opponent": "8u GD Howlers",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Littleton (A) Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Littleton%20-%20Shattuck%20Field%2033%20Shattuck%20St%20Littleton%20MA%2001460"
+        },
+        {
+          "date": "2026-11-01",
+          "homeAway": "Away",
+          "opponent": "8u Harvard",
+          "time": "9:00 AM",
+          "ourScore": null,
+          "oppScore": null,
+          "result": null,
+          "location": "Harvard Field 1",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=Harvard%20-%20Ryan%20Land%20Park%2071%20Depot%20Rd%20Harvard%20MA%2001451"
+        }
+      ],
+      "fetchedAt": "2026-10-16T01:14:24.834Z"
     }
   },
-  "scrapedAt": "2026-10-15T18:26:17.419Z"
+  "scrapedAt": "2026-10-16T01:14:24.835Z"
 }
