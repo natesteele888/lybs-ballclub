@@ -210,13 +210,19 @@
   // attribute/handler every other team link on this page already does;
   // skipped for our own side since there's no Team Page for ourselves to
   // send it to (the live Schedule tab is already one nav tap away).
+  // Nathan: "dont have full width for the last 5 games, keep it small and
+  // split in two columns like the sample provided" -- side by side
+  // (.last5Col, see render()'s own wrapping .last5Grid), not stacked
+  // full-width, so both the table and the card itself stay compact
+  // (.last5Table modifier -- smaller font/padding than the full-width
+  // League Standings table below reusing the same base .standingsTable).
   function last5Html(side, divisionId, games) {
     const mine = isOurTeam(side.name);
     const body = !games || !games.length
-      ? '<div class="emptyState">No recent results available.</div>'
+      ? '<div class="emptyState" style="font-size:11px;padding:10px 4px;">No results yet.</div>'
       : `<div class="standingsTableWrap">
-           <table class="standingsTable">
-             <thead><tr><th>Date</th><th>Opp</th><th class="numCell">Result</th></tr></thead>
+           <table class="standingsTable last5Table">
+             <thead><tr><th>Date</th><th>Opp</th><th class="numCell">Res</th></tr></thead>
              <tbody>
                ${games.map(g => `
                  <tr>
@@ -228,10 +234,10 @@
            </table>
          </div>`;
     return `
-      <div class="drillCard" style="margin-bottom:12px;">
-        <div class="drillCardTitle">${escapeHtml(side.name || 'TBD')}'s Last 5</div>
+      <div class="drillCard last5Col">
+        <div class="drillCardTitle" style="font-size:12px;">${escapeHtml(side.name || 'TBD')}'s Last 5</div>
         ${body}
-        ${!mine ? `<div style="text-align:center;margin-top:10px;"><span class="standingsTeamLink" style="cursor:pointer;color:var(--accent-blue);font-weight:600;" data-team-nav="${escapeHtml(side.name || '')}"${divisionId ? ` data-team-division="${escapeHtml(divisionId)}"` : ''} tabindex="0" role="button">Full Team Schedule</span></div>` : ''}
+        ${!mine ? `<div style="text-align:center;margin-top:8px;"><span class="standingsTeamLink" style="cursor:pointer;color:var(--accent-blue);font-weight:600;font-size:11px;" data-team-nav="${escapeHtml(side.name || '')}"${divisionId ? ` data-team-division="${escapeHtml(divisionId)}"` : ''} tabindex="0" role="button">Full Schedule</span></div>` : ''}
       </div>`;
   }
 
@@ -317,7 +323,7 @@
         ${heroHtml(m)}
         ${mapHtml(m.location)}
         <div class="sectionLabel" style="margin-top:18px;">Last 5</div>
-        ${resolvedSides.map(rs => last5Html(rs.side, m.divisionId, last5For(rs))).join('')}
+        <div class="last5Grid">${resolvedSides.map(rs => last5Html(rs.side, m.divisionId, last5For(rs))).join('')}</div>
         ${m.sides.map((side, i) => `
           <div class="sectionLabel" style="margin-top:8px;">${escapeHtml(side.name || 'Team')}'s Pitching Status</div>
           <div id="gpPitchSlot${i}"></div>`).join('')}
