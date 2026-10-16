@@ -706,6 +706,20 @@ a { color: var(--lybs-blue-bright); }
 .standingsTeamLink { cursor: pointer; border-radius: 8px; padding: 2px 6px; margin: -2px -6px; transition: background .15s; }
 .standingsTeamLink:hover, .standingsTeamLink:active { background: rgba(76,106,235,0.12); }
 
+/* ---- Game Preview's "Last 5" (js/game-preview.js) -- two side-by-side
+   compact tables, not one full-width table per side -- Nathan: "dont have
+   full width for the last 5 games, keep it small and split in two
+   columns like the sample provided." min-width:0 on the columns is load-
+   bearing: without it a flex child won't shrink past its content's
+   natural width, and a long opponent name would blow the column back out
+   to full width, defeating the whole point. */
+.last5Grid { display: flex; gap: 8px; margin-bottom: 4px; }
+.last5Col { flex: 1 1 0; min-width: 0; padding: 10px; margin-bottom: 0; }
+.last5Table { font-size: 10.5px; }
+.last5Table thead th { padding: 5px 4px; font-size: 8.5px; }
+.last5Table td { padding: 5px 4px; white-space: normal; overflow: hidden; text-overflow: ellipsis; }
+.last5Table td:first-child { white-space: nowrap; }
+
 /* Full standings table is 9 columns (Team, GP, W, L, T, PCT, RF, RA, DIFF)
    -- tightened up on narrow phones so most/all of it fits without the
    horizontal scroll a casual visitor won't think to try. */
