@@ -1241,6 +1241,13 @@ a { color: var(--lybs-blue-bright); }
   .appModalSheet { border-radius: 16px; }
 }
 .mapModalFrame { width: 100%; height: 240px; border: 0; border-radius: 10px; display: block; background: rgba(var(--overlay-rgb),0.04); }
+/* Always-visible embed on an upcoming game's own detail view (js/schedule.js)
+   -- same sizing as .mapModalFrame above, just never hidden behind a tap,
+   matching the ASL Bengals app's own game screen (map shown inline, not a
+   popup) since there's only ever one of these on screen at a time here,
+   unlike js/league-info.js's Facilities list (many addresses at once --
+   stays the modal, an iframe per row there would be real page weight). */
+.inlineMapFrame { width: 100%; height: 200px; border: 0; border-radius: 10px; display: block; margin-top: 8px; background: rgba(var(--overlay-rgb),0.04); }
 .appConfirmBody { font-size: 14px; color: var(--text); line-height: 1.5; padding: 6px 2px 18px; }
 .appConfirmActions { display: flex; gap: 10px; }
 .appConfirmActions .btn { flex: 1; }
