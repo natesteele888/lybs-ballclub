@@ -33,10 +33,10 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=184">
+<link rel="stylesheet" href="css/styles.css?v=185">
 <!-- Situations Trainer's own scoped "Sandlot" design system -- deliberately
      separate from styles.css, see css/situations.css's own header comment. -->
-<link rel="stylesheet" href="css/situations.css?v=184">
+<link rel="stylesheet" href="css/situations.css?v=185">
 </head>
 <body>
 <div class="steelTexture"></div>
@@ -114,6 +114,15 @@
     </div>
     <div class="topBarActions">
       <button class="topBarThemeBtn" title="Switch to light mode" aria-label="Switch to light mode">🌙</button>
+      <!-- Board-only -- toggled by onIdentityReady below, same IS_BOARD
+           flag that gates BOARD_ONLY_TABS. A real cross-origin link (to
+           lybs-reporting, the league's registration/admin dashboard), not
+           an in-app route -- target=_blank keeps this installed PWA's own
+           state intact rather than navigating it away, same reasoning as
+           mapModalOpenBtn's own target=_blank. Signing into that dashboard
+           is still gated by its own separate admin/director check --
+           this is a navigation convenience, not an SSO bridge. -->
+      <a class="topBarSwitchBtn hide" id="topBarSwitchBtn" href="https://lybs-dashboard.web.app/" target="_blank" rel="noopener" title="Switch to the League Dashboard">Dashboard</a>
       <!-- Coach-only -- toggled by onIdentityReady below. Opens
            js/social-submit.js in the modal sheet at the bottom of body,
            not a nav tab: a one-off action, not a place to browse to. -->
@@ -316,58 +325,58 @@
      silently change behavior underneath this app -- bump deliberately. -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-app-compat.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-auth-compat.min.js"></script>
-<script defer src="js/util.js?v=184"></script>
-<script defer src="js/nav-history.js?v=184"></script>
-<script defer src="js/backend.js?v=184"></script>
-<script defer src="js/team-registry.js?v=184"></script>
-<script defer src="js/cloud-auth.js?v=184"></script>
-<script defer src="js/google-auth.js?v=184"></script>
-<script defer src="js/team-config.js?v=184"></script>
-<script defer src="js/identity.js?v=184"></script>
-<script defer src="js/weather.js?v=184"></script>
-<script defer src="js/club-logos.js?v=184"></script>
-<script defer src="js/league-teams.js?v=184"></script>
-<script defer src="js/game-card.js?v=184"></script>
-<script defer src="js/pitch-smart.js?v=184"></script>
-<script defer src="js/tonight.js?v=184"></script>
-<script defer src="js/announcements.js?v=184"></script>
-<script defer src="js/league-events.js?v=184"></script>
-<script defer src="js/data-admin.js?v=184"></script>
-<script defer src="js/homepage.js?v=184"></script>
-<script defer src="js/league-info.js?v=184"></script>
-<script defer src="js/calendar-export.js?v=184"></script>
-<script defer src="js/schedule.js?v=184"></script>
-<script defer src="js/practices.js?v=184"></script>
-<script defer src="js/calendar-view.js?v=184"></script>
-<script defer src="js/roster.js?v=184"></script>
-<script defer src="js/drill-baserunning.js?v=184"></script>
-<script defer src="js/drill-ath.js?v=184"></script>
-<script defer src="js/drill-pitching.js?v=184"></script>
-<script defer src="js/depth-chart.js?v=184"></script>
-<script defer src="js/lineup-builder.js?v=184"></script>
-<script defer src="js/duty.js?v=184"></script>
-<script defer src="js/signup.js?v=184"></script>
-<script defer src="js/awards.js?v=184"></script>
-<script defer src="js/equipment.js?v=184"></script>
-<script defer src="js/signals.js?v=184"></script>
-<script defer src="js/team-access.js?v=184"></script>
-<script defer src="js/coach-notes.js?v=184"></script>
-<script defer src="js/player-benchmarks.js?v=184"></script>
-<script defer src="js/practice-plan.js?v=184"></script>
-<script defer src="js/play-diagram.js?v=184"></script>
-<script defer src="js/stats-import.js?v=184"></script>
-<script defer src="js/social-submit.js?v=184"></script>
-<script defer src="js/gamechanger.js?v=184"></script>
-<script defer src="js/rules.js?v=184"></script>
-<script defer src="js/practice-catalog.js?v=184"></script>
-<script defer src="js/situations.js?v=184"></script>
-<script defer src="js/standings.js?v=184"></script>
-<script defer src="js/calendar-family.js?v=184"></script>
-<script defer src="js/archive.js?v=184"></script>
-<script defer src="js/league-schedule.js?v=184"></script>
-<script defer src="js/team-details.js?v=184"></script>
-<script defer src="js/team-page.js?v=184"></script>
-<script defer src="js/game-preview.js?v=184"></script>
+<script defer src="js/util.js?v=185"></script>
+<script defer src="js/nav-history.js?v=185"></script>
+<script defer src="js/backend.js?v=185"></script>
+<script defer src="js/team-registry.js?v=185"></script>
+<script defer src="js/cloud-auth.js?v=185"></script>
+<script defer src="js/google-auth.js?v=185"></script>
+<script defer src="js/team-config.js?v=185"></script>
+<script defer src="js/identity.js?v=185"></script>
+<script defer src="js/weather.js?v=185"></script>
+<script defer src="js/club-logos.js?v=185"></script>
+<script defer src="js/league-teams.js?v=185"></script>
+<script defer src="js/game-card.js?v=185"></script>
+<script defer src="js/pitch-smart.js?v=185"></script>
+<script defer src="js/tonight.js?v=185"></script>
+<script defer src="js/announcements.js?v=185"></script>
+<script defer src="js/league-events.js?v=185"></script>
+<script defer src="js/data-admin.js?v=185"></script>
+<script defer src="js/homepage.js?v=185"></script>
+<script defer src="js/league-info.js?v=185"></script>
+<script defer src="js/calendar-export.js?v=185"></script>
+<script defer src="js/schedule.js?v=185"></script>
+<script defer src="js/practices.js?v=185"></script>
+<script defer src="js/calendar-view.js?v=185"></script>
+<script defer src="js/roster.js?v=185"></script>
+<script defer src="js/drill-baserunning.js?v=185"></script>
+<script defer src="js/drill-ath.js?v=185"></script>
+<script defer src="js/drill-pitching.js?v=185"></script>
+<script defer src="js/depth-chart.js?v=185"></script>
+<script defer src="js/lineup-builder.js?v=185"></script>
+<script defer src="js/duty.js?v=185"></script>
+<script defer src="js/signup.js?v=185"></script>
+<script defer src="js/awards.js?v=185"></script>
+<script defer src="js/equipment.js?v=185"></script>
+<script defer src="js/signals.js?v=185"></script>
+<script defer src="js/team-access.js?v=185"></script>
+<script defer src="js/coach-notes.js?v=185"></script>
+<script defer src="js/player-benchmarks.js?v=185"></script>
+<script defer src="js/practice-plan.js?v=185"></script>
+<script defer src="js/play-diagram.js?v=185"></script>
+<script defer src="js/stats-import.js?v=185"></script>
+<script defer src="js/social-submit.js?v=185"></script>
+<script defer src="js/gamechanger.js?v=185"></script>
+<script defer src="js/rules.js?v=185"></script>
+<script defer src="js/practice-catalog.js?v=185"></script>
+<script defer src="js/situations.js?v=185"></script>
+<script defer src="js/standings.js?v=185"></script>
+<script defer src="js/calendar-family.js?v=185"></script>
+<script defer src="js/archive.js?v=185"></script>
+<script defer src="js/league-schedule.js?v=185"></script>
+<script defer src="js/team-details.js?v=185"></script>
+<script defer src="js/team-page.js?v=185"></script>
+<script defer src="js/game-preview.js?v=185"></script>
 <script defer>
 (function () {
   let TEAM_ID = null, ROLE = null, SESSION = null, IS_BOARD = false;
@@ -1120,6 +1129,7 @@
       }
     };
     document.getElementById('topBarShareBtn').classList.toggle('hide', !canEdit());
+    document.getElementById('topBarSwitchBtn').classList.toggle('hide', !IS_BOARD);
     document.getElementById('appShell').classList.add('show');
     await window.ClubLogos.ensureLoaded();
     switchTab('home');
@@ -1131,7 +1141,7 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script defer src="js/auth.js?v=184"></script>
+<script defer src="js/auth.js?v=185"></script>
 <!-- access-control.js also calls window.onIdentityReady, but only from
      inside an async googleAuth.onReady() callback, never at top-level
      script-execution time -- so unlike auth.js it doesn't strictly need to
@@ -1139,12 +1149,12 @@
      google-auth.js. Placed next to auth.js anyway since the two play the
      same role (driving entry into the app) for their respective sign-in
      paths. -->
-<script defer src="js/access-control.js?v=184"></script>
+<script defer src="js/access-control.js?v=185"></script>
 <!-- public-view.js wires up #publicViewLink/#publicViewBack -- needs
      TEAM_REGISTRY, LeagueInfo, Standings, and LeagueEvents to already
      exist, no ordering constraint relative to auth.js/access-control.js
      since it never touches onIdentityReady or the gated app shell at all. -->
-<script defer src="js/public-view.js?v=184"></script>
+<script defer src="js/public-view.js?v=185"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.

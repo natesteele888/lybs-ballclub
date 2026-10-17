@@ -332,6 +332,18 @@ a { color: var(--lybs-blue-bright); }
   min-height: 36px; flex: 0 0 auto;
 }
 .topBarShareBtn:hover { background: rgba(76,106,235,0.24); }
+/* Same pill as .topBarShareBtn (a header CTA, not a nav tab) but its own
+   class rather than reusing that one -- this is an <a> to another origin,
+   not a same-page modal trigger, and a future grep for "share" shouldn't
+   turn this up. display/text-decoration overrides are needed because an
+   <a> defaults to inline (ignores min-height) and underlined. */
+.topBarSwitchBtn {
+  background: rgba(76,106,235,0.14); border: 1px solid rgba(76,106,235,0.4); color: var(--accent-blue);
+  font-family: var(--font-label); font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; padding: 10px 14px; border-radius: 20px; white-space: nowrap;
+  min-height: 36px; flex: 0 0 auto; display: inline-flex; align-items: center; text-decoration: none;
+}
+.topBarSwitchBtn:hover { background: rgba(76,106,235,0.24); }
 .topBarThemeBtn {
   background: rgba(var(--overlay-rgb),0.08); border: 1px solid var(--card-border); color: var(--text);
   font-size: 15px; width: 36px; height: 36px; min-height: 36px; border-radius: 50%; cursor: pointer;
