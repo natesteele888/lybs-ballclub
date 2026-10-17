@@ -278,6 +278,17 @@ a { color: var(--lybs-blue-bright); }
   box-shadow: none;
 }
 .btnGhost:hover { background: rgba(180,187,191,0.12); filter: none; box-shadow: none; }
+/* Google's own brand button, not this app's house style -- white and sentence
+   case regardless of .btn's uppercase/letter-spacing, the same treatment
+   lybs-reporting (the league dashboard) uses for the same real per-person
+   Google identity, so it reads as the same button in both apps. */
+.btnGoogle {
+  background: #fff; color: #1f1f1f; border: 1px solid #dadce0;
+  text-transform: none; letter-spacing: normal; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: none;
+}
+.btnGoogle:hover { filter: none; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
 .btnDanger { background: linear-gradient(180deg, #D64545, #8E2626); box-shadow: 0 8px 20px rgba(142,38,38,0.3); }
 .btnSmall { padding: 8px 14px; font-size: 11px; }
 /* .btnTiny carries a real floor -- it's reused for every icon-only ×/↑/↓
