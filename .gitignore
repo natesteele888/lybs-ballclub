@@ -15,3 +15,9 @@ data/dashboard-roster-import.json
 # file at all -- it's listed here only so a locally-regenerated copy for
 # testing is never accidentally staged.
 data/roster-seed.json
+
+# scripts/sync-contacts-from-dashboard.mjs's own staging file -- parent
+# emails, pulled from lybs-reporting's Contacts carve-out (see that repo's
+# CLAUDE.md). For a human to review before the same script merges it into
+# a team's live roster in Firebase; never read by the app itself.
+data/dashboard-contacts-import.json

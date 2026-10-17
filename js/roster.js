@@ -1,11 +1,24 @@
 /* ============================================================
-   Roster -- name / number / position / bats-throws, deliberately
-   nothing more. No DOB, no contact info, no address, no height or
-   weight, no birthplace -- same privacy posture as the
-   lybs-reporting dashboard's registration data (see that repo's
-   CLAUDE.md): this app never stores anything that would need to
-   be scrubbed before the repo or database could be shown to
-   anyone outside the team.
+   Roster -- name / number / position / bats-throws / an optional
+   parent email, and deliberately nothing more beyond those five. No
+   DOB, no address, no height or weight, no birthplace -- same
+   privacy posture as the lybs-reporting dashboard's registration
+   data (see that repo's CLAUDE.md): this app stores nothing else
+   that would need to be scrubbed before the repo or database could
+   be shown to anyone outside the team.
+
+   The email field is a later, narrow exception to what used to be an
+   unqualified "no contact info" rule here -- see lybs-reporting's
+   CLAUDE.md, "Contacts Carve-Out" section, for the one sanctioned
+   pipe it can arrive through (that repo's publish_contacts.py, never
+   committed anywhere, reviewed by a human before it's sent). A coach
+   can also just type it in directly. Either way it is the one piece
+   of real contact info this app stores, it exists only to pre-fill
+   a parent invite (see js/team-access.js) so a coach doesn't have to
+   retype an email they already have on file, and it deliberately
+   never appears in renderTable()'s read-only roster view below --
+   only in renderForm(), while a coach is actively editing that one
+   player's entry.
 
    Table layout is modeled on ESPN/MLB.com roster pages (# / Name /
    Pos / B-T, small avatar per row), minus the columns that don't
@@ -128,6 +141,8 @@
           <label>Number<input id="fNumber" value="${escapeHtml(player.number || '')}"></label>
           <label>Position<input id="fPosition" value="${escapeHtml(player.position || '')}" placeholder="e.g. SS, 2B, P/OF"></label>
           <label>Bats/Throws<input id="fBT" value="${escapeHtml(player.batsThrows || '')}" placeholder="e.g. R/R, L/L, S/R"></label>
+          <label>Parent email <span style="font-size:11px;color:var(--text2);font-weight:400;">(optional -- for invites only, never shown on the roster list)</span>
+            <input id="fEmail" type="email" value="${escapeHtml(player.email || '')}" placeholder="parent@example.com"></label>
           <div class="detailActions">
             <button class="btn" id="saveBtn">Save</button>
             <button class="btn btnGhost" id="cancelBtn">Cancel</button>
@@ -142,6 +157,7 @@
           number: containerEl.querySelector('#fNumber').value.trim(),
           position: containerEl.querySelector('#fPosition').value.trim(),
           batsThrows: containerEl.querySelector('#fBT').value.trim(),
+          email: containerEl.querySelector('#fEmail').value.trim(),
         });
         if (opts.onSave) withBusyButton(btnEvt.target, 'Saving...', () => opts.onSave(updated));
       });

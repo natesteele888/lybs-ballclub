@@ -69,7 +69,32 @@
           </div>`;
       }
 
-      function refresh() {
+      // Roster entries with an email already on file (typed by a coach, or
+      // pulled from lybs-reporting's Contacts carve-out -- see js/roster.js's
+      // header comment) whose parent doesn't already have access or a
+      // pending invite. Shown as pick-to-prefill suggestions so a coach
+      // doesn't have to retype an email that's already in the roster.
+      // Fetched once per render pass, not per keystroke -- this list only
+      // changes when granted/pending/the roster itself changes, all of
+      // which already trigger a fresh refresh() below.
+      async function suggestedContacts() {
+        if (!window.Roster) return []; // roster.js not loaded on this page
+        await window.Roster.ensureLoaded(teamId);
+        const takenEmails = new Set(
+          granted.map(p => (p.email || '').toLowerCase())
+            .concat(pending.map(p => (p.email || '').toLowerCase())));
+        return window.Roster.getPlayers(teamId)
+          .filter(p => p.email && !takenEmails.has(p.email.toLowerCase()));
+      }
+
+      function suggestedRowHtml(p) {
+        return `
+          <button type="button" class="btn btnGhost btnSmall" data-suggest="${escapeHtml(p.email)}"
+            style="margin:0 6px 6px 0;">${escapeHtml(p.name || 'Unnamed')}</button>`;
+      }
+
+      async function refresh() {
+        const suggestions = inviting ? await suggestedContacts() : [];
         containerEl.innerHTML = `
           <div class="drillHero">
             <div class="drillHeroTitle">Team Access</div>
@@ -80,7 +105,11 @@
           <div class="sectionLabel" style="margin-top:16px;">Pending invites</div>
           <div class="listBody">${pending.length ? pending.map(pendingRowHtml).join('') : '<div class="emptyState">No pending invites.</div>'}</div>
           ${inviting ? `
-            <div class="drillAddRow" style="margin-top:14px;">
+            ${suggestions.length ? `
+              <div class="helpText" style="margin-top:14px;">From the roster -- tap to fill in their email:</div>
+              <div style="margin-top:4px;">${suggestions.map(suggestedRowHtml).join('')}</div>
+            ` : ''}
+            <div class="drillAddRow" style="margin-top:${suggestions.length ? 4 : 14}px;">
               <input class="drillFreeInput" id="taEmailInput" type="email" placeholder="parent@example.com" autofocus>
               <button class="btn btnSmall" id="taInviteSave">Send</button>
             </div>
@@ -89,6 +118,13 @@
 
         const inviteBtn = containerEl.querySelector('#taInviteBtn');
         if (inviteBtn) inviteBtn.addEventListener('click', () => { inviting = true; refresh(); });
+
+        containerEl.querySelectorAll('[data-suggest]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const input = containerEl.querySelector('#taEmailInput');
+            if (input) { input.value = btn.dataset.suggest; input.focus(); }
+          });
+        });
 
         const saveBtn = containerEl.querySelector('#taInviteSave');
         if (saveBtn) {
