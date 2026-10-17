@@ -43,18 +43,27 @@
     return Object.keys((window.TEAM_REGISTRY && window.TEAM_REGISTRY.teams) || {});
   }
 
-  async function redeemInvites(uid, email) {
+  // token: this user's own Google ID token, passed explicitly all the way
+  // through to dbGet/dbPut -- see those functions' own comments for why.
+  // A brand-new sign-in has no grant yet for the normal fallback session
+  // (a stale gate session, or a grant-less anonymous one, whichever
+  // window.__activeAuthMode/getFirebaseIdToken() would otherwise pick) to
+  // read or write any of this against, and window.__activeAuthMode itself
+  // isn't set to 'google' until enter() below actually confirms a grant --
+  // too late for these first reads/writes, which is what determines
+  // whether there's a grant to confirm in the first place.
+  async function redeemInvites(uid, email, token) {
     const key = emailKey(email);
     const candidates = [...knownTeamIds(), 'board'];
     for (const teamIdOrBoard of candidates) {
       let invite;
       try {
-        invite = await window.dbGet(window.invitePath(key, teamIdOrBoard));
+        invite = await window.dbGet(window.invitePath(key, teamIdOrBoard), token);
       } catch (e) { continue; } // no invite pending (or no read access to it) -- nothing to do
       if (!invite || !invite.role) continue;
       try {
-        if (teamIdOrBoard === 'board') await window.dbPut(window.boardMemberPath(uid), true);
-        else await window.dbPut(window.accessPath(teamIdOrBoard, uid), invite.role);
+        if (teamIdOrBoard === 'board') await window.dbPut(window.boardMemberPath(uid), true, token);
+        else await window.dbPut(window.accessPath(teamIdOrBoard, uid), invite.role, token);
       } catch (e) {
         console.error('Could not redeem invite for', teamIdOrBoard, e);
         continue; // leave the invite in place -- retried next sign-in
@@ -62,16 +71,16 @@
       // Best-effort cleanup -- the grant above already landed, so a
       // failure here is harmless: a leftover invite just gets silently
       // re-redeemed (a no-op, since the grant already matches) next time.
-      window.dbPut(window.invitePath(key, teamIdOrBoard), null).catch(() => {});
-      window.dbPut(window.inviteByTeamPath(teamIdOrBoard, key), null).catch(() => {});
+      window.dbPut(window.invitePath(key, teamIdOrBoard), null, token).catch(() => {});
+      window.dbPut(window.inviteByTeamPath(teamIdOrBoard, key), null, token).catch(() => {});
     }
   }
 
-  async function resolveGrants(uid) {
+  async function resolveGrants(uid, token) {
     const teamIds = knownTeamIds();
     const [isBoard, ...roles] = await Promise.all([
-      window.dbGet(window.boardMemberPath(uid)),
-      ...teamIds.map(teamId => window.dbGet(window.accessPath(teamId, uid))),
+      window.dbGet(window.boardMemberPath(uid), token),
+      ...teamIds.map(teamId => window.dbGet(window.accessPath(teamId, uid), token)),
     ]);
     const teams = teamIds
       .map((teamId, i) => ({ teamId, role: roles[i] }))
@@ -84,7 +93,7 @@
     if (el) el.textContent = text;
   }
 
-  async function enter(user) {
+  async function enter(user, token) {
     // Already past the login screen (a gate-code login, or an earlier
     // call for this same user) -- don't re-enter on top of it. A device
     // with both a lingering gate session and a Google grant would
@@ -96,14 +105,14 @@
     const loginScreen = document.getElementById('loginScreen');
     if (!loginScreen || loginScreen.classList.contains('hide') || window.__identityResolved) return;
 
-    await window.dbPut(window.personPath(user.uid), { name: user.name, email: user.email });
-    const grants = await resolveGrants(user.uid);
+    await window.dbPut(window.personPath(user.uid), { name: user.name, email: user.email }, token);
+    const grants = await resolveGrants(user.uid, token);
     if (window.__identityResolved) return; // gate path won while the two awaits above were in flight
 
     if (grants.teams.length) {
       const grant = grants.teams[0];
       const identity = window.Identity.setSession(grant.teamId, grant.role, user.name);
-      await window.TeamConfig.load(grant.teamId);
+      await window.TeamConfig.load(grant.teamId, token);
       if (window.__identityResolved) return; // re-check -- TeamConfig.load() is itself async
       // Read by cloud-auth.js's getFirebaseIdToken() -- marks this as the
       // session every dbGet/dbPut should authenticate as from here on,
@@ -130,7 +139,7 @@
       const teamId = knownTeamIds()[0];
       if (teamId) {
         const identity = window.Identity.setSession(teamId, 'parent', user.name);
-        await window.TeamConfig.load(teamId);
+        await window.TeamConfig.load(teamId, token);
         if (window.__identityResolved) return; // re-check -- TeamConfig.load() is itself async
         window.__activeAuthMode = 'google';
         loginScreen.classList.add('hide');
@@ -147,8 +156,9 @@
   window.AccessControl = {
     async handleSignedInUser(user) {
       if (!user) return;
-      await redeemInvites(user.uid, user.email);
-      await enter(user);
+      const token = await window.googleAuth.getIdToken();
+      await redeemInvites(user.uid, user.email, token);
+      await enter(user, token);
     },
   };
 

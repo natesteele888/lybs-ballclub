@@ -78,10 +78,15 @@
        events.js). Same cascading-rule reasoning as coachPrivate/access
        above, just inverted: this needs to be LESS restrictive than
        teams/{teamId}, so it has to live outside that tree too.
-     window.dbGet(path)             -- async, resolves to the JSON
-       value at that path (or null).
-     window.dbPut(path, value)      -- async, writes the whole
+     window.dbGet(path, explicitToken?)        -- async, resolves to the
+       JSON value at that path (or null).
+     window.dbPut(path, value, explicitToken?) -- async, writes the whole
        value at that path (RTDB semantics: PUT replaces).
+       explicitToken (both, optional) -- authenticate as this specific
+       ID token instead of letting window.getFirebaseIdToken() pick a
+       session itself. See js/access-control.js's redeemInvites()/enter()
+       for the one real use: a brand-new Google sign-in's own first
+       invite/grant reads, before window.__activeAuthMode is set.
      window.dbUpdate({path: value, ...}) -- async, writes several paths
        in one atomic multi-location update (RTDB's PATCH-at-root
        semantics) instead of several separate dbPut calls that could
@@ -187,13 +192,16 @@
   // reads identically to success). Rethrowing keeps every try/catch a
   // caller already has working exactly as before; this only adds the
   // one thing nothing was doing, telling the person it didn't work.
-  window.dbGet = async function (path) {
+  // explicitToken (optional, both below) -- see cloud-auth.js's
+  // firebaseAuthed() for why a caller would pass one instead of letting
+  // window.getFirebaseIdToken() pick a session itself.
+  window.dbGet = async function (path, explicitToken) {
     if (isMock()) {
       const db = loadMockDb();
       return getAtPath(db, path);
     }
     try {
-      const url = await window.firebaseAuthed(restUrl(path));
+      const url = await window.firebaseAuthed(restUrl(path), explicitToken);
       const res = await fetch(url);
       if (!res.ok) throw new Error(`dbGet ${path} failed: HTTP ${res.status}`);
       const data = await res.json();
@@ -204,7 +212,7 @@
     }
   };
 
-  window.dbPut = async function (path, value) {
+  window.dbPut = async function (path, value, explicitToken) {
     if (isMock()) {
       const db = loadMockDb();
       setAtPath(db, path, value);
@@ -212,7 +220,7 @@
       return value;
     }
     try {
-      const url = await window.firebaseAuthed(restUrl(path));
+      const url = await window.firebaseAuthed(restUrl(path), explicitToken);
       const res = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

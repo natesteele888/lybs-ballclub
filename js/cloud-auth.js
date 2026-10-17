@@ -158,8 +158,14 @@
     return c.idToken;
   };
 
-  window.firebaseAuthed = async function (url) {
-    const token = await window.getFirebaseIdToken();
+  // explicitToken lets a caller bypass window.__activeAuthMode's own
+  // session-picking entirely -- see js/access-control.js's redeemInvites()/
+  // enter() for why: a brand-new Google sign-in needs to authenticate as
+  // itself for its own first invite/grant reads, before __activeAuthMode
+  // is set (deliberately late, only once that flow confirms it actually
+  // won the entry race -- see its own comment).
+  window.firebaseAuthed = async function (url, explicitToken) {
+    const token = explicitToken || await window.getFirebaseIdToken();
     const sep = url.indexOf('?') === -1 ? '?' : '&';
     return `${url}${sep}auth=${encodeURIComponent(token)}`;
   };

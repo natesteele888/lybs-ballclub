@@ -7,7 +7,10 @@
    standings.js/thisweek.js -- every display point here reads
    window.TeamConfig.current() instead.
 
-   window.TeamConfig.load(teamId)  -- async, fetches + caches
+   window.TeamConfig.load(teamId, explicitToken?)  -- async, fetches + caches.
+     explicitToken -- see js/backend.js's dbGet() for why a caller would
+     pass one; js/access-control.js's enter() does, for the same
+     brand-new-Google-sign-in reason as its own dbGet/dbPut calls.
    window.TeamConfig.current()     -- sync, last-loaded config (or
      a neutral placeholder before load() resolves)
    ============================================================ */
@@ -15,10 +18,10 @@
   let current = { name: 'LYBS Ballclub', shortName: 'Team', sport: 'Baseball', colors: { primary: '#0a2f5c', secondary: '#c8102e' } };
 
   window.TeamConfig = {
-    async load(teamId) {
+    async load(teamId, explicitToken) {
       const fallback = (window.TEAM_REGISTRY && window.TEAM_REGISTRY.teams[teamId]) || current;
       try {
-        const saved = await window.dbGet(window.teamPath(teamId, 'config'));
+        const saved = await window.dbGet(window.teamPath(teamId, 'config'), explicitToken);
         // colors merges separately -- the outer Object.assign is only one
         // level deep, so a saved override naming just one of primary/
         // secondary would otherwise replace the whole sub-object and drop
