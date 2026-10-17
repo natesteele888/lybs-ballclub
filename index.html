@@ -55,7 +55,15 @@
     <!-- Additive, not a replacement -- the code above keeps working for
          anyone who has it. This is for a coach or a specifically-invited
          parent with a real per-person grant (js/access-control.js). -->
-    <button class="btn btnGhost" id="googleSignInBtn">Sign in with Google</button>
+    <button class="btn btnGoogle" id="googleSignInBtn">
+      <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-2.7-.4-4H24v7.3h12.1c-.2 1.8-1.6 4.6-4.5 6.5l6.9 5.4c4.1-3.8 6.6-9.4 6.6-15.2z"/>
+        <path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-6.9-5.4c-1.9 1.3-4.4 2.1-7.6 2.1-5.8 0-10.7-3.8-12.5-9.1l-7.1 5.5C8.1 41 15.4 46 24 46z"/>
+        <path fill="#FBBC05" d="M11.5 28.3c-.5-1.4-.7-2.8-.7-4.3s.3-3 .7-4.3l-7.1-5.5C2.9 17.1 2 20.4 2 24s.9 6.9 2.4 9.8l7.1-5.5z"/>
+        <path fill="#EA4335" d="M24 10.6c4.1 0 6.9 1.8 8.5 3.3l6.1-6C34.9 4.5 29.9 2 24 2 15.4 2 8.1 7 4.4 14.2l7.1 5.5c1.8-5.3 6.7-9.1 12.5-9.1z"/>
+      </svg>
+      Sign in with Google
+    </button>
     <div id="googleSignInError"></div>
     <a id="publicViewLink" class="loginPublicLink" href="#">View public info (standings, schedule, league info) &mdash; no sign-in needed</a>
   </div>
