@@ -13,6 +13,7 @@
         "roster": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "playerBenchmarks": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "gameChangerSnippet": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
+        "gcTeamId": { ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" },
         "announcements": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "depthChart": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "lineups": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },

@@ -9,6 +9,7 @@ data/standings-cache.json
 data/pitchsmart-cache.json
 data/team-details-cache.json
 data/dashboard-roster-import.json
+data/gamechanger-schedule-cache.json
 
 # Real kids' names, even reduced to first name + last initial, don't belong
 # in this (public) repo's git history. js/roster.js no longer reads this
