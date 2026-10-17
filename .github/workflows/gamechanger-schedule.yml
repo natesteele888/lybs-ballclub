@@ -1,0 +1,37 @@
+name: Mirror GameChanger schedules
+
+# Runs on the same cadence as standings.yml (every 30 min, 8am-9pm ET) --
+# this is live, in-season schedule/score data, same spirit as standings,
+# and far lighter than that job: one request per team that has a gcTeamId
+# set (see scripts/scrape-gamechanger-schedule.mjs), not per league team.
+# api.team-manager.gc.com publishes no robots.txt/crawl-delay (confirmed
+# live, see that script's own header), so there's no published cadence to
+# stay under -- this still isn't run more often than it needs to be.
+#
+# Secrets needed (repo Settings -> Secrets and variables -> Actions):
+#   FIREBASE_DB_URL     e.g. https://lybs-ballclub-default-rtdb.firebaseio.com
+#   FIREBASE_DB_SECRET  the Realtime Database's legacy secret -- same one
+#                        every other scraper here uses, scoped by database
+#                        rules to also cover teams/{teamId}/gameChangerSchedule.
+#
+# Unlike team-details.yml, this doesn't need a separate "regenerate the
+# team-id list" step first -- scrape-gamechanger-schedule.mjs reads its
+# own team-id list straight from js/team-registry.js in this checkout.
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0,30 12-21 * * *' # every 30 min, 8am-9pm ET (UTC-4), every day
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Scrape and push GameChanger schedules
+        env:
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+        run: node scripts/scrape-gamechanger-schedule.mjs

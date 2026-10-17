@@ -1,25 +1,33 @@
 /* ============================================================
-   GameChanger widget embed -- ported directly from
-   lybs-reporting/schedules.js's pattern (same validation, same
-   sandboxed-iframe render), adapted to this app's per-team RTDB
-   path instead of a Firestore doc holding every league team.
+   GameChanger integration -- two independent pieces living in one
+   tab since they're both "this team's GameChanger data":
 
-   GameChanger has no public API: no keys, no webhooks, no
-   developer docs, none has ever been offered. The only sanctioned
-   integration is their own Scoreboard Widget -- web.gc.com ->
-   Tools -> Create Scoreboard Widget -- a snippet a coach copies
-   out and pastes in here. It shows live scores/upcoming games and
-   links through to the livestream when one is running, but it is
-   NOT a data source for anything else in this app: there's no feed
-   to read a schedule or roster back out of it, which is why the
-   combined calendar (calendar-family.js) is built from games we
-   enter ourselves, not from this widget.
+   1. Widget embed -- ported directly from lybs-reporting/schedules.js's
+      pattern (same validation, same sandboxed-iframe render), adapted
+      to this app's per-team RTDB path instead of a Firestore doc
+      holding every league team. A coach pastes the snippet from
+      web.gc.com -> Tools -> Create Scoreboard Widget; it shows live
+      scores/upcoming games and links through to a livestream when one
+      is running. The snippet is third-party JS from gc.com executing
+      inside our page for every signed-in user, so it renders inside a
+      sandboxed iframe via srcdoc with allow-scripts but deliberately
+      NOT allow-same-origin -- it can draw its scoreboard and talk to
+      its own servers, but it cannot reach this page's session/storage.
 
-   The snippet is third-party JS from gc.com executing inside our
-   page for every signed-in user, so it renders inside a sandboxed
-   iframe via srcdoc with allow-scripts but deliberately NOT
-   allow-same-origin -- it can draw its scoreboard and talk to its
-   own servers, but it cannot reach this page's session/storage.
+   2. Live schedule mirror -- teams/{teamId}/gcTeamId (board-settable
+      below) plus scripts/scrape-gamechanger-schedule.mjs (a scheduled
+      GitHub Action, see .github/workflows/gamechanger-schedule.yml)
+      together pull this team's real schedule/scores into
+      teams/{teamId}/gameChangerSchedule for display here, instead of
+      relying solely on the pasted widget above. This CORRECTS an
+      earlier assumption in this file (and elsewhere in this repo) that
+      GameChanger has no public API at all -- it does, confirmed live
+      2026-10-15/17: api.team-manager.gc.com serves real, unauthenticated
+      JSON behind GameChanger's own public team pages. It's just not
+      reachable from a browser (CORS-blocked, confirmed live, see that
+      script's own header) -- hence the scheduled-job-plus-mirror shape,
+      not a client-side fetch, same as every other external mirror in
+      this app (macleague.org standings/team-details).
    ============================================================ */
 (function () {
   function validateSnippet(html) {
@@ -33,6 +41,49 @@
     }
     if (s.length > 20000) return 'That snippet is unexpectedly large — check you copied only the widget code.';
     return null;
+  }
+
+  // Accepts either the bare id (what scripts/scrape-gamechanger-schedule.mjs
+  // and database.rules.json both call gcTeamId) or a pasted
+  // web.gc.com/teams/{id} URL -- the URL is what a board member actually
+  // sees and copies from their browser's address bar, so requiring them to
+  // hand-extract the id themselves would be real, avoidable friction. Real
+  // ids seen so far (data/season-archive.json) are short mixed-case
+  // alphanumeric tokens, e.g. "gtKEQZgp28Vd" -- NOT numeric, despite how
+  // GameChanger team ids might sound; don't add numeric-only validation.
+  function extractGcTeamId(input) {
+    const s = (input || '').trim();
+    if (!s) return null;
+    const urlMatch = s.match(/web\.gc\.com\/teams\/([A-Za-z0-9]+)/i);
+    if (urlMatch) return urlMatch[1];
+    if (/^[A-Za-z0-9]{6,24}$/.test(s)) return s;
+    return null;
+  }
+
+  function fmtGameTime(iso, timezone) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleString('en-US', {
+      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+      timeZone: timezone || 'America/New_York',
+    });
+  }
+
+  // Same badge/badgeW/badgeL/badgeT/badgeTbd convention js/team-page.js,
+  // js/calendar-view.js, js/homepage.js and js/public-view.js all already
+  // use for a played-vs-upcoming game result.
+  function scheduleRowHtml(g) {
+    const played = g.status === 'completed' && g.ourScore != null && g.theirScore != null;
+    const resultBadge = played
+      ? `<span class="badge ${g.ourScore > g.theirScore ? 'badgeW' : g.ourScore < g.theirScore ? 'badgeL' : 'badgeT'}">${g.ourScore}-${g.theirScore}</span>`
+      : '<span class="badge badgeTbd">Upcoming</span>';
+    return `
+      <div class="listRow" style="cursor:default;">
+        <div class="listRowMain">
+          <div class="listRowTitle">${g.homeAway === 'away' ? '@ ' : 'vs '}${escapeHtml(g.opponent || 'TBD')}</div>
+          <div class="listRowSub">${escapeHtml(fmtGameTime(g.startTs, g.timezone))}</div>
+        </div>
+        ${resultBadge}
+      </div>`;
   }
 
   window.GameChanger = {
@@ -50,10 +101,32 @@
       await window.dbPut(window.teamPath(teamId, 'gameChangerSnippet'), null);
     },
 
+    async loadTeamId(teamId) {
+      return window.dbGet(window.teamPath(teamId, 'gcTeamId'));
+    },
+    async saveTeamId(teamId, input) {
+      const id = extractGcTeamId(input);
+      if (!id) throw new Error('Paste the team’s GameChanger id, or the team’s web.gc.com page URL.');
+      await window.dbPut(window.teamPath(teamId, 'gcTeamId'), id);
+      return id;
+    },
+    async removeTeamId(teamId) {
+      await window.dbPut(window.teamPath(teamId, 'gcTeamId'), null);
+    },
+    // {games: [...], fetchedAt} | null -- written by
+    // scripts/scrape-gamechanger-schedule.mjs, never by this app.
+    async loadSchedule(teamId) {
+      return window.dbGet(window.teamPath(teamId, 'gameChangerSchedule'));
+    },
+
     async render(teamId, containerEl, opts) {
       opts = opts || {};
       if (!containerEl.innerHTML) containerEl.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
-      const record = await window.GameChanger.load(teamId);
+      const [record, gcTeamId, schedule] = await Promise.all([
+        window.GameChanger.load(teamId),
+        window.GameChanger.loadTeamId(teamId),
+        window.GameChanger.loadSchedule(teamId),
+      ]);
       // The iframe itself is built as a real DOM node below, not this
       // string -- a coach-pasted snippet almost always contains a quoted
       // attribute (<script src="...">), and escapeHtml() only escapes
@@ -96,13 +169,50 @@
           <button class="btn btnSmall" id="gcMirrorBtn">Post to team feed</button>
         </div>`;
 
+      // Live schedule mirror -- see this file's header for the
+      // gcTeamId/scrape-gamechanger-schedule.mjs pipeline this reads from.
+      // Three states: no gcTeamId set yet (nothing to show, board form
+      // below explains how); gcTeamId set but the scheduled job hasn't
+      // run against it yet (honest wait message, not a blank gap); real
+      // games to list.
+      let scheduleSection = '';
+      if (gcTeamId) {
+        if (schedule && schedule.games && schedule.games.length) {
+          scheduleSection = `
+            <div class="sectionLabel">Live GameChanger schedule</div>
+            <div class="listBody">${schedule.games.map(scheduleRowHtml).join('')}</div>`;
+        } else {
+          scheduleSection = `<div class="emptyState">GameChanger id is set -- schedule syncs within the next 30 minutes.</div>`;
+        }
+      }
+
+      // Board-only -- sets teams/{teamId}/gcTeamId, which
+      // scripts/scrape-gamechanger-schedule.mjs (a scheduled GitHub
+      // Action) reads to know which team to pull from GameChanger's own
+      // API. Separate from the coach-gated widget-paste form below: a
+      // one-time per-team setup step, not something every coach needs to
+      // touch each season.
+      const boardIdForm = !opts.isBoard ? '' : `
+        <div class="gcAddForm">
+          <div class="sectionLabel">${gcTeamId ? 'GameChanger team id' : 'Connect this team’s live schedule'}</div>
+          ${gcTeamId
+            ? `<div class="helpText">Currently: <code>${escapeHtml(gcTeamId)}</code></div>
+               <div class="detailActions"><button class="btn btnGhost btnSmall" id="gcIdRemoveBtn">Disconnect</button></div>`
+            : `<div class="helpText">Paste this team's <b>web.gc.com</b> page URL (or just its id) to pull in a live schedule, instead of relying only on the pasted widget above. One-time, board-only setup.</div>
+               <input class="drillFreeInput" id="gcIdInput" placeholder="web.gc.com/teams/... or the id itself">
+               <div class="detailActions"><button class="btn btnSmall" id="gcIdSaveBtn">Connect</button></div>`}
+          <div class="errorText" id="gcIdError"></div>
+        </div>`;
+
       containerEl.innerHTML = `
         <div class="helpText">Live schedule and scores from GameChanger &mdash; display-only.
           <button class="btn btnGhost btnTiny" id="gcInfoBtn" style="margin-left:4px;">&#9432;</button>
         </div>
+        ${scheduleSection}
         ${widgetHtml}
         ${mirrorForm}
-        ${addForm}`;
+        ${addForm}
+        ${boardIdForm}`;
       const frameSlot = containerEl.querySelector('#gcFrameSlot');
       if (frameSlot && record && record.snippet) {
         const frame = document.createElement('iframe');
@@ -142,6 +252,25 @@
           if (!text) return;
           await withBusyButton(mirrorBtn, 'Posting...', () => window.Announcements.addItem(teamId, text, opts.addedBy, 'gamechanger'));
           input.value = '';
+        });
+      }
+
+      if (opts.isBoard) {
+        const idSaveBtn = containerEl.querySelector('#gcIdSaveBtn');
+        if (idSaveBtn) idSaveBtn.addEventListener('click', async () => {
+          const val = containerEl.querySelector('#gcIdInput').value;
+          try {
+            await window.GameChanger.saveTeamId(teamId, val);
+            window.GameChanger.render(teamId, containerEl, opts);
+          } catch (e) {
+            containerEl.querySelector('#gcIdError').textContent = e.message;
+          }
+        });
+        const idRemoveBtn = containerEl.querySelector('#gcIdRemoveBtn');
+        if (idRemoveBtn) idRemoveBtn.addEventListener('click', async () => {
+          if (!(await confirmModal('Disconnect this team’s live GameChanger schedule? The pasted widget above (if any) keeps working.'))) return;
+          await window.GameChanger.removeTeamId(teamId);
+          window.GameChanger.render(teamId, containerEl, opts);
         });
       }
     },
