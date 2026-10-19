@@ -238,7 +238,11 @@
   // body keys are full paths, applied atomically -- either every path
   // lands or none do, unlike calling dbPut once per path (see this file's
   // header comment for why that matters).
-  window.dbUpdate = async function (updates) {
+  // explicitToken: same as dbGet/dbPut's own param of the same name -- see
+  // js/cloud-auth.js's firebaseAuthed() header for the one real use
+  // (access-control.js's redeemInvites(), a brand-new Google sign-in's
+  // own first reads/writes, before window.__activeAuthMode is set).
+  window.dbUpdate = async function (updates, explicitToken) {
     if (isMock()) {
       const db = loadMockDb();
       Object.keys(updates).forEach(path => setAtPath(db, path, updates[path]));
@@ -246,7 +250,7 @@
       return updates;
     }
     try {
-      const url = await window.firebaseAuthed(restUrl(''));
+      const url = await window.firebaseAuthed(restUrl(''), explicitToken);
       const res = await fetch(url, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

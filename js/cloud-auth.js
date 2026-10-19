@@ -136,20 +136,30 @@
     if (cached && cached.expiresAt - SAFETY_MARGIN_MS > Date.now()) return cached.idToken;
     if (!inFlight) {
       inFlight = (async () => {
-        try {
-          if (cached && cached.refreshToken) {
-            cached = Object.assign({}, await refreshIdToken(cached.refreshToken), { teamId: cached.teamId, role: cached.role });
+        // Only the "nothing to refresh at all" branches fall back to
+        // signInAnonymously() -- a REFRESH ATTEMPT that fails (network
+        // blip, or a genuinely revoked/invalid refresh token) propagates
+        // instead of being silently swallowed into the same fallback.
+        // That used to downgrade a real gate/Google session to a fresh,
+        // grant-less anonymous identity on any transient failure, with
+        // no error shown and no re-login prompt -- every subsequent
+        // protected read/write then failed permission-denied against
+        // that new anonymous uid for the rest of the session. Letting it
+        // throw here instead routes through dbGet/dbPut/dbUpdate's own
+        // existing catch (backend.js), which already shows a "couldn't
+        // connect" toast and re-throws -- the same visible failure every
+        // other network error in this app already gets, and the next
+        // call just retries the refresh instead of being stuck anonymous.
+        if (cached && cached.refreshToken) {
+          cached = Object.assign({}, await refreshIdToken(cached.refreshToken), { teamId: cached.teamId, role: cached.role });
+        } else {
+          const saved = loadGateSession();
+          if (saved && saved.refreshToken) {
+            cached = Object.assign({}, await refreshIdToken(saved.refreshToken), { teamId: saved.teamId, role: saved.role });
+            saveGateSession(cached.refreshToken, saved.teamId, saved.role);
           } else {
-            const saved = loadGateSession();
-            if (saved && saved.refreshToken) {
-              cached = Object.assign({}, await refreshIdToken(saved.refreshToken), { teamId: saved.teamId, role: saved.role });
-              saveGateSession(cached.refreshToken, saved.teamId, saved.role);
-            } else {
-              cached = await signInAnonymously();
-            }
+            cached = await signInAnonymously();
           }
-        } catch (e) {
-          cached = await signInAnonymously();
         }
         return cached;
       })().finally(() => { inFlight = null; });

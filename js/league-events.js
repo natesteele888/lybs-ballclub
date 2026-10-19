@@ -18,6 +18,7 @@
    ============================================================ */
 (function () {
   let cache = null; // events[]
+  let pending = null; // in-flight ensureLoaded() promise
 
   function fmtWhen(ev) {
     if (!ev.date) return '';
@@ -27,11 +28,26 @@
   }
 
   window.LeagueEvents = {
+    // Caches the in-flight fetch, not just the resolved value -- same
+    // reason as js/roster.js's ensureLoaded(). Three independent call
+    // sites (every team's Home render, the board-only League Events tab,
+    // js/public-view.js) can race this with no guard: whichever dbGet
+    // resolves last clobbers the shared `cache` with its own stale
+    // snapshot, silently reverting an add/edit/delete saved in between
+    // until a full reload.
     async ensureLoaded() {
       if (cache) return cache;
-      const items = await window.dbGet(window.leagueEventsPath());
-      cache = Array.isArray(items) ? items : [];
-      return cache;
+      if (pending) return pending;
+      pending = (async () => {
+        try {
+          const items = await window.dbGet(window.leagueEventsPath());
+          cache = Array.isArray(items) ? items : [];
+          return cache;
+        } finally {
+          pending = null;
+        }
+      })();
+      return pending;
     },
     getItems() {
       return (cache || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));

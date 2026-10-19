@@ -7,6 +7,7 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> items[]
+  const pending = {}; // teamId -> in-flight ensureLoaded() promise
 
   // Public-mirror projection for js/public-view.js -- see js/schedule.js's
   // toPublicGame() and js/backend.js's publicSchedulePath() for why.
@@ -16,11 +17,26 @@
   }
 
   window.Practices = {
+    // Caches the in-flight fetch, not just the resolved value -- same
+    // reason as js/roster.js's ensureLoaded(). index.html calls this from
+    // two independent sites (renderScheduleTab and renderPracticesTab),
+    // so switching between those tabs before the first dbGet resolves
+    // starts a second one, and whichever resolves last clobbers
+    // cache[teamId] with its own stale snapshot, silently reverting a
+    // save made in between until a full reload.
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      const items = await window.dbGet(window.teamPath(teamId, 'practices'));
-      cache[teamId] = Array.isArray(items) ? items : [];
-      return cache[teamId];
+      if (pending[teamId]) return pending[teamId];
+      pending[teamId] = (async () => {
+        try {
+          const items = await window.dbGet(window.teamPath(teamId, 'practices'));
+          cache[teamId] = Array.isArray(items) ? items : [];
+          return cache[teamId];
+        } finally {
+          delete pending[teamId];
+        }
+      })();
+      return pending[teamId];
     },
     getItems(teamId) {
       return (cache[teamId] || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));

@@ -70,6 +70,13 @@
   // scoreless js/league-schedule.js shape, which only ever carries a
   // division NAME) is a different direction than anything there needs.
   const DIVISION_NAME_TO_ID = { Rookies: '33694', Minors: '33695', Majors: '33696' };
+  // Bumped on every render() call -- lets a call that's been superseded
+  // by a newer one (two different games opened in quick succession,
+  // routed through the same #tab-gamePreview container) detect that
+  // before it commits its own DOM write, rather than racing whichever
+  // call's awaits happen to resolve last onto the screen regardless of
+  // which one is actually current.
+  let renderGen = 0;
 
   // Normalizes either raw shape into one common shape:
   // {divisionId, divisionName, date, time, location, final,
@@ -277,6 +284,7 @@
   window.GamePreview = {
     async render(containerEl, source, opts) {
       opts = opts || {};
+      const myGen = ++renderGen;
       containerEl.innerHTML = '<div class="emptyState">Loading…</div>';
       const m = normalize(source);
 
@@ -315,6 +323,11 @@
           .slice(0, 5);
       };
 
+      // A newer render() call (a different game tapped before this one's
+      // awaits above resolved) has already taken over -- committing this
+      // call's content now would show the wrong matchup, with Back wired
+      // to the wrong onBack.
+      if (myGen !== renderGen) return;
       containerEl.innerHTML = `
         <div class="sectionHeader">
           <button class="btn btnGhost btnSmall" id="gpBack">&larr; Back</button>

@@ -50,5 +50,15 @@
       stack.pop();
       history.back();
     },
+    // True once push() has run and neither consumeTop() nor a real Back
+    // press has closed it yet -- lets a navigation path OTHER than that
+    // screen's own Back button (index.html's switchTab(), jumping
+    // straight to a different tab) know there's a stale entry it needs
+    // to clean up first, the same way that screen's own Back button
+    // would, instead of leaving it to hijack a later, unrelated Back
+    // press.
+    hasOpen() {
+      return stack.length > 0;
+    },
   };
 })();

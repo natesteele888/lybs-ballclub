@@ -12,6 +12,7 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> items[]
+  const pending = {}; // teamId -> in-flight ensureLoaded() promise
 
   function fmtWhen(iso) {
     if (!iso) return '';
@@ -25,11 +26,26 @@
   }
 
   window.Announcements = {
+    // Caches the in-flight fetch, not just the resolved value -- same
+    // reason as js/roster.js's ensureLoaded(): js/homepage.js calls this
+    // on every Home render with no re-entrancy guard of its own, so
+    // tapping Home away and back before a slow dbGet resolves starts a
+    // second one, and whichever resolves last clobbers cache[teamId]
+    // with its own stale snapshot -- silently un-posting a note saved
+    // in between until a full reload.
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      const items = await window.dbGet(window.teamPath(teamId, 'announcements'));
-      cache[teamId] = Array.isArray(items) ? items : [];
-      return cache[teamId];
+      if (pending[teamId]) return pending[teamId];
+      pending[teamId] = (async () => {
+        try {
+          const items = await window.dbGet(window.teamPath(teamId, 'announcements'));
+          cache[teamId] = Array.isArray(items) ? items : [];
+          return cache[teamId];
+        } finally {
+          delete pending[teamId];
+        }
+      })();
+      return pending[teamId];
     },
     getItems(teamId) {
       return (cache[teamId] || []).slice().sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));

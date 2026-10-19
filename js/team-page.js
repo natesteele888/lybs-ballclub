@@ -197,7 +197,18 @@
           ${g.played && g.ourScore != null ? `<span class="badge ${g.ourScore > g.theirScore ? 'badgeW' : g.ourScore < g.theirScore ? 'badgeL' : 'badgeT'}">${g.ourScore}-${g.theirScore}</span>` : '<span class="badge badgeTbd">Upcoming</span>'}
         </div>`).join('')}</div>` : '<div class="emptyState">No games on record against this team yet.</div>';
 
-      const division = window.TeamConfig.current().macLeagueDivisionName || null;
+      // Resolved from the OPPONENT's own divisionId (see the comment on
+      // that resolution above), not window.TeamConfig.current() -- that's
+      // our own team's division, which is wrong for an opponent reached
+      // from a league-wide, cross-division source (js/tonight.js's
+      // ticker). That bug showed an opponent's pitch-count eligibility
+      // against the wrong division's rules table -- wrong daily max,
+      // wrong rest-day requirement -- for any opponent not in our own
+      // division. Falls back to null (an honest "no table for this
+      // division" from PitchSmart.computeStatus(), rather than a second
+      // guess) when divisionId isn't one of the divisions this app knows
+      // a name for.
+      const division = (window.TonightGames.DIVISION_NAMES && window.TonightGames.DIVISION_NAMES[divisionId]) || null;
       window.PitchSmart.renderOpponentEligibility(containerEl.querySelector('#tpPitchSlot'), opponentName, division, todayIso());
 
       containerEl.querySelector('#tpBack').addEventListener('click', () => opts.onBack && opts.onBack());

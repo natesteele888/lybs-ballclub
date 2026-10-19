@@ -30,6 +30,22 @@
    Revisit once a second team exists to make either one matter.
    ============================================================ */
 (function () {
+  // RTDB keys can't contain '.', so every dot in the email gets replaced --
+  // this has to stay a true global replace. database.rules.json recomputes
+  // this same key server-side (for the self-redeem invite match at
+  // invites/{emailKey}), but its rules-language .replace() can only
+  // replace ONE occurrence per call -- no regex/global flag, no loop
+  // construct, so "replace all" there is 10 chained .replace() calls
+  // instead (one per potential dot). That only agrees with this true
+  // global replace for emails with at most 10 dots total -- comfortably
+  // covers every realistic address, but isn't literally the same
+  // operation. This was a real, live bug: any "first.last@domain.com"
+  // address (2+ dots total) computed a different key here than the rule
+  // self-matched against, so a real pending invite silently never
+  // resolved for most actual email addresses. If this function's
+  // behavior ever changes, that 10x chain in database.rules.json (5 call
+  // sites: access/$uid, boardMembers/$uid, invites/$emailKey x2,
+  // invitesByTeam/$emailKey) needs to change with it.
   function emailKey(email) {
     return (email || '').trim().toLowerCase().replace(/\./g, ',');
   }
@@ -71,8 +87,17 @@
       // Best-effort cleanup -- the grant above already landed, so a
       // failure here is harmless: a leftover invite just gets silently
       // re-redeemed (a no-op, since the grant already matches) next time.
-      window.dbPut(window.invitePath(key, teamIdOrBoard), null, token).catch(() => {});
-      window.dbPut(window.inviteByTeamPath(teamIdOrBoard, key), null, token).catch(() => {});
+      // One atomic multi-path update, not two independent dbPuts -- a
+      // dropped connection between two separate calls could delete one
+      // mirror but not the other, and team-access.js's pending-invites
+      // panel reads only the invitesByTeam side, so it could keep
+      // showing someone as "not yet accepted" after they'd already
+      // redeemed. Same dbUpdate shape team-access.js's own invite-send/
+      // cancel handlers already use for this exact mirrored pair.
+      window.dbUpdate({
+        [window.invitePath(key, teamIdOrBoard)]: null,
+        [window.inviteByTeamPath(teamIdOrBoard, key)]: null,
+      }, token).catch(() => {});
     }
   }
 
