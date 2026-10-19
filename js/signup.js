@@ -10,8 +10,15 @@
    Stored at teams/{teamId}/signups = [{id, title,
      items: [{id, name, claimedBy: viewerName|null}]}]. Claiming is
    open to anyone signed in, same reasoning as RSVP/Carpool: a parent
-   needs to claim an item without being the coach. Only the coach can
-   create/delete a sheet or add/remove an item from one.
+   needs to claim an item without being the coach. Creating/deleting a
+   sheet or adding/removing an item is meant to be coach-only -- but,
+   same caveat as js/equipment.js, that split is UI-only (opts.canEdit
+   hides those buttons), not database-enforced. Claiming and
+   sheet/item edits all go through save() below, one dbPut of the
+   whole array, so database.rules.json's "signups" rule has to allow
+   any team member through (claiming would break otherwise) and can't
+   separately stop a non-coach from calling window.SignUp.save()
+   directly to add/rename/delete a sheet or item.
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> sheets[]

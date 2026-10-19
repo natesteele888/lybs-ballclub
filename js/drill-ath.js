@@ -67,16 +67,31 @@
   }
 
   const cache = {}; // teamId -> leaderboard[]
+  const pending = {}; // teamId -> in-flight ensureLeaderboard() promise
   const ST = {
     state: 'setup', startTs: 0, elapsedMs: 0, raf: null,
     groups: [], current: 0, sessionBestMs: null, newRecord: false,
   };
 
+  // Caches the in-flight fetch, not just the resolved value -- same
+  // reason as js/roster.js's ensureLoaded(): without this, switching
+  // Coaching sub-tabs away and back before the first dbGet resolves
+  // starts a second one, and whichever resolves last clobbers
+  // cache[teamId] with its own snapshot, silently reverting a leaderboard
+  // post saved in between.
   async function ensureLeaderboard(teamId) {
     if (cache[teamId]) return cache[teamId];
-    const data = await window.dbGet(window.teamPath(teamId, 'drills/athLeaderboard'));
-    cache[teamId] = Array.isArray(data) ? data : [];
-    return cache[teamId];
+    if (pending[teamId]) return pending[teamId];
+    pending[teamId] = (async () => {
+      try {
+        const data = await window.dbGet(window.teamPath(teamId, 'drills/athLeaderboard'));
+        cache[teamId] = Array.isArray(data) ? data : [];
+        return cache[teamId];
+      } finally {
+        delete pending[teamId];
+      }
+    })();
+    return pending[teamId];
   }
   async function saveLeaderboard(teamId) {
     await window.dbPut(window.teamPath(teamId, 'drills/athLeaderboard'), cache[teamId]);
@@ -309,9 +324,16 @@
           refresh();
         });
         containerEl.querySelector('#athPost')?.addEventListener('click', async btnEvt => {
-          const date = new Date().toISOString().slice(0, 10);
-          ST.groups.filter(g => g.bestMs).forEach(g => addResult(leaderboard, g.name, g.bestMs, g.players.map(p => p.name)));
-          await saveLeaderboard(teamId);
+          // withBusyButton disables the button for the duration of the save
+          // (a double-tap before the first save resolves used to re-enter
+          // this handler and post the same group results twice); it resets
+          // disabled/text once done, so the permanent "Posted!" disable
+          // below has to be set as a separate step afterward, same as
+          // js/practice-plan.js's #ppSave does for its own "Saved!" label.
+          await withBusyButton(btnEvt.target, 'Posting...', async () => {
+            ST.groups.filter(g => g.bestMs).forEach(g => addResult(leaderboard, g.name, g.bestMs, g.players.map(p => p.name)));
+            await saveLeaderboard(teamId);
+          });
           btnEvt.target.textContent = 'Posted!';
           btnEvt.target.disabled = true;
         });

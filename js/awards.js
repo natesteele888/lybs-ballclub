@@ -51,6 +51,17 @@
       let expanded = null; // award id whose winner-picker is open
       let addingCustom = false;
 
+      // award.playerName is only ever written at pick-winner time (below),
+      // so a later roster name correction (or the player being removed
+      // from the roster) would otherwise leave this showing the old name
+      // forever. Resolve against the live roster by playerId first, same
+      // as js/depth-chart.js's nameFor(); fall back to the stored snapshot
+      // only once that player's no longer on the roster to resolve to.
+      function winnerName(award) {
+        const p = roster.find(x => x.id === award.playerId);
+        return p ? p.name : award.playerName;
+      }
+
       function awardCardHtml(award) {
         const isOpen = expanded === award.id;
         return `
@@ -59,7 +70,7 @@
               <div>
                 <h3 style="margin:0 0 4px;">${escapeHtml(award.category)}</h3>
                 ${award.playerName
-                  ? `<div class="listRowTitle"><span class="popReveal">&#127942;</span> ${escapeHtml(award.playerName)}</div>`
+                  ? `<div class="listRowTitle"><span class="popReveal">&#127942;</span> ${escapeHtml(winnerName(award))}</div>`
                   : '<div class="emptyState" style="padding:0;">Not yet announced</div>'}
               </div>
               ${opts.canEdit ? `

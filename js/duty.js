@@ -18,6 +18,7 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> {order: [playerId,...]}
+  const pending = {}; // teamId -> in-flight ensureLoaded() promise
 
   function reconcile(teamId, roster) {
     const data = cache[teamId] || (cache[teamId] = { order: [] });
@@ -29,11 +30,24 @@
   }
 
   window.Duty = {
+    // Caches the in-flight fetch, not just the resolved value -- same
+    // reason as js/roster.js's ensureLoaded(): without this, tapping away
+    // from this tab and back before the first dbGet resolves starts a
+    // second one, and whichever resolves last clobbers cache[teamId] with
+    // its own snapshot, silently reverting any reorder saved in between.
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      const data = await window.dbGet(window.teamPath(teamId, 'dutyRotation'));
-      cache[teamId] = { order: Array.isArray(data && data.order) ? data.order : [] };
-      return cache[teamId];
+      if (pending[teamId]) return pending[teamId];
+      pending[teamId] = (async () => {
+        try {
+          const data = await window.dbGet(window.teamPath(teamId, 'dutyRotation'));
+          cache[teamId] = { order: Array.isArray(data && data.order) ? data.order : [] };
+          return cache[teamId];
+        } finally {
+          delete pending[teamId];
+        }
+      })();
+      return pending[teamId];
     },
     async save(teamId) {
       await window.dbPut(window.teamPath(teamId, 'dutyRotation'), cache[teamId]);

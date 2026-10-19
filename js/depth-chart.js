@@ -35,14 +35,28 @@
   };
 
   const cache = {}; // teamId -> {position: [{id,name}]}
+  const pending = {}; // teamId -> in-flight ensureChart() promise
 
+  // Caches the in-flight fetch, not just the resolved value -- same reason
+  // as js/roster.js's ensureLoaded(): without this, tapping away from this
+  // tab and back before the first dbGet resolves starts a second one, and
+  // whichever resolves last clobbers cache[teamId] with its own snapshot --
+  // silently reverting any reorder/add/remove saved in between.
   async function ensureChart(teamId) {
     if (cache[teamId]) return cache[teamId];
-    const data = await window.dbGet(window.teamPath(teamId, 'depthChart'));
-    const chart = {};
-    POSITIONS.forEach(p => { chart[p] = (data && Array.isArray(data[p])) ? data[p] : []; });
-    cache[teamId] = chart;
-    return chart;
+    if (pending[teamId]) return pending[teamId];
+    pending[teamId] = (async () => {
+      try {
+        const data = await window.dbGet(window.teamPath(teamId, 'depthChart'));
+        const chart = {};
+        POSITIONS.forEach(p => { chart[p] = (data && Array.isArray(data[p])) ? data[p] : []; });
+        cache[teamId] = chart;
+        return chart;
+      } finally {
+        delete pending[teamId];
+      }
+    })();
+    return pending[teamId];
   }
   async function saveChart(teamId) {
     await window.dbPut(window.teamPath(teamId, 'depthChart'), cache[teamId]);
@@ -117,6 +131,18 @@
       // unintended player.
       let busy = false;
 
+      // Resolves against the live roster by id rather than trusting the
+      // stored `name` snapshot -- chart entries only ever get a `name` field
+      // at add-time (see the data-add handler below), never refreshed, so a
+      // roster name correction made afterward would otherwise leave every
+      // depth chart display showing the player's old name indefinitely.
+      // Falls back to the stored snapshot only if the player's since been
+      // removed from the roster entirely (nothing live left to resolve to).
+      function nameFor(entry) {
+        const p = roster.find(r => r.id === entry.id);
+        return p ? p.name : (entry.name || 'Unknown');
+      }
+
       function posCardHtml(p) {
         const list = chart[p];
         const starter = list[0];
@@ -125,8 +151,8 @@
         return `
           <button class="depthPosCard ${selected === p ? 'depthPosCardActive' : ''}" style="left:${c.x}%;top:${c.y}%;" data-selectpos="${p}">
             <div class="depthPosLabel">${p}</div>
-            ${starter ? `<div class="depthPosStarter">${escapeHtml(starter.name)}</div>` : '<div class="depthPosEmpty">Open</div>'}
-            ${bench.length ? `<div class="depthPosBench">${bench.map(b => escapeHtml(b.name)).join(' &middot; ')}</div>` : ''}
+            ${starter ? `<div class="depthPosStarter">${escapeHtml(nameFor(starter))}</div>` : '<div class="depthPosEmpty">Open</div>'}
+            ${bench.length ? `<div class="depthPosBench">${bench.map(b => escapeHtml(nameFor(b))).join(' &middot; ')}</div>` : ''}
           </button>`;
       }
 
@@ -144,7 +170,7 @@
               ${list.length ? list.map((pl, i) => `
                 <div class="listRow depthRow" style="cursor:default;">
                   <div class="depthRank">${i === 0 ? '★' : i + 1}</div>
-                  <div class="listRowMain"><div class="listRowTitle">${escapeHtml(pl.name)}</div>${i === 0 ? '<div class="listRowSub">Starter</div>' : ''}</div>
+                  <div class="listRowMain"><div class="listRowTitle">${escapeHtml(nameFor(pl))}</div>${i === 0 ? '<div class="listRowSub">Starter</div>' : ''}</div>
                   <div class="depthRowActions">
                     <button class="btn btnTiny" data-up="${i}" ${i === 0 ? 'disabled' : ''}>&uarr;</button>
                     <button class="btn btnTiny" data-down="${i}" ${i === list.length - 1 ? 'disabled' : ''}>&darr;</button>
@@ -192,7 +218,7 @@
             [list[i - 1], list[i]] = [list[i], list[i - 1]];
             if (i - 1 === 0) {
               const movedFrom = enforceStarterExclusivity(chart, selected);
-              if (movedFrom) banner = { name: list[0].name, from: movedFrom, to: selected };
+              if (movedFrom) banner = { name: nameFor(list[0]), from: movedFrom, to: selected };
             }
             await saveChart(teamId); busy = false; refresh();
           });
@@ -206,7 +232,7 @@
             [list[i + 1], list[i]] = [list[i], list[i + 1]];
             if (i === 0) {
               const movedFrom = enforceStarterExclusivity(chart, selected);
-              if (movedFrom) banner = { name: list[0].name, from: movedFrom, to: selected };
+              if (movedFrom) banner = { name: nameFor(list[0]), from: movedFrom, to: selected };
             }
             await saveChart(teamId); busy = false; refresh();
           });
@@ -220,7 +246,7 @@
             list.splice(Number(btn.dataset.remove), 1);
             if (removedTopSpot && list.length) {
               const movedFrom = enforceStarterExclusivity(chart, selected);
-              if (movedFrom) banner = { name: list[0].name, from: movedFrom, to: selected };
+              if (movedFrom) banner = { name: nameFor(list[0]), from: movedFrom, to: selected };
             }
             await saveChart(teamId); busy = false; refresh();
           });

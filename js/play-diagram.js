@@ -70,6 +70,11 @@
     async render(containerEl, teamId) {
       let diagrams = await ensureDiagrams(teamId);
       let view = { mode: 'list' };
+      // Same pattern as js/lineup-builder.js's/js/practice-plan.js's own
+      // unsavedIds: a diagram created by #pdNew but abandoned via #pdBack
+      // without ever getting a title, note, or marker gets discarded
+      // instead of persisted as an empty "Untitled" diagram.
+      const unsavedIds = new Set();
 
       function listHtml() {
         const rows = diagrams.map(d => `
@@ -126,6 +131,7 @@
           containerEl.querySelector('#pdNew').addEventListener('click', () => {
             const d = { id: uid('pd'), title: '', note: '', markers: [] };
             diagrams.unshift(d);
+            unsavedIds.add(d.id);
             view = { mode: 'edit', id: d.id };
             refresh();
           });
@@ -139,6 +145,19 @@
           containerEl.querySelector('#pdBack').addEventListener('click', async () => {
             d.title = containerEl.querySelector('#pdTitle').value.trim();
             d.note = containerEl.querySelector('#pdNote').value.trim();
+            const hasContent = d.title || d.note || d.markers.length;
+            // Persisted below either way, not just filtered locally -- the
+            // field-tap and data-marker handlers below both call
+            // saveDiagrams() unconditionally, so a diagram that briefly got
+            // a marker added and then removed again before Back was tapped
+            // already has a real (if now-empty) record in the backend from
+            // that round trip; a local-only filter would leave that ghost
+            // both in cache[teamId] and in Firestore.
+            if (unsavedIds.has(d.id) && !hasContent) {
+              diagrams = diagrams.filter(x => x.id !== d.id);
+            } else {
+              unsavedIds.delete(d.id);
+            }
             await saveDiagrams(teamId, diagrams);
             view = { mode: 'list' }; refresh();
           });

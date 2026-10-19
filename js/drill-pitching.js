@@ -32,14 +32,29 @@
   }
 
   const cache = {}; // teamId -> sessions[]
+  const pending = {}; // teamId -> in-flight ensureSessions() promise
 
   const PC = { state: 'setup', pitches: [], pitcher: null, targetCount: 0, pendingPitch: null };
 
+  // Caches the in-flight fetch, not just the resolved value -- same
+  // reason as js/roster.js's ensureLoaded(): without this, switching
+  // Coaching sub-tabs away and back before the first dbGet resolves
+  // starts a second one, and whichever resolves last clobbers
+  // cache[teamId] with its own snapshot, silently reverting a session
+  // saved in between.
   async function ensureSessions(teamId) {
     if (cache[teamId]) return cache[teamId];
-    const data = await window.dbGet(window.teamPath(teamId, 'drills/pitchSessions'));
-    cache[teamId] = Array.isArray(data) ? data : [];
-    return cache[teamId];
+    if (pending[teamId]) return pending[teamId];
+    pending[teamId] = (async () => {
+      try {
+        const data = await window.dbGet(window.teamPath(teamId, 'drills/pitchSessions'));
+        cache[teamId] = Array.isArray(data) ? data : [];
+        return cache[teamId];
+      } finally {
+        delete pending[teamId];
+      }
+    })();
+    return pending[teamId];
   }
   async function saveSessions(teamId) {
     await window.dbPut(window.teamPath(teamId, 'drills/pitchSessions'), cache[teamId]);
@@ -248,18 +263,26 @@
           refresh();
         });
         containerEl.querySelector('#pcSave')?.addEventListener('click', async btnEvt => {
-          const total = PC.pitches.length;
-          const strikes = PC.pitches.filter(p => p.zone !== 'ball').length;
-          const withSpeed = PC.pitches.filter(p => p.speed);
-          let maxStreak = 0, cur = 0;
-          PC.pitches.forEach(p => { if (p.zone !== 'ball') { cur++; maxStreak = Math.max(maxStreak, cur); } else cur = 0; });
-          sessions.unshift({
-            id: Date.now(), date: new Date().toISOString().slice(0, 10), pitcher: PC.pitcher, pitches: PC.pitches,
-            total, strikes, balls: total - strikes, strikeRate: total ? Math.round(strikes / total * 100) : 0,
-            avgSpeed: withSpeed.length ? Math.round(withSpeed.reduce((s, p) => s + p.speed, 0) / withSpeed.length) : null,
-            topSpeed: withSpeed.length ? Math.max(...withSpeed.map(p => p.speed)) : null, maxStreak,
+          // withBusyButton disables the button for the duration of the save
+          // (a double-tap before the first save resolves used to re-enter
+          // this handler and push the same session twice); it resets
+          // disabled/text once done, so the permanent "Saved!" disable
+          // below has to be set as a separate step afterward, same as
+          // js/practice-plan.js's #ppSave does for its own "Saved!" label.
+          await withBusyButton(btnEvt.target, 'Saving...', async () => {
+            const total = PC.pitches.length;
+            const strikes = PC.pitches.filter(p => p.zone !== 'ball').length;
+            const withSpeed = PC.pitches.filter(p => p.speed);
+            let maxStreak = 0, cur = 0;
+            PC.pitches.forEach(p => { if (p.zone !== 'ball') { cur++; maxStreak = Math.max(maxStreak, cur); } else cur = 0; });
+            sessions.unshift({
+              id: Date.now(), date: new Date().toISOString().slice(0, 10), pitcher: PC.pitcher, pitches: PC.pitches,
+              total, strikes, balls: total - strikes, strikeRate: total ? Math.round(strikes / total * 100) : 0,
+              avgSpeed: withSpeed.length ? Math.round(withSpeed.reduce((s, p) => s + p.speed, 0) / withSpeed.length) : null,
+              topSpeed: withSpeed.length ? Math.max(...withSpeed.map(p => p.speed)) : null, maxStreak,
+            });
+            await saveSessions(teamId);
           });
-          await saveSessions(teamId);
           btnEvt.target.textContent = 'Saved!';
           btnEvt.target.disabled = true;
         });

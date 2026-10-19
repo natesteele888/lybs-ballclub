@@ -20,12 +20,25 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> {playerId: [{id,date,text}]}
+  const pending = {}; // teamId -> in-flight ensureLoaded() promise
 
+  // Same pending[teamId] in-flight-promise guard as awards.js/equipment.js/
+  // roster.js etc -- cheap insurance against two near-simultaneous renders
+  // (e.g. opening two different players' edit screens in quick succession)
+  // clobbering each other's cache entry.
   async function ensureLoaded(teamId) {
     if (cache[teamId]) return cache[teamId];
-    const data = await window.dbGet(window.coachPrivatePath(teamId, 'notes'));
-    cache[teamId] = (data && typeof data === 'object' && !Array.isArray(data)) ? data : {};
-    return cache[teamId];
+    if (pending[teamId]) return pending[teamId];
+    pending[teamId] = (async () => {
+      try {
+        const data = await window.dbGet(window.coachPrivatePath(teamId, 'notes'));
+        cache[teamId] = (data && typeof data === 'object' && !Array.isArray(data)) ? data : {};
+        return cache[teamId];
+      } finally {
+        delete pending[teamId];
+      }
+    })();
+    return pending[teamId];
   }
   async function save(teamId) {
     await window.dbPut(window.coachPrivatePath(teamId, 'notes'), cache[teamId]);
