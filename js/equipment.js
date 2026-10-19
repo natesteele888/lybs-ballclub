@@ -12,8 +12,19 @@
    actually has the bag is just as often a parent as a player, and
    this app doesn't track roster-vs-viewer the way Awards does.
    Checking an item in/out is open to any signed-in team member
-   (coach or player gate); only adding/removing an item from the
-   list is coach-only, same split Sign-Up already uses.
+   (coach or player gate); adding/removing an item from the list is
+   meant to be coach-only, same split Sign-Up already uses -- but
+   that split is UI-only (opts.canEdit below hides the buttons), not
+   database-enforced. Every mutation -- check-in/out AND add/remove
+   alike -- goes through save() below, one dbPut of the whole array,
+   so database.rules.json's "equipment" rule can't tell those two
+   kinds of write apart and has to allow any team member through or
+   check-in/out would break too. A non-coach calling
+   window.Equipment.save() directly (devtools, or a raw REST PUT with
+   their own token) can still add/rename/delete items. Real
+   server-side enforcement of the coach-only half would need
+   splitting the item catalog (coach-only) from the live holder state
+   (anyone), not just a tighter top-level rule.
    ============================================================ */
 (function () {
   const PRESETS = ['Equipment Bag', "Catcher's Gear", 'Team Balls', 'Scorebook', 'First Aid Kit', 'Pop-Up Net'];

@@ -118,13 +118,16 @@
   // "First L" placeholder (toFirstLastInitial's own output) instead of a
   // confident-looking but possibly wrong roster link.
   function matchRosterPlayer(rawName, roster) {
-    const display = toFirstLastInitial(rawName);
-    const [first, initial] = display.split(' ');
-    const matches = (roster || []).filter(p => {
-      const parts = (p.name || '').split(' ');
-      return parts[0] && parts[0].toLowerCase() === (first || '').toLowerCase()
-        && (parts[1] || '').toLowerCase() === (initial || '').toLowerCase();
-    });
+    // Both sides go through the exact same canonicalizer before comparing.
+    // Comparing raw p.name with a literal single-space split used to miss
+    // any roster entry that didn't look exactly like "First T" -- a trailing
+    // period ("Jake T."), double space, or different case all failed to
+    // match a GameChanger row that should have. Running the roster name
+    // through toFirstLastInitial() too (it already strips exactly that
+    // kind of punctuation/whitespace noise for the imported side) makes
+    // the comparison robust to all of that for free.
+    const display = toFirstLastInitial(rawName).toLowerCase();
+    const matches = (roster || []).filter(p => toFirstLastInitial(p.name).toLowerCase() === display);
     return matches.length === 1 ? matches[0] : null;
   }
 
@@ -355,21 +358,25 @@
                 const { kind, rows } = parseRows(String(reader.result), roster);
                 if (!rows.length) throw new Error('No player rows found in that file.');
                 data = data || {};
+                const importedAt = new Date().toISOString();
                 // Tracked per kind, not one shared field -- a batting import
                 // and a pitching import merge into the same record (see
                 // this file's own header), so the "last import" label needs
                 // to remember each one's own file/date, not just whichever
-                // was uploaded most recently.
-                if (kind === 'pitching') {
-                  data.pitchingRows = rows;
-                  data.pitchingSource = file.name;
-                  data.pitchingImportedAt = new Date().toISOString();
-                } else {
-                  data.battingRows = rows;
-                  data.battingSource = file.name;
-                  data.battingImportedAt = new Date().toISOString();
-                }
-                await window.dbPut(window.teamPath(teamId, 'importedStats'), data);
+                // was uploaded most recently. Written via dbUpdate (specific
+                // field paths), not a dbPut of the whole record -- dbPut's
+                // in-memory `data` is only as fresh as this tab's last load,
+                // so a batting import saved from one tab and a pitching
+                // import saved from another around the same time would
+                // otherwise have whichever one lands second overwrite the
+                // first one's rows with its own stale copy of them.
+                const fields = kind === 'pitching'
+                  ? { pitchingRows: rows, pitchingSource: file.name, pitchingImportedAt: importedAt }
+                  : { battingRows: rows, battingSource: file.name, battingImportedAt: importedAt };
+                Object.assign(data, fields);
+                const base = window.teamPath(teamId, 'importedStats');
+                await window.dbUpdate(Object.fromEntries(
+                  Object.entries(fields).map(([k, v]) => [`${base}/${k}`, v])));
                 refresh();
               } catch (e) {
                 containerEl.querySelector('#siErr').textContent = 'Could not read that file: ' + e.message;

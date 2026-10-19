@@ -24,12 +24,26 @@
   const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH', 'Bench'];
 
   const cache = {}; // teamId -> lineups[]
+  const pending = {}; // teamId -> in-flight ensureLineups() promise
 
+  // Caches the in-flight fetch, not just the resolved value -- same reason
+  // as js/roster.js's ensureLoaded(): without this, tapping away from this
+  // tab and back before the first dbGet resolves starts a second one, and
+  // whichever resolves last clobbers cache[teamId] with its own snapshot --
+  // silently reverting any edit saved in between.
   async function ensureLineups(teamId) {
     if (cache[teamId]) return cache[teamId];
-    const data = await window.dbGet(window.teamPath(teamId, 'lineups'));
-    cache[teamId] = Array.isArray(data) ? data : [];
-    return cache[teamId];
+    if (pending[teamId]) return pending[teamId];
+    pending[teamId] = (async () => {
+      try {
+        const data = await window.dbGet(window.teamPath(teamId, 'lineups'));
+        cache[teamId] = Array.isArray(data) ? data : [];
+        return cache[teamId];
+      } finally {
+        delete pending[teamId];
+      }
+    })();
+    return pending[teamId];
   }
   // Takes the current array explicitly, rather than reading it back out of
   // cache, because the list gets reassigned (not just mutated) on delete --
@@ -114,9 +128,19 @@
 
       // Plain-text batting order for texting/pasting elsewhere -- only
       // slots with a player actually picked, same "don't show a blank
-      // name" rule the roster/position dropdowns already follow.
+      // name" rule the roster/position dropdowns already follow. Re-resolves
+      // each slot's name against the live roster by playerId rather than
+      // trusting the slot's own stored `name` -- that field is only ever
+      // (re)written when a coach actively re-picks that slot's player, so a
+      // roster name correction made afterward would otherwise still go out
+      // in the shared text, even though the on-screen edit dropdown (which
+      // always renders from the live roster) shows the corrected name.
       function shareText(l) {
-        const lines = l.slots.filter(s => s.name).map((s, i) => `${i + 1}. ${s.name}${s.position ? ' - ' + s.position : ''}`);
+        const lines = l.slots.filter(s => s.name).map((s, i) => {
+          const p = s.playerId && roster.find(r => r.id === s.playerId);
+          const name = p ? p.name : s.name;
+          return `${i + 1}. ${name}${s.position ? ' - ' + s.position : ''}`;
+        });
         const header = [l.name || 'Lineup', l.date || ''].filter(Boolean).join(' -- ');
         return [header, ...lines].join('\n');
       }
@@ -166,7 +190,16 @@
             l.date = containerEl.querySelector('#luDate').value;
             const hasContent = l.name || l.slots.some(s => s.playerId);
             if (unsavedIds.has(l.id) && !hasContent) {
+              // Must update cache[teamId] too, not just this render's local
+              // `lineups` -- #luNew below already spliced the blank draft
+              // into that same cached array by reference (lineups.unshift),
+              // so filtering only the local variable leaves the cache still
+              // holding it. Left uncorrected, the next time this tab opens,
+              // ensureLineups() hands back the stale cache with the ghost
+              // draft still in it, and any save from that render (even an
+              // unrelated edit) persists it to Firestore for real.
               lineups = lineups.filter(x => x.id !== l.id);
+              cache[teamId] = lineups;
             } else {
               unsavedIds.delete(l.id);
               await saveLineups(teamId, lineups);

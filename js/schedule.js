@@ -48,6 +48,7 @@
    ============================================================ */
 (function () {
   const cache = {}; // teamId -> games[]
+  const pending = {}; // teamId -> in-flight ensureLoaded() promise
 
   // Public-mirror projection for js/public-view.js's no-sign-in schedule
   // panel -- see js/backend.js's publicSchedulePath() header comment.
@@ -176,9 +177,28 @@
       });
       const addBtn = slotEl.querySelector('#pcAddBtn');
       if (addBtn) addBtn.addEventListener('click', async () => {
-        const name = slotEl.querySelector('#pcName').value.trim();
+        const typed = slotEl.querySelector('#pcName').value.trim();
         const pitches = Number(slotEl.querySelector('#pcPitches').value);
-        if (!name || !Number.isFinite(pitches)) return;
+        if (!typed || !Number.isFinite(pitches)) return;
+        // Resolve against the roster before storing -- js/pitch-smart.js's
+        // eligibility math groups appearances by this exact name string
+        // (appearancesByPitcher), with no roster/id tie at all. A free-typed
+        // field with no normalization means the SAME real pitcher logged as
+        // "Jake T" on Monday and "Jake T." (or just a typo) on Wednesday
+        // becomes two unrelated histories -- Wednesday's pitches never
+        // count against Monday's rest-day clock, and a pitcher who should
+        // still be resting can silently show eligible. toFirstLastInitial
+        // is the same canonicalizer js/stats-import.js already uses to match
+        // an uploaded GameChanger name against this same roster; reusing it
+        // here keeps one pitcher's name consistent across every game log
+        // rather than inventing a second normalization scheme. Falls back
+        // to the typed text verbatim for a non-roster call-up/guest pitcher,
+        // or when the typed name is ambiguous against the roster (matches
+        // more than one player) -- same "don't guess" rule matchRosterPlayer
+        // itself follows.
+        const canon = s => window.StatsImport.toFirstLastInitial(s).toLowerCase();
+        const matches = (opts.roster || []).filter(p => canon(p.name) === canon(typed));
+        const name = matches.length === 1 ? matches[0].name : typed;
         game.pitchCounts = (game.pitchCounts || []).concat([{ id: uid('pc'), name, pitches }]);
         await window.Schedule.saveGame(teamId, game);
         renderLogged();
@@ -188,12 +208,25 @@
   }
 
   window.Schedule = {
+    // Caches the in-flight fetch, not just the resolved value -- same
+    // reason as js/roster.js's ensureLoaded(): without this, tapping away
+    // from this tab and back before the first dbGet resolves starts a
+    // second one, and whichever resolves last clobbers cache[teamId] with
+    // its own snapshot, silently reverting any edit saved in between.
     async ensureLoaded(teamId) {
       if (cache[teamId]) return cache[teamId];
-      const games = await window.dbGet(window.teamPath(teamId, 'schedule'));
-      cache[teamId] = Array.isArray(games) ? games : [];
-      await window.LeagueTeams.ensureLoaded();
-      return cache[teamId];
+      if (pending[teamId]) return pending[teamId];
+      pending[teamId] = (async () => {
+        try {
+          const games = await window.dbGet(window.teamPath(teamId, 'schedule'));
+          cache[teamId] = Array.isArray(games) ? games : [];
+          await window.LeagueTeams.ensureLoaded();
+          return cache[teamId];
+        } finally {
+          delete pending[teamId];
+        }
+      })();
+      return pending[teamId];
     },
     getGames(teamId) {
       return (cache[teamId] || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));

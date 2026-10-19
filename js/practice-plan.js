@@ -257,6 +257,11 @@
       // never re-fetches or downgrades.
       await window.PracticeCatalog.ensureLoaded(false);
       let view = { mode: 'list' };
+      // Same pattern as js/lineup-builder.js's own unsavedIds: a plan
+      // created by '#ppNew' but abandoned via '#ppBack' without ever being
+      // given a name or a block gets dropped instead of persisted as an
+      // empty "Untitled plan" -- previously #ppBack saved unconditionally.
+      const unsavedIds = new Set();
       let addMode = 'library'; // 'library' | 'custom'
       let addingCustom = false;
       const defaultDivision = (window.TeamConfig.current() || {}).macLeagueDivisionName || null;
@@ -458,6 +463,7 @@
           containerEl.querySelector('#ppNew').addEventListener('click', () => {
             const p = { id: uid('pp'), name: '', date: new Date().toISOString().slice(0, 10), blocks: [] };
             plans.unshift(p);
+            unsavedIds.add(p.id);
             view = { mode: 'edit', id: p.id };
             addingCustom = false;
             refresh();
@@ -496,6 +502,22 @@
           containerEl.querySelector('#ppBack').addEventListener('click', async () => {
             p.name = containerEl.querySelector('#ppName').value.trim();
             p.date = containerEl.querySelector('#ppDate').value;
+            const hasContent = p.name || p.blocks.length;
+            // Must actually persist the removal below, not just filter the
+            // local `plans` reference -- every block-mutation handler above
+            // (data-minutes, data-blockup/down, data-blockremove,
+            // data-adddrill, the custom-add path) calls savePlans()
+            // unconditionally, with no unsavedIds check. So a plan that
+            // briefly had a block added and then removed again before Back
+            // was tapped already has a real (if now-empty) record sitting
+            // in the backend from that round trip -- a local-only filter
+            // here would leave that ghost record both in cache[teamId] and
+            // in Firestore, to reappear next time this tab opens.
+            if (unsavedIds.has(p.id) && !hasContent) {
+              plans = plans.filter(x => x.id !== p.id);
+            } else {
+              unsavedIds.delete(p.id);
+            }
             await savePlans(teamId, plans);
             view = { mode: 'list' }; refresh();
           });
@@ -540,6 +562,17 @@
               if (!drill) return;
               withBusyButton(btn, 'Adding...', async () => {
                 p.blocks.push(blockFromDrill(drill));
+                await savePlans(teamId, plans); refresh();
+              });
+            });
+          });
+          // These 7 chips rendered (addBlockRowHtml above) but were never
+          // wired to anything -- tapping one in Quick/Custom mode silently
+          // did nothing; only "+ Custom..." (free text) worked.
+          containerEl.querySelectorAll('[data-addpreset]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              withBusyButton(btn, 'Adding...', async () => {
+                p.blocks.push({ id: uid('blk'), label: btn.dataset.addpreset, minutes: 10 });
                 await savePlans(teamId, plans); refresh();
               });
             });

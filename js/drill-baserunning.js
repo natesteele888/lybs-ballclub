@@ -81,12 +81,27 @@
   }
 
   const cache = {}; // teamId -> runs[]
+  const pending = {}; // teamId -> in-flight ensureRuns() promise
 
+  // Caches the in-flight fetch, not just the resolved value -- same
+  // reason as js/roster.js's ensureLoaded(): without this, switching
+  // Coaching sub-tabs away and back before the first dbGet resolves
+  // starts a second one, and whichever resolves last clobbers
+  // cache[teamId] with its own snapshot, silently reverting a run saved
+  // in between.
   async function ensureRuns(teamId) {
     if (cache[teamId]) return cache[teamId];
-    const data = await window.dbGet(window.teamPath(teamId, 'drills/baseRunningRuns'));
-    cache[teamId] = Array.isArray(data) ? data : [];
-    return cache[teamId];
+    if (pending[teamId]) return pending[teamId];
+    pending[teamId] = (async () => {
+      try {
+        const data = await window.dbGet(window.teamPath(teamId, 'drills/baseRunningRuns'));
+        cache[teamId] = Array.isArray(data) ? data : [];
+        return cache[teamId];
+      } finally {
+        delete pending[teamId];
+      }
+    })();
+    return pending[teamId];
   }
   async function saveRuns(teamId) {
     await window.dbPut(window.teamPath(teamId, 'drills/baseRunningRuns'), cache[teamId]);
@@ -235,14 +250,20 @@
           refresh();
         });
         containerEl.querySelector('#brRedo')?.addEventListener('click', () => { ST.elapsedMs = 0; ST.state = 'idle'; refresh(); });
-        containerEl.querySelector('#brAccept')?.addEventListener('click', async () => {
-          const prevDrillBest = drillBest(runs, ST.drillType);
-          const runnerLabel = ST.playerName || 'Unassigned';
-          runs.push({ id: uid('br'), playerId: ST.playerId, name: runnerLabel, drillType: ST.drillType, timeMs: ST.elapsedMs, date: new Date().toISOString().slice(0, 10) });
-          await saveRuns(teamId);
-          ST.newRecord = prevDrillBest === null || ST.elapsedMs < prevDrillBest;
-          ST.state = 'accepted'; ST.elapsedMs = 0;
-          if (ST.newRecord) { confetti(); showBanner('New team best!', `${runnerLabel}: ${fmtShort(runs[runs.length - 1].timeMs)}`); }
+        containerEl.querySelector('#brAccept')?.addEventListener('click', async btnEvt => {
+          // withBusyButton disables the button for the duration of the save
+          // -- without it, a double-tap before the first save resolves
+          // re-entered this handler and pushed two near-identical run
+          // records for the same timed attempt, both persisted.
+          await withBusyButton(btnEvt.target, 'Saving...', async () => {
+            const prevDrillBest = drillBest(runs, ST.drillType);
+            const runnerLabel = ST.playerName || 'Unassigned';
+            runs.push({ id: uid('br'), playerId: ST.playerId, name: runnerLabel, drillType: ST.drillType, timeMs: ST.elapsedMs, date: new Date().toISOString().slice(0, 10) });
+            await saveRuns(teamId);
+            ST.newRecord = prevDrillBest === null || ST.elapsedMs < prevDrillBest;
+            ST.state = 'accepted'; ST.elapsedMs = 0;
+            if (ST.newRecord) { confetti(); showBanner('New team best!', `${runnerLabel}: ${fmtShort(runs[runs.length - 1].timeMs)}`); }
+          });
           refresh();
         });
       }

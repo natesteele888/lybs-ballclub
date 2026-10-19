@@ -58,6 +58,11 @@
       const sets = cache[teamId] || [];
       let view = { mode: 'list' };
       let addingSignal = false;
+      // Same pattern as js/lineup-builder.js's/js/practice-plan.js's own
+      // unsavedIds: a set created by #sigNew but abandoned via #sigBack
+      // without ever getting a label, a scope reference, or a signal gets
+      // discarded instead of persisted as an empty "Untitled set".
+      const unsavedIds = new Set();
 
       function setRowHtml(s) {
         return `
@@ -142,6 +147,7 @@
           containerEl.querySelector('#sigNew').addEventListener('click', () => {
             const s = { id: uid('sig'), label: '', scope: 'week', scopeRef: '', signals: [] };
             sets.unshift(s);
+            unsavedIds.add(s.id);
             view = { mode: 'detail', id: s.id };
             addingSignal = false;
             refresh();
@@ -159,6 +165,20 @@
         containerEl.querySelector('#sigBack').addEventListener('click', async () => {
           s.label = containerEl.querySelector('#sigLabel').value.trim();
           s.scopeRef = containerEl.querySelector('#sigScopeRef').value.trim();
+          const hasContent = s.label || s.scopeRef || s.signals.length;
+          // Persisted below either way, not just filtered locally -- the
+          // scope-chip, remove-signal and add-signal handlers all call
+          // save() unconditionally, so a set that briefly had a signal
+          // added and then removed again before Back was tapped already
+          // has a real (if now-empty) record in the backend from that
+          // round trip; a local-only splice would leave that ghost both in
+          // cache[teamId] and in Firestore.
+          if (unsavedIds.has(s.id) && !hasContent) {
+            const i = sets.findIndex(x => x.id === s.id);
+            if (i !== -1) sets.splice(i, 1);
+          } else {
+            unsavedIds.delete(s.id);
+          }
           await save(teamId, sets);
           view = { mode: 'list' }; refresh();
         });
