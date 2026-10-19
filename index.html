@@ -81,6 +81,23 @@
   </div>
 </div>
 
+<!-- ===================== TEAM PICKER ===================== -->
+<!-- Shown only for a Google-signed-in account with more than one real
+     team grant (access/{teamId}/{uid}) -- a parent with kids on more
+     than one team. Both the first time such an account signs in (no
+     remembered choice yet, or one that no longer matches a current
+     grant) and later, reopened from the app shell's own "Switch team"
+     button -- see js/access-control.js's showTeamPicker()/switchTeam(). -->
+<div id="teamPickerScreen" class="hide">
+  <img class="loginCrest" src="assets/images/lybs-icon.png" alt="" style="width:110px;">
+  <div class="loginContent">
+    <h1>Which team?</h1>
+    <p class="sub">This Google account has access to more than one team.</p>
+    <div id="teamPickerList"></div>
+    <button class="btn btnGhost" id="teamPickerCancelBtn" style="margin-top:10px;">Cancel</button>
+  </div>
+</div>
+
 <!-- ===================== PUBLIC VIEW (no sign-in) =====================
      Deliberately a standalone mini-shell, not a restricted pass through
      #appShell's real nav -- that nav assumes a genuine signed-in
@@ -114,6 +131,16 @@
     </div>
     <div class="topBarActions">
       <button class="topBarThemeBtn" title="Switch to light mode" aria-label="Switch to light mode">🌙</button>
+      <!-- Only for a Google-signed-in account with more than one real
+           team grant (a parent with kids on more than one team) --
+           toggled by onIdentityReady below, same MY_TEAMS list that
+           feeds js/calendar-family.js's combined calendar. Reopens the
+           same team picker shown at sign-in (js/access-control.js's
+           switchTeam()) rather than requiring a full sign-out/back-in
+           -- logging out would also sign out of Google entirely (see
+           js/auth.js's logOutOfApp()), which would mean a fresh OAuth
+           round-trip just to look at a different kid's team. -->
+      <button class="topBarShareBtn hide" id="topBarTeamSwitchBtn" title="Switch to a different team">Switch Team</button>
       <!-- Board-only -- toggled by onIdentityReady below, same IS_BOARD
            flag that gates BOARD_ONLY_TABS. A real cross-origin link (to
            lybs-reporting, the league's registration/admin dashboard), not
@@ -379,7 +406,7 @@
 <script defer src="js/game-preview.js?v=188"></script>
 <script defer>
 (function () {
-  let TEAM_ID = null, ROLE = null, SESSION = null, IS_BOARD = false;
+  let TEAM_ID = null, ROLE = null, SESSION = null, IS_BOARD = false, MY_TEAMS = [];
   // A device can hold both a remembered gate-code session (auth.js's
   // tryResume) and a persisted Google session (access-control.js's
   // googleAuth.onReady) at once, and both resolve asynchronously with no
@@ -1121,7 +1148,7 @@
     else if (name === 'signals') { const el = loadingEl('tab-signals'); window.Signals.ensureLoaded(TEAM_ID).then(() => window.Signals.render(el, TEAM_ID)); } // coach-only tab, see COACH_ONLY_TABS
     else if (name === 'situations') { const el = loadingEl('tab-situations'); window.Situations.ensureLoaded(IS_BOARD).then(() => window.Situations.render(el)); } // non-coach tab, see NON_COACH_TABS
     else if (name === 'access') { const el = loadingEl('tab-access'); window.TeamAccess.render(el, TEAM_ID, { inviterName: SESSION.name, isBoard: IS_BOARD }); }
-    else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
+    else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID, MY_TEAMS.length ? MY_TEAMS.map(g => g.teamId) : null);
     else if (name === 'catalog') { const el = loadingEl('tab-catalog'); window.PracticeCatalog.ensureLoaded(IS_BOARD).then(() => window.PracticeCatalog.render(el, { teamId: TEAM_ID, canEdit: canEdit() })); }
     else if (name === 'archive') { const el = loadingEl('tab-archive'); window.Archive.ensureLoaded().then(() => window.Archive.render(el)); }
     else if (name === 'fallSchedule') { const el = loadingEl('tab-fallSchedule'); window.LeagueSchedule.ensureLoaded().then(() => window.LeagueSchedule.render(el)); }
@@ -1134,10 +1161,27 @@
   // off -- otherwise the Schedule tab's first paint after every fresh load
   // races the fetch and every badge falls back to a plain letter until the
   // tab is revisited (cache.find() returns null while cache is still null).
-  window.onIdentityReady = async function (teamId, role, identity, isBoard) {
-    if (window.__identityResolved) return false; // the other auth path already won this race -- see window.__identityResolved's own comment
-    window.__identityResolved = true;
-    TEAM_ID = teamId; ROLE = role; SESSION = identity; IS_BOARD = !!isBoard;
+  // Shared by the initial entry point (onIdentityReady, guarded against
+  // the gate-login/Google-login entry race -- see window.__identityResolved)
+  // and a later, deliberate team switch (topBarTeamSwitchBtn's handler
+  // below, which has no such race to guard against: the app is already
+  // fully entered by the time that button is even visible). allTeams is
+  // every real team grant this signed-in Google account holds ([] for a
+  // gate-code login, or the board-only stopgap, neither of which is a
+  // real multi-team choice) -- feeds js/calendar-family.js's combined
+  // calendar and the Switch Team button's own visibility below.
+  async function applyIdentity(teamId, role, identity, isBoard, allTeams) {
+    TEAM_ID = teamId; ROLE = role; SESSION = identity; IS_BOARD = !!isBoard; MY_TEAMS = allTeams || [];
+    // Defensive: the gate-login path (auth.js) never shows the team
+    // picker, so it doesn't know to hide it -- but it's conceivable for
+    // a device with BOTH a lingering gate session and a multi-team
+    // Google grant to have that gate session resolve and win the entry
+    // race while a human is still looking at the picker shown by the
+    // slower Google/access-control.js path. Hiding it here, on every
+    // successful entry regardless of which path won, closes that gap
+    // cheaply rather than leaving a stale picker floating over an
+    // already-entered app shell.
+    document.getElementById('teamPickerScreen').classList.add('hide');
     const whoamiEl = document.getElementById('whoamiLabel');
     whoamiEl.textContent = `${identity.name} · ${role === 'coach' ? 'Coach' : 'Parent'}${IS_BOARD ? ' · Board' : ''}`;
     whoamiEl.title = 'Tap to log out of this device';
@@ -1148,11 +1192,23 @@
     };
     document.getElementById('topBarShareBtn').classList.toggle('hide', !canEdit());
     document.getElementById('topBarSwitchBtn').classList.toggle('hide', !IS_BOARD);
+    document.getElementById('topBarTeamSwitchBtn').classList.toggle('hide', MY_TEAMS.length < 2);
     document.getElementById('appShell').classList.add('show');
     await window.ClubLogos.ensureLoaded();
     switchTab('home');
+  }
+
+  window.onIdentityReady = async function (teamId, role, identity, isBoard, allTeams) {
+    if (window.__identityResolved) return false; // the other auth path already won this race -- see window.__identityResolved's own comment
+    window.__identityResolved = true;
+    await applyIdentity(teamId, role, identity, isBoard, allTeams);
     return true;
   };
+
+  document.getElementById('topBarTeamSwitchBtn').addEventListener('click', async () => {
+    const picked = await window.AccessControl.switchTeam();
+    if (picked) await applyIdentity(picked.teamId, picked.role, picked.identity, picked.isBoard, picked.allTeams);
+  });
 })();
 </script>
 <!-- auth.js loads last: it calls window.onIdentityReady (defined just above)

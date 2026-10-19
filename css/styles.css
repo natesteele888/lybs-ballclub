@@ -133,7 +133,8 @@
    value here, or light mode would leave dark text and near-invisible
    borders floating on that same dark background. */
 :root[data-theme="light"] #loginScreen,
-:root[data-theme="light"] #identityScreen {
+:root[data-theme="light"] #identityScreen,
+:root[data-theme="light"] #teamPickerScreen {
   --lybs-silver: #B4BBBF;
   --text: #F3F5FA;
   --text2: #9AA3C2;
@@ -173,8 +174,8 @@ a { color: var(--lybs-blue-bright); }
     repeating-linear-gradient(115deg, rgba(var(--overlay-rgb),0.025) 0px, rgba(var(--overlay-rgb),0.025) 1px, transparent 1px, transparent 68px);
 }
 
-/* ---- Login / identity screens ---- */
-#loginScreen, #identityScreen {
+/* ---- Login / identity / team-picker screens ---- */
+#loginScreen, #identityScreen, #teamPickerScreen {
   position: fixed; inset: 0; z-index: 1000;
   display: flex; align-items: center; justify-content: center;
   flex-direction: column;

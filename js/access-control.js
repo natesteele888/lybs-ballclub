@@ -22,12 +22,19 @@
    an invite" message instead of entering the app -- there is no
    self-serve request-access flow.
 
-   Only one team exists today, so enter() just takes grants.teams[0]
-   rather than offering a real picker, and a board-only grant (no
-   team role at all) falls back to a read-only view of that same
-   first team rather than a dead end -- both stopgaps for "only one
-   team exists," not a real multi-team picker or board console.
-   Revisit once a second team exists to make either one matter.
+   A Google account can hold more than one real team grant (a parent
+   with kids on two teams) -- the app itself still only ever shows ONE
+   team at a time (see js/team-config.js's single "active team" model),
+   so a multi-grant account picks which one via showTeamPicker() below,
+   either the first time it signs in (then remembered, so a reload
+   doesn't re-prompt) or later from the app shell's own "Switch team"
+   button (window.AccessControl.switchTeam()). A single-grant account
+   never sees the picker at all -- same immediate entry as before.
+
+   A board-only grant (no team role at all) still falls back to a
+   read-only view of knownTeamIds()[0] rather than a dead end -- that
+   part really is just a stopgap for "no real board console exists
+   yet," unrelated to the multi-team picker above.
    ============================================================ */
 (function () {
   // RTDB keys can't contain '.', so every dot in the email gets replaced --
@@ -118,6 +125,58 @@
     if (el) el.textContent = text;
   }
 
+  // Last team a multi-grant Google account picked, so a reload doesn't
+  // re-prompt every single time -- re-validated against this uid's
+  // CURRENT grants on every use (see enter()/switchTeam() below), so a
+  // stale value (access revoked, or a different Google account on this
+  // same device/browser) just falls back to the picker again, never
+  // silently wrong. Single-grant accounts never write or read this.
+  const TEAM_CHOICE_KEY = 'lybsGoogleTeamChoice';
+  function getRememberedChoice() {
+    try { return localStorage.getItem(TEAM_CHOICE_KEY); } catch (e) { return null; }
+  }
+  function rememberChoice(teamId) {
+    try { localStorage.setItem(TEAM_CHOICE_KEY, teamId); } catch (e) {}
+  }
+
+  // Resolves each grant's team name for the picker below, without
+  // touching the single active "current" team config -- see
+  // js/team-config.js's own comment on peek() vs load() for why load()
+  // itself can't be used here (it would clobber whichever team actually
+  // IS active with the last one resolved).
+  async function namedGrants(teams, token) {
+    const configs = await Promise.all(teams.map(g => window.TeamConfig.peek(g.teamId, token)));
+    return teams.map((g, i) => Object.assign({}, g, {
+      name: (configs[i] && (configs[i].shortName || configs[i].name)) || g.teamId,
+    }));
+  }
+
+  // Resolves to the picked {teamId, role, name}, or null if cancelled.
+  // Used both the first time a multi-grant account signs in (no
+  // remembered choice yet, or one that no longer matches a current
+  // grant) and later, reopened from the app shell's own "Switch team"
+  // button (switchTeam() below).
+  function showTeamPicker(named) {
+    return new Promise(resolve => {
+      const screen = document.getElementById('teamPickerScreen');
+      const list = document.getElementById('teamPickerList');
+      list.innerHTML = named.map((g, i) => `
+        <button class="btn btnGhost" data-pick="${i}" style="width:100%;margin-bottom:8px;text-align:left;">
+          ${escapeHtml(g.name)} <span style="opacity:.7;">&middot; ${g.role === 'coach' ? 'Coach' : 'Parent'}</span>
+        </button>`).join('');
+      let settled = false;
+      const finish = picked => { if (settled) return; settled = true; screen.classList.add('hide'); resolve(picked); };
+      list.querySelectorAll('[data-pick]').forEach(btn => {
+        btn.addEventListener('click', () => finish(named[Number(btn.dataset.pick)]));
+      });
+      const cancelBtn = document.getElementById('teamPickerCancelBtn');
+      cancelBtn.onclick = () => finish(null);
+      document.getElementById('loginScreen').classList.add('hide');
+      document.getElementById('identityScreen').classList.add('hide');
+      screen.classList.remove('hide');
+    });
+  }
+
   async function enter(user, token) {
     // Already past the login screen (a gate-code login, or an earlier
     // call for this same user) -- don't re-enter on top of it. A device
@@ -135,7 +194,23 @@
     if (window.__identityResolved) return; // gate path won while the two awaits above were in flight
 
     if (grants.teams.length) {
-      const grant = grants.teams[0];
+      let grant = grants.teams[0];
+      if (grants.teams.length > 1) {
+        const remembered = getRememberedChoice();
+        const rememberedGrant = remembered && grants.teams.find(g => g.teamId === remembered);
+        if (rememberedGrant) {
+          grant = rememberedGrant;
+        } else {
+          const picked = await showTeamPicker(await namedGrants(grants.teams, token));
+          if (window.__identityResolved) return; // re-check -- the picker itself can take a while
+          // showTeamPicker() hid loginScreen when it opened -- re-show it
+          // so the message below (and a retry) is actually visible, not
+          // left behind a hidden screen.
+          if (!picked) { loginScreen.classList.remove('hide'); showMessage('Sign-in cancelled.'); return; }
+          grant = picked;
+        }
+        rememberChoice(grant.teamId);
+      }
       const identity = window.Identity.setSession(grant.teamId, grant.role, user.name);
       await window.TeamConfig.load(grant.teamId, token);
       if (window.__identityResolved) return; // re-check -- TeamConfig.load() is itself async
@@ -148,18 +223,16 @@
       // lands in the gap between this check and the one just above.
       window.__activeAuthMode = 'google';
       loginScreen.classList.add('hide');
-      window.onIdentityReady(grant.teamId, grant.role, identity, grants.board);
+      window.onIdentityReady(grant.teamId, grant.role, identity, grants.board, grants.teams);
       return;
     }
 
     // Board-only stopgap: no team grant, but this is a real board member.
-    // There's no board console yet (no cross-team dashboard, no "pick a
-    // team" picker), and only one team exists today, so land read-only
-    // ('parent' role -- canEdit() stays false) on the first known team
-    // rather than leaving a board member with nowhere to go at all. This
-    // is explicitly a stopgap for "only one team exists" -- revisit once
-    // a second team or a real board console makes knownTeamIds()[0] not
-    // an obviously-right pick anymore.
+    // There's no board console yet (no cross-team dashboard), so land
+    // read-only ('parent' role -- canEdit() stays false) on the first
+    // known team rather than leaving a board member with nowhere to go
+    // at all -- unrelated to the multi-team picker above (a board grant
+    // with no team role isn't a multi-team choice, just a missing one).
     if (grants.board) {
       const teamId = knownTeamIds()[0];
       if (teamId) {
@@ -168,7 +241,7 @@
         if (window.__identityResolved) return; // re-check -- TeamConfig.load() is itself async
         window.__activeAuthMode = 'google';
         loginScreen.classList.add('hide');
-        window.onIdentityReady(teamId, 'parent', identity, true);
+        window.onIdentityReady(teamId, 'parent', identity, true, []);
         return;
       }
     }
@@ -184,6 +257,33 @@
       const token = await window.googleAuth.getIdToken();
       await redeemInvites(user.uid, user.email, token);
       await enter(user, token);
+    },
+
+    // Re-opens the team picker for the CURRENTLY signed-in Google
+    // account -- the app shell's "Switch team" button (only shown when
+    // index.html's MY_TEAMS has more than one entry, see onIdentityReady
+    // there). Re-resolves grants fresh rather than reusing whatever
+    // index.html was handed at entry, so a grant added/removed since
+    // then (another tab redeeming an invite, a coach revoking access)
+    // is reflected immediately. No window.__identityResolved race to
+    // guard here -- that guard is only for the ambiguous "which sign-in
+    // path wins" moment at initial entry; this is a deliberate action
+    // taken long after entry already finished. Returns the picked
+    // {teamId, role, name}, or null if cancelled or there's nothing to
+    // switch to (not a real multi-grant account after all, e.g. the
+    // board-only stopgap, or every other grant got revoked since entry).
+    async switchTeam() {
+      const user = window.googleAuth.currentUser();
+      if (!user) return null;
+      const token = await window.googleAuth.getIdToken();
+      const grants = await resolveGrants(user.uid, token);
+      if (grants.teams.length < 2) return null;
+      const picked = await showTeamPicker(await namedGrants(grants.teams, token));
+      if (!picked) return null;
+      rememberChoice(picked.teamId);
+      const identity = window.Identity.setSession(picked.teamId, picked.role, user.name);
+      await window.TeamConfig.load(picked.teamId, token);
+      return { teamId: picked.teamId, role: picked.role, identity, isBoard: grants.board, allTeams: grants.teams };
     },
   };
 

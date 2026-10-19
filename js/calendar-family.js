@@ -8,11 +8,17 @@
    change actually needed to make that builder multi-team-ready --
    buildICS()/downloadICS() themselves need no changes at all.
 
-   "My teams" is just every team this device has ever logged into
-   -- window.Identity.listTeamIds(), so there's no separate picker
-   to set up first. A parent who's logged into both Select and
-   (once it exists) Majors B on the same phone sees both here
-   automatically.
+   "My teams" prefers a signed-in Google account's own real grants
+   (index.html's MY_TEAMS, resolved by js/access-control.js from
+   access/{teamId}/{uid}) when there are any -- the actual account-
+   level truth, not tied to this one device. Falls back to
+   window.Identity.listTeamIds() (every team this DEVICE has ever
+   logged into) only for the no-account shared-code path, where
+   there's no real multi-team grant to read at all. The two used to
+   always be the device-local list, which could miss a team the
+   account has real access to but this device has never opened, or
+   include an unrelated team/account that happened to log into this
+   same device at some point.
 
    This is explicitly NOT synced from GameChanger -- GameChanger
    has no feed to sync from (see gamechanger.js's header comment).
@@ -52,8 +58,11 @@
   }
 
   window.FamilyCalendar = {
-    async render(containerEl, activeTeamId) {
-      let ids = window.Identity.listTeamIds();
+    // myTeamIds: index.html's MY_TEAMS for the current signed-in account,
+    // already mapped to bare team ids -- null/omitted for a gate-code
+    // login, the one real case with no account grants to read.
+    async render(containerEl, activeTeamId, myTeamIds) {
+      let ids = (myTeamIds && myTeamIds.length) ? myTeamIds.slice() : window.Identity.listTeamIds();
       if (!ids.includes(activeTeamId)) ids.push(activeTeamId);
       containerEl.innerHTML = '<div class="emptyState">Loading your teams…</div>';
       const groups = await Promise.all(ids.map(loadTeamEvents));
