@@ -592,6 +592,24 @@
   }
 
   function switchTab(name) {
+    // A Team Page/Game Preview screen pushes a NavHistory entry so Back
+    // closes it instead of leaving the app (see js/nav-history.js) -- but
+    // that entry is only ever consumed by that screen's OWN Back button
+    // or a real Back press. Jumping straight to a different tab via a
+    // category pill/sub-tab bar (bypassing that screen's Back button
+    // entirely) used to leave it dangling: the next real Back press,
+    // whenever it came, popped that orphaned entry instead and
+    // teleported back to wherever Team Page/Game Preview had been opened
+    // from -- silently hijacking a Back press meant for wherever the
+    // user had already navigated to since. Discard it here instead, the
+    // same way its own Back button would -- except when switchTab is
+    // itself being called with 'team'/'gamePreview' (the [data-team-nav]/
+    // [data-game-nav] handlers below, which call switchTab() right
+    // before their own NavHistory.push()), since that's the entry about
+    // to be pushed, not a stale one to clean up.
+    if (window.NavHistory.hasOpen() && name !== 'team' && name !== 'gamePreview') {
+      window.NavHistory.consumeTop();
+    }
     renderNav(name);
     document.querySelectorAll('.tabPanel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
     if (!NOT_REAL_NAV_TABS.has(name)) lastNavTab = name;
@@ -1089,7 +1107,7 @@
     else if (name === 'gamechanger') window.GameChanger.render(TEAM_ID, document.getElementById('tab-gamechanger'), { canEdit: canEdit(), addedBy: SESSION.name, isBoard: IS_BOARD });
     else if (name === 'standings') window.Standings.render(document.getElementById('tab-standings'), window.TeamConfig.current().macLeagueDivisionId);
     else if (name === 'seeding') window.Standings.renderSeeding(document.getElementById('tab-seeding'), window.TeamConfig.current().macLeagueDivisionId);
-    else if (name === 'stats') { const el = loadingEl('tab-stats'); window.StatsImport.render(el, TEAM_ID, { canEdit: canEdit() }); }
+    else if (name === 'stats') { const el = loadingEl('tab-stats'); window.StatsImport.render(el, TEAM_ID, { canEdit: canEdit(), switchTool: id => switchTab(id) }); }
     else if (name === 'pitching') renderPitchingTab();
     else if (name === 'rules') { const el = loadingEl('tab-rules'); window.Rules.ensureLoaded().then(() => window.Rules.render(el)); }
     else if (name === 'league') { const el = loadingEl('tab-league'); window.LeagueInfo.ensureLoaded().then(() => window.LeagueInfo.render(el)); }
@@ -1102,7 +1120,7 @@
     else if (name === 'equipment') { const el = loadingEl('tab-equipment'); window.Equipment.ensureLoaded(TEAM_ID).then(() => window.Equipment.render(el, TEAM_ID, { canEdit: canEdit(), viewerName: SESSION.name })); }
     else if (name === 'signals') { const el = loadingEl('tab-signals'); window.Signals.ensureLoaded(TEAM_ID).then(() => window.Signals.render(el, TEAM_ID)); } // coach-only tab, see COACH_ONLY_TABS
     else if (name === 'situations') { const el = loadingEl('tab-situations'); window.Situations.ensureLoaded(IS_BOARD).then(() => window.Situations.render(el)); } // non-coach tab, see NON_COACH_TABS
-    else if (name === 'access') { const el = loadingEl('tab-access'); window.TeamAccess.render(el, TEAM_ID, { inviterName: SESSION.name }); }
+    else if (name === 'access') { const el = loadingEl('tab-access'); window.TeamAccess.render(el, TEAM_ID, { inviterName: SESSION.name, isBoard: IS_BOARD }); }
     else if (name === 'calendar') window.FamilyCalendar.render(document.getElementById('tab-calendar'), TEAM_ID);
     else if (name === 'catalog') { const el = loadingEl('tab-catalog'); window.PracticeCatalog.ensureLoaded(IS_BOARD).then(() => window.PracticeCatalog.render(el, { teamId: TEAM_ID, canEdit: canEdit() })); }
     else if (name === 'archive') { const el = loadingEl('tab-archive'); window.Archive.ensureLoaded().then(() => window.Archive.render(el)); }

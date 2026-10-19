@@ -159,6 +159,13 @@
   }
 
   window.TonightGames = {
+    // The same divisionId -> name table availableDivisions() below uses --
+    // exposed so a caller that needs THE OPPONENT's real division name
+    // (not necessarily our own team's, e.g. js/team-page.js's pitch-count
+    // eligibility section) can resolve it without keeping its own second
+    // copy of this mapping that could drift out of sync with this one.
+    DIVISION_NAMES,
+
     async ensureLoaded() {
       if (cache) return cache;
       cache = await window.dbGet(window.sharedPath('macLeagueStandings'));

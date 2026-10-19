@@ -68,7 +68,16 @@
   // event: {uid, title, date:'YYYY-MM-DD', time:'6:00 PM'|'', durationMinutes, location, description}
   function buildEvent(ev) {
     const durationMin = ev.durationMinutes || 120;
-    const [y, mo, d] = ev.date.split('-').map(Number);
+    const [y, mo, d] = (ev.date || '').split('-').map(Number);
+    // A game/practice with no date (neither field is required on its own
+    // edit form -- see js/schedule.js's/js/practices.js's date inputs)
+    // used to still reach here and emit a syntactically broken VEVENT --
+    // DTSTART/DTEND built from NaN/undefined pieces ("0undefinedundefined",
+    // "NaNNaNNaN") -- corrupting the whole downloaded .ics file around it,
+    // not just that one event. Skip it instead, same "don't export a
+    // half-complete record" rule js/calendar-view.js's own date filter
+    // already follows for its on-screen list.
+    if (!Number.isFinite(y) || !Number.isFinite(mo) || !Number.isFinite(d)) return [];
     const time = parseTime(ev.time);
     const lines = [];
     lines.push('BEGIN:VEVENT');

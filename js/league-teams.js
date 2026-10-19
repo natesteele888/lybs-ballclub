@@ -98,15 +98,25 @@
     if (!needle.size) return null;
     let best = null, bestScore = 0, tie = false;
     for (const row of pool) {
+      // Distinct needle tokens this row covers, not a raw count over every
+      // occurrence in row.tokens -- tokenize() does no de-duplication, so
+      // a row that happens to repeat one shared word could otherwise reach
+      // needle.size purely by repetition, without ever matching the
+      // needle's OTHER distinct tokens at all. Real gap this closes:
+      // searching "Bolton Green" (needle = {bolton, green}, size 2)
+      // against a row tokenized to ["bolton","bolton"] used to score 2 by
+      // counting that one word twice, passing the coverage check below
+      // with "green" never matched. Iterating needle (already a Set)
+      // against a Set of this row's tokens makes that impossible --
+      // score can only ever reach as high as needle.size, never past it.
+      const rowTokens = new Set(row.tokens);
       let score = 0;
-      for (const t of row.tokens) if (needle.has(t)) score++;
+      for (const t of needle) if (rowTokens.has(t)) score++;
       if (score > bestScore) { best = row; bestScore = score; tie = false; }
       else if (score === bestScore && score > 0) tie = true;
     }
     // bestScore can only reach needle.size by covering every one of the
-    // needle's own tokens at least once (duplicate tokens in a row can
-    // push score past needle.size, never short of it) -- >= here, not
-    // ===, so that over-count still counts as full coverage.
+    // needle's own distinct tokens at least once.
     if (!best || bestScore < needle.size || tie) return null;
     return best;
   }

@@ -53,7 +53,7 @@
         ".read": "auth != null && (root.child('boardMembers').child(auth.uid).val() == true || root.child('access').child($teamId).child(auth.uid).val() == 'coach' || auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal'))",
         "$uid": {
           ".read": "auth != null && (auth.uid == $uid || root.child('boardMembers').child(auth.uid).val() == true || root.child('access').child($teamId).child(auth.uid).val() == 'coach' || auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal'))",
-          ".write": "auth != null && ((auth.uid == $uid && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',')).child($teamId).child('role').val() == newData.val()) || (!newData.exists() && (root.child('boardMembers').child(auth.uid).val() == true || (data.val() == 'parent' && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')))))",
+          ".write": "auth != null && ((auth.uid == $uid && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child($teamId).child('role').val() == newData.val()) || (!newData.exists() && (root.child('boardMembers').child(auth.uid).val() == true || (data.val() == 'parent' && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')))))",
           ".validate": "newData.isString() && (newData.val() == 'coach' || newData.val() == 'parent')"
         }
       }
@@ -63,7 +63,7 @@
       ".read": "auth != null && root.child('boardMembers').child(auth.uid).val() == true",
       "$uid": {
         ".read": "auth != null && (auth.uid == $uid || root.child('boardMembers').child(auth.uid).val() == true)",
-        ".write": "auth != null && ((auth.uid == $uid && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',')).child('board').child('role').val() == 'board') || (!newData.exists() && root.child('boardMembers').child(auth.uid).val() == true))",
+        ".write": "auth != null && ((auth.uid == $uid && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('board').child('role').val() == 'board') || (!newData.exists() && root.child('boardMembers').child(auth.uid).val() == true))",
         ".validate": "newData.isBoolean()"
       }
     },
@@ -78,8 +78,8 @@
     "invites": {
       "$emailKey": {
         "$teamIdOrBoard": {
-          ".read": "auth != null && (root.child('boardMembers').child(auth.uid).val() == true || (auth.token.email_verified == true && $emailKey == auth.token.email.toLowerCase().replace('.', ',')) || auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')",
-          ".write": "auth != null && ((newData.exists() && root.child('boardMembers').child(auth.uid).val() == true) || (newData.exists() && newData.child('role').val() == 'parent' && (auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')) || (!newData.exists() && (root.child('boardMembers').child(auth.uid).val() == true || (auth.token.email_verified == true && $emailKey == auth.token.email.toLowerCase().replace('.', ',')) || (data.child('role').val() == 'parent' && (auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')))))"
+          ".read": "auth != null && (root.child('boardMembers').child(auth.uid).val() == true || (auth.token.email_verified == true && $emailKey == auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')) || auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')",
+          ".write": "auth != null && ((newData.exists() && root.child('boardMembers').child(auth.uid).val() == true) || (newData.exists() && newData.child('role').val() == 'parent' && (auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')) || (!newData.exists() && (root.child('boardMembers').child(auth.uid).val() == true || (auth.token.email_verified == true && $emailKey == auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')) || (data.child('role').val() == 'parent' && (auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')))))"
         }
       }
     },
@@ -88,7 +88,7 @@
       "$teamIdOrBoard": {
         ".read": "auth != null && (root.child('boardMembers').child(auth.uid).val() == true || auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')",
         "$emailKey": {
-          ".write": "auth != null && ((newData.exists() && root.child('boardMembers').child(auth.uid).val() == true) || (newData.exists() && newData.child('role').val() == 'parent' && (auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')) || (!newData.exists() && (root.child('boardMembers').child(auth.uid).val() == true || (auth.token.email_verified == true && $emailKey == auth.token.email.toLowerCase().replace('.', ',')) || (data.child('role').val() == 'parent' && (auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')))))"
+          ".write": "auth != null && ((newData.exists() && root.child('boardMembers').child(auth.uid).val() == true) || (newData.exists() && newData.child('role').val() == 'parent' && (auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')) || (!newData.exists() && (root.child('boardMembers').child(auth.uid).val() == true || (auth.token.email_verified == true && $emailKey == auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')) || (data.child('role').val() == 'parent' && (auth.token.email == ('coach-' + $teamIdOrBoard + '-gate@lybsballclub.internal') || root.child('access').child($teamIdOrBoard).child(auth.uid).val() == 'coach')))))"
         }
       }
     },

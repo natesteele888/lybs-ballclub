@@ -18,6 +18,34 @@
   let current = { name: 'LYBS Ballclub', shortName: 'Team', sport: 'Baseball', colors: { primary: '#0a2f5c', secondary: '#c8102e' } };
 
   window.TeamConfig = {
+    // Side-effect-free: same fetch + TEAM_REGISTRY fallback merge load()
+    // below uses, but never touches `current`, the CSS vars, or any
+    // [data-team-name]/[data-team-short] element. load()/current() are a
+    // single-active-team model -- exactly one team's config is ever "the"
+    // config at a time. A caller that needs ANOTHER team's name/colors
+    // without changing which team is active (js/calendar-family.js,
+    // building a combined calendar across every team a device has
+    // logged into) needs this instead: calling load() once per team,
+    // concurrently (Promise.all), clobbers the real active team's own
+    // branding/colors/division with whichever team's fetch happens to
+    // resolve last -- wrong CSS colors, wrong team name in the UI, wrong
+    // macLeagueDivisionId on the Standings tab, for the rest of the
+    // session, until a full reload. Zero visible impact with only one
+    // team today, but a real, demonstrable bug the moment a second one
+    // exists.
+    async peek(teamId, explicitToken) {
+      const fallback = (window.TEAM_REGISTRY && window.TEAM_REGISTRY.teams[teamId]) || {};
+      try {
+        const saved = await window.dbGet(window.teamPath(teamId, 'config'), explicitToken);
+        return Object.assign({}, fallback, saved || {}, {
+          teamId,
+          colors: Object.assign({}, fallback.colors, saved && saved.colors),
+        });
+      } catch (e) {
+        console.error('Could not load team config for', teamId, e);
+        return Object.assign({}, fallback, { teamId });
+      }
+    },
     async load(teamId, explicitToken) {
       const fallback = (window.TEAM_REGISTRY && window.TEAM_REGISTRY.teams[teamId]) || current;
       try {

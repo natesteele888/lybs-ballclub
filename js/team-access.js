@@ -19,6 +19,10 @@
    person's first Google sign-in.
    ============================================================ */
 (function () {
+  // Same emailKey() as js/access-control.js, kept in sync by hand -- see
+  // that file's own comment on this function for why it must stay a true
+  // global replace, and why database.rules.json's matching 10x-chained
+  // .replace() only agrees with it for emails with at most 10 dots total.
   function emailKey(email) {
     return (email || '').trim().toLowerCase().replace(/\./g, ',');
   }
@@ -48,6 +52,14 @@
       let pending = await loadPendingInvites(teamId);
       let inviting = false;
 
+      // database.rules.json only lets a non-board coach remove a 'parent'
+      // grant/invite -- removing another coach's requires a board member.
+      // The revoke/cancel button below only renders when the action would
+      // actually be allowed, instead of rendering it for every row and
+      // letting the write fail with a generic "couldn't save" toast that
+      // doesn't explain why.
+      function canRemove(role) { return opts.isBoard || role === 'parent'; }
+
       function personRowHtml(person) {
         return `
           <div class="listRow" style="cursor:default;">
@@ -55,7 +67,7 @@
               <div class="listRowTitle">${escapeHtml(person.name)}</div>
               <div class="listRowSub">${escapeHtml(person.email || '')} &middot; ${person.role === 'coach' ? 'Coach' : 'Parent'}</div>
             </div>
-            <button class="btn btnTiny" data-revoke="${escapeHtml(person.uid)}" title="Remove access">&times;</button>
+            ${canRemove(person.role) ? `<button class="btn btnTiny" data-revoke="${escapeHtml(person.uid)}" title="Remove access">&times;</button>` : ''}
           </div>`;
       }
       function pendingRowHtml(invite) {
@@ -65,7 +77,7 @@
               <div class="listRowTitle">${escapeHtml(invite.email || 'Pending')}</div>
               <div class="listRowSub">Invited as ${invite.role === 'coach' ? 'Coach' : 'Parent'}${invite.invitedByName ? ' by ' + escapeHtml(invite.invitedByName) : ''} &middot; not yet accepted</div>
             </div>
-            <button class="btn btnTiny" data-uninvite="${escapeHtml(invite.emailKey)}" title="Cancel invite">&times;</button>
+            ${canRemove(invite.role) ? `<button class="btn btnTiny" data-uninvite="${escapeHtml(invite.emailKey)}" title="Cancel invite">&times;</button>` : ''}
           </div>`;
       }
 

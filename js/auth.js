@@ -8,6 +8,11 @@
 (function () {
   const STORAGE_KEY = 'lybsAuthedTeam'; // remembers {teamId, role} across reloads
   const LOCKOUT_KEY = 'lybsLoginLockout';
+  // Persisted (not just the in-memory `attempts` counter below) so reloading
+  // the page can't reset progress toward MAX_ATTEMPTS -- without this, the
+  // 5-attempt lockout only ever triggered within a single page load, and
+  // was trivially bypassed by refreshing after every 4 wrong guesses.
+  const ATTEMPTS_KEY = 'lybsLoginAttempts';
   const MAX_ATTEMPTS = 5;
   const LOCKOUT_MS = 30000;
 
@@ -31,7 +36,15 @@
   const identityBtnEl = document.getElementById('identityBtn');
   const identityErrorEl = document.getElementById('identityError');
 
-  let attempts = 0;
+  function getAttempts() {
+    try { return parseInt(localStorage.getItem(ATTEMPTS_KEY) || '0', 10) || 0; }
+    catch (e) { return 0; }
+  }
+  function setAttempts(n) {
+    try { localStorage.setItem(ATTEMPTS_KEY, String(n)); } catch (e) {}
+  }
+
+  let attempts = getAttempts(); // seeded from any attempts already made before this page load
   let lockTimer = null;
   let pendingTeamRole = null; // {teamId, role} between code accept and identity submit
 
@@ -51,7 +64,7 @@
   function clearLock() {
     inputEl.disabled = false; btnEl.disabled = false;
     errorEl.textContent = ''; attempts = 0;
-    try { localStorage.removeItem(LOCKOUT_KEY); } catch (e) {}
+    try { localStorage.removeItem(LOCKOUT_KEY); localStorage.removeItem(ATTEMPTS_KEY); } catch (e) {}
   }
   (function checkExistingLock() {
     const left = getLockRemaining();
@@ -106,10 +119,12 @@
         return;
       }
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(match)); } catch (e) {}
+      attempts = 0; setAttempts(0); // a correct code clears any prior failed-guess count
       inputEl.value = '';
       await enterApp(match.teamId, match.role);
     } else {
       attempts++;
+      setAttempts(attempts);
       inputEl.value = '';
       if (attempts >= MAX_ATTEMPTS) {
         const until = Date.now() + LOCKOUT_MS;

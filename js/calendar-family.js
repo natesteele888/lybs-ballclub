@@ -21,15 +21,29 @@
    ============================================================ */
 (function () {
   async function loadTeamEvents(teamId) {
-    const config = (await window.TeamConfig.load(teamId)) || { shortName: teamId };
+    // TeamConfig.peek(), not .load() -- load() overwrites the single
+    // module-wide "active team" config (plus CSS vars and DOM text) as a
+    // side effect. Calling it once per team here, concurrently
+    // (Promise.all below), would clobber the real active team's own
+    // branding with whichever team's fetch happened to resolve last --
+    // this only wants to read another team's name for the event title,
+    // never to change which team the rest of the app considers active.
+    const config = (await window.TeamConfig.peek(teamId)) || { shortName: teamId };
     const games = await window.Schedule.ensureLoaded(teamId);
     const practices = await window.Practices.ensureLoaded(teamId);
-    const gameEvents = games.map(g => ({
+    // Same date filter js/calendar-view.js's own itemsByDate() already
+    // applies -- neither date field is required on its own edit form, and
+    // an undated game/practice can't go on a calendar. Without this, the
+    // team-checklist's own "(N events)" count above the download button
+    // counted it, but js/calendar-export.js's buildEvent() silently skips
+    // anything with no valid date -- a count that didn't match what the
+    // downloaded file actually contained.
+    const gameEvents = games.filter(g => g.date).map(g => ({
       uid: g.id,
       title: `${config.shortName} ${g.homeAway === 'Away' ? '@' : 'vs'} ${g.opponent || 'TBD'}`,
       date: g.date, time: g.gameTime, location: g.location, description: g.notes,
     }));
-    const practiceEvents = practices.map(p => ({
+    const practiceEvents = practices.filter(p => p.date).map(p => ({
       uid: p.id,
       title: `${config.shortName} ${TYPE_LABEL[p.type] || 'Practice'}`,
       date: p.date, time: p.time, location: p.location, description: p.notes,
