@@ -195,6 +195,23 @@ a { color: var(--lybs-blue-bright); }
   filter: drop-shadow(0 8px 28px rgba(46,82,232,0.55));
   animation: crestIn 0.7s cubic-bezier(.2,.8,.2,1) both;
 }
+/* The open (first) screen only -- identityScreen/teamPickerScreen keep the
+   plain shadow above, sized smaller as a secondary-screen accent. This is
+   the one people see first, so it gets the full glow treatment: same
+   recipe as the dashboard app's sign-in screen (mix-blend-mode:screen lets
+   the icon's black outline melt into the dark background instead of
+   reading as a hard edge, and three stacked drop-shadows at different
+   blur radii is what makes the glow read as soft light instead of a flat
+   shadow) -- just re-colored to this app's own blue instead of copying
+   the dashboard's hex. */
+.loginCrestOpen {
+  width: 170px;
+  mix-blend-mode: screen;
+  filter:
+    drop-shadow(0 0 32px rgba(46,82,232,0.8))
+    drop-shadow(0 0 64px rgba(46,82,232,0.4))
+    drop-shadow(0 2px 12px rgba(46,82,232,0.6));
+}
 @keyframes crestIn {
   from { opacity: 0; transform: translateY(-14px) scale(0.92); }
   to { opacity: 1; transform: translateY(0) scale(1); }
