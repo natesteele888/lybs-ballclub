@@ -34,7 +34,7 @@
   --text2: #9AA3C2;
   --text3: #6B7394;
   --glow: rgba(46, 82, 232, 0.45);
-  --gold: #e8edf5;
+  --gold: #F0C84B;
   /* Status-color family (eligible/win/positive, rest/loss/negative,
      championship-orange) -- dark-mode values pulled straight off a dark
      navy card, retuned for light mode below since none of them were
@@ -96,18 +96,14 @@
   --glow: rgba(46, 82, 232, 0.25);
   --overlay-rgb: 20, 24, 48;
   --sunken-rgb: 228, 231, 239;
-  /* The dark-mode accent (#e8edf5, a near-white neutral -- no more mustard
-     gold, same change made across the LYBS apps) is ~1.05:1 against this
-     theme's near-white surfaces -- unreadable as text, same problem the old
-     gold had (~1.6:1). This darker neutral gray keeps the same hue family
-     (desaturated, brand-steel-adjacent, not yellow) at ~5.6:1 -- reuses the
-     exact value --lybs-silver is overridden to just below, tuned for the
-     same light-card-contrast problem. Used only for actual text/border
-     accents (the dark, fixed-background .athBanner popup stays pinned to
-     the brighter dark-mode value -- see its own rule -- since it keeps an
-     always-dark background in either theme; .pcPocketMed keeps its own
-     gold literal on purpose -- a heat-tier color, not a brand accent). */
-  --gold: #5A6180;
+  /* The dark-mode gold (#F0C84B) is ~1.6:1 against this theme's near-white
+     surfaces -- nowhere near readable as text. This darker amber keeps the
+     same hue family at ~5:1, used only for actual text/border accents (the
+     dark, fixed-background .athBanner popup and .pcPocketMed/.pcNetFrame
+     mini-diagram stay pinned to the brighter dark-mode gold -- see their
+     own rules -- since both keep an always-dark background in either
+     theme). */
+  --gold: #8A6914;
   /* --lybs-silver is a brand constant, not one of the semantic tokens
      above -- but 13 call sites use it directly as the color for a small
      uppercase caption (section labels, form field labels, etc.), and its
@@ -1039,7 +1035,7 @@ a { color: var(--lybs-blue-bright); }
   font-size: 13px; font-weight: 600; cursor: pointer; min-height: 40px;
 }
 .drillChip:disabled { opacity: 0.35; cursor: default; }
-.drillChipOn { background: rgba(232,237,245,0.18); border-color: var(--gold); color: var(--gold); }
+.drillChipOn { background: rgba(245,166,35,0.18); border-color: var(--gold); color: var(--gold); }
 .drillAddRow { display: flex; gap: 8px; margin-top: 10px; }
 .drillFreeInput {
   flex: 1; padding: 11px 13px; border-radius: 9px; border: 1px solid var(--card-border);
@@ -1074,16 +1070,16 @@ a { color: var(--lybs-blue-bright); }
 .athBanner {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.4); z-index: 9999;
   text-align: center; background: rgba(5,7,28,0.92); padding: 24px 36px; border-radius: 18px;
-  border: 2px solid #e8edf5; box-shadow: 0 0 50px rgba(232,237,245,0.4); pointer-events: none;
+  border: 2px solid #F0C84B; box-shadow: 0 0 50px rgba(245,166,35,0.4); pointer-events: none;
   transition: transform 0.25s cubic-bezier(.175,.885,.32,1.275), opacity 0.3s; opacity: 0;
 }
 .athBanner.show { transform: translate(-50%,-50%) scale(1); opacity: 1; }
-.athBannerTitle { font-family: var(--font-display); font-size: clamp(26px,7vw,44px); color: #e8edf5; line-height: 1; }
+.athBannerTitle { font-family: var(--font-display); font-size: clamp(26px,7vw,44px); color: #F0C84B; line-height: 1; }
 .athBannerSub { font-size: 13px; color: #fff; margin-top: 6px; font-weight: 700; }
 .athPillRow { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
 .athPill { padding: 5px 11px; border-radius: 99px; font-size: 11px; font-weight: 700; }
 .athPillDone { background: rgba(16,185,129,0.12); color: var(--status-green); border: 1px solid rgba(16,185,129,0.3); }
-.athPillCur { background: rgba(232,237,245,0.15); color: var(--gold); border: 1px solid rgba(232,237,245,0.35); }
+.athPillCur { background: rgba(245,166,35,0.15); color: var(--gold); border: 1px solid rgba(245,166,35,0.35); }
 .athPillWait { background: rgba(var(--overlay-rgb),0.04); color: var(--text3); border: 1px solid var(--card-border); }
 .athTimerCard {
   text-align: center; padding: 22px 14px 18px; background: var(--card); border: 1px solid var(--card-border);
@@ -1150,7 +1146,7 @@ a { color: var(--lybs-blue-bright); }
 .siCardName { font-family: var(--font-label); font-weight: 700; font-size: 13px; color: var(--text); }
 .pcPitcherRank {
   display: inline-block; font-family: var(--font-label); font-weight: 700; font-size: 11px;
-  color: var(--gold); background: rgba(232,237,245,0.15); border-radius: 5px; padding: 1px 5px; margin-right: 2px;
+  color: var(--gold); background: rgba(245,166,35,0.15); border-radius: 5px; padding: 1px 5px; margin-right: 2px;
 }
 
 .coachingToggle { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; }
@@ -1160,7 +1156,7 @@ a { color: var(--lybs-blue-bright); }
 /* ---- Depth chart ---- */
 .depthRow { gap: 10px; }
 .depthRank {
-  width: 26px; height: 26px; border-radius: 7px; background: rgba(232,237,245,0.15); color: var(--gold);
+  width: 26px; height: 26px; border-radius: 7px; background: rgba(245,166,35,0.15); color: var(--gold);
   font-family: var(--font-display); font-size: 15px; display: flex; align-items: center; justify-content: center;
   flex: 0 0 auto;
 }
@@ -1230,7 +1226,7 @@ a { color: var(--lybs-blue-bright); }
 .ssPostCard { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; }
 .ssPostWho { display: flex; align-items: center; gap: 10px; }
 .ssPostAvatar {
-  width: 36px; height: 36px; border-radius: 50%; background: #e8edf5; color: #10131a;
+  width: 36px; height: 36px; border-radius: 50%; background: #F0C84B; color: #10131a;
   font-family: var(--font-display); font-size: 15px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
 }
 .ssPostName { font-weight: 700; font-size: 13.5px; }
