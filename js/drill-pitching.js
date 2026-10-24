@@ -170,7 +170,7 @@
             ${stat('Strike%', sr + '%', sr >= 65 ? GREEN : sr >= 55 ? GOLD : RED)}
             ${stat('Strikes', strikes, GREEN)}
             ${stat('Balls', total - strikes)}
-            ${avgSpeed ? stat('Avg MPH', avgSpeed, GOLD) : ''}
+            ${avgSpeed ? stat('Avg MPH', avgSpeed, '#e8edf5') : ''}
             ${topSpeed ? stat('Top MPH', topSpeed, '#60a5fa') : ''}
             ${maxStreak >= 2 ? stat('K Streak', maxStreak, GREEN) : ''}
           </div>

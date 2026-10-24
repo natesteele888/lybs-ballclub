@@ -24,7 +24,7 @@
    over the same list, not separate state to keep in sync.
    ============================================================ */
 (function () {
-  const GOLD = '#f5a623', GREEN = '#10b981';
+  const GOLD = '#e8edf5', GREEN = '#10b981';
   const DRILLS = [
     { id: 'home1b', label: 'Home to 1st' },
     { id: 'home2b', label: 'Home to 2nd' },
