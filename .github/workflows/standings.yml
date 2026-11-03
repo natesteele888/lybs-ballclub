@@ -10,9 +10,9 @@ name: Mirror MAC League standings and Pitch Smart data
 #   FIREBASE_DB_URL     e.g. https://lybs-ballclub-default-rtdb.firebaseio.com
 #   FIREBASE_DB_SECRET  the Realtime Database's legacy secret (Firebase
 #                        console -> Project settings -> Service accounts ->
-#                        Database secrets) -- used only for this one write,
-#                        scoped by database rules to shared/macLeagueStandings
-#                        and shared/pitchSmart.
+#                        Database secrets) -- writes shared/macLeagueStandings
+#                        and shared/pitchSmart. This secret skips database
+#                        rules entirely, so guard it like an admin password.
 #
 # Division IDs: scrape-standings.mjs defaults to every known division
 # (Rookies/Minors/Majors) when run with no args, so the "League" tab's

@@ -33,9 +33,9 @@
     "shared": {
       "rules": { ".read": "auth != null", ".write": "auth != null" },
       "seasonArchive": { ".read": "auth != null", ".write": "auth != null" },
-      "macLeagueStandings": { ".read": "auth != null", ".write": "auth != null" },
+      "macLeagueStandings": { ".read": "auth != null", ".write": false },
       "pitchSmart": { ".read": "auth != null", ".write": "auth != null" },
-      "macLeagueTeamDetails": { ".read": "auth != null", ".write": "auth != null" },
+      "macLeagueTeamDetails": { ".read": "auth != null", ".write": false },
       "practiceCatalog": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" },
       "skillBenchmarks": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" },
       "situationRules": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" }

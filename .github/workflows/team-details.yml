@@ -13,8 +13,8 @@ name: Mirror MAC League team details (schedule, roster, staff)
 # Secrets needed (repo Settings -> Secrets and variables -> Actions):
 #   FIREBASE_DB_URL     e.g. https://lybs-ballclub-default-rtdb.firebaseio.com
 #   FIREBASE_DB_SECRET  the Realtime Database's legacy secret -- same one
-#                        standings.yml already uses, scoped by database
-#                        rules to also cover shared/macLeagueTeamDetails.
+#                        standings.yml already uses. It skips database
+#                        rules, so it can write shared/macLeagueTeamDetails.
 #
 # data/standings-cache.json (where scrape-team-details.mjs reads its
 # default team-id list from) is gitignored -- never committed, only ever
