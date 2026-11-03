@@ -88,6 +88,10 @@
   Object.keys(STARTS).forEach(p => { LM['POS_' + p] = STARTS[p]; });
   const POSN = { P: '1', C: '2', '1B': '3', '2B': '4', '3B': '5', SS: '6', LF: '7', CF: '8', RF: '9' };
   const POSLIST = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF'];
+  const POSFULL = {
+    P: 'Pitcher', C: 'Catcher', '1B': 'First baseman', '2B': 'Second baseman', '3B': 'Third baseman',
+    SS: 'Shortstop', LF: 'Left fielder', CF: 'Center fielder', RF: 'Right fielder',
+  };
   const ROLES = {
     FIELD: { c: 'var(--sit-amber)', t: 'Field the ball' },
     CHASE: { c: 'var(--sit-orange)', t: 'Run the runner back' },
@@ -156,6 +160,23 @@
     <defs>
       <clipPath id="sitFairclip"><path d="${FAN}"/></clipPath>
       <clipPath id="sitBackclip"><circle cx="260" cy="428" r="80"/></clipPath>
+      <!-- The three dirt cutout circles that sit ON a foul line (home, 1B,
+           3B) are plain circles -- unclipped, they bulge past the line into
+           what should be foul grass on one or both sides (home has a foul
+           line on each side; 1B/3B each have just the one). sitSkinClip
+           trims that to the same fair 45deg wedge SKIN already draws, so
+           the cutoff lands exactly on the chalk, not past it. Home's own
+           circle also reaches behind the plate, outside SKIN entirely (SKIN
+           only runs forward, into the field) -- sitHomeDirtClip adds a
+           second, backward-facing 90deg wedge (mirrored across home, same
+           45deg half-angle) just for that side, so the catcher's box stays
+           dirt instead of also getting clipped to nothing. 2B and the mound
+           aren't near either line and don't need this. -->
+      <clipPath id="sitSkinClip"><path d="${SKIN}"/></clipPath>
+      <clipPath id="sitHomeDirtClip">
+        <path d="${SKIN}"/>
+        <path d="M260,415 L235.3,439.8 A35,35 0 0 0 284.8,439.8 Z"/>
+      </clipPath>
       <radialGradient id="sitGLight" cx="50%" cy="74%" r="80%">
         <stop offset="0" stop-color="#ffffff" stop-opacity=".17"/>
         <stop offset=".5" stop-color="#ffffff" stop-opacity=".05"/>
@@ -189,15 +210,15 @@
     <path d="${SKIN}" fill="var(--sit-dirt)"/>
     <path d="${SKIN}" fill="url(#sitDLight)"/>
     <path d="${SKIN}" fill="none" stroke="#7d5133" stroke-width="1.6" opacity=".7"/>
-    <circle cx="260" cy="417" r="31" fill="var(--sit-dirt)"/>
+    <g clip-path="url(#sitHomeDirtClip)"><circle cx="260" cy="417" r="31" fill="var(--sit-dirt)"/></g>
     <path d="M182,438 A80,80 0 0 0 338,438" fill="none" stroke="#dfe6e0" stroke-width="2" opacity=".45"/>
 
     <polygon points="260,395 315,340 260,285 205,340" fill="var(--sit-grass)"/>
     <polygon points="260,395 315,340 260,285 205,340" fill="url(#sitGLight)"/>
     <polygon points="260,395 315,340 260,285 205,340" fill="none" stroke="#2a5a41" stroke-width="1.6"/>
-    <circle cx="335" cy="340" r="17" fill="var(--sit-dirt)"/>
+    <g clip-path="url(#sitSkinClip)"><circle cx="335" cy="340" r="17" fill="var(--sit-dirt)"/></g>
     <circle cx="260" cy="265" r="17" fill="var(--sit-dirt)"/>
-    <circle cx="185" cy="340" r="17" fill="var(--sit-dirt)"/>
+    <g clip-path="url(#sitSkinClip)"><circle cx="185" cy="340" r="17" fill="var(--sit-dirt)"/></g>
     <circle cx="260" cy="334" r="27" fill="var(--sit-dirt)"/>
     <circle cx="260" cy="334" r="27" fill="url(#sitMLight)"/>
     <rect x="254" y="332" width="12" height="4" rx="1" fill="#fff" opacity=".92"/>
@@ -392,6 +413,22 @@
         const want = ['COVER', 'PLATE', 'CUT', 'RELAY', 'CHASE'];
         return POSLIST.find(p => assign[p].target === landmark && want.includes(assign[p].role)) ||
                POSLIST.find(p => assign[p].target === landmark);
+      }
+      // The scorebook number sequence for a play -- same walk buildPlay()
+      // does to build its own throw chain, pulled out standalone (no legs/
+      // timing) so the quiz can ask "what's a 6-4-3" without animating
+      // anything. Returns null when the ball never leaves one player's
+      // glove (nothing to score as a numbered sequence).
+      function computeChain(ballId, bases, outs) {
+        const assign = resolve(ballId, bases, outs, false);
+        const thrower = POSLIST.find(p => assign[p].throw);
+        if (!thrower) return null;
+        const chain = [POSN[thrower]];
+        assign[thrower].throw.split('>').forEach(step => {
+          const rec = receiverAt(assign, step.trim());
+          if (rec && POSN[rec] !== chain[chain.length - 1]) chain.push(POSN[rec]);
+        });
+        return chain.length > 1 ? chain : null;
       }
       function runnerPlan(sit, bases, outs, catchT) {
         const code = sit.runners || 'force', out = [];
@@ -645,12 +682,191 @@
           `<button class="sitChip${!S.me ? ' on' : ''}" data-me="">Everybody</button>`;
       }
 
+      /* ------------------------------ quiz ------------------------------
+         Multiple choice, not tap-to-point -- a tap quiz needs the question
+         to already pin down one exact base/out state or the "right" spot
+         on the field is ambiguous (the prototype's version picked bases/
+         outs fully at random, independent of the ball event, so it could
+         ask you to field "strike three, bases loaded, two outs" with the
+         bases actually empty -- nonsensical, and the reported "vague
+         question"). Every generator below either uses a situation's own
+         set_bases/set_outs when it has one, or only randomizes states a
+         situation is actually meant to answer for. */
+      const QUIZKINDS = [['mixed', 'Mixed'], ['numbers', 'Numbers'], ['notation', 'Notation'], ['situational', 'Situational']];
+      const BASESTATES = ['_', '1', '2', '3', '12', '13', '23', '123'];
+      function shuffleInPlace(arr) {
+        for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[arr[i], arr[j]] = [arr[j], arr[i]]; }
+        return arr;
+      }
+      function qzNum(key, def) {
+        try { const v = localStorage.getItem('lybs_sitquiz_' + key); return v == null ? def : +v; } catch (e) { return def; }
+      }
+      function qzSave() {
+        try {
+          localStorage.setItem('lybs_sitquiz_right', QZ.right);
+          localStorage.setItem('lybs_sitquiz_total', QZ.total);
+          localStorage.setItem('lybs_sitquiz_streak', QZ.streak);
+        } catch (e) { /* private browsing or storage blocked -- quiz still works, just doesn't remember the score */ }
+      }
+      let QZ = { kind: 'mixed', cur: null, right: qzNum('right', 0), total: qzNum('total', 0), streak: qzNum('streak', 0) };
+
+      function makeNumberQ() {
+        const p = POSLIST[Math.floor(Math.random() * POSLIST.length)];
+        const askByNumber = Math.random() < 0.5;
+        if (askByNumber) {
+          const choices = shuffleInPlace([p, ...shuffleInPlace(POSLIST.filter(x => x !== p)).slice(0, 3)]);
+          return {
+            kindLabel: 'Numbers', prompt: `Which position wears #${POSN[p]}?`, sub: null,
+            options: choices.map(c => ({ label: POSFULL[c], correct: c === p })),
+            explain: `#${POSN[p]} is the ${POSFULL[p]}.`, answered: false, picked: null,
+          };
+        }
+        const otherNums = shuffleInPlace(POSLIST.map(x => POSN[x]).filter(n => n !== POSN[p])).slice(0, 3);
+        const choices = shuffleInPlace([POSN[p], ...otherNums]);
+        return {
+          kindLabel: 'Numbers', prompt: `What number does the ${POSFULL[p]} wear?`, sub: null,
+          options: choices.map(c => ({ label: '#' + c, correct: c === POSN[p] })),
+          explain: `The ${POSFULL[p]} is #${POSN[p]}.`, answered: false, picked: null,
+        };
+      }
+
+      // Every situation x base/out state that actually produces a multi-
+      // player throw chain (a real "X-Y-Z" play) -- built once, lazily,
+      // not on module load, since most sessions never open the quiz.
+      let chainPool = null;
+      function getChainPool() {
+        if (chainPool) return chainPool;
+        chainPool = [];
+        SITS.forEach(sit => {
+          const baseStates = sit.set_bases ? [sit.set_bases] : BASESTATES;
+          const outStates = (sit.set_outs !== '' && sit.set_outs != null) ? [+sit.set_outs] : [0, 1, 2];
+          baseStates.forEach(b => outStates.forEach(o => {
+            const chain = computeChain(sit.ball_id, b, o);
+            if (chain) chainPool.push({ sit, bases: b, outs: o, chain });
+          }));
+        });
+        return chainPool;
+      }
+      function posByNum(n) { return POSLIST.find(p => POSN[p] === n); }
+      function notationDistractors(correct) {
+        const nums = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        const variants = new Set();
+        variants.add(correct.slice().reverse().join('-'));
+        if (correct.length >= 2) { const c = correct.slice();[c[0], c[1]] = [c[1], c[0]]; variants.add(c.join('-')); }
+        for (let tries = 0; tries < 8 && variants.size < 3; tries++) {
+          const c = correct.slice(); const idx = Math.floor(Math.random() * c.length);
+          const pool = nums.filter(n => !c.includes(n));
+          c[idx] = pool[Math.floor(Math.random() * pool.length)];
+          const s = c.join('-'); if (s !== correct.join('-')) variants.add(s);
+        }
+        return [...variants].slice(0, 3);
+      }
+      function makeNotationQ() {
+        const pool = getChainPool();
+        if (!pool.length) return null;
+        const { sit, bases, outs, chain } = pool[Math.floor(Math.random() * pool.length)];
+        const notation = chain.join('-');
+        const subLine = `From: ${sit.label} -- ${basesLabel(bases)}, ${outs} out${outs === 1 ? '' : 's'}.`;
+        if (Math.random() < 0.5) {
+          const words = chain.map(n => POSFULL[posByNum(n)]).join(' to ');
+          const choices = shuffleInPlace([notation, ...notationDistractors(chain)]);
+          return {
+            kindLabel: 'Scoring notation', prompt: `What do you call it when the ball goes ${words}?`, sub: subLine,
+            options: choices.map(c => ({ label: c, correct: c === notation })),
+            explain: `${notation} -- ${words}.`, answered: false, picked: null,
+          };
+        }
+        const starter = posByNum(chain[0]);
+        const choices = shuffleInPlace([starter, ...shuffleInPlace(POSLIST.filter(p => p !== starter)).slice(0, 3)]);
+        return {
+          kindLabel: 'Scoring notation', prompt: `On a ${notation}, who starts the play?`, sub: subLine,
+          options: choices.map(c => ({ label: POSFULL[c], correct: c === starter })),
+          explain: `${notation} starts with #${chain[0]}, the ${POSFULL[starter]}.`, answered: false, picked: null,
+        };
+      }
+
+      function makeSituationalQ() {
+        const sit = SITS[Math.floor(Math.random() * SITS.length)];
+        const bases = sit.set_bases || BASESTATES[Math.floor(Math.random() * BASESTATES.length)];
+        const outs = (sit.set_outs !== '' && sit.set_outs != null) ? +sit.set_outs : Math.floor(Math.random() * 3);
+        const assign = resolve(sit.ball_id, bases, outs, false);
+        const p = POSLIST[Math.floor(Math.random() * POSLIST.length)];
+        const label = (role, cue) => `${(ROLES[role] || { t: role }).t} -- ${cue || 'Hold your spot.'}`;
+        const correctLabel = label(assign[p].role, assign[p].cue);
+        const seen = new Set([correctLabel]); const distractors = [];
+        shuffleInPlace(POSLIST.filter(x => x !== p)).forEach(x => {
+          if (distractors.length >= 3) return;
+          const l = label(assign[x].role, assign[x].cue);
+          if (seen.has(l)) return;
+          seen.add(l); distractors.push(l);
+        });
+        while (distractors.length < 3) distractors.push('Hold your spot and watch the ball.');
+        const choices = shuffleInPlace([correctLabel, ...distractors]);
+        return {
+          kindLabel: 'Situational', prompt: `${sit.label} -- ${basesLabel(bases)}, ${outs} out${outs === 1 ? '' : 's'}.`,
+          sub: `You're the ${POSFULL[p]} (#${POSN[p]}). What do you do?`,
+          options: choices.map(c => ({ label: c, correct: c === correctLabel })),
+          explain: correctLabel, answered: false, picked: null,
+        };
+      }
+
+      function makeQuestion() {
+        let kind = QZ.kind === 'mixed' ? ['numbers', 'notation', 'situational'][Math.floor(Math.random() * 3)] : QZ.kind;
+        if (kind === 'numbers') return makeNumberQ();
+        if (kind === 'notation') return makeNotationQ() || makeNumberQ();
+        return makeSituationalQ();
+      }
+      function answerQuiz(i) {
+        const q = QZ.cur; if (!q || q.answered) return;
+        q.answered = true; q.picked = i;
+        const ok = q.options[i].correct;
+        QZ.total++; if (ok) { QZ.right++; QZ.streak++; } else QZ.streak = 0;
+        qzSave(); renderQuiz();
+      }
+      function renderQuiz() {
+        const host = containerEl.querySelector('#sitQuizHost'); if (!host) return;
+        if (!QZ.cur) QZ.cur = makeQuestion();
+        const q = QZ.cur;
+        host.innerHTML = `
+          <div class="sitBoard">
+            <div><div class="sitLbl">SCORE</div><div class="situationsCond" style="font-size:20px">${QZ.right}/${QZ.total}</div></div>
+            <div><div class="sitLbl">STREAK</div><div class="situationsCond" style="font-size:20px;color:var(--sit-amber)">${QZ.streak}</div></div>
+            <div class="sitGrow"></div>
+            <div class="sitChips" id="sitQuizKind">${QUIZKINDS.map(([k, l]) =>
+              `<button class="sitChip${QZ.kind === k ? ' on' : ''}" data-qkind="${k}">${escapeHtml(l)}</button>`).join('')}</div>
+          </div>
+          <div class="sitCard">
+            <div class="sitLbl">${escapeHtml(q.kindLabel)}</div>
+            <div class="sitQuizPrompt situationsCond">${escapeHtml(q.prompt)}</div>
+            ${q.sub ? `<div class="sitMuted" style="margin-top:4px">${escapeHtml(q.sub)}</div>` : ''}
+          </div>
+          <div class="sitQuizOpts">${q.options.map((o, i) => {
+            let cls = 'sitQuizOpt';
+            if (q.answered) cls += o.correct ? ' sitQuizOptCorrect' : (i === q.picked ? ' sitQuizOptWrong' : '');
+            return `<button class="${cls}" data-qopt="${i}"${q.answered ? ' disabled' : ''}>${escapeHtml(o.label)}</button>`;
+          }).join('')}</div>
+          ${q.answered ? `<div class="sitQuizFb ${q.options[q.picked].correct ? 'sitQuizGood' : 'sitQuizBad'}">
+            <b class="situationsCond" style="font-size:16px">${q.options[q.picked].correct ? "That's it." : 'Not quite.'}</b>
+            <div style="margin-top:4px">${escapeHtml(q.explain)}</div>
+          </div>` : ''}
+          <div class="sitPlaybar" style="display:${q.answered ? 'flex' : 'none'}">
+            <button class="sitPrimary" id="sitQuizNext">Next question</button>
+          </div>`;
+      }
+
       containerEl.innerHTML = `
         <div class="situationsRoot">
           <div class="sectionHeader">
             <div class="recordLine">Where do I go?</div>
             <button class="btn btnGhost btnSmall sitInfoBtn" id="sitFundamentalsBtn">Fundamentals</button>
           </div>
+
+          <div class="sitViewToggle">
+            <button class="on" data-view="builder">Builder</button>
+            <button data-view="quiz">Quiz</button>
+          </div>
+
+          <div id="sitBuilderView">
           <div class="sitBoard">
             <div>
               <div class="sitLbl">RUNNERS</div>
@@ -702,6 +918,11 @@
           <div id="sitBigJobBox"></div>
           <div class="sitJobs" id="sitJobs"></div>
           <div class="sitCard sitMuted" id="sitTeachBox" style="display:none"></div>
+          </div>
+
+          <div id="sitQuizView" style="display:none">
+            <div id="sitQuizHost"></div>
+          </div>
         </div>`;
 
       containerEl.querySelectorAll('.sitDiamond button').forEach(b => b.addEventListener('click', () => {
@@ -767,6 +988,26 @@
         window.openInfoModal('Fundamentals', fundamentalsHtml());
       });
 
+      containerEl.querySelector('.sitViewToggle').addEventListener('click', e => {
+        const b = e.target.closest('[data-view]'); if (!b) return;
+        const quiz = b.dataset.view === 'quiz';
+        containerEl.querySelectorAll('.sitViewToggle button').forEach(x => x.classList.toggle('on', x === b));
+        containerEl.querySelector('#sitBuilderView').style.display = quiz ? 'none' : '';
+        containerEl.querySelector('#sitQuizView').style.display = quiz ? '' : 'none';
+        if (quiz) renderQuiz();
+      });
+      // Delegated on the host (not re-bound per render) since renderQuiz()
+      // replaces this whole subtree's innerHTML on every answer/question --
+      // binding inside renderQuiz() itself would stack a new listener each
+      // time instead of reusing one, the same reason buildPicker()'s click
+      // handling lives out here rather than inside buildPicker().
+      containerEl.querySelector('#sitQuizHost').addEventListener('click', e => {
+        const opt = e.target.closest('[data-qopt]'); if (opt) { answerQuiz(+opt.dataset.qopt); return; }
+        const next = e.target.closest('#sitQuizNext'); if (next) { QZ.cur = makeQuestion(); renderQuiz(); return; }
+        const kind = e.target.closest('[data-qkind]');
+        if (kind) { QZ.kind = kind.dataset.qkind; QZ.cur = makeQuestion(); renderQuiz(); }
+      });
+
       function fundamentalsHtml() {
         const legend = Object.keys(ROLES).map(r =>
           `<div class="sitLegendRow"><span class="sitLegendDot" style="background:${ROLES[r].c}"></span><b class="situationsCond" style="font-size:15px">${escapeHtml(ROLES[r].t)}</b></div>`).join('');
@@ -777,6 +1018,12 @@
           <div class="sitCard"><b style="font-size:15px">3. Throws to third: shortstop is the cut.</b><br>Every time, from anywhere. The third baseman stays on the bag.</div>
           <div class="sitCard"><b style="font-size:15px">4. Throws home: left field, third baseman cuts. Center or right, first baseman cuts.</b><br>The catcher is the only one who can see the runner, so the catcher makes the call: "Cut!" or "Let it go!"</div>
           <div class="sitCard"><b style="font-size:15px">5. The pitcher backs up one base, not two.</b><br>Third or home -- pick the one the ball is going to and get deep behind it.</div>
+          <h3>Every position has a number</h3>
+          <div class="sitCard">Scorebooks and cut calls use the number, not the name -- "6-4-3" means short to second to first. Every number on the field matches the ones on your own jersey list.</div>
+          <div class="sitCard"><table>
+            <tr><th>#</th><th>Position</th></tr>
+            ${POSLIST.map(p => `<tr><td><b style="color:var(--sit-amber)">${POSN[p]}</b></td><td>${escapeHtml(POSFULL[p])} (${p})</td></tr>`).join('')}
+          </table></div>
           <h3>Infield fly</h3>
           <div class="sitCard">Runners on first and second, or bases loaded, with fewer than two outs, and an infielder can catch a fair pop with ordinary effort -- the umpire calls the batter out on the spot. Nobody is forced anymore. So catch it, and if you drop it, do not go running to a base looking for a force that isn't there.</div>
           <h3>When the batter can run on strike three</h3>
