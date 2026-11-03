@@ -30,7 +30,6 @@ GB_C,1|12|13|123,0|1,*,C,FIELD,BALL,Force at second. Feed it firm and chest-high
 GB_C,1|12|13|123,0|1,*,SS,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
 GB_C,1|12|13|123,0|1,*,2B,BACKUP,BU_2_R,Back up the bag behind your partner. A missed feed here is two bases.,
 GB_C,3|13|23|123,0|1,INF_IN,C,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
-GB_C,123,0|1,*,C,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
 GB_C,123,0|1,*,C,FIELD,BALL,"Force at home and you're standing on it. Step on the plate, then throw to first.",PLATE>BASE_1
 GB_C,*,2,*,C,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
 GB_1B,*,*,*,1B,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
@@ -706,3 +705,21 @@ FLY_CF,13|123,0|1,*,1B,CUT,CUT_PLATE_R,"Two runners tagging. Cut it, check home 
 FLY_CF,13|123,0|1,*,C,PLATE,PLATE,"Two runners moving. Call the plate first. If the run is beaten, call 'Cut, two!' and get the back one.",
 FLY_RF,13|123,0|1,*,1B,CUT,CUT_PLATE_R,"Two runners tagging. Cut it, check home first, then look at second — the other one is going too.",
 FLY_RF,13|123,0|1,*,C,PLATE,PLATE,"Two runners moving. Call the plate first. If the run is beaten, call 'Cut, two!' and get the back one.",
+TRIPLE_LF,*,*,*,LF,FIELD,BALL,"Get to it and get rid of it. The runner's not stopping at second — every throw goes to third.",RELAY_CORNER_L>BASE_3
+TRIPLE_LF,*,*,*,CF,BACKUP,BALL,"Go with him. If it kicks off the fence, you're the one who saves the run.",
+TRIPLE_LF,*,*,*,RF,BACKUP,BU_2,"All the way across behind second, in case this ball ever comes back that far.",
+TRIPLE_LF,*,*,*,SS,RELAY,RELAY_CORNER_L,"Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.",
+TRIPLE_LF,*,*,*,2B,COVER,BASE_2,"Cover the bag — short went out for the relay, so this one's yours now.",
+TRIPLE_LF,*,*,*,3B,COVER,BASE_3,"Straddle the bag. This throw is coming to you — he isn't stopping before here.",
+TRIPLE_LF,*,*,*,1B,BACKUP,BU_PLATE,"Drift toward home as the safety. If he gets greedy rounding third, you're backing up the catcher.",
+TRIPLE_LF,*,*,*,C,PLATE,PLATE,"Call it: 'Cut 3!' if you want it cut, or 'Let it go!' to third. Then stay alert in case he tries for home.",
+TRIPLE_LF,*,*,*,P,BACKUP,BU_3,"Back up third. That's the whole play here.",
+TRIPLE_RF,*,*,*,RF,FIELD,BALL,"Get to it and get rid of it. The runner's not stopping at second — every throw goes to third.",RELAY_CORNER_R>BASE_3
+TRIPLE_RF,*,*,*,CF,BACKUP,BALL,"Go with him. If it kicks off the fence, you're the one who saves the run.",
+TRIPLE_RF,*,*,*,LF,BACKUP,BU_2,"All the way across behind second, in case this ball ever comes back that far.",
+TRIPLE_RF,*,*,*,2B,RELAY,RELAY_CORNER_R,"Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.",
+TRIPLE_RF,*,*,*,SS,COVER,BASE_2,"Cover the bag — 2B went out for the relay, so this one's yours now.",
+TRIPLE_RF,*,*,*,3B,COVER,BASE_3,"Straddle the bag. This throw is coming to you — he isn't stopping before here.",
+TRIPLE_RF,*,*,*,1B,BACKUP,BU_PLATE,"Drift toward home as the safety. If he gets greedy rounding third, you're backing up the catcher.",
+TRIPLE_RF,*,*,*,C,PLATE,PLATE,"Call it: 'Cut 3!' if you want it cut, or 'Let it go!' to third. Then stay alert in case he tries for home.",
+TRIPLE_RF,*,*,*,P,BACKUP,BU_3,"Back up third. That's the whole play here.",

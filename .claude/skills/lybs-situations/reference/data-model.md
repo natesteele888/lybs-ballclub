@@ -30,6 +30,7 @@ One row per ball event. 55 rows.
 | `contact` | batter to first; **all** runners advance one (squeeze, backstop D3K) |
 | `single` | batter to first; runner on 1st takes two bases; runner on 2nd scores |
 | `double` | batter takes two; everyone else takes two or scores |
+| `triple` | batter takes three; every existing runner scores, regardless of base |
 | `tag` | batter is out; runners on 2nd and 3rd tag after the catch, with a running start |
 | `wp` | all runners advance one after a short delay |
 | `steal2` / `steal3` | that one runner advances |
