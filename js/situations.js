@@ -236,18 +236,30 @@
     return pts[pts.length - 1].slice();
   }
 
-  /* ------------------------------ shared/situationRules load ------------------------------ */
+  /* ------------------------------ shared/situationRules load ------------------------------
+     Bump this whenever data/situations.csv or data/responsibilities.csv changes.
+     Without it, this follows js/rules.js's "seed once, then that's the live
+     copy" convention literally -- fine for a rulebook that's re-pulled by hand
+     once an offseason, wrong here: a CSV fix committed today would otherwise
+     never reach a device that already seeded shared/situationRules from an
+     earlier, buggier build (there is no coach-edit UI yet to justify treating
+     the shared copy as authoritative over the shipped file -- see this file's
+     header comment). Comparing rulesVersion makes every load -- board member
+     or not -- re-pull the shipped CSVs instead of trusting a stale mirror;
+     only the WRITE that re-seeds it for everyone else still needs a board
+     member (shared/situationRules is gated board-write in database.rules.json). */
+  const RULES_VERSION = '20261103a';
   let cache = null; // { situations:[...], responsibilities:[...] }
   let pending = null;
 
   async function loadShared(isBoard) {
     let data = await window.dbGet(window.sharedPath('situationRules'));
-    if (!data || !Array.isArray(data.situations) || !data.situations.length) {
+    if (!data || !Array.isArray(data.situations) || !data.situations.length || data.rulesVersion !== RULES_VERSION) {
       const [sitText, respText] = await Promise.all([
         fetch('data/situations.csv?v=' + window.BUILD_V).then(r => r.text()).catch(() => ''),
         fetch('data/responsibilities.csv?v=' + window.BUILD_V).then(r => r.text()).catch(() => ''),
       ]);
-      data = { situations: parseCSV(sitText), responsibilities: parseCSV(respText) };
+      data = { situations: parseCSV(sitText), responsibilities: parseCSV(respText), rulesVersion: RULES_VERSION };
       if (isBoard) {
         try { await window.dbPut(window.sharedPath('situationRules'), data); } catch (e) { /* already toasted; browse the fetched copy in memory regardless */ }
       }
