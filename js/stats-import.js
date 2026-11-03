@@ -147,6 +147,10 @@
       const out = { name: player ? player.name : toFirstLastInitial(rawName), playerId: player ? player.id : null };
       headerMap.forEach((key, i) => {
         if (!key || key === 'name') return;
+        // GameChanger's export can repeat a column name (e.g. two "AB"
+        // columns in different sections) -- keep the first one instead of
+        // letting a later repeat silently overwrite it.
+        if (out[key] != null) return;
         out[key] = num(cells[i]);
       });
       return out;
