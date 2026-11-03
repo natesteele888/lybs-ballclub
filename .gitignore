@@ -1,6 +1,7 @@
 .DS_Store
 ._*
 node_modules/
+*-debug.log
 
 # Scrape output -- a point-in-time local artifact the Action regenerates on
 # its own schedule and pushes to Firebase; nothing in the app reads this file
