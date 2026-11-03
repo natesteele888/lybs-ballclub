@@ -114,8 +114,8 @@
                the outer fence path -- found by sampling the rendered fence
                stroke, not eyeballed. Re-derive both endpoints together if
                home plate, a base marker or the fence path ever moves. -->
-          <polygon points="332.9 -111.8 171.1 -277.1 171.6 -277.6 333.5 -112.2 332.9 -111.8" />
-          <polygon points="340.9 -112.2 501.4 -275.9 501.9 -275.4 341.3 -111.8 340.9 -112.2" />
+          <polygon points="332.9 -111.8 166.7 -281.7 167.2 -282.1 333.5 -112.2 332.9 -111.8" />
+          <polygon points="340.9 -112.2 505.4 -280 505.9 -279.5 341.3 -111.8 340.9 -112.2" />
           <path d="M349.8-96.2h-6.7v-22.5h6.7v22.5Z" />
           <path d="M332.2-96.5v-23.2h-8.7v24.5h8.7v-1.2ZM331.2-96.2h-6.7v-22.5h6.7v22.5Z" />
         </g>
