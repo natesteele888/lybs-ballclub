@@ -124,6 +124,22 @@
   // independently tunable.
   const FAN = 'M260,415 L15.3,300.9 A252,252 0 0 1 504.7,300.9 Z';
   const SKIN = 'M260,415 L121.4,276.4 A196,196 0 0 1 398.6,276.4 Z';
+  /* FAN's own arc, decoded once: a circle of radius FAN_R centred below the
+     chord between its two corners (same chord+sagitta construction as the
+     comment above -- the arc bulges away from home). Lets buildPlay() find
+     exactly where a ball's own flight path would reach the fence, instead
+     of a second hand-placed constant that could drift out of sync with
+     FAN. Recompute alongside FAN if it ever changes. */
+  const FAN_L = [15.3, 300.9], FAN_R_PT = [504.7, 300.9], FAN_R = 252;
+  const FAN_CENTER = [260, (FAN_L[1] + FAN_R_PT[1]) / 2 +
+    Math.sqrt(FAN_R * FAN_R - ((FAN_R_PT[0] - FAN_L[0]) / 2) ** 2)];
+  function fenceDist(toward) {
+    const dx = toward[0] - HOME[0], dy = toward[1] - HOME[1], len = Math.hypot(dx, dy);
+    const ux = dx / len, uy = dy / len;
+    const ox = HOME[0] - FAN_CENTER[0], oy = HOME[1] - FAN_CENTER[1];
+    const b = 2 * (ux * ox + uy * oy), c = ox * ox + oy * oy - FAN_R * FAN_R;
+    return (-b + Math.sqrt(b * b - 4 * c)) / 2;
+  }
   function mowStripes() {
     let out = '';
     const N = 10, span = 130, a0 = -65;
@@ -439,13 +455,33 @@
         const fl = TIME.hang[type] || Math.max(.3, dist(origin, bp) / (TIME.ball[type] || 150));
         legs.push({ from: origin, to: bp, start: 0, dur: fl, arc: (type === 'fly' || type === 'pop') ? 38 : ((type === 'hit' || type === 'gap') ? 14 : 0) });
         t = fl;
+        // A gap ball nobody catches doesn't stop dead where it lands --
+        // it keeps rolling. Extend it on toward the fence, straight out
+        // along the same line from home, when it landed more than
+        // ROLL_MIN short of the fence; a ball already hit into the
+        // corner or off the wall is skipped since there's nothing left
+        // to roll. Fielders and the throw both start from the real stop
+        // point (stopPt), not the landing spot, via sitB below.
+        const ROLL_MIN = 10;
+        let stopPt = bp;
+        if (type === 'gap') {
+          const landedR = dist(HOME, bp), fenceR = fenceDist(bp);
+          if (fenceR - landedR > ROLL_MIN) {
+            const ux = (bp[0] - HOME[0]) / landedR, uy = (bp[1] - HOME[1]) / landedR;
+            stopPt = [HOME[0] + ux * fenceR, HOME[1] + uy * fenceR];
+            const rollDur = Math.max(.3, (fenceR - landedR) / TIME.ball.loose);
+            legs.push({ from: bp, to: stopPt, start: t, dur: rollDur, arc: 0 });
+            t += rollDur;
+          }
+        }
+        const sitB = stopPt === bp ? sit : Object.assign({}, sit, { ball_x: stopPt[0], ball_y: stopPt[1] });
         const chain = []; const thrower = POSLIST.find(p => assign[p].throw);
         if (thrower) {
           chain.push(POSN[thrower]);
           t += (TIME.gather[type] != null ? TIME.gather[type] : .5);
-          let from = bp, prevCut = false;
+          let from = stopPt, prevCut = false;
           assign[thrower].throw.split('>').forEach((step, i) => {
-            const key = step.trim(), to = pt(key, sit);
+            const key = step.trim(), to = pt(key, sitB);
             if (i > 0 && !prevCut) t += TIME.transfer;
             prevCut = (key.indexOf('CUT_') === 0);
             const dur = Math.max(.22, dist(from, to) / TIME.throw);
@@ -455,7 +491,7 @@
             if (rec && POSN[rec] !== chain[chain.length - 1]) chain.push(POSN[rec]);
           });
         }
-        const moves = POSLIST.map(p => { const from = STARTS[p].slice(), to = pt(assign[p].target, sit); return { p, from, to, dur: Math.max(.2, dist(from, to) / TIME.fielder) }; });
+        const moves = POSLIST.map(p => { const from = STARTS[p].slice(), to = pt(assign[p].target, sitB); return { p, from, to, dur: Math.max(.2, dist(from, to) / TIME.fielder) }; });
         const runners = runnerPlan(sit, S.bases, S.outs, fl);
         const calls = [];
         if (sit.runners !== 'rundown') legs.forEach(l => {
