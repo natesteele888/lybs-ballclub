@@ -54,3 +54,5 @@ D3K_THROW,"Strike three in the dirt, throw to first",Dropped third strike,loose,
 D3K_BACKSTOP,Strike three gets all the way to the backstop,Dropped third strike,loose,314,462,Now it's a wild pitch AND a dropped third strike. Look at the other runners before you look at the batter.,no,PLATE,_,,contact
 D3K_LOADED,"Strike three in the dirt, bases loaded, two outs",Dropped third strike,loose,268,430,"Everybody is forced, including the batter. Step on the plate — do not throw anywhere.",no,PLATE,123,2,force
 SQUEEZE,Squeeze bunt with a runner on third,Bunts,bunt,246,386,"You have about two seconds. Everybody charges, the catcher clears a lane, nobody panics.",no,PLATE,3,,contact
+TRIPLE_LF,Ball into the left field corner for a triple,Cutoffs & relays,gap,78,210,"The relay throw still goes to third — a throw to second here just lets him walk into it anyway.",yes,PLATE,,,triple
+TRIPLE_RF,Ball into the right field corner for a triple,Cutoffs & relays,gap,442,210,,yes,PLATE,,,triple

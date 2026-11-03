@@ -248,7 +248,7 @@
      or not -- re-pull the shipped CSVs instead of trusting a stale mirror;
      only the WRITE that re-seeds it for everyone else still needs a board
      member (shared/situationRules is gated board-write in database.rules.json). */
-  const RULES_VERSION = '20261103a';
+  const RULES_VERSION = '20261103b';
   let cache = null; // { situations:[...], responsibilities:[...] }
   let pending = null;
 
@@ -400,6 +400,9 @@
         } else if (code === 'double') {
           add('H', 2, TIME.react);
           if (has('1')) add('1', 2, 0); if (has('2')) add('2', 2, 0); if (has('3')) add('3', 1, 0);
+        } else if (code === 'triple') {
+          add('H', 3, TIME.react);
+          if (has('1')) add('1', 3, 0); if (has('2')) add('2', 2, 0); if (has('3')) add('3', 1, 0);
         } else if (code === 'tag') {
           if (outs < 2) { if (has('3')) add('3', 1, catchT + .12, TIME.rounding); if (has('2')) add('2', 1, catchT + .12, TIME.rounding); }
         } else if (code === 'wp') {
