@@ -128,6 +128,22 @@
   // independently tunable.
   const FAN = 'M260,415 L15.3,300.9 A252,252 0 0 1 504.7,300.9 Z';
   const SKIN = 'M260,415 L121.4,276.4 A196,196 0 0 1 398.6,276.4 Z';
+  /* The whole playing surface: outfield fence, then straight down each side
+     to where that side meets the backstop circle, then around behind home.
+     FAN alone stops at a line from each corner to home plate, which left
+     black wedges of "nothing" where foul ground belongs along both baselines.
+     Each side runs along the tangent to the backstop circle, so the edge
+     meets the circle with no corner. Mirror-symmetric around x=260. */
+  function groundPath(cornerX, cornerY, arcR, cx, cy, r) {
+    const dx = cornerX - cx, dy = cornerY - cy, d = Math.hypot(dx, dy);
+    const a = Math.atan2(dy, dx) - Math.acos(r / d);
+    const tx = cx + r * Math.cos(a), ty = cy + r * Math.sin(a);
+    const f = n => n.toFixed(1), rx = 2 * cx - tx, rc = 2 * cx - cornerX;
+    return `M${f(cornerX)},${f(cornerY)} A${arcR},${arcR} 0 0 1 ${f(rc)},${f(cornerY)} ` +
+      `L${f(rx)},${f(ty)} A${r},${r} 0 1 1 ${f(tx)},${f(ty)} Z`;
+  }
+  const GROUND = groundPath(15.3, 300.9, 252, 260, 428, 80);
+  const TRACK = groundPath(-4.6, 291.6, 272.1, 260, 428, 94);
   /* FAN's own arc, decoded once: a circle of radius FAN_R centred below the
      chord between its two corners (same chord+sagitta construction as the
      comment above -- the arc bulges away from home). Lets buildPlay() find
@@ -159,7 +175,6 @@
     return `
     <defs>
       <clipPath id="sitFairclip"><path d="${FAN}"/></clipPath>
-      <clipPath id="sitBackclip"><circle cx="260" cy="428" r="80"/></clipPath>
       <!-- The three dirt cutout circles that sit ON a foul line (home, 1B,
            3B) are plain circles -- unclipped, they bulge past the line into
            what should be foul grass on one or both sides (home has a foul
@@ -195,17 +210,13 @@
 
     <rect width="520" height="482" fill="#0e1a15"/>
 
-    <circle cx="260" cy="428" r="94" fill="var(--sit-track)"/>
-    <path d="M260,438 L-4.6,291.6 A272.1,272.1 0 0 1 524.6,291.6 Z" fill="var(--sit-track)"/>
-    <circle cx="260" cy="428" r="94" fill="none" stroke="#16241c" stroke-width="3"/>
-    <path d="M260,438 L-4.6,291.6 A272.1,272.1 0 0 1 524.6,291.6 Z" fill="none" stroke="#16241c" stroke-width="3.5"/>
+    <path d="${TRACK}" fill="var(--sit-track)"/>
+    <path d="${TRACK}" fill="none" stroke="#16241c" stroke-width="3.5"/>
 
-    <circle cx="260" cy="428" r="80" fill="var(--sit-grass)"/>
-    <g clip-path="url(#sitBackclip)"><circle cx="260" cy="428" r="80" fill="url(#sitGLight)"/></g>
-    <path d="${FAN}" fill="var(--sit-grass)"/>
-    <g clip-path="url(#sitFairclip)">${mowStripes()}
-      <path d="${FAN}" fill="url(#sitGLight)"/></g>
-    <path d="${FAN}" fill="none" stroke="#2a5a41" stroke-width="2"/>
+    <path d="${GROUND}" fill="var(--sit-grass)"/>
+    <g clip-path="url(#sitFairclip)">${mowStripes()}</g>
+    <path d="${GROUND}" fill="url(#sitGLight)"/>
+    <path d="${GROUND}" fill="none" stroke="#2a5a41" stroke-width="2"/>
 
     <path d="${SKIN}" fill="var(--sit-dirt)"/>
     <path d="${SKIN}" fill="url(#sitDLight)"/>
