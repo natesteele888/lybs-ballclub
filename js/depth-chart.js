@@ -101,8 +101,22 @@
         <path class="depthFieldLine" d="M428.9-253.3c-15.8-18.8-44.6-41.1-91.6-41.1s-76.2,22.4-92.6,41.2c-15.7,17.9-22.7,35.9-24.5,41,0,.1,0,.2,0,.2v.3c0,0,98,98.1,98,98.1v.3c-1,2.3-1.4,4.8-1.4,7.2,0,11.2,9.1,20.3,20.3,20.3s10.6-2.2,14.5-6.1c3.8-3.9,5.9-8.9,5.8-14.2,0-4.2-.6-5.7-1.7-8.2v-.3c-.1,0,.1-.2.1-.2l96.7-97v-.4c-.1,0-6.3-20.6-23.6-41Z" />
         <path class="depthFieldLine" d="M392.4-183.8c0-4.2,1.8-8,4.7-10.8l.7-.7-.9-.9-47.4-47.4-.9-.9c-.2.3-.4.5-.7.8-2.8,3.1-6.9,5-11.3,5s-7.8-1.6-10.6-4.2l-.7-.7-.9.9-46.8,46.8-.9.9.7.7c2.6,2.7,4.2,6.5,4.2,10.6s-1.5,7.5-4,10.2c-.2.2-.4.5-.7.7l.9.9,46.2,46.2,1.1,1.1c.3-.2.5-.4.8-.6,3.1-2.4,7.1-3.9,11.3-3.9s8.2,1.5,11.3,4c.3.2.5.4.8.6l1.1-1.1,46-46,.9-.9-.7-.7c-2.5-2.7-4.2-6.4-4.2-10.5h0Z" />
         <g class="depthFieldFaint">
-          <polygon points="165.6 -275.5 323.5 -117.7 323.5 -119.1 166.3 -276.2 165.6 -275.5" />
-          <path d="M506.5-274.9l-155.7,155.7v-.6h-8.7v24.5h8.7v-22.5l156.4-156.4-.7-.7ZM349.8-96.2h-6.7v-22.5h6.7v22.5Z" />
+          <!-- Foul lines -- rebuilt straight. The shipped shapes bent: they
+               left home plate's own back corner heading toward the base,
+               but drifted about 1.8deg wider by the time they reached the
+               fence, so they bowed out past 1B/3B into the fair-side grass
+               instead of running along the bases' outer edge the way a
+               foul line has to. Recomputed as a straight ribbon from each
+               back corner of home plate (the depthFieldHome polygon's
+               (333.2,-112)/(341.1,-112)), through that base's outer
+               corner (its marker center pushed out half the marker's own
+               diagonal, away from home), to where that exact ray meets
+               the outer fence path -- found by sampling the rendered fence
+               stroke, not eyeballed. Re-derive both endpoints together if
+               home plate, a base marker or the fence path ever moves. -->
+          <polygon points="332.9 -111.8 171.1 -277.1 171.6 -277.6 333.5 -112.2 332.9 -111.8" />
+          <polygon points="340.9 -112.2 501.4 -275.9 501.9 -275.4 341.3 -111.8 340.9 -112.2" />
+          <path d="M349.8-96.2h-6.7v-22.5h6.7v22.5Z" />
           <path d="M332.2-96.5v-23.2h-8.7v24.5h8.7v-1.2ZM331.2-96.2h-6.7v-22.5h6.7v22.5Z" />
         </g>
         <circle class="depthFieldLine" cx="337.2" cy="-181.9" r="13.5" />
