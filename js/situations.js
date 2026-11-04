@@ -254,7 +254,7 @@
      or not -- re-pull the shipped CSVs instead of trusting a stale mirror;
      only the WRITE that re-seeds it for everyone else still needs a board
      member (shared/situationRules is gated board-write in database.rules.json). */
-  const RULES_VERSION = '20261103l';
+  const RULES_VERSION = '20261103m';
   let cache = null; // { situations:[...], responsibilities:[...] }
   let pending = null;
 
@@ -485,19 +485,25 @@
         if (thrower) {
           chain.push(POSN[thrower]);
           t += (TIME.gather[type] != null ? TIME.gather[type] : .5);
+          /* The ball can't leave before the fielder has it. */
+          if (assign[thrower].target === 'BALL') t = Math.max(t, dist(STARTS[thrower], bp) / TIME.fielder + .1);
           let from = stopPt, prevCut = false;
           assign[thrower].throw.split('>').forEach((step, i) => {
             const key = step.trim(), to = pt(key, sitB);
             if (i > 0 && !prevCut) t += TIME.transfer;
             prevCut = (key.indexOf('CUT_') === 0);
+            if (i === 0 && sit.runners === 'rundown') { const c = pt(assign[thrower].target, sit); t = Math.max(t, dist(bp, c) / TIME.fielder); from = c; }
             const dur = Math.max(.22, dist(from, to) / TIME.throw);
+            /* Nor can a throw beat the player it's going to, so it waits for him. */
+            const toward = receiverAt(assign, key);
+            if (toward && toward !== thrower) t = Math.max(t, dist(STARTS[toward], to) / TIME.fielder - dur);
             legs.push({ from, to, start: t, dur, arc: 11, target: key });
             t += dur; from = to;
             const rec = receiverAt(assign, key);
             if (rec && POSN[rec] !== chain[chain.length - 1]) chain.push(POSN[rec]);
           });
         }
-        const moves = POSLIST.map(p => { const from = STARTS[p].slice(), to = pt(assign[p].target, sitB); return { p, from, to, dur: Math.max(.2, dist(from, to) / TIME.fielder) }; });
+        const moves = POSLIST.map(p => { const from = (sit.runners === 'rundown' && p === thrower) ? bp.slice() : STARTS[p].slice(), to = pt(assign[p].target, sitB); return { p, from, to, dur: Math.max(.2, dist(from, to) / TIME.fielder) }; });
         const runners = runnerPlan(sit, S.bases, S.outs, fl);
         const calls = [];
         if (sit.runners !== 'rundown') legs.forEach(l => {
