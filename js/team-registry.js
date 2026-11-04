@@ -12,13 +12,10 @@
    shared login screen serves every team -- typing a code both
    authenticates AND selects which team you land in.
 
-   *** select's TWO hashes below are still DEV-ONLY PLACEHOLDER CODES ***
-   sha256("LunenburgSelect2026") and sha256("LYBS#2027!") -- made up for
-   local development, left untouched here deliberately: Select is an
-   already-piloted team, and rotating its real login codes is not a
-   decision this registry-expansion pass gets to make unprompted. Follow
-   README.md's "Go live" step 6 for Select specifically, whenever that's
-   actually wanted.
+   Select's two codes were replaced in Nov 2026 (the old ones had been
+   printed in README.md). Like every team's codes, the plaintext lives
+   only with the board, never in this repo. Change a team's codes with
+   scripts/set-team-codes.mjs.
 
    The 7 teams below Select (Majors Black/Blue, Minors Black/Blue,
    Rookies Black/Blue/White -- Phase 7 of the season-lifecycle plan,
