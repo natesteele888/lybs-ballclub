@@ -390,10 +390,10 @@ SINGLE_RF,*,*,*,1B,COVER,BASE_1,He's rounding the bag — get back behind him.,
 SINGLE_RF,*,*,*,3B,COVER,BASE_3,Stay at third.,
 SINGLE_RF,*,*,*,C,PLATE,PLATE,Stay home and read the play.,
 SINGLE_RF,*,*,*,P,BACKUP,BU_2,Get behind second in case the throw sails.,
-SINGLE_RF,1|13,*,*,RF,FIELD,BALL,Runner from first is going to third. Get it to the cut on one hop.,CUT_3>BASE_3
+SINGLE_RF,1|13,*,*,RF,FIELD,BALL,Runner from first is going to third. Get it to the cut on one hop.,CUT_3_RF>BASE_3
 SINGLE_RF,1|13,*,*,SS,COVER,BASE_2,Cover second. Be ready for a throw behind the hitter.,
 SINGLE_RF,1|13,*,*,3B,COVER,BASE_3,"Get to the bag, straddle it, wait for the throw.",
-SINGLE_RF,1|13,*,*,2B,CUT,CUT_3,"You are the cut to third. Line up between the right fielder and the bag, hands high.",
+SINGLE_RF,1|13,*,*,2B,CUT,CUT_3_RF,"You are the cut to third. Line up between the right fielder and the bag, hands high.",
 SINGLE_RF,1|13,*,*,P,BACKUP,BU_3,Back up third. Get deep — 20 feet behind the bag.,
 SINGLE_RF,2|12|23|123,*,*,RF,FIELD,BALL,He's scoring on this. Throw low through the cutoff — a one-hopper beats a rainbow.,CUT_PLATE_R>PLATE
 SINGLE_RF,2|12|23|123,*,*,1B,CUT,CUT_PLATE_R,"You are cut 4. Get in the line between him and the plate, hands up so he can find you.",
