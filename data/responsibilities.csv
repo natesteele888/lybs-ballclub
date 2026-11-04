@@ -22,7 +22,6 @@ GB_C,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the 
 GB_C,*,*,*,SS,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
 GB_C,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
 GB_C,*,*,*,P,HOLD,MOUND,Stay in the middle of the infield around the mound. Watch the play and be ready for the next throw.,
-GB_C,3|13|23|123,0|1,*,P,COVER,PLATE,"Catcher came out front, so home is yours. Get to the plate for the throw.",
 GB_C,*,*,*,2B,BACKUP,BU_2_R,Get behind the throw. Don't stand and watch it.,
 GB_C,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
 GB_C,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
@@ -33,6 +32,7 @@ GB_C,1|12|13|123,0|1,*,2B,BACKUP,BU_2_R,Back up the bag behind your partner. A m
 GB_C,3|13|23|123,0|1,INF_IN,C,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
 GB_C,123,0|1,*,C,FIELD,BALL,"Force at home and you're standing on it. Step on the plate, then throw to first.",PLATE>BASE_1
 GB_C,*,2,*,C,FIELD,BALL,Two outs — take the easiest out you have. Usually first.,BASE_1
+GB_C,3|13|23|123,*,*,P,COVER,PLATE,"Catcher came out front, so home is yours. Get to the plate.",
 GB_1B,*,*,*,1B,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
 GB_1B,*,*,*,P,COVER,BASE_1,"Ball to the right side — first base is yours. Sprint to the line, then up it.",
 GB_1B,*,*,*,SS,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
@@ -100,7 +100,7 @@ GB_3B,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
 GB_3B,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
 GB_3B,1|12|13|123,0|1,*,3B,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
 GB_3B,1|12|13|123,0|1,*,2B,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
-GB_3B,1|12|13|123,0|1,*,SS,BACKUP,BU_2_L,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_3B,1|12|13|123,0|1,*,SS,COVER,BASE_3,"Third baseman left the bag, so third is yours.",
 GB_3B,3|13|23|123,0|1,INF_IN,3B,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
 GB_3B,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
 GB_3B,123,0|1,*,3B,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
@@ -173,7 +173,7 @@ GB_SLOW_3B,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up th
 GB_SLOW_3B,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
 GB_SLOW_3B,1|12|13|123,0|1,*,3B,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
 GB_SLOW_3B,1|12|13|123,0|1,*,2B,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
-GB_SLOW_3B,1|12|13|123,0|1,*,SS,BACKUP,BU_2_L,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_SLOW_3B,1|12|13|123,0|1,*,SS,COVER,BASE_3,"Third baseman left the bag, so third is yours.",
 GB_SLOW_3B,3|13|23|123,0|1,INF_IN,3B,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
 GB_SLOW_3B,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
 GB_SLOW_3B,123,0|1,*,3B,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
@@ -215,6 +215,11 @@ BUNT_3B,*,*,*,RF,BACKUP,BU_1,Sprint in behind first.,
 BUNT_3B,1|12|13|123,0|1,*,3B,FIELD,BALL,Sac bunt. Take the sure out at first unless you field it fast and clean.,BASE_1
 BUNT_3B,2|23,0|1,*,3B,FIELD,BALL,"Runner on second. Look him back to the bag first, then throw to first.",BASE_1
 BUNT_3B,3|13|23|123,0|1,INF_IN,3B,FIELD,BALL,"Runner on third. Field it, check him, throw home only if he broke.",PLATE
+BUNT_3B,2|3|12|13|23|123,0|1,*,P,FIELD,BALL,Third baseman stays home on this one. Field it and take the sure out at first.,BASE_1
+BUNT_3B,2|3|12|13|23|123,0|1,*,3B,COVER,BASE_3,Runner can reach third. Stay at the bag unless the pitcher calls you off.,
+BUNT_3B,2|3|12|13|23|123,0|1,*,1B,BACKUP,BALL,"Crash in hard to help, then get out of the throwing lane.",
+BUNT_3B,2|3|12|13|23|123,0|1,*,2B,COVER,BASE_1,"First baseman charged, so first is yours.",
+BUNT_3B,2|3|12|13|23|123,0|1,*,SS,COVER,BASE_2,Cover second.,
 POP_INF_L,*,*,*,P,DIRECT,MOUND,Get out of the way. This is never your ball.,
 POP_INF_L,*,*,*,C,DIRECT,PLATE,You're the traffic cop. Point at it and call a name.,
 POP_INF_L,*,*,*,1B,HOLD,POS_1B,Stay out of the way and hold the runners.,
@@ -299,7 +304,7 @@ FLY_CF,*,*,*,LF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
 FLY_CF,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
 FLY_CF,*,*,*,1B,COVER,BASE_1,Back to the bag. The hitter might round it.,
 FLY_CF,*,*,*,2B,COVER,BASE_2,Cover second.,
-FLY_CF,*,*,*,SS,CUT,CUT_2_R,Go out and be the cut. Give him a chest to throw at.,
+FLY_CF,*,*,*,SS,CUT,CUT_2_L,Go out and be the cut. Give him a chest to throw at.,
 FLY_CF,*,*,*,3B,COVER,BASE_3,Stay at third.,
 FLY_CF,*,*,*,C,PLATE,PLATE,Stay home.,
 FLY_CF,*,*,*,P,BACKUP,MOUND,Watch the play. Be ready to back up a base.,
@@ -334,7 +339,7 @@ FLY_RF,2|23,0|1,*,RF,FIELD,BALL,He's going to tag and go to third. Catch it movi
 FLY_RF,2|23,0|1,*,SS,CUT,CUT_3,"You are cut 3 on every throw to third, from anywhere on the field.",
 FLY_RF,2|23,0|1,*,3B,COVER,BASE_3,Straddle the bag and give him a target.,
 FLY_RF,*,2,*,RF,FIELD,BALL,Two outs — catch it and the inning is over. Nothing else matters.,
-SINGLE_LF,*,*,*,LF,FIELD,BALL,Charge it. Field it on your throwing-hand side and come up firing.,CUT_2>BASE_2
+SINGLE_LF,*,*,*,LF,FIELD,BALL,Charge it. Field it on your throwing-hand side and come up firing.,CUT_2_L>BASE_2
 SINGLE_LF,*,*,*,CF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
 SINGLE_LF,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
 SINGLE_LF,*,*,*,SS,CUT,CUT_2_L,"You are cut 2. Go out and meet the throw, turn glove side.",
@@ -354,7 +359,7 @@ SINGLE_LF,2|3|13|23|123,*,*,C,PLATE,PLATE,Give him the plate until you have the 
 SINGLE_LF,2|3|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate, deep and behind the catcher.",
 SINGLE_LF,2|3|13|23|123,*,*,SS,COVER,BASE_3,Third baseman is the cut — you have third.,
 SINGLE_LF,2|3|13|23|123,*,*,2B,COVER,BASE_2,Second is yours.,
-SINGLE_CF,*,*,*,CF,FIELD,BALL,Charge it. Field it on your throwing-hand side and come up firing.,CUT_2>BASE_2
+SINGLE_CF,*,*,*,CF,FIELD,BALL,Charge it. Field it on your throwing-hand side and come up firing.,CUT_2_L>BASE_2
 SINGLE_CF,*,*,*,LF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
 SINGLE_CF,*,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
 SINGLE_CF,*,*,*,2B,COVER,BASE_2,Cover the bag.,
@@ -375,7 +380,7 @@ SINGLE_CF,2|3|13|23|123,*,*,P,BACKUP,BU_PLATE,"Back up the plate, deep and behin
 SINGLE_CF,2|3|13|23|123,*,*,2B,COVER,BASE_1,First baseman is the cut — you have first.,
 SINGLE_CF,2|3|13|23|123,*,*,SS,COVER,BASE_2,Second is yours.,
 SINGLE_CF,2|3|13|23|123,*,*,3B,COVER,BASE_3,Third is yours.,
-SINGLE_RF,*,*,*,RF,FIELD,BALL,Charge it. Field it on your throwing-hand side and come up firing.,CUT_2>BASE_2
+SINGLE_RF,*,*,*,RF,FIELD,BALL,Charge it. Field it on your throwing-hand side and come up firing.,CUT_2_R>BASE_2
 SINGLE_RF,*,*,*,CF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
 SINGLE_RF,*,*,*,LF,BACKUP,BU_2_L,Come all the way in and back up the throw to second.,
 SINGLE_RF,*,*,*,2B,CUT,CUT_2_R,"You are cut 2. Go out and meet the throw, turn glove side.",
@@ -475,15 +480,17 @@ WILD_PITCH,1|12,*,*,C,FIELD,BALL,"Only a runner on first — get it, set your fe
 STEAL_2B,*,*,*,P,DIRECT,MOUND,Get off the mound toward first. Do not block the throw.,
 STEAL_2B,*,*,*,C,FIELD,PLATE,"Catch, replace, throw. Quick feet beat a big arm.",BASE_2
 STEAL_2B,*,*,*,1B,COVER,BASE_1,Stay at first.,
-STEAL_2B,*,*,*,2B,BACKUP,BU_2_R,Back up the bag from the right side. A throw past you is a run.,
+STEAL_2B,*,*,*,2B,COVER,BASE_2,"Right-handed hitter, so you have the bag. Get there early, tag down in front of it.",
 STEAL_2B,*,*,*,3B,COVER,BASE_3,Stay at third — watch for the trail runner.,
-STEAL_2B,*,*,*,SS,COVER,BASE_2,"Cover the bag. Get there early, tag down in front of it.",
+STEAL_2B,*,*,*,SS,BACKUP,BU_2_L,"Right-handed hitter, so stay home until the ball is past him, then back up the bag. A lefty flips this.",
 STEAL_2B,*,*,*,LF,HOLD,POS_LF,Hold your position.,
 STEAL_2B,*,*,*,CF,BACKUP,BU_2,Sprint in behind second on every steal.,
 STEAL_2B,*,*,*,RF,HOLD,POS_RF,Hold your position.,
 STEAL_2B,13|123,*,*,C,FIELD,PLATE,"First and third. Check the runner at third first, then throw. If he broke, come to me.",BASE_2
 STEAL_2B,13|123,*,*,3B,COVER,BASE_3,Runner on third is the one who scores. Stay on the bag and yell if he breaks.,
 STEAL_2B,13|123,*,*,P,DIRECT,MOUND,"Be ready for the cut. If the catcher calls it, catch it and look at third.",
+STEAL_2B,13|123,*,*,SS,COVER,BASE_2,First and third. You take the bag and tag if the throw comes through.,
+STEAL_2B,13|123,*,*,2B,BACKUP,BU_2_R,First and third. Back up the bag.,
 STEAL_3B,*,*,*,P,DIRECT,MOUND,Duck out of the lane toward first base side.,
 STEAL_3B,*,*,*,C,FIELD,PLATE,"Step toward third and throw over the pitcher, not around him.",BASE_3
 STEAL_3B,*,*,*,1B,COVER,BASE_1,Stay at first.,
@@ -630,7 +637,7 @@ RD_3B_HOME,*,*,*,CF,BACKUP,BU_2,In behind second.,
 RD_3B_HOME,*,*,*,RF,BACKUP,BU_1,In behind first.,
 FT_THROW_THROUGH,*,*,*,P,BACKUP,BU_PLATE,"Fake the cut, then back up home on the first base side.",
 FT_THROW_THROUGH,*,*,*,C,FIELD,PLATE,"Straight through, normal throw. Then trust your shortstop to read the runner.",BASE_2
-FT_THROW_THROUGH,*,*,*,1B,COVER,BASE_1,Stay at first.,
+FT_THROW_THROUGH,*,*,*,1B,TRAIL,CHASE_TO_1,Trail the runner toward second in case he gets caught in a rundown.,
 FT_THROW_THROUGH,*,*,*,2B,BACKUP,BU_2_R,Behind the bag on the right side. A ball through here is a run.,
 FT_THROW_THROUGH,*,*,*,3B,COVER,BASE_3,Do not leave this bag. Your only job is to yell the second he breaks.,
 FT_THROW_THROUGH,*,*,*,SS,COVER,BASE_2,Take the throw and look home immediately. Do not sweep a tag first.,
@@ -639,7 +646,7 @@ FT_THROW_THROUGH,*,*,*,CF,BACKUP,BU_2,Sprint in behind second on every one of th
 FT_THROW_THROUGH,*,*,*,RF,BACKUP,BU_1,In behind first.,
 FT_CUT,*,*,*,P,CUT,MOUND,"Step in front of the mound and catch it. Look at third first — if he broke, throw home.",
 FT_CUT,*,*,*,C,FIELD,PLATE,Throw it exactly like you're going to second. Sell it.,MOUND
-FT_CUT,*,*,*,1B,COVER,BASE_1,Stay at first.,
+FT_CUT,*,*,*,1B,TRAIL,CHASE_TO_1,Trail the runner toward second in case he gets caught in a rundown.,
 FT_CUT,*,*,*,2B,BACKUP,BU_2_R,Behind the bag on the right side. A ball through here is a run.,
 FT_CUT,*,*,*,3B,COVER,BASE_3,Do not leave this bag. Your only job is to yell the second he breaks.,
 FT_CUT,*,*,*,SS,COVER,BASE_2,"Still cover the bag. If the pitcher lets it go, it's a real throw.",
@@ -735,12 +742,15 @@ FLY_LF,13|123,0|1,*,C,PLATE,PLATE,"Two runners moving. Call the plate first. If 
 FLY_LF,2|12|23,0|1,*,SS,CUT,CUT_3,You are cut 3. Line up about 45 feet in front of the bag.,
 FLY_LF,2|12|23,0|1,*,2B,COVER,BASE_2,Cover second.,
 FLY_LF,2,0|1,*,P,BACKUP,BU_3,"Runner may tag. Back up third, deep behind the bag.",
+FLY_LF,12,0|1,*,P,BACKUP,BU_3,"Runner may tag. Back up third, deep behind the bag.",
 FLY_CF,13|123,0|1,*,1B,CUT,CUT_PLATE_R,"Two runners tagging. Cut it, check home first, then look at second — the other one is going too.",
 FLY_CF,13|123,0|1,*,C,PLATE,PLATE,"Two runners moving. Call the plate first. If the run is beaten, call 'Cut, two!' and get the back one.",
 FLY_CF,2|12|23,0|1,*,SS,CUT,CUT_3,You are cut 3. Line up about 45 feet in front of the bag.,
 FLY_CF,2|12|23,0|1,*,2B,COVER,BASE_2,Cover second.,
 FLY_CF,2,0|1,*,P,BACKUP,BU_3,"Runner may tag. Back up third, deep behind the bag.",
 FLY_CF,2,0|1,*,LF,BACKUP,BU_3_IN,"Come in toward third, in front of the pitcher, in case the throw gets through.",
+FLY_CF,12,0|1,*,P,BACKUP,BU_3,"Runner may tag. Back up third, deep behind the bag.",
+FLY_CF,12,0|1,*,LF,BACKUP,BU_3_IN,"Come in toward third, in front of the pitcher, in case the throw gets through.",
 FLY_RF,13|123,0|1,*,1B,CUT,CUT_PLATE_R,"Two runners tagging. Cut it, check home first, then look at second — the other one is going too.",
 FLY_RF,13|123,0|1,*,C,PLATE,PLATE,"Two runners moving. Call the plate first. If the run is beaten, call 'Cut, two!' and get the back one.",
 FLY_RF,2|12|23,0|1,*,SS,CUT,CUT_3,You are cut 3. Line up about 45 feet in front of the bag.,
@@ -748,6 +758,8 @@ FLY_RF,2|12|23,0|1,*,2B,COVER,BASE_2,Cover second.,
 FLY_RF,2,0|1,*,P,BACKUP,BU_3,"Runner may tag. Back up third, deep behind the bag.",
 FLY_RF,2,0|1,*,LF,BACKUP,BU_3_IN,"Come in toward third, in front of the pitcher, in case the throw gets through.",
 FLY_RF,3|13|23|123,0|1,*,LF,BACKUP,BU_3,Back up third in case the play goes there.,
+FLY_RF,12,0|1,*,P,BACKUP,BU_3,"Runner may tag. Back up third, deep behind the bag.",
+FLY_RF,12,0|1,*,LF,BACKUP,BU_3_IN,"Come in toward third, in front of the pitcher, in case the throw gets through.",
 TRIPLE_LF,*,*,*,LF,FIELD,BALL,Get to it and get rid of it. The runner's not stopping at second — every throw goes to third.,RELAY_CORNER_L>BASE_3
 TRIPLE_LF,*,*,*,CF,BACKUP,BALL,"Go with him. If it kicks off the fence, you're the one who saves the run.",
 TRIPLE_LF,*,*,*,RF,BACKUP,BU_2,"All the way across behind second, in case this ball ever comes back that far.",
