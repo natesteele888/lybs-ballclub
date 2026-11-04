@@ -137,7 +137,8 @@
       opts = opts || {};
       containerEl.innerHTML = `
         <div class="detailCard">
-          <label>Name<input id="fName" value="${escapeHtml(player.name || '')}"></label>
+          <label>Name <span style="font-size:11px;color:var(--text2);font-weight:400;">(first name + last initial -- what Stats Import matches a GameChanger export against)</span>
+            <input id="fName" value="${escapeHtml(player.name || '')}" placeholder="e.g. Jake T"></label>
           <label>Number<input id="fNumber" value="${escapeHtml(player.number || '')}"></label>
           <label>Position<input id="fPosition" value="${escapeHtml(player.position || '')}" placeholder="e.g. SS, 2B, P/OF"></label>
           <label>Bats/Throws<input id="fBT" value="${escapeHtml(player.batsThrows || '')}" placeholder="e.g. R/R, L/L, S/R"></label>
