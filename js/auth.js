@@ -107,11 +107,12 @@
       errorEl.textContent = "This browser can't verify the code securely — try a modern browser over https.";
       return;
     }
-    const hash = await sha256Hex(inputEl.value);
+    const typed = inputEl.value;
+    const hash = await sha256Hex(typed);
     const match = window.TEAM_REGISTRY.codeHashes[hash];
     if (match) {
       try {
-        await window.signInWithGate(match.teamId, match.role, hash);
+        await window.signInWithGate(match.teamId, match.role, typed);
       } catch (gateErr) {
         console.error('Gate sign-in failed:', gateErr);
         errorEl.textContent = "Couldn't verify that code right now — check your connection and try again.";
