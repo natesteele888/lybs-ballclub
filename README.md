@@ -42,9 +42,7 @@ If the league's brand ever changes (new crest, different team joins with its own
 
 Nothing to install. `window.FIREBASE_DB_URL` defaults to `'MOCK'` in `js/backend.js`, which routes every read/write through a localStorage-backed mock database instead of a real one -- the whole app is clickable today with no Firebase project.
 
-Dev login codes (see `js/team-registry.js` -- **placeholders, not for production**):
-- Player/family code: `LunenburgSelect2026`
-- Coach code: `LYBS#2027!`
+Login codes are never written in this repo. Use a team's code from the board, or set new ones for a team with `node scripts/set-team-codes.mjs <teamId>` (asks for the codes, writes only their hashes into `js/team-registry.js`).
 
 Serve the folder with any static server, e.g.:
 
