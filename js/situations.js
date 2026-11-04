@@ -296,7 +296,7 @@
      or not -- re-pull the shipped CSVs instead of trusting a stale mirror;
      only the WRITE that re-seeds it for everyone else still needs a board
      member (shared/situationRules is gated board-write in database.rules.json). */
-  const RULES_VERSION = '20261103b';
+  const RULES_VERSION = '20261103c';
   let cache = null; // { situations:[...], responsibilities:[...] }
   let pending = null;
 
