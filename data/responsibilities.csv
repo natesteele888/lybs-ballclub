@@ -1,10 +1,10 @@
 ball_id,bases,outs,context,pos,role,target,cue,throw
 GB_P,*,*,*,P,FIELD,BALL,"Field it clean. Look it into your glove, then throw.",BASE_1
 GB_P,*,*,*,1B,COVER,BASE_1,"Beat the ball to the bag. Stretch after you see the throw, not before.",
-GB_P,*,*,*,2B,COVER,BASE_2,Second is yours on this ball. Get there and give a target.,
+GB_P,*,*,*,2B,BACKUP,BU_2_R,Shortstop has the bag. Back him up from the right side.,
 GB_P,*,*,*,3B,COVER,BASE_3,Stay home at third. Don't chase.,
 GB_P,*,*,*,C,BACKUP,BU_1_LINE,Nobody on — trail the runner down the line behind first.,
-GB_P,*,*,*,SS,BACKUP,BU_2_L,Slide in behind second on the left-field side.,
+GB_P,*,*,*,SS,COVER,BASE_2,"Comebacker, so second is yours. Get to the bag and take the throw.",
 GB_P,*,*,*,RF,BACKUP,BU_1,Every throw to first is yours. Get deep behind the bag in foul ground.,
 GB_P,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
 GB_P,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
