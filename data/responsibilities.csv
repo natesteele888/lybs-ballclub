@@ -10,8 +10,8 @@ GB_P,*,*,*,CF,BACKUP,BU_2,Come in behind second. Be ready for a bad feed.,
 GB_P,*,*,*,LF,BACKUP,BU_3,Come in behind third in case the ball ends up there.,
 GB_P,1|2|3|12|13|23|123,*,*,C,PLATE,PLATE,Runners on — stay in front of the plate. You're the last line.,
 GB_P,1|12|13|123,0|1,*,P,FIELD,BALL,Force at second. Feed it firm and chest-high — don't make him reach.,BASE_2>BASE_1
-GB_P,1|12|13|123,0|1,*,2B,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
-GB_P,1|12|13|123,0|1,*,SS,BACKUP,BU_2_L,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_P,1|12|13|123,0|1,*,2B,BACKUP,BU_2_R,Back up the bag behind your partner. A missed feed here is two bases.,
+GB_P,1|12|13|123,0|1,*,SS,COVER,BASE_2,"Turn two. Beat the ball to the bag, catch, clear the runner, throw.",
 GB_P,3|13|23|123,0|1,INF_IN,P,FIELD,BALL,"Infield in. Look the runner back, then decide: home if he broke, first if he held.",PLATE
 GB_P,3|13|23|123,0|1,INF_IN,C,PLATE,PLATE,Give a target at the plate. He's not forced — you have to tag him.,
 GB_P,123,0|1,*,P,FIELD,BALL,"Bases loaded — everybody's forced. Home is the easy out, then first for two.",PLATE>BASE_1
