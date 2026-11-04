@@ -71,7 +71,7 @@
   };
   const LM = {
     BASE_1: B1, BASE_2: B2, BASE_3: B3, PLATE: HOME, MOUND: MOUND, BALL: null,
-    BU_1: [392, 308], BU_2: [260, 210], BU_3: [128, 308], BU_PLATE: [300, 466],
+    BU_1: [392, 308], BU_2: [260, 210], BU_3: [128, 308], BU_PLATE: [272, 464],
     BU_1_IN: [369, 334], BU_1_LINE: [318, 362], BU_3_IN: [151, 334],
     BU_2_L: [234, 232], BU_2_R: [286, 232],
     CHASE_TO_1: [318, 320], CHASE_TO_2: [238, 288], CHASE_TO_3: [208, 362],
@@ -111,61 +111,34 @@
 
   /* ------------------------------ field drawing (see field-geometry.md
      for the drawing-order rationale) ------------------------------ */
-  // The fan's edges sit 65 deg off centre here, not the skill's original 58
-  // -- the foul line (still a fixed 45 deg, unchanged) left only a 13 deg
-  // sliver of foul ground, which pinches to almost nothing right next to
-  // home plate and reads as a jarring black cutout next to the batter's
-  // box rather than a deliberate boundary (confirmed against the skill's
-  // own unmodified prototype: identical artifact, not a porting bug --
-  // this is a deliberate departure from the reference for this app). 65
-  // keeps both fan corners safely inside the 0-520 viewBox and preserves
-  // the outfield fence's own bulge height (solved so the arc's sagitta
-  // relative to its new, wider chord matches the original exactly) --
-  // only the corners pull in closer to home (shallower, wider foul
-  // territory) as a result, not the center-field depth. Recompute all
-  // three constants together (FAN, TRACK below, and this span/a0) if this
-  // angle ever changes again -- they're derived from each other, not
-  // independently tunable.
-  const FAN = 'M260,415 L15.3,300.9 A252,252 0 0 1 504.7,300.9 Z';
-  const SKIN = 'M260,415 L121.4,276.4 A196,196 0 0 1 398.6,276.4 Z';
-  /* The whole playing surface: outfield fence, then straight down each side
-     to where that side meets the backstop circle, then around behind home.
-     FAN alone stops at a line from each corner to home plate, which left
-     black wedges of "nothing" where foul ground belongs along both baselines.
-     Each side runs along the tangent to the backstop circle, so the edge
-     meets the circle with no corner. Mirror-symmetric around x=260. */
-  function groundPath(cornerX, cornerY, arcR, cx, cy, r) {
-    const dx = cornerX - cx, dy = cornerY - cy, d = Math.hypot(dx, dy);
-    const a = Math.atan2(dy, dx) - Math.acos(r / d);
-    const tx = cx + r * Math.cos(a), ty = cy + r * Math.sin(a);
-    const f = n => n.toFixed(1), rx = 2 * cx - tx, rc = 2 * cx - cornerX;
-    return `M${f(cornerX)},${f(cornerY)} A${arcR},${arcR} 0 0 1 ${f(rc)},${f(cornerY)} ` +
-      `L${f(rx)},${f(ty)} A${r},${r} 0 1 1 ${f(tx)},${f(ty)} Z`;
+  /* Field shape, drawn to scale from the reference image: 106px = 60ft.
+     Majors dimensions: 60ft bases, 46ft mound, 200ft fence measured from home
+     (353px), so the fence is an arc centred on home. Foul ground runs parallel
+     to each foul line and the two sides meet in a point behind home. The
+     skinned infield is an arc of 81ft around a point just in front of the
+     mound, cut off at the foul lines. Recompute TRACK_* with GROUND_* if the
+     fence moves: they're the same shape, 12px larger. */
+  const FENCE_R = 353, FOUL_W = 62, TRACK_W = 12;
+  function vPoint(offset, r) {
+    // Where a side, `offset` px outside the foul line, meets a fence arc of radius r.
+    const k = offset * Math.SQRT2, t = (k + Math.sqrt(2 * r * r - k * k)) / 2;
+    return [260 - t, 415 + k - t];
   }
-  const GROUND = groundPath(15.3, 300.9, 252, 260, 428, 80);
-  const TRACK = groundPath(-4.6, 291.6, 272.1, 260, 428, 94);
-  /* FAN's own arc, decoded once: a circle of radius FAN_R centred below the
-     chord between its two corners (same chord+sagitta construction as the
-     comment above -- the arc bulges away from home). Lets buildPlay() find
-     exactly where a ball's own flight path would reach the fence, instead
-     of a second hand-placed constant that could drift out of sync with
-     FAN. Recompute alongside FAN if it ever changes. */
-  const FAN_L = [15.3, 300.9], FAN_R_PT = [504.7, 300.9], FAN_R = 252;
-  const FAN_CENTER = [260, (FAN_L[1] + FAN_R_PT[1]) / 2 +
-    Math.sqrt(FAN_R * FAN_R - ((FAN_R_PT[0] - FAN_L[0]) / 2) ** 2)];
-  function fenceDist(toward) {
-    const dx = toward[0] - HOME[0], dy = toward[1] - HOME[1], len = Math.hypot(dx, dy);
-    const ux = dx / len, uy = dy / len;
-    const ox = HOME[0] - FAN_CENTER[0], oy = HOME[1] - FAN_CENTER[1];
-    const b = 2 * (ux * ox + uy * oy), c = ox * ox + oy * oy - FAN_R * FAN_R;
-    return (-b + Math.sqrt(b * b - 4 * c)) / 2;
+  function groundPath(offset, r) {
+    const [x, y] = vPoint(offset, r), f = n => n.toFixed(1), k = offset * Math.SQRT2;
+    return `M${f(x)},${f(y)} A${r},${r} 0 0 1 ${f(520 - x)},${f(y)} L260,${f(415 + k)} Z`;
   }
+  const GROUND = groundPath(FOUL_W, FENCE_R);
+  const TRACK = groundPath(FOUL_W + TRACK_W, FENCE_R + TRACK_W);
+  const FOUL_END = 250; // 200ft down each line: 353px at 45 deg is 250px on each axis
+  const SKIN = 'M260,415 L131.4,286.4 A143,143 0 0 1 388.6,286.4 Z';
+  function fenceDist() { return FENCE_R; }
   function mowStripes() {
     let out = '';
-    const N = 10, span = 130, a0 = -65;
+    const N = 18, span = 180, a0 = -90;
     for (let i = 0; i < N; i++) {
       if (i % 2) continue;
-      const r = 360, p = a => [260 + r * Math.sin(a * Math.PI / 180), 415 - r * Math.cos(a * Math.PI / 180)];
+      const r = 460, p = a => [260 + r * Math.sin(a * Math.PI / 180), 415 - r * Math.cos(a * Math.PI / 180)];
       const [x0, y0] = p(a0 + i * span / N), [x1, y1] = p(a0 + (i + 1) * span / N);
       out += `<path d="M260,415 L${x0.toFixed(1)},${y0.toFixed(1)} L${x1.toFixed(1)},${y1.toFixed(1)} Z" fill="var(--sit-grass2)" opacity=".62"/>`;
     }
@@ -174,24 +147,10 @@
   function fieldBase() {
     return `
     <defs>
-      <clipPath id="sitFairclip"><path d="${FAN}"/></clipPath>
-      <!-- The three dirt cutout circles that sit ON a foul line (home, 1B,
-           3B) are plain circles -- unclipped, they bulge past the line into
-           what should be foul grass on one or both sides (home has a foul
-           line on each side; 1B/3B each have just the one). sitSkinClip
-           trims that to the same fair 45deg wedge SKIN already draws, so
-           the cutoff lands exactly on the chalk, not past it. Home's own
-           circle also reaches behind the plate, outside SKIN entirely (SKIN
-           only runs forward, into the field) -- sitHomeDirtClip adds a
-           second, backward-facing 90deg wedge (mirrored across home, same
-           45deg half-angle) just for that side, so the catcher's box stays
-           dirt instead of also getting clipped to nothing. 2B and the mound
-           aren't near either line and don't need this. -->
+      <clipPath id="sitGroundClip"><path d="${GROUND}"/></clipPath>
+      <!-- 1B and 3B cutouts sit on a foul line, so they're trimmed to the fair
+           side. Home's circle is full, as on a real field. -->
       <clipPath id="sitSkinClip"><path d="${SKIN}"/></clipPath>
-      <clipPath id="sitHomeDirtClip">
-        <path d="${SKIN}"/>
-        <path d="M260,415 L235.3,439.8 A35,35 0 0 0 284.8,439.8 Z"/>
-      </clipPath>
       <radialGradient id="sitGLight" cx="50%" cy="74%" r="80%">
         <stop offset="0" stop-color="#ffffff" stop-opacity=".17"/>
         <stop offset=".5" stop-color="#ffffff" stop-opacity=".05"/>
@@ -208,21 +167,19 @@
       </radialGradient>
     </defs>
 
-    <rect width="520" height="482" fill="#0e1a15"/>
+    <rect x="-60" y="20" width="640" height="520" fill="#0e1a15"/>
 
     <path d="${TRACK}" fill="var(--sit-track)"/>
-    <path d="${TRACK}" fill="none" stroke="#16241c" stroke-width="3.5"/>
+    <path d="${TRACK}" fill="none" stroke="#16241c" stroke-width="3.5" stroke-linejoin="round"/>
 
     <path d="${GROUND}" fill="var(--sit-grass)"/>
-    <g clip-path="url(#sitFairclip)">${mowStripes()}</g>
+    <g clip-path="url(#sitGroundClip)">${mowStripes()}</g>
     <path d="${GROUND}" fill="url(#sitGLight)"/>
-    <path d="${GROUND}" fill="none" stroke="#2a5a41" stroke-width="2"/>
+    <path d="${GROUND}" fill="none" stroke="#2a5a41" stroke-width="2" stroke-linejoin="round"/>
 
     <path d="${SKIN}" fill="var(--sit-dirt)"/>
     <path d="${SKIN}" fill="url(#sitDLight)"/>
     <path d="${SKIN}" fill="none" stroke="#7d5133" stroke-width="1.6" opacity=".7"/>
-    <g clip-path="url(#sitHomeDirtClip)"><circle cx="260" cy="417" r="31" fill="var(--sit-dirt)"/></g>
-    <path d="M182,438 A80,80 0 0 0 338,438" fill="none" stroke="#dfe6e0" stroke-width="2" opacity=".45"/>
 
     <polygon points="260,395 315,340 260,285 205,340" fill="var(--sit-grass)"/>
     <polygon points="260,395 315,340 260,285 205,340" fill="url(#sitGLight)"/>
@@ -230,14 +187,15 @@
     <g clip-path="url(#sitSkinClip)"><circle cx="335" cy="340" r="17" fill="var(--sit-dirt)"/></g>
     <circle cx="260" cy="265" r="17" fill="var(--sit-dirt)"/>
     <g clip-path="url(#sitSkinClip)"><circle cx="185" cy="340" r="17" fill="var(--sit-dirt)"/></g>
-    <circle cx="260" cy="334" r="27" fill="var(--sit-dirt)"/>
-    <circle cx="260" cy="334" r="27" fill="url(#sitMLight)"/>
+    <circle cx="260" cy="417" r="26" fill="var(--sit-dirt)"/>
+    <circle cx="260" cy="334" r="18" fill="var(--sit-dirt)"/>
+    <circle cx="260" cy="334" r="18" fill="url(#sitMLight)"/>
     <rect x="254" y="332" width="12" height="4" rx="1" fill="#fff" opacity=".92"/>
 
-    <line x1="260" y1="415" x2="52.5" y2="207.5" stroke="#fff" stroke-width="3"/>
-    <line x1="260" y1="415" x2="467.5" y2="207.5" stroke="#fff" stroke-width="3"/>
-    <line x1="52.5" y1="207.5" x2="52.5" y2="180" stroke="#f5d76e" stroke-width="4.5" stroke-linecap="round"/>
-    <line x1="467.5" y1="207.5" x2="467.5" y2="180" stroke="#f5d76e" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="260" y1="415" x2="${260 - FOUL_END}" y2="${415 - FOUL_END}" stroke="#fff" stroke-width="3"/>
+    <line x1="260" y1="415" x2="${260 + FOUL_END}" y2="${415 - FOUL_END}" stroke="#fff" stroke-width="3"/>
+    <line x1="${260 - FOUL_END}" y1="${415 - FOUL_END}" x2="${260 - FOUL_END}" y2="${415 - FOUL_END - 28}" stroke="#f5d76e" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="${260 + FOUL_END}" y1="${415 - FOUL_END}" x2="${260 + FOUL_END}" y2="${415 - FOUL_END - 28}" stroke="#f5d76e" stroke-width="4.5" stroke-linecap="round"/>
 
     <rect x="343" y="341" width="38" height="15" fill="none" stroke="#fff" stroke-width="1.6"
           opacity=".8" transform="rotate(-45 362 348.5)"/>
@@ -296,7 +254,7 @@
      or not -- re-pull the shipped CSVs instead of trusting a stale mirror;
      only the WRITE that re-seeds it for everyone else still needs a board
      member (shared/situationRules is gated board-write in database.rules.json). */
-  const RULES_VERSION = '20261103c';
+  const RULES_VERSION = '20261103d';
   let cache = null; // { situations:[...], responsibilities:[...] }
   let pending = null;
 
@@ -668,7 +626,7 @@
         const r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
         const cx = (evt.touches ? evt.touches[0].clientX : evt.clientX) - r.left;
         const cy = (evt.touches ? evt.touches[0].clientY : evt.clientY) - r.top;
-        return [cx / r.width * vb.width, cy / r.height * vb.height];
+        return [vb.x + cx / r.width * vb.width, vb.y + cy / r.height * vb.height];
       }
 
       function syncOuts() {
@@ -900,7 +858,7 @@
           </div>
 
           <div class="sitFieldwrap">
-            <svg class="sitFieldSvg" id="sitSvg" viewBox="0 0 520 482" role="img" aria-label="Baseball field with player movement"></svg>
+            <svg class="sitFieldSvg" id="sitSvg" viewBox="-46 44 612 490" role="img" aria-label="Baseball field with player movement"></svg>
             <div class="sitHint" id="sitFieldHint">Tap the field to hit it there</div>
           </div>
 
