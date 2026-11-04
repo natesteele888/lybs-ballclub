@@ -76,7 +76,7 @@
     BU_2_L: [234, 232], BU_2_R: [286, 232],
     CHASE_TO_1: [318, 320], CHASE_TO_2: [238, 288], CHASE_TO_3: [208, 362],
     CUT_PLATE_L: [224, 372], CUT_PLATE_R: [296, 372],
-    CUT_3: [214, 296], CUT_3_L: [198, 300], CUT_3_R: [230, 294],
+    CUT_3: [214, 296], CUT_3_RF: [274, 298], CUT_3_L: [198, 300], CUT_3_R: [230, 294],
     CUT_2: [260, 300], CUT_2_L: [224, 290], CUT_2_R: [296, 290],
     RELAY_LF: [150, 270], RELAY_LC: [198, 234], RELAY_CF: [252, 224], RELAY_RC: [322, 234], RELAY_RF: [370, 270],
     TRAIL_LC: [234, 270], TRAIL_RC: [288, 270],
@@ -254,7 +254,7 @@
      or not -- re-pull the shipped CSVs instead of trusting a stale mirror;
      only the WRITE that re-seeds it for everyone else still needs a board
      member (shared/situationRules is gated board-write in database.rules.json). */
-  const RULES_VERSION = '20261103m';
+  const RULES_VERSION = '20261103n';
   let cache = null; // { situations:[...], responsibilities:[...] }
   let pending = null;
 
