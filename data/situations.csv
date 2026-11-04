@@ -33,11 +33,11 @@ WILD_PITCH,Wild pitch or passed ball,Battery plays,loose,306,452,Pitcher coverin
 STEAL_2B,Runner steals second,Battery plays,steal,260,452,Pitcher must get off the mound and out of the throwing lane.,no,PLATE,,,steal2
 STEAL_3B,Runner steals third,Battery plays,steal,260,452,,no,PLATE,,,steal3
 OVER_LF,Over the left fielder's head,Cutoffs & relays,gap,100,179,Two-man relay. The trail man exists because 11-year-olds throw the relay over the cutoff's head.,yes,PLATE,,,double
-CORNER_LF,Ball rolls into the left field corner,Cutoffs & relays,gap,78,210,Longest throw on the field. Nobody should try to make it in one.,yes,PLATE,,,double
-WALL_LC,Off the fence in left-center,Cutoffs & relays,gap,170,102,,yes,PLATE,,,double
+CORNER_LF,Ball rolls into the left field corner,Cutoffs & relays,gap,42,169,Longest throw on the field. Nobody should try to make it in one.,yes,PLATE,,,double
+WALL_LC,Off the fence in left-center,Cutoffs & relays,gap,166,89,,yes,PLATE,,,double
 OVER_RF,Over the right fielder's head,Cutoffs & relays,gap,420,179,,yes,PLATE,,,double
-CORNER_RF,Ball rolls into the right field corner,Cutoffs & relays,gap,442,210,,yes,PLATE,,,double
-WALL_RC,Off the fence in right-center,Cutoffs & relays,gap,350,102,Second base is open on purpose. The trail man is the one who retreats to it.,yes,PLATE,,,double
+CORNER_RF,Ball rolls into the right field corner,Cutoffs & relays,gap,478,169,,yes,PLATE,,,double
+WALL_RC,Off the fence in right-center,Cutoffs & relays,gap,354,89,Second base is open on purpose. The trail man is the one who retreats to it.,yes,PLATE,,,double
 THROW_BEHIND_1B,Cut man throws behind the runner at first,Cutoffs & relays,hit,398,250,"This is why the second baseman covers first on a throw home. Free out, twice a season.",no,PLATE,2,,single
 THROW_BEHIND_2B,Cut man throws behind the runner at second,Cutoffs & relays,hit,116,244,Runners round second hard and stop watching the ball. The cut man is the only one who can see it.,no,PLATE,1,,single
 RD_1B_2B,Rundown between first and second,Rundowns,run,300,300,Run him BACK toward first. A runner retreating can't advance if you drop the ball.,no,BASE_2,1,,rundown
@@ -51,8 +51,8 @@ PICK_2B,Pickoff at second,Pickoffs,pick,260,265,"Timing play, not a look play. C
 PICK_3B_BACK,Catcher back-picks at third,Pickoffs,pick,185,340,"High risk. Only with a big lead off the bag, and only on a clean catch.",no,PLATE,3,,pickoff
 D3K_TAG,"Strike three in the dirt, ball at your feet",Dropped third strike,loose,276,436,"If the ball is right there, tag him. A three-foot tag beats a ninety-foot throw every time.",no,PLATE,_,,force
 D3K_THROW,"Strike three in the dirt, throw to first",Dropped third strike,loose,302,448,"Step around the batter and throw from OUTSIDE the baseline, or you'll hit him in the back.",no,PLATE,_,,force
-D3K_BACKSTOP,Strike three gets all the way to the backstop,Dropped third strike,loose,314,462,Now it's a wild pitch AND a dropped third strike. Look at the other runners before you look at the batter.,no,PLATE,_,,contact
+D3K_BACKSTOP,Strike three gets all the way to the backstop,Dropped third strike,loose,298,462,Now it's a wild pitch AND a dropped third strike. Look at the other runners before you look at the batter.,no,PLATE,_,,contact
 D3K_LOADED,"Strike three in the dirt, bases loaded, two outs",Dropped third strike,loose,268,430,"Everybody is forced, including the batter. Step on the plate — do not throw anywhere.",no,PLATE,123,2,force
 SQUEEZE,Squeeze bunt with a runner on third,Bunts,bunt,246,386,"You have about two seconds. Everybody charges, the catcher clears a lane, nobody panics.",no,PLATE,3,,contact
-TRIPLE_LF,Ball into the left field corner for a triple,Cutoffs & relays,gap,78,210,"The relay throw still goes to third — a throw to second here just lets him walk into it anyway.",yes,PLATE,,,triple
-TRIPLE_RF,Ball into the right field corner for a triple,Cutoffs & relays,gap,442,210,,yes,PLATE,,,triple
+TRIPLE_LF,Ball into the left field corner for a triple,Cutoffs & relays,gap,42,169,"The relay throw still goes to third — a throw to second here just lets him walk into it anyway.",yes,PLATE,,,triple
+TRIPLE_RF,Ball into the right field corner for a triple,Cutoffs & relays,gap,478,169,,yes,PLATE,,,triple

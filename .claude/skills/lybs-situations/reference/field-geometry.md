@@ -13,25 +13,20 @@ HOME   (260, 415)      MOUND  (260, 334)      // 46 ft from home
 1B     (335, 340)      2B     (260, 265)      3B  (185, 340)
 ```
 
-## Field shape
+## Field shape (Ballclub and apps/situations)
 
-The field is a **fan** with edges 58° off centre, while the foul lines run at 45°.
-That gap is what gives foul territory real width — if the edges and the lines are
-both at 45° there is nowhere for a foul pop to land.
+Drawn to scale from `field-reference.jpeg`: Majors dimensions, 106px = 60ft.
+The viewBox is `-46 44 612 490`; coordinates stay the same.
 
 ```
-fan (green)   M260,415 L31,272 A232.6,232.6 0 0 1 489,272 Z
-track (tan)   M260,438 L12.4,260.3 A252.7,252.7 0 0 1 507.6,260.3 Z
-backstop      green circle (260,428) r80, inside a tan circle r94
-foul lines    home → (52.5, 207.5) and (467.5, 207.5)
-foul poles    short yellow verticals at those two endpoints
-infield skin  M260,415 L121.4,276.4 A196,196 0 0 1 398.6,276.4 Z
+fence         arc of radius 353 (200ft) centred on home
+foul lines    home to (10,165) and (510,165), 200ft
+foul ground   sides parallel to the foul lines, 62px out, meeting behind home
+track         same shape, 12px larger
+infield skin  arc radius 143 around (260,349), cut at the foul lines
+home dirt     full circle, radius 26
+mound         radius 18
 ```
-
-The infield skin is a **45° sector of radius 196 from home** — foul line to foul
-line, about 1.3× the distance to second base. The grass diamond sits inside it and
-the base paths are the tan gap between. Drawing thin dirt strips on a grass infield
-is backwards and looks wrong.
 
 ## Drawing order
 
