@@ -41,6 +41,18 @@ runner legs.
 
 ## Porting it to LYBS
 
+Ballclub's port (`js/situations.js` + `data/*.csv`, the copy players use) has its
+own mode. It runs the same five checks on the real resolver and timeline builder:
+
+```
+node scripts/validate.js --ballclub
+57 situations · 780 rules · 1368 plays checked
+PASS — all five invariants hold
+```
+
+It hooks into `Situations.render()` at three exact lines. If one of them moves,
+the script stops with "anchor not found" instead of passing.
+
 The geometry constants at the top (`HOME`, `ARC`, `R`, `BACK`, `BR`, the 196 skin
 radius) must match whatever the LYBS field renderer uses. If you change the viewBox,
 change them here in the same commit or the validator silently passes garbage.
