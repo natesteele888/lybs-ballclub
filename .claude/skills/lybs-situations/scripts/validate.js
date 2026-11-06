@@ -1,19 +1,43 @@
 #!/usr/bin/env node
 /* Validates a built situations app. Usage: node scripts/validate.js <app.html>
+   or, for Ballclub's port in js/situations.js: node scripts/validate.js --ballclub
    Checks the five invariants from SKILL.md. Exits non-zero on failure. */
 const fs = require('fs');
-const path = process.argv[2] || 'assets/baseball-situations.html';
-const html = fs.readFileSync(path, 'utf8');
-const js = html.split('<script>')[1].split('</script>')[0];
-const core = js.split('/* ------------------------------ playback ---')[0]
-  .replace(/^let MYRULES=.*$/m, 'let MYRULES=[];')
-  .replace(/^let CFG=.*$/m, "let CFG={name:'x',sub:'y'};")
-  .replace(/^let TEAM=Object\.assign\(\{/m, 'let TEAM=({')
-  .replace(/^\},JSON\.parse\(store\.get\(LS\+'team','\{\}'\)\)\);$/m, '});');
+const nodePath = require('path');
 global.localStorage = { getItem: () => null, setItem(){}, removeItem(){} };
 global.performance = global.performance || { now: () => 0 };
 const ctx = {};
-new Function('g', core + '\nObject.assign(g,{SITS,BASE_RULES,LM,STARTS,POSLIST,POSN,resolve,pt,buildPlay,S,sitById,BASEKEY});')(ctx);
+if (process.argv[2] === '--ballclub') {
+  /* Ballclub's port: js/situations.js + data/*.csv, the copy players use.
+     Usage: node scripts/validate.js --ballclub [repo root]
+     Three small source hooks reach the real resolver and timeline builder
+     inside Situations.render(); each anchor must match exactly once, so a
+     refactor of situations.js fails loudly here instead of passing. */
+  const root = process.argv[3] || nodePath.resolve(__dirname, '../../../..');
+  let src = fs.readFileSync(nodePath.join(root, 'js/situations.js'), 'utf8');
+  const hook = (anchor, add) => {
+    if (src.split(anchor).length !== 2) throw new Error(`situations.js changed: anchor not found once: ${anchor.trim()}`);
+    src = src.replace(anchor, add(anchor));
+  };
+  hook('(function () {\n', a => a + '  window.__parseCSV = parseCSV;\n');
+  hook('      const SITS = cache.situations;\n', a => '      if (window.__sitData) cache = window.__sitData;\n' + a);
+  hook('      let PLAN = null,', a => '      return window.__sitHook({SITS,BASE_RULES,LM,STARTS,POSLIST,POSN,resolve,pt,buildPlay,S,sitById,BASEKEY});\n' + a);
+  const win = { __sitHook: o => Object.assign(ctx, o) };
+  new Function('window', 'document', src)(win, {});
+  const csv = f => win.__parseCSV(fs.readFileSync(nodePath.join(root, 'data', f), 'utf8'));
+  win.__sitData = { situations: csv('situations.csv'), responsibilities: csv('responsibilities.csv') };
+  win.Situations.render({});
+} else {
+  const path = process.argv[2] || 'assets/baseball-situations.html';
+  const html = fs.readFileSync(path, 'utf8');
+  const js = html.split('<script>')[1].split('</script>')[0];
+  const core = js.split('/* ------------------------------ playback ---')[0]
+    .replace(/^let MYRULES=.*$/m, 'let MYRULES=[];')
+    .replace(/^let CFG=.*$/m, "let CFG={name:'x',sub:'y'};")
+    .replace(/^let TEAM=Object\.assign\(\{/m, 'let TEAM=({')
+    .replace(/^\},JSON\.parse\(store\.get\(LS\+'team','\{\}'\)\)\);$/m, '});');
+  new Function('g', core + '\nObject.assign(g,{SITS,BASE_RULES,LM,STARTS,POSLIST,POSN,resolve,pt,buildPlay,S,sitById,BASEKEY});')(ctx);
+}
 const { SITS, LM, STARTS, POSLIST, resolve, buildPlay, S } = ctx;
 
 const STATES = ['_','1','2','3','12','13','23','123'];
