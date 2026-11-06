@@ -31,10 +31,17 @@
     },
 
     "shared": {
-      "rules": { ".read": "auth != null", ".write": "auth != null" },
-      "seasonArchive": { ".read": "auth != null", ".write": "auth != null" },
+      "rules": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" },
+      "seasonArchive": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" },
       "macLeagueStandings": { ".read": "auth != null", ".write": false },
-      "pitchSmart": { ".read": "auth != null", ".write": "auth != null" },
+      "pitchSmart": {
+        ".read": "auth != null",
+        ".write": false,
+        "$team": {
+          "depthOrder": { ".write": "auth != null && ((auth.token.email != null && auth.token.email.matches(/^coach-[^@]+-gate@lybsballclub\\.internal$/)) || root.child('boardMembers').child(auth.uid).val() == true || (newData.parent().child('depthOrderBy').isString() && root.child('access').child(newData.parent().child('depthOrderBy').val()).child(auth.uid).val() == 'coach'))" },
+          "depthOrderBy": { ".write": "auth != null && ((auth.token.email != null && auth.token.email.matches(/^coach-[^@]+-gate@lybsballclub\\.internal$/)) || root.child('boardMembers').child(auth.uid).val() == true || (newData.parent().child('depthOrderBy').isString() && root.child('access').child(newData.parent().child('depthOrderBy').val()).child(auth.uid).val() == 'coach'))", ".validate": "newData.isString()" }
+        }
+      },
       "macLeagueTeamDetails": { ".read": "auth != null", ".write": false },
       "practiceCatalog": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" },
       "skillBenchmarks": { ".read": "auth != null", ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true" },

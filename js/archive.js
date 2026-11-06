@@ -14,12 +14,16 @@
   let cache = null; // {teams:[...]}
 
   window.Archive = {
-    async ensureLoaded() {
+    // isBoard: only a board member's page saves the seed back to the
+    // database (shared/seasonArchive is board-write in database.rules.json).
+    async ensureLoaded(isBoard) {
       if (cache) return cache;
       let data = await window.dbGet(window.sharedPath('seasonArchive'));
       if (!data || !Array.isArray(data.teams) || !data.teams.length) {
         data = await fetch('data/season-archive.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => ({ teams: [] }));
-        await window.dbPut(window.sharedPath('seasonArchive'), data);
+        if (isBoard) {
+          try { await window.dbPut(window.sharedPath('seasonArchive'), data); } catch (e) { /* already toasted; show the seed anyway */ }
+        }
       }
       await window.LeagueTeams.ensureLoaded();
       cache = data;

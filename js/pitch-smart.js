@@ -494,9 +494,13 @@
           addOptions: (team.pitchers || []).map(p => p.name),
           suggestFrom: null,
           onSave: async (newOrder) => {
-            const fresh = (await window.dbGet(window.sharedPath('pitchSmart'))) || {};
-            fresh[selected] = Object.assign({}, fresh[selected], { depthOrder: newOrder });
-            await window.dbPut(window.sharedPath('pitchSmart'), fresh);
+            // Write only this team's depthOrder (the pitch counts themselves
+            // come from the scheduled scrape and browsers can't write them).
+            // depthOrderBy names our team so the rules can check we coach it.
+            await window.dbUpdate({
+              [window.sharedPath('pitchSmart') + '/' + selected + '/depthOrder']: newOrder,
+              [window.sharedPath('pitchSmart') + '/' + selected + '/depthOrderBy']: opts.teamId,
+            });
           },
         });
       }
