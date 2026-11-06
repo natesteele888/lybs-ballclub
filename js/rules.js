@@ -163,15 +163,20 @@
   }
 
   window.Rules = {
-    async ensureLoaded() {
+    // isBoard: only a board member's page saves the seed back to the
+    // database (shared/rules is board-write in database.rules.json).
+    async ensureLoaded(isBoard) {
       if (cache) return cache;
       let rules = await window.dbGet(window.sharedPath('rules'));
       if (!Array.isArray(rules) || !rules.length) {
-        // First-ever load: seed from the shipped file, then mirror it into
-        // the database so it becomes the live, admin-editable copy.
+        // First-ever load: seed from the shipped file. A board member's page
+        // also mirrors it into the database as the live copy; everyone else
+        // just shows it.
         const seed = await fetch('data/rules-seed.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => ({ rules: [] }));
         rules = seed.rules || [];
-        await window.dbPut(window.sharedPath('rules'), rules);
+        if (isBoard) {
+          try { await window.dbPut(window.sharedPath('rules'), rules); } catch (e) { /* already toasted; show the seed anyway */ }
+        }
       }
       cache = rules;
       return cache;
