@@ -138,7 +138,7 @@
         (leadsTo[pid] = leadsTo[pid] || []).push(b.id);
       }));
 
-      let view = { tab: 'drills', division: null, category: null, tiers: new Set(TIER_ORDER), query: '', drillId: null, addPlanFor: null };
+      let view = { tab: 'drills', division: null, category: null, tiers: new Set(TIER_ORDER), query: '', drillId: null };
 
       function matchesTier(d) { return view.tiers.has(d.tier); }
       function matchesQuery(d) {
@@ -393,7 +393,7 @@
       function wire() {
         containerEl.querySelectorAll('[data-top]').forEach(btn => {
           btn.addEventListener('click', () => {
-            view = { tab: btn.dataset.top, division: null, category: null, tiers: new Set(TIER_ORDER), query: '', drillId: null, addPlanFor: null };
+            view = { tab: btn.dataset.top, division: null, category: null, tiers: new Set(TIER_ORDER), query: '', drillId: null };
             refresh();
           });
         });

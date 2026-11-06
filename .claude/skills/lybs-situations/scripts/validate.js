@@ -21,14 +21,12 @@ const fail = [];
 const note = (t, m) => fail.push(`[${t}] ${m}`);
 
 /* --- geometry --- */
-const HOME=[260,415], ARC=[260,312.6], R=232.6, BACK=[260,428], BR=80;
+const HOME=[260,415], FENCE=353, FOUL_W=62, SKIN_C=[260,349], SKIN_R=143;
 const zone = (x,y) => {
-  if (Math.hypot(x-BACK[0], y-BACK[1]) <= BR) return 'backstop';
-  const dx=x-HOME[0], dy=y-HOME[1];
-  if (dy > 0) return 'off';
-  const a = Math.atan2(Math.abs(dx), -dy) * 180/Math.PI;
-  if (a > 58 || Math.hypot(x-ARC[0], y-ARC[1]) > R-3) return 'off';
-  return a <= 45 ? 'fair' : 'foul';
+  const dx=Math.abs(x-HOME[0]), dy=y-HOME[1];
+  const past = (dx + dy) / Math.SQRT2; // px past the foul line, negative when fair
+  if (past > FOUL_W || Math.hypot(dx, dy) > FENCE - 3) return 'off';
+  return past <= 2 ? 'fair' : (dy > 0 ? 'backstop' : 'foul');
 };
 
 /* 3. positions on the right ground */
@@ -46,7 +44,7 @@ Object.keys(LM).forEach(k => {
 POSLIST.forEach(p => {
   if (zone(STARTS[p][0], STARTS[p][1]) === 'off') note('geometry', `${p} starts off the field`);
 });
-const onSkin = p => Math.hypot(p[0]-260, p[1]-415) <= 196;
+const onSkin = p => Math.hypot(p[0]-SKIN_C[0], p[1]-SKIN_C[1]) <= SKIN_R;
 ['P','1B','2B','3B','SS'].forEach(p => { if (!onSkin(STARTS[p])) note('geometry', `${p} does not start on the dirt`); });
 ['LF','CF','RF'].forEach(p => { if (onSkin(STARTS[p])) note('geometry', `${p} starts on the infield dirt`); });
 
