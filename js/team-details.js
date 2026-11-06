@@ -32,10 +32,10 @@
           // Same bootstrap as js/tonight.js's own TonightGames.ensureLoaded():
           // a brand new browser with nothing mirrored yet (no scheduled job
           // has run against their database) falls back to a real one-time
-          // scrape committed alongside this file, not nothing.
+          // scrape committed alongside this file, not nothing. Display only:
+          // browsers can't write this mirror.
           if (!data || !data.teams || !Object.keys(data.teams).length) {
             data = await fetch('data/team-details-seed.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => null);
-            if (data) await window.dbPut(window.sharedPath('macLeagueTeamDetails'), data);
           }
           cache = (data && data.teams) || {};
           return cache;
