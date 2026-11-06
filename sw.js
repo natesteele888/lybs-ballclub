@@ -17,7 +17,11 @@
 // zone at the field didn't just show stale data -- it broke outright: the
 // shell loaded but every tab's own module was missing, since only
 // index.html/styles.css/manifest.json were ever cached.
-const CACHE_NAME = 'lybs-ballclub-shell-20261103e';
+const CACHE_NAME = 'lybs-ballclub-shell-20261103t';
+// Only ever delete our own caches. Every natesteele888.github.io app shares
+// one origin and so one Cache Storage, so deleting "everything but ours"
+// wiped other apps' offline copies (Power Program, Toolbox...) on each update.
+const CACHE_PREFIX = 'lybs-ballclub-shell-';
 const SHELL_FILES = [
   './index.html',
   './css/styles.css',
@@ -98,7 +102,9 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((names) =>
-      Promise.all(names.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n)))
+      Promise.all(names
+        .filter((n) => n.startsWith(CACHE_PREFIX) && n !== CACHE_NAME)
+        .map((n) => caches.delete(n)))
     )
   );
   self.clients.claim();
