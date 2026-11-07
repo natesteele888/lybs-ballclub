@@ -12,13 +12,12 @@
    shared login screen serves every team -- typing a code both
    authenticates AND selects which team you land in.
 
-   Select's two hashes below are STILL the codes that used to be printed
-   in README.md (they are no longer printed, but stay in git history, so
-   they are not secret). Replace them: run
-   `node scripts/set-team-codes.mjs select`, commit this file, then run
-   `node scripts/rotate-gate-passwords.mjs --apply` with the new codes.
-   Like every team's codes, the plaintext lives only with the board,
-   never in this repo.
+   Select's two hashes below were replaced on 2026-11-07. The codes that
+   used to be printed in README.md are no longer valid (they stay in git
+   history, but they open nothing). No Select gate account existed in
+   Firebase yet, so nothing needed rotating: the first sign-in with a new
+   code creates the account. Like every team's codes, the plaintext lives
+   only with the board, never in this repo.
 
    The 7 teams below Select (Majors Black/Blue, Minors Black/Blue,
    Rookies Black/Blue/White -- Phase 7 of the season-lifecycle plan,
@@ -41,8 +40,8 @@
    ============================================================ */
 window.TEAM_REGISTRY = {
   codeHashes: {
-    '8d62dce0f74603956a6a6103d85888008680e9e579182404a8fa21b29dd8496f': { teamId: 'select', role: 'player' },
-    '82dcd01057b33fcc3749042f7e21212ba01ed8c41b04cad4ecd362a87ba14280': { teamId: 'select', role: 'coach' },
+    '4e7db7dfef94a1dc223447c9f68f546fb299d055352b0d234c14420bc2b8079e': { teamId: 'select', role: 'player' },
+    'ffe4794cd8914285aac86b6d84fa1c318c6d24878fc599518f2ae5a3ef72b2ac': { teamId: 'select', role: 'coach' },
     // Majors Black -- real codes, plaintexts given to the board directly, never committed (see header comment).
     '83288b1b56756e23bfc5683f5d30b174aec3403ddb7f052e002376d54865c898': { teamId: 'majors-black', role: 'player' },
     '83c958fd52e1c70f52029255bd09a2c7154ec136c2d60e8d306bd936e659e1e9': { teamId: 'majors-black', role: 'coach' },
