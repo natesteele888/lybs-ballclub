@@ -29,7 +29,11 @@
    password is PBKDF2(code) with a separate salt (gatePassword below),
    so it can only be worked out by someone who knows the code itself.
    scripts/rotate-gate-passwords.mjs moves existing accounts over and
-   uses the exact same recipe -- change one, change both.
+   uses the exact same recipe -- change one, change both. An account
+   that still has the old password is also moved the first time its
+   code is typed (signInWithGate below), so shipping this never locks a
+   team out; the script is still how to end old saved sessions at once,
+   and how to follow a code change (set-team-codes.mjs).
    ============================================================ */
 (function () {
   // Public project identifier, not a secret -- see README.md "Go live".
@@ -39,6 +43,7 @@
   const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${FIREBASE_API_KEY}`;
   const SIGNIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`;
   const REFRESH_URL = `https://securetoken.googleapis.com/v1/token?key=${FIREBASE_API_KEY}`;
+  const UPDATE_URL = `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${FIREBASE_API_KEY}`;
   const SAFETY_MARGIN_MS = 60000;
 
   const GATE_SESSION_KEY = 'lybsGateSession'; // {refreshToken, teamId, role}
@@ -57,6 +62,12 @@
       { name: 'PBKDF2', hash: 'SHA-256', salt: enc.encode(`${GATE_PW_SALT_PREFIX}|${teamId}|${role}`), iterations: GATE_PW_ITERATIONS },
       key, 256);
     return Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  // What every gate account had as its password before Nov 2026: the
+  // published SHA-256 of the code. Only used to move an old account over.
+  async function legacyGatePassword(typedCode) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(typedCode));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
   let cached = null;   // { idToken, refreshToken, expiresAt, teamId, role }
@@ -119,26 +130,42 @@
     }
     const email = gateEmail(teamId, role);
     const password = await gatePassword(typedCode, teamId, role);
-    let res = await fetch(SIGNUP_URL, {
+    const post = (url, body) => fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, returnSecureToken: true }),
+      body: JSON.stringify(body),
     });
-    if (!res.ok) {
+    let res = await post(SIGNUP_URL, { email, password, returnSecureToken: true });
+    let data;
+    if (res.ok) {
+      data = await res.json();
+    } else {
       const errBody = await res.json().catch(() => ({}));
       const code = errBody.error && errBody.error.message;
-      if (code === 'EMAIL_EXISTS') {
-        res = await fetch(SIGNIN_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, returnSecureToken: true }),
-        });
-        if (!res.ok) throw new Error('Gate sign-in failed: HTTP ' + res.status);
+      if (code !== 'EMAIL_EXISTS') throw new Error('Gate account setup failed: ' + (code || res.status));
+      res = await post(SIGNIN_URL, { email, password, returnSecureToken: true });
+      if (res.ok) {
+        data = await res.json();
       } else {
-        throw new Error('Gate account setup failed: ' + (code || res.status));
+        // Either the code really is wrong, or this account still has the
+        // old password (the published hash of the code), because
+        // scripts/rotate-gate-passwords.mjs has not been run for it yet.
+        // Try the old one once; if it works the person does know the code,
+        // so move the account onto the new password and the published
+        // hash stops working. This is what lets the new app ship without
+        // locking anyone out while the script is still to be run.
+        const old = await post(SIGNIN_URL, { email, password: await legacyGatePassword(typedCode), returnSecureToken: true });
+        if (!old.ok) throw new Error('Gate sign-in failed: HTTP ' + res.status);
+        data = await old.json();
+        try {
+          const upd = await post(UPDATE_URL, { idToken: data.idToken, password, returnSecureToken: true });
+          const moved = upd.ok ? await upd.json() : null;
+          if (moved && moved.idToken && moved.refreshToken) data = moved;
+        } catch (e) {
+          // Signed in either way; the next sign-in tries the move again.
+        }
       }
     }
-    const data = await res.json();
     cached = {
       idToken: data.idToken,
       refreshToken: data.refreshToken,
