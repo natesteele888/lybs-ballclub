@@ -299,7 +299,9 @@
           </div>
           ${statusBadge}${tbdBadge}
         </div>`;
-      }).join('') || '<div class="emptyState">No games yet. Add the first one below.</div>';
+      }).join('') || (opts.canEdit
+        ? '<div class="emptyState">No games yet. Tap + Add game to add the first one.</div>'
+        : '<div class="emptyState">No games scheduled yet. Check back once your coach adds them.</div>');
       containerEl.innerHTML = `
         <div class="sectionHeader">
           <div><div class="recordLine">Season record: <b>${recStr}</b></div></div>
