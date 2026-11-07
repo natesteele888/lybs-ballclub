@@ -70,7 +70,7 @@
   // right pool instead of silently assuming our own division.
   function teamHtml(team, recordSuffix, divisionId) {
     if (!team) return '<span class="tonightTeamName">TBD</span>';
-    const logo = team.logoUrl ? `<img class="tonightTeamLogo" src="${team.logoUrl}" alt="" loading="lazy">` : '';
+    const logo = team.logoUrl ? `<img class="tonightTeamLogo" src="${team.logoUrl}" alt="" data-name="${escapeHtml(stripAgePrefix(team.name || ''))}" loading="lazy">` : '';
     const suffix = recordSuffix ? `<span class="tonightTeamRecord">${escapeHtml(recordSuffix)}</span>` : '';
     const inner = `${logo}<span class="tonightTeamName">${escapeHtml(stripAgePrefix(team.name))}</span>${suffix}`;
     return team.teamId
