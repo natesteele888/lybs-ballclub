@@ -779,3 +779,43 @@ TRIPLE_RF,*,*,*,3B,COVER,BASE_3,Straddle the bag. This throw is coming to you �
 TRIPLE_RF,*,*,*,1B,TRAIL,TRAIL_RF,"See him touch first, then trail the relay man. If the throw gets past him, it is yours.",
 TRIPLE_RF,*,*,*,C,PLATE,PLATE,"Call it: 'Cut 3!' if you want it cut, or 'Let it go!' to third. Then stay alert in case he tries for home.",
 TRIPLE_RF,*,*,*,P,BACKUP,BU_3,Back up third. That's the whole play here.,
+GAP_LC,3,*,*,CF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_LC>BASE_3
+GAP_LC,3,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+GAP_LC,3,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+GAP_RC,3,*,*,CF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_RC>BASE_3
+GAP_RC,3,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+GAP_RC,3,*,*,LF,BACKUP,BU_3_IN,"Come in toward third, in front of the pitcher, in case the throw gets through.",
+GAP_RC,3,*,*,RF,BACKUP,BALL,"Go with him. If it gets by him, it's yours.",
+LINE_LF,3,*,*,LF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_LF>BASE_3
+LINE_LF,3,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+LINE_LF,3,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+LINE_RF,3,*,*,RF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_RF>BASE_3
+LINE_RF,3,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+LINE_RF,3,*,*,LF,BACKUP,BU_3_IN,"Come in toward third, in front of the pitcher, in case the throw gets through.",
+OVER_CF,3,*,*,CF,FIELD,BALL,Get to it fast. Don't look at the runners — find your relay man.,RELAY_CF>BASE_3
+OVER_CF,3,*,*,P,BACKUP,BU_3,"Back up third. If the runner rounds it, switch to the plate.",
+OVER_CF,3,*,*,RF,BACKUP,BU_2_R,Come all the way in and back up the throw to second.,
+OVER_LF,3,*,*,LF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_LF>BASE_3
+OVER_LF,3,*,*,SS,RELAY,RELAY_LF,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+OVER_LF,3,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+OVER_LF,3,*,*,RF,BACKUP,BU_2,All the way in behind second. That's where this ball is coming.,
+CORNER_LF,3,*,*,LF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_CORNER_L>BASE_3
+CORNER_LF,3,*,*,SS,RELAY,RELAY_CORNER_L,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+CORNER_LF,3,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+CORNER_LF,3,*,*,RF,BACKUP,BU_2,All the way in behind second. That's where this ball is coming.,
+WALL_LC,3,*,*,CF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_DEEP_L>BASE_3
+WALL_LC,3,*,*,SS,RELAY,RELAY_DEEP_L,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+WALL_LC,3,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+WALL_LC,3,*,*,RF,BACKUP,BU_2,All the way in behind second. That's where this ball is coming.,
+OVER_RF,3,*,*,RF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_RF>BASE_3
+OVER_RF,3,*,*,2B,RELAY,RELAY_RF,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+OVER_RF,3,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+OVER_RF,3,*,*,LF,BACKUP,BU_3_IN,"Come in toward third, in front of the pitcher, in case the throw gets through.",
+CORNER_RF,3,*,*,RF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_CORNER_R>BASE_3
+CORNER_RF,3,*,*,2B,RELAY,RELAY_CORNER_R,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+CORNER_RF,3,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+CORNER_RF,3,*,*,LF,BACKUP,BU_3_IN,"Come in toward third, in front of the pitcher, in case the throw gets through.",
+WALL_RC,3,*,*,CF,FIELD,BALL,Get to it and get rid of it. Two quick throws beat one hero throw.,RELAY_DEEP_R>BASE_3
+WALL_RC,3,*,*,2B,RELAY,RELAY_DEEP_R,Sprint out and get in a line with him. Wave your arms and yell your name so he can find you.,
+WALL_RC,3,*,*,P,BACKUP,BU_3,"Back up third. If the throw goes home instead, switch and get deep behind the plate.",
+WALL_RC,3,*,*,LF,BACKUP,BU_3_IN,"Come in toward third, in front of the pitcher, in case the throw gets through.",
