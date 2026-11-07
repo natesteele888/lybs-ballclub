@@ -12,10 +12,13 @@
    shared login screen serves every team -- typing a code both
    authenticates AND selects which team you land in.
 
-   Select's two codes were replaced in Nov 2026 (the old ones had been
-   printed in README.md). Like every team's codes, the plaintext lives
-   only with the board, never in this repo. Change a team's codes with
-   scripts/set-team-codes.mjs.
+   Select's two hashes below are STILL the codes that used to be printed
+   in README.md (they are no longer printed, but stay in git history, so
+   they are not secret). Replace them: run
+   `node scripts/set-team-codes.mjs select`, commit this file, then run
+   `node scripts/rotate-gate-passwords.mjs --apply` with the new codes.
+   Like every team's codes, the plaintext lives only with the board,
+   never in this repo.
 
    The 7 teams below Select (Majors Black/Blue, Minors Black/Blue,
    Rookies Black/Blue/White -- Phase 7 of the season-lifecycle plan,
