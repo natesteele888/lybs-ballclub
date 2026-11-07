@@ -19,8 +19,17 @@
    Exposes the same surface as the Bengals version:
      window.getFirebaseIdToken()
      window.firebaseAuthed(url)
-     window.signInWithGate(teamId, role, passwordHash)
+     window.signInWithGate(teamId, role, typedCode)
      window.hasGateSession()
+
+   Gate password (Nov 2026): the account password is NOT the published
+   SHA-256 hash any more. team-registry.js publishes sha256(code) so the
+   login screen can check a code, which meant anyone could copy a hash
+   from GitHub and use it directly as the Firebase password. Now the
+   password is PBKDF2(code) with a separate salt (gatePassword below),
+   so it can only be worked out by someone who knows the code itself.
+   scripts/rotate-gate-passwords.mjs moves existing accounts over and
+   uses the exact same recipe -- change one, change both.
    ============================================================ */
 (function () {
   // Public project identifier, not a secret -- see README.md "Go live".
@@ -36,6 +45,18 @@
 
   function gateEmail(teamId, role) {
     return `${role}-${teamId}-gate@lybsballclub.internal`;
+  }
+
+  // Must match scripts/rotate-gate-passwords.mjs exactly.
+  const GATE_PW_SALT_PREFIX = 'lybs-ballclub-gate-v2';
+  const GATE_PW_ITERATIONS = 100000;
+  async function gatePassword(typedCode, teamId, role) {
+    const enc = new TextEncoder();
+    const key = await crypto.subtle.importKey('raw', enc.encode(typedCode), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits(
+      { name: 'PBKDF2', hash: 'SHA-256', salt: enc.encode(`${GATE_PW_SALT_PREFIX}|${teamId}|${role}`), iterations: GATE_PW_ITERATIONS },
+      key, 256);
+    return Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
   let cached = null;   // { idToken, refreshToken, expiresAt, teamId, role }
@@ -75,25 +96,33 @@
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(refreshToken)}`,
     });
-    if (!res.ok) throw new Error('Token refresh failed: HTTP ' + res.status);
+    if (!res.ok) {
+      // 400 = this refresh token is dead for good (e.g. the gate password
+      // was changed, which ends every saved session). Forget it so the
+      // next page load shows the code screen instead of failing forever.
+      if (res.status === 400) window.signOutOfGate();
+      throw new Error('Token refresh failed: HTTP ' + res.status);
+    }
     const data = await res.json();
     return { idToken: data.id_token, refreshToken: data.refresh_token, expiresAt: Date.now() + Number(data.expires_in) * 1000 };
   }
 
   // Called by auth.js once a typed code's hash matches an entry in
-  // TEAM_REGISTRY.codeHashes. passwordHash is that same SHA-256 hex
-  // string, reused as the Firebase account password.
-  window.signInWithGate = async function (teamId, role, passwordHash) {
+  // TEAM_REGISTRY.codeHashes. typedCode is the code as typed; the
+  // Firebase password is derived from it (gatePassword above), never
+  // the published hash.
+  window.signInWithGate = async function (teamId, role, typedCode) {
     if (window.__isMockBackend && window.__isMockBackend()) {
       cached = { idToken: 'mock-token', refreshToken: 'mock-refresh', expiresAt: Date.now() + 3600000, teamId, role };
       saveGateSession(cached.refreshToken, teamId, role);
       return cached;
     }
     const email = gateEmail(teamId, role);
+    const password = await gatePassword(typedCode, teamId, role);
     let res = await fetch(SIGNUP_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: passwordHash, returnSecureToken: true }),
+      body: JSON.stringify({ email, password, returnSecureToken: true }),
     });
     if (!res.ok) {
       const errBody = await res.json().catch(() => ({}));
@@ -102,7 +131,7 @@
         res = await fetch(SIGNIN_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password: passwordHash, returnSecureToken: true }),
+          body: JSON.stringify({ email, password, returnSecureToken: true }),
         });
         if (!res.ok) throw new Error('Gate sign-in failed: HTTP ' + res.status);
       } else {
