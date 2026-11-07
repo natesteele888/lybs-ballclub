@@ -137,9 +137,9 @@
   }
 
   function sideBadgeHtml(side) {
-    if (side.logoUrl) return `<img class="gameResultLogo" src="${side.logoUrl}" alt="" loading="lazy">`;
+    if (side.logoUrl) return `<img class="gameResultLogo" src="${side.logoUrl}" alt="" data-name="${escapeHtml(side.name || '')}" loading="lazy">`;
     const club = window.ClubLogos.find(side.name || '');
-    if (club) return `<img class="gameResultLogo" src="${club.logoUrl}" alt="" loading="lazy">`;
+    if (club) return `<img class="gameResultLogo" src="${club.logoUrl}" alt="" data-name="${escapeHtml(side.name || '')}" loading="lazy">`;
     const letter = (side.name || '?').trim().charAt(0).toUpperCase() || '?';
     return `<div class="gameResultLogoFallback">${escapeHtml(letter)}</div>`;
   }
