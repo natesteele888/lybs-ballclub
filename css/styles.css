@@ -268,7 +268,8 @@ a { color: var(--lybs-blue-bright); }
 }
 .loginDivider::before, .loginDivider::after { content: ''; flex: 1; height: 1px; background: var(--card-border); }
 .loginPublicLink {
-  display: block; text-align: center; margin-top: 16px;
+  display: flex; align-items: center; justify-content: center; min-height: 44px;
+  text-align: center; margin-top: 8px;
   color: var(--text2); font-size: 12.5px; font-family: var(--font-body);
   text-decoration: underline; text-underline-offset: 2px;
 }
