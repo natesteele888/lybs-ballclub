@@ -292,7 +292,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261107b';</script>
+<script defer>window.BUILD_V = '20261109a';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -441,8 +441,23 @@
     clearTimeout(errorToastTimer);
     errorToastTimer = setTimeout(() => el.remove(), 5000);
   }
+  // A failed load leaves a tab's "Loading..." up for good, so swap it for a
+  // plain message and a way to retry. Covers every tab from this one spot.
+  function replaceStuckLoading() {
+    document.querySelectorAll('.emptyState').forEach(el => {
+      if (el.textContent.trim() !== 'Loading\u2026' || !el.getClientRects().length) return;
+      el.innerHTML = 'Couldn\u2019t load this. Check your signal and try again.<br><button class="btn btnSmall" type="button" style="margin-top:10px;">Try again</button>';
+      el.querySelector('button').addEventListener('click', () => {
+        const panel = el.closest('.tabPanel.active');
+        if (!panel) { location.reload(); return; }
+        panel.innerHTML = ''; // so the tab shows Loading again while it retries
+        renderTab(panel.id.replace(/^tab-/, ''));
+      });
+    });
+  }
   window.addEventListener('unhandledrejection', e => {
     console.error('Unhandled error:', e.reason);
+    replaceStuckLoading();
     // dbGet/dbPut/dbUpdate (js/backend.js) already call showToast with a
     // specific message right before rethrowing on a network/HTTP failure --
     // most call sites await without their own try/catch, so that rethrow
