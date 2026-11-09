@@ -26,8 +26,8 @@ SINGLE_CF,Base hit to center field,Base hits,hit,260,186,,yes,PLATE,,,single
 SINGLE_RF,Base hit to right field,Base hits,hit,408,236,,yes,PLATE,,,single
 GAP_LC,Ball in the left-center gap,Extra base hits,gap,186,152,Two-man relay. The trail man saves a run when the relay throw gets away.,yes,PLATE,,,double
 GAP_RC,Ball in the right-center gap,Extra base hits,gap,336,152,,yes,PLATE,,,double
-LINE_LF,Double down the left field line,Extra base hits,gap,112,250,,yes,PLATE,,,double
-LINE_RF,Double down the right field line,Extra base hits,gap,408,250,,yes,PLATE,,,double
+LINE_LF,Double down the left field line,Extra base hits,gap,72,206,,yes,PLATE,,,double
+LINE_RF,Double down the right field line,Extra base hits,gap,448,206,,yes,PLATE,,,double
 OVER_CF,Ball over the center fielder's head,Extra base hits,gap,260,96,"Nobody panics. Get it in with two throws, not one heroic one.",yes,PLATE,,,double
 WILD_PITCH,Wild pitch or passed ball,Battery plays,loose,306,452,Pitcher covering the plate is the play nobody practices and everybody needs.,no,PLATE,,,wp
 STEAL_2B,Runner steals second,Battery plays,steal,260,452,Pitcher must get off the mound and out of the throwing lane.,no,PLATE,,,steal2
