@@ -195,6 +195,36 @@
   // explicitToken (optional, both below) -- see cloud-auth.js's
   // firebaseAuthed() for why a caller would pass one instead of letting
   // window.getFirebaseIdToken() pick a session itself.
+  // ---- Last-seen copies for no signal ----
+  // Every successful team/league read is kept on this phone so the Schedule,
+  // Roster and Standings still open at a field with no signal. Coach-only
+  // notes and sign-in/access records are deliberately not saved. Cleared on
+  // sign-out (clearOfflineCopies, called from cloud-auth.js's signOutOfGate).
+  const COPY_PREFIX = 'lybsOfflineCopy:';
+  const COPY_MAX_CHARS = 200000;
+  let copyToastAt = 0;
+  function copyAllowed(path) { return /^(teams|shared|publicSchedule)\//.test(path); }
+  function saveCopy(path, value) {
+    if (!copyAllowed(path)) return;
+    try {
+      // A path that's empty online (null) stays empty offline, not an error.
+      const json = JSON.stringify(value === undefined ? null : value);
+      if (json.length <= COPY_MAX_CHARS) localStorage.setItem(COPY_PREFIX + path, json);
+    } catch (e) {} // storage full or blocked: just go without a copy
+  }
+  function readCopy(path) {
+    if (!copyAllowed(path)) return undefined;
+    try {
+      const json = localStorage.getItem(COPY_PREFIX + path);
+      return json === null ? undefined : JSON.parse(json);
+    } catch (e) { return undefined; }
+  }
+  window.clearOfflineCopies = function () {
+    try {
+      Object.keys(localStorage).filter(k => k.startsWith(COPY_PREFIX)).forEach(k => localStorage.removeItem(k));
+    } catch (e) {}
+  };
+
   window.dbGet = async function (path, explicitToken) {
     if (isMock()) {
       const db = loadMockDb();
@@ -205,8 +235,19 @@
       const res = await fetch(url);
       if (!res.ok) throw new Error(`dbGet ${path} failed: HTTP ${res.status}`);
       const data = await res.json();
+      saveCopy(path, data);
       return data === undefined ? null : data;
     } catch (e) {
+      // fetch() rejects with a TypeError only when the network failed. A
+      // refused or broken read (HTTP error) must never fall back to a copy.
+      const copy = e instanceof TypeError ? readCopy(path) : undefined;
+      if (copy !== undefined) {
+        if (Date.now() - copyToastAt > 30000) {
+          copyToastAt = Date.now();
+          window.showToast('No signal -- showing the last saved copy.');
+        }
+        return copy;
+      }
       window.showToast("Couldn't load the latest data -- check your connection.");
       throw e;
     }
@@ -227,6 +268,7 @@
         body: JSON.stringify(value),
       });
       if (!res.ok) throw new Error(`dbPut ${path} failed: HTTP ${res.status}`);
+      saveCopy(path, value);
       return value;
     } catch (e) {
       window.showToast("Couldn't save -- check your connection and try again.");
@@ -257,6 +299,7 @@
         body: JSON.stringify(updates),
       });
       if (!res.ok) throw new Error(`dbUpdate failed: HTTP ${res.status}`);
+      Object.keys(updates).forEach(path => saveCopy(path, updates[path]));
       return updates;
     } catch (e) {
       window.showToast("Couldn't save -- check your connection and try again.");

@@ -33,7 +33,7 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=194">
+<link rel="stylesheet" href="css/styles.css?v=209">
 <!-- Situations Trainer's own scoped "Sandlot" design system -- deliberately
      separate from styles.css, see css/situations.css's own header comment. -->
 <link rel="stylesheet" href="css/situations.css?v=194">
@@ -292,7 +292,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261108a';</script>
+<script defer>window.BUILD_V = '20261109e';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -354,10 +354,10 @@
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-auth-compat.min.js"></script>
 <script defer src="js/util.js?v=194"></script>
 <script defer src="js/nav-history.js?v=194"></script>
-<script defer src="js/backend.js?v=194"></script>
-<script defer src="js/team-registry.js?v=194"></script>
-<script defer src="js/cloud-auth.js?v=194"></script>
-<script defer src="js/google-auth.js?v=194"></script>
+<script defer src="js/backend.js?v=209"></script>
+<script defer src="js/team-registry.js?v=195"></script>
+<script defer src="js/cloud-auth.js?v=209"></script>
+<script defer src="js/google-auth.js?v=209"></script>
 <script defer src="js/team-config.js?v=194"></script>
 <script defer src="js/identity.js?v=194"></script>
 <script defer src="js/weather.js?v=194"></script>
@@ -441,8 +441,23 @@
     clearTimeout(errorToastTimer);
     errorToastTimer = setTimeout(() => el.remove(), 5000);
   }
+  // A failed load leaves a tab's "Loading..." up for good, so swap it for a
+  // plain message and a way to retry. Covers every tab from this one spot.
+  function replaceStuckLoading() {
+    document.querySelectorAll('.emptyState').forEach(el => {
+      if (el.textContent.trim() !== 'Loading\u2026' || !el.getClientRects().length) return;
+      el.innerHTML = 'Couldn\u2019t load this. Check your signal and try again.<br><button class="btn btnSmall" type="button" style="margin-top:10px;">Try again</button>';
+      el.querySelector('button').addEventListener('click', () => {
+        const panel = el.closest('.tabPanel.active');
+        if (!panel) { location.reload(); return; }
+        panel.innerHTML = ''; // so the tab shows Loading again while it retries
+        renderTab(panel.id.replace(/^tab-/, ''));
+      });
+    });
+  }
   window.addEventListener('unhandledrejection', e => {
     console.error('Unhandled error:', e.reason);
+    replaceStuckLoading();
     // dbGet/dbPut/dbUpdate (js/backend.js) already call showToast with a
     // specific message right before rethrowing on a network/HTTP failure --
     // most call sites await without their own try/catch, so that rethrow
@@ -1223,7 +1238,7 @@
      google-auth.js. Placed next to auth.js anyway since the two play the
      same role (driving entry into the app) for their respective sign-in
      paths. -->
-<script defer src="js/access-control.js?v=194"></script>
+<script defer src="js/access-control.js?v=209"></script>
 <!-- public-view.js wires up #publicViewLink/#publicViewBack -- needs
      TEAM_REGISTRY, LeagueInfo, Standings, and LeagueEvents to already
      exist, no ordering constraint relative to auth.js/access-control.js

@@ -17,7 +17,7 @@
 // zone at the field didn't just show stale data -- it broke outright: the
 // shell loaded but every tab's own module was missing, since only
 // index.html/styles.css/manifest.json were ever cached.
-const CACHE_NAME = 'lybs-ballclub-shell-20261108a';
+const CACHE_NAME = 'lybs-ballclub-shell-20261109e';
 // Only ever delete our own caches. Every natesteele888.github.io app shares
 // one origin and so one Cache Storage, so deleting "everything but ours"
 // wiped other apps' offline copies (Power Program, Toolbox...) on each update.
@@ -103,6 +103,13 @@ const SHELL_FILES = [
   './data/team-details-seed.json',
 ];
 
+// The Firebase scripts index.html loads from a CDN. Without a saved copy,
+// Google sign-in breaks outright with no signal.
+const CDN_FILES = [
+  'https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-app-compat.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-auth-compat.min.js',
+];
+
 self.addEventListener('install', (event) => {
   // No .catch() swallowing a failed addAll -- cache.addAll is all-or-nothing,
   // so if even one shell file fails to fetch (a flaky connection, exactly
@@ -113,7 +120,10 @@ self.addEventListener('install', (event) => {
   // never runs against a half-populated cache.
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(SHELL_FILES))
+      .then((cache) => cache.addAll(SHELL_FILES).then(() =>
+        // Best effort: a CDN hiccup must never block the install. The next
+        // visit with signal fills these in when the worker updates.
+        Promise.all(CDN_FILES.map((u) => cache.add(u).catch(() => {})))))
       .then(() => self.skipWaiting())
   );
 });
@@ -151,7 +161,7 @@ self.addEventListener('fetch', (event) => {
     if (early) return early;
     // ignoreSearch: a request for js/util.js?v=82 still matches the entry
     // cached as js/util.js -- see SHELL_FILES' header comment above.
-    const cached = await caches.match(cacheKey, { ignoreSearch: true });
+    const cached = await caches.match(cacheKey, { ignoreSearch: true, ignoreVary: true });
     if (cached) return cached;
     // Nothing cached for this request -- wait out the slow network instead
     // of failing outright.
