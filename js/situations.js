@@ -254,7 +254,7 @@
      or not -- re-pull the shipped CSVs instead of trusting a stale mirror;
      only the WRITE that re-seeds it for everyone else still needs a board
      member (shared/situationRules is gated board-write in database.rules.json). */
-  const RULES_VERSION = '20261108a';
+  const RULES_VERSION = '20261108b';
   let cache = null; // { situations:[...], responsibilities:[...] }
   let pending = null;
 
@@ -462,20 +462,31 @@
         legs.push({ from: origin, to: bp, start: 0, dur: fl, arc: (type === 'fly' || type === 'pop') ? 38 : ((type === 'hit' || type === 'gap') ? 14 : 0) });
         t = fl;
         // A gap ball nobody catches doesn't stop dead where it lands --
-        // it keeps rolling. Extend it on toward the fence, straight out
-        // along the same line from home, when it landed more than
-        // ROLL_MIN short of the fence; a ball already hit into the
-        // corner or off the wall is skipped since there's nothing left
-        // to roll. Fielders and the throw both start from the real stop
+        // it keeps rolling a bit further, straight out along the same
+        // line from home. ROLL_EXTRA caps that at a modest, realistic
+        // skid (a double in the gap gets run down well inside the
+        // track) instead of always extending every single one of these
+        // situations all the way out to the literal fence -- that was
+        // the actual bug behind "every ball hit to the outfield is a
+        // shot to the fence": GAP_LC, a routine double down the line,
+        // and a ball that's genuinely off the wall all looked identical
+        // because all three were forced out to the same point (the
+        // fence) regardless of how hard the ball was really hit. A ball
+        // already scripted at or past the fence (WALL_*, CORNER_*,
+        // OVER_*) still ends up capped there -- there's nothing left to
+        // roll -- while a plain gap/line double now stops well short of
+        // it. Fielders and the throw both start from the real stop
         // point (stopPt), not the landing spot, via sitB below.
-        const ROLL_MIN = 10;
+        const ROLL_MIN = 10, ROLL_EXTRA = 30;
         let stopPt = bp;
         if (type === 'gap') {
           const landedR = dist(HOME, bp), fenceR = fenceDist(bp);
-          if (fenceR - landedR > ROLL_MIN) {
+          const rollDist = Math.min(ROLL_EXTRA, fenceR - landedR);
+          if (rollDist > ROLL_MIN) {
             const ux = (bp[0] - HOME[0]) / landedR, uy = (bp[1] - HOME[1]) / landedR;
-            stopPt = [HOME[0] + ux * fenceR, HOME[1] + uy * fenceR];
-            const rollDur = Math.max(.3, (fenceR - landedR) / TIME.ball.loose);
+            const rollR = landedR + rollDist;
+            stopPt = [HOME[0] + ux * rollR, HOME[1] + uy * rollR];
+            const rollDur = Math.max(.3, rollDist / TIME.ball.loose);
             legs.push({ from: bp, to: stopPt, start: t, dur: rollDur, arc: 0 });
             t += rollDur;
           }
