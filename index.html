@@ -292,7 +292,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261109e';</script>
+<script defer>window.BUILD_V = '20261109f';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -354,10 +354,10 @@
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-auth-compat.min.js"></script>
 <script defer src="js/util.js?v=194"></script>
 <script defer src="js/nav-history.js?v=194"></script>
-<script defer src="js/backend.js?v=209"></script>
+<script defer src="js/backend.js?v=210"></script>
 <script defer src="js/team-registry.js?v=195"></script>
 <script defer src="js/cloud-auth.js?v=209"></script>
-<script defer src="js/google-auth.js?v=209"></script>
+<script defer src="js/google-auth.js?v=210"></script>
 <script defer src="js/team-config.js?v=194"></script>
 <script defer src="js/identity.js?v=194"></script>
 <script defer src="js/weather.js?v=194"></script>
@@ -1230,7 +1230,7 @@
      as soon as script execution starts, including synchronously-fast mock-
      backend resume on a remembered session -- it must never run before that
      callback exists. -->
-<script defer src="js/auth.js?v=194"></script>
+<script defer src="js/auth.js?v=210"></script>
 <!-- access-control.js also calls window.onIdentityReady, but only from
      inside an async googleAuth.onReady() callback, never at top-level
      script-execution time -- so unlike auth.js it doesn't strictly need to
@@ -1238,7 +1238,7 @@
      google-auth.js. Placed next to auth.js anyway since the two play the
      same role (driving entry into the app) for their respective sign-in
      paths. -->
-<script defer src="js/access-control.js?v=209"></script>
+<script defer src="js/access-control.js?v=210"></script>
 <!-- public-view.js wires up #publicViewLink/#publicViewBack -- needs
      TEAM_REGISTRY, LeagueInfo, Standings, and LeagueEvents to already
      exist, no ordering constraint relative to auth.js/access-control.js
