@@ -100,3 +100,31 @@ outfield:   RF → BU_1     CF → BU_2       LF → BU_3
 
 On a bunt, the first baseman **charges** and the second baseman covers first. Both
 covering first was a real shipped bug.
+
+On a gap ball or a ball hit over/off the fence (`Extra base hits` and `Cutoffs &
+relays` groups — every `GAP_*`, `LINE_*`, `OVER_*`, `CORNER_*`, `WALL_*`, `TRIPLE_*`
+row), the two middle infielders split, exactly one each, regardless of which side the
+ball was hit to or what the bases/outs are:
+
+```
+relay  = ball hit left of center ? SS : 2B     // goes out, takes the OF's throw
+cover2 = the OTHER one                         // stays, covers second -- always,
+                                                // every base state, no exceptions
+1B     = TRAIL at the matching TRAIL_* point    // the corner infielder is the one
+                                                 // free to back up the relay, not
+                                                 // a middle infielder going a second
+                                                 // time and not 1B covering second
+far_OF = the opposite-side outfielder backs up third (BU_3_IN default, BU_3 once
+         a runner's actually on) -- never "back up second", nothing is being
+         thrown there
+3B     = always covers third; C stays home; P backs up third, then the plate once
+         a runner's on
+```
+
+**Never send 1B (or a corner outfielder) to cover second.** That was a real bug:
+with both middle infielders committed to the relay (one relaying, one "trailing"
+15 feet behind him), second base was left open, and the patch for it sent the
+first baseman — on the *opposite* side of the infield from where the relay even
+is — sprinting over to cover second, abandoning first entirely. No one teaches
+that. The fix is above: only one middle infielder ever leaves the bag; the other
+stays and covers second himself.
