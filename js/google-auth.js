@@ -33,8 +33,17 @@
   let readyCallbacks = [];
   let initialUser; // undefined = not yet known, null = known-signed-out
 
+  // The Firebase script comes from a CDN, so with no signal (and no saved
+  // copy yet) it may simply not be there. Nothing below should crash on that.
+  function sdkMissing() { return typeof firebase === 'undefined'; }
+
   function ensureInit() {
     if (auth) return;
+    if (sdkMissing()) {
+      const err = new Error('Firebase script not loaded');
+      err.code = 'app/no-sdk';
+      throw err;
+    }
     firebase.initializeApp({
       apiKey: window.FIREBASE_API_KEY,
       authDomain: window.FIREBASE_AUTH_DOMAIN,
@@ -62,15 +71,18 @@
 
   window.googleAuth = {
     onReady(fn) {
+      if (sdkMissing()) return; // no SDK, so no session to report
       ensureInit();
       if (initialUser !== undefined) fn(toUser(initialUser));
       else readyCallbacks.push(user => fn(toUser(user)));
     },
     hasSession() {
+      if (sdkMissing()) return false;
       ensureInit();
       return !!auth.currentUser;
     },
     currentUser() {
+      if (sdkMissing()) return null;
       ensureInit();
       return toUser(auth.currentUser);
     },
@@ -103,6 +115,7 @@
       }
     },
     async signOut() {
+      if (sdkMissing()) return;
       ensureInit();
       await auth.signOut();
     },
