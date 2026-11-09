@@ -287,7 +287,16 @@
     },
   };
 
-  window.googleAuth.onReady(user => { if (user) window.AccessControl.handleSignedInUser(user); });
+  const NO_SIGNAL_MSG = "No signal, so Google sign-in can't finish right now. Try again when you have a connection.";
+  const looksLikeNoSignal = e => !navigator.onLine || (e && (e.code === 'app/no-sdk' || e.code === 'auth/network-request-failed' || /fetch|network/i.test(e.message || '')));
+
+  window.googleAuth.onReady(user => {
+    if (!user) return;
+    window.AccessControl.handleSignedInUser(user).catch(e => {
+      console.error('Google resume failed:', e);
+      if (looksLikeNoSignal(e)) showMessage(NO_SIGNAL_MSG);
+    });
+  });
 
   const googleBtn = document.getElementById('googleSignInBtn');
   if (googleBtn) {
@@ -300,7 +309,7 @@
         if (user) await window.AccessControl.handleSignedInUser(user);
       } catch (e) {
         console.error('Google sign-in failed:', e);
-        if (errEl) errEl.textContent = "Couldn't sign in with Google -- try again.";
+        if (errEl) errEl.textContent = looksLikeNoSignal(e) ? NO_SIGNAL_MSG : "Couldn't sign in with Google -- try again.";
       } finally {
         googleBtn.disabled = false;
       }
