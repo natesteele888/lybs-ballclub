@@ -89,7 +89,16 @@
     async getIdToken() {
       ensureInit();
       if (!auth.currentUser) throw new Error('No Google session');
-      return auth.currentUser.getIdToken();
+      try {
+        return await auth.currentUser.getIdToken();
+      } catch (e) {
+        // Rethrown as our own Error (same message and code): an error made
+        // inside the cross-origin SDK script never reaches the page's
+        // unhandledrejection handler, so a tab would sit on Loading for good.
+        const err = new Error(e && e.message);
+        err.code = e && e.code;
+        throw err;
+      }
     },
     async signIn() {
       ensureInit();
