@@ -88,6 +88,7 @@
   window.signOutOfGate = function () {
     cached = null;
     try { localStorage.removeItem(GATE_SESSION_KEY); } catch (e) {}
+    if (window.clearOfflineCopies) window.clearOfflineCopies();
   };
 
   async function signInAnonymously() {
