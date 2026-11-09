@@ -238,9 +238,12 @@
       saveCopy(path, data);
       return data === undefined ? null : data;
     } catch (e) {
-      // fetch() rejects with a TypeError only when the network failed. A
-      // refused or broken read (HTTP error) must never fall back to a copy.
-      const copy = e instanceof TypeError ? readCopy(path) : undefined;
+      // fetch() rejects with a TypeError only when the network failed, and
+      // an expired Google token that can't refresh with no signal rejects
+      // with this Firebase code. A refused or broken read (HTTP error) must
+      // never fall back to a copy.
+      const noNetwork = e instanceof TypeError || (e && e.code === 'auth/network-request-failed');
+      const copy = noNetwork ? readCopy(path) : undefined;
       if (copy !== undefined) {
         if (Date.now() - copyToastAt > 30000) {
           copyToastAt = Date.now();
