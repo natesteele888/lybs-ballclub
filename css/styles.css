@@ -322,7 +322,7 @@ a { color: var(--lybs-blue-bright); }
 }
 .btnGoogle:hover { filter: none; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
 .btnDanger { background: linear-gradient(180deg, #D64545, #8E2626); box-shadow: 0 8px 20px rgba(142,38,38,0.3); }
-.btnSmall { padding: 8px 14px; font-size: 11px; }
+.btnSmall { padding: 8px 14px; font-size: 11px; min-height: 36px; }
 /* .btnTiny carries a real floor -- it's reused for every icon-only ×/↑/↓
    control in the app (depth chart, lineups, duty rotation, announcements),
    several of which sit stacked together; under ~36px these become easy
@@ -1458,3 +1458,8 @@ a { color: var(--lybs-blue-bright); }
   background: rgba(10,14,40,0.9); border: 1px solid var(--card-border); border-radius: 6px;
   padding: 2px 6px; white-space: nowrap; max-width: 110px; overflow: hidden; text-overflow: ellipsis;
 }
+
+/* Team names in the standings and the small links under them are real tap
+   targets on a phone. The negative margin keeps the line spacing as it was. */
+.standingsTeamLink { min-height: 36px; }
+.helpText a { display: inline-block; padding: 9px 0; margin: -9px 0; }
