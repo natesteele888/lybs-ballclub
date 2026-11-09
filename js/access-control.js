@@ -139,6 +139,44 @@
     try { localStorage.setItem(TEAM_CHOICE_KEY, teamId); } catch (e) {}
   }
 
+  // The last team/role this Google account actually entered with, kept on
+  // this phone so it can reopen at a field with no signal: access grants
+  // can only be read live, so there would otherwise be nothing to enter
+  // with. Only ever used when the network failed, and only for the same
+  // uid. The database rules still decide what any real read returns, and a
+  // grant that's been removed is caught on the next open with signal.
+  // Forgotten on sign-out and when a live check finds no grant at all.
+  const LAST_ENTRY_KEY = 'lybsGoogleLastEntry';
+  function saveLastEntry(uid, teamId, role, name, board, teams) {
+    try { localStorage.setItem(LAST_ENTRY_KEY, JSON.stringify({ uid, teamId, role, name, board: !!board, teams: teams || [] })); } catch (e) {}
+  }
+  function readLastEntry(uid) {
+    try {
+      const last = JSON.parse(localStorage.getItem(LAST_ENTRY_KEY) || 'null');
+      return last && last.uid === uid && last.teamId && (last.role === 'coach' || last.role === 'parent') ? last : null;
+    } catch (e) { return null; }
+  }
+  function forgetLastEntry() {
+    try { localStorage.removeItem(LAST_ENTRY_KEY); } catch (e) {}
+  }
+
+  // Returns true if this user got into the app (or was already in).
+  async function resumeLastEntry(user) {
+    const last = readLastEntry(user.uid);
+    if (!last) return false;
+    const loginScreen = document.getElementById('loginScreen');
+    if (!loginScreen || loginScreen.classList.contains('hide') || window.__identityResolved) return true;
+    let token;
+    try { token = await window.googleAuth.getIdToken(); } catch (e) {} // an expired token can't refresh with no signal
+    const identity = window.Identity.setSession(last.teamId, last.role, last.name || user.name);
+    await window.TeamConfig.load(last.teamId, token);
+    if (window.__identityResolved) return true; // gate path won while that was in flight
+    window.__activeAuthMode = 'google';
+    loginScreen.classList.add('hide');
+    window.onIdentityReady(last.teamId, last.role, identity, last.board, last.teams);
+    return true;
+  }
+
   // Resolves each grant's team name for the picker below, without
   // touching the single active "current" team config -- see
   // js/team-config.js's own comment on peek() vs load() for why load()
@@ -222,6 +260,7 @@
       // 'google' even on the rare run where the gate path's own call
       // lands in the gap between this check and the one just above.
       window.__activeAuthMode = 'google';
+      saveLastEntry(user.uid, grant.teamId, grant.role, user.name, grants.board, grants.teams);
       loginScreen.classList.add('hide');
       window.onIdentityReady(grant.teamId, grant.role, identity, grants.board, grants.teams);
       return;
@@ -240,12 +279,14 @@
         await window.TeamConfig.load(teamId, token);
         if (window.__identityResolved) return; // re-check -- TeamConfig.load() is itself async
         window.__activeAuthMode = 'google';
+        saveLastEntry(user.uid, teamId, 'parent', user.name, true, []);
         loginScreen.classList.add('hide');
         window.onIdentityReady(teamId, 'parent', identity, true, []);
         return;
       }
     }
 
+    forgetLastEntry(); // a live check found nothing to enter with
     showMessage(grants.board
       ? `Signed in as ${user.email} with board access, but no team exists yet to view.`
       : `Signed in as ${user.email}, but no team has invited you yet -- ask your coach or board for an invite.`);
@@ -254,10 +295,20 @@
   window.AccessControl = {
     async handleSignedInUser(user) {
       if (!user) return;
-      const token = await window.googleAuth.getIdToken();
-      await redeemInvites(user.uid, user.email, token);
-      await enter(user, token);
+      // Plainly offline: skip the live checks (each would only fail and
+      // show its own error toast) and reopen where this account left off.
+      if (!navigator.onLine && await resumeLastEntry(user)) return;
+      try {
+        const token = await window.googleAuth.getIdToken();
+        await redeemInvites(user.uid, user.email, token);
+        await enter(user, token);
+      } catch (e) {
+        if (looksLikeNoSignal(e) && await resumeLastEntry(user)) return;
+        throw e;
+      }
     },
+
+    forgetLastEntry,
 
     // Re-opens the team picker for the CURRENTLY signed-in Google
     // account -- the app shell's "Switch team" button (only shown when
@@ -282,6 +333,7 @@
       if (!picked) return null;
       rememberChoice(picked.teamId);
       const identity = window.Identity.setSession(picked.teamId, picked.role, user.name);
+      saveLastEntry(user.uid, picked.teamId, picked.role, user.name, grants.board, grants.teams);
       await window.TeamConfig.load(picked.teamId, token);
       return { teamId: picked.teamId, role: picked.role, identity, isBoard: grants.board, allTeams: grants.teams };
     },
