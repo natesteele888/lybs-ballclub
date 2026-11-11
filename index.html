@@ -22,6 +22,7 @@
 </script>
 <link rel="manifest" href="manifest.json">
 <script src="https://natesteele888.github.io/apps/install.js" defer></script>
+<script src="https://natesteele888.github.io/apps/health.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- A direct link here, not the @import that used to live at the top of
@@ -33,7 +34,7 @@
      parallel. The two preconnects above only warmed up the connections;
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/styles.css?v=211">
+<link rel="stylesheet" href="css/styles.css?v=212">
 <!-- Situations Trainer's own scoped "Sandlot" design system -- deliberately
      separate from styles.css, see css/situations.css's own header comment. -->
 <link rel="stylesheet" href="css/situations.css?v=194">
@@ -66,6 +67,7 @@
     </button>
     <div id="googleSignInError"></div>
     <a id="publicViewLink" class="loginPublicLink" href="#">View public info (standings, schedule, league info) &mdash; no sign-in needed</a>
+    <button type="button" class="reportLink" onclick="window.nateHealth&&nateHealth.report()">Something wrong? Send a report</button>
   </div>
 </div>
 
@@ -119,6 +121,7 @@
     <select id="publicTeamSelect"></select>
     <div class="leagueSectionTabs" id="publicNavBar"></div>
     <div id="publicViewContent"></div>
+    <button type="button" class="reportLink" onclick="window.nateHealth&&nateHealth.report()">Something wrong? Send a report</button>
   </div>
 </div>
 
@@ -200,6 +203,7 @@
        tapping a game itself (data-game-nav, see the delegated click
        handler below) rather than a specific team's name/logo. -->
   <div class="tabPanel" id="tab-gamePreview"></div>
+  <button type="button" class="reportLink" onclick="window.nateHealth&&nateHealth.report()">Something wrong? Send a report</button>
 </div>
 
 <!-- Share to Social -- a header CTA, not a nav tab (see topBarShareBtn
@@ -352,7 +356,7 @@
      silently change behavior underneath this app -- bump deliberately. -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-app-compat.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.2.0/firebase-auth-compat.min.js"></script>
-<script defer src="js/util.js?v=194"></script>
+<script defer src="js/util.js?v=195"></script>
 <script defer src="js/nav-history.js?v=194"></script>
 <script defer src="js/backend.js?v=210"></script>
 <script defer src="js/team-registry.js?v=195"></script>
