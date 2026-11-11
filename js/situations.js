@@ -1,4 +1,17 @@
 /* ============================================================
+   TWO HOMES -- read before renaming or moving anything here.
+   The App Store's Where Do I Go? page (natesteele888/apps,
+   situations/index.html, live at /apps/situations/) runs THIS file
+   straight from /lybs-ballclub/. It loads by path:
+     js/situations.js, css/situations.css,
+     data/situations.csv, data/responsibilities.csv
+   and supplies these page globals in place of Ballclub's own:
+     dbGet, dbPut, sharedPath, BUILD_V, escapeHtml, openInfoModal
+   and calls window.Situations.ensureLoaded() and .render(host).
+   Keep those paths and names, or change apps/situations (index.html
+   and its sw.js file list) in the same session.
+   ============================================================ */
+/* ============================================================
    Situations Trainer -- "Where do I go?" Pick a ball event, a base
    state and an out count; this resolves all nine defensive
    responsibilities from a rules table and animates the play in real

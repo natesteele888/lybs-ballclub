@@ -119,3 +119,13 @@ Everything that makes the plays feel right for an age group lives in two places:
   skinned infield, white chalk, mown fan pattern.
 - Don't let the cue text drift into third person. It is what a coach says to a kid at
   practice: second person, imperative, one instruction, under about fifteen words.
+
+## Two homes: the App Store runs this trainer too
+
+The App Store's Where Do I Go? (`natesteele888/apps`, `situations/index.html`,
+live at `/apps/situations/`) loads Ballclub's own `js/situations.js`,
+`css/situations.css`, `data/situations.csv` and `data/responsibilities.csv` by
+path, and stubs the page globals `dbGet`, `dbPut`, `sharedPath`, `BUILD_V`,
+`escapeHtml` and `openInfoModal`. Keep those paths and names, or change
+`apps/situations` (its `index.html` and the file list in its `sw.js`) in the
+same session.
