@@ -22,3 +22,13 @@ This app is one of several that share parts and lessons through the private
   want, add a dated entry to `nate-brain/lessons.md`. If you change a shared part
   here, update its entry in `parts.md`.
 - Know-how only in nate-brain: never copy names, contact info, stats or secrets into it.
+
+## Two homes: the App Store runs this trainer too
+
+The App Store's Where Do I Go? (`natesteele888/apps`, `situations/index.html`,
+live at `/apps/situations/`) loads Ballclub's own `js/situations.js`,
+`css/situations.css`, `data/situations.csv` and `data/responsibilities.csv` by
+path, and stubs the page globals `dbGet`, `dbPut`, `sharedPath`, `BUILD_V`,
+`escapeHtml` and `openInfoModal`. Keep those paths and names, or change
+`apps/situations` (its `index.html` and the file list in its `sw.js`) in the
+same session.
