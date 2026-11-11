@@ -142,6 +142,8 @@
     }
     const el = document.createElement('div');
     el.className = `toast ${kind === 'info' ? 'toastInfo' : 'toastError'}`;
+    // Keep failed loads/saves for the "Something wrong?" report (apps/health.js).
+    if (kind !== 'info' && window.nateHealth) window.nateHealth.note('sync', message);
     el.textContent = message;
     host.appendChild(el);
     requestAnimationFrame(() => el.classList.add('toastShow'));
