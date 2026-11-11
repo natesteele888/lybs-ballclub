@@ -274,6 +274,16 @@ a { color: var(--lybs-blue-bright); }
   text-decoration: underline; text-underline-offset: 2px;
 }
 .loginPublicLink:hover { color: var(--text); }
+/* "Something wrong?" -- opens the shared apps/health.js report sheet. Same
+   quiet look as the public-info link, on the login screen, the public view
+   and under every signed-in tab. */
+.reportLink {
+  display: flex; align-items: center; justify-content: center; min-height: 44px;
+  margin: 8px auto 24px; padding: 0 12px; background: none; border: 0; cursor: pointer;
+  color: var(--text2); font-size: 12.5px; font-family: var(--font-body);
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.reportLink:hover { color: var(--text); }
 
 /* ---- Public view (no sign-in) -- reuses .topBar/.leagueSectionTabs/
    .listRow etc. from elsewhere in this file; only what's genuinely new
