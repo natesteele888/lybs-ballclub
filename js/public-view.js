@@ -133,6 +133,9 @@
         eventsSlot.appendChild(slot);
         window.LeagueEvents.render(slot, { canEdit: false });
       }
+    }).catch(() => {
+      // No signal: leave League Events out. The panel below already says it
+      // couldn't load, so this must not also surface as an unhandled error.
     });
 
     renderPanel();
