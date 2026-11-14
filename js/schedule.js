@@ -166,7 +166,7 @@
           <label>Pitches thrown<input id="pcPitches" type="number" min="0"></label>
           <button class="btn btnSmall" id="pcAddBtn">Add</button>
         </div>` : '';
-      slotEl.innerHTML = `<div class="listBody">${rows}</div>${form}`;
+      slotEl.innerHTML = `<div class="listBody">${rows}</div>${macReportHtml()}${form}`;
       slotEl.querySelectorAll('button[data-pcid]').forEach(btn => {
         btn.addEventListener('click', async () => {
           const removedId = btn.dataset.pcid;
@@ -186,6 +186,54 @@
         renderLogged();
       });
       wirePitchCountImport();
+      wireMacReport();
+    }
+
+    // MAC League wants every pitcher's first name, last initial, uniform
+    // number and pitches within 24 hours (js/mac-report.js). Coaches only,
+    // since they're the ones who enter it on macleague.org.
+    function macReport() {
+      return window.MacReport.build({
+        teamName: window.TeamConfig.current().name,
+        opponent: game.opponent,
+        date: game.date,
+        pitchCounts: game.pitchCounts || [],
+        roster: opts.roster || [],
+        toFirstLastInitial: window.StatsImport && window.StatsImport.toFirstLastInitial,
+      });
+    }
+    function macReportHtml() {
+      if (!opts.canEdit || !window.MacReport || !(game.pitchCounts || []).length) return '';
+      const r = macReport();
+      return `
+        <div class="gcAddForm" id="macReport" style="margin-top:10px;">
+          <div class="sectionLabel">For MAC League</div>
+          <div class="helpText">Enter these on the MAC League site within 24 hours, or before your next game if that's sooner.${r.missingNumbers ? ` ${r.missingNumbers === 1 ? 'One pitcher has' : r.missingNumbers + ' pitchers have'} no uniform number on the roster yet (shown as # ?).` : ''}</div>
+          <pre id="macReportText" style="white-space:pre-wrap;margin:8px 0;font:inherit;">${escapeHtml(r.text)}</pre>
+          <button class="btn btnSmall" id="macReportCopy">Copy for MAC League</button>
+          <span id="macReportMsg" class="helpText" style="margin-left:8px;"></span>
+        </div>`;
+    }
+    function wireMacReport() {
+      const btn = slotEl.querySelector('#macReportCopy');
+      if (!btn) return;
+      btn.addEventListener('click', async () => {
+        const text = macReport().text;
+        const msg = slotEl.querySelector('#macReportMsg');
+        const say = (t, good) => { msg.textContent = t; msg.style.color = good ? 'var(--status-green)' : 'var(--status-red)'; };
+        try {
+          if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); say('Copied.', true); return; }
+        } catch (e) { /* fall through */ }
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;top:0;left:-9999px;';
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        let ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        ta.remove();
+        say(ok ? 'Copied.' : 'Could not copy automatically -- select the text above and copy it.', ok);
+      });
     }
 
     // Resolve a typed or imported name against the roster before storing --
