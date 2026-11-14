@@ -1,0 +1,54 @@
+name: Pull rosters from the Dashboard
+
+# A button, never a schedule: Actions -> "Pull rosters from the Dashboard"
+# -> Run workflow. It brings every team's drafted roster from the LYBS
+# Dashboard into Ballclub in one go (scripts/sync-roster-from-dashboard.mjs
+# --all). Someone first clicks "Publish team rosters" in the Dashboard's
+# publish page after the draft.
+#
+# Leave "Change Ballclub" off to only see how many players each team has
+# on the Dashboard. Turn it on to merge them in: players already in
+# Ballclub keep their number and position, new ones are added, and nobody
+# is removed. "Start rosters over" (with "Change Ballclub" on) replaces
+# each team's roster with the Dashboard's, for the start of a new season.
+#
+# The log shows counts only, never player names, because this repo is
+# public and so are its Actions logs.
+#
+# Secrets needed (repo Settings -> Secrets and variables -> Actions):
+#   FIREBASE_DB_URL, FIREBASE_DB_SECRET  same ones standings.yml uses
+#   LYBS_APPS_SCRIPT_URL, LYBS_REVIEW_KEY  the Dashboard's Apps Script
+#     address and review key (the same pair its Post Review settings use)
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Change Ballclub (off = just count)'
+        type: boolean
+        default: false
+      replace:
+        description: 'Start rosters over (new season only)'
+        type: boolean
+        default: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Pull rosters
+        env:
+          LYBS_APPS_SCRIPT_URL: ${{ secrets.LYBS_APPS_SCRIPT_URL }}
+          LYBS_REVIEW_KEY: ${{ secrets.LYBS_REVIEW_KEY }}
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+          APPLY: ${{ inputs.apply }}
+          REPLACE: ${{ inputs.replace }}
+        run: |
+          set -- --all
+          [ "$APPLY" = "true" ] && set -- "$@" --apply
+          [ "$APPLY" = "true" ] && [ "$REPLACE" = "true" ] && set -- "$@" --replace
+          node scripts/sync-roster-from-dashboard.mjs "$@"
