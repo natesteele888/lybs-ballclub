@@ -336,11 +336,18 @@
     // comes from that same record's depthOrder, whenever a coach (any
     // coach -- same crowdsourced trust as the pitch-count mirror itself)
     // has set one.
-    async renderOpponentEligibility(containerEl, opponentName, division, asOfDate) {
+    // divisionId (optional) adds a link to MAC League's own public Pitch
+    // Smart page for the division, the official record, until the mirror
+    // has data (scripts/scrape-pitchsmart.mjs's parser waits on real Spring
+    // data to read). A link only: the app never reads that page itself.
+    async renderOpponentEligibility(containerEl, opponentName, division, asOfDate, divisionId) {
       const data = await window.dbGet(window.sharedPath('pitchSmart'));
       const team = data && data[opponentName];
       if (!team || !team.pitchers || !team.pitchers.length) {
-        containerEl.innerHTML = `<div class="emptyState">No pitch count data mirrored for ${escapeHtml(opponentName)} yet.</div>`;
+        const link = /^\d+$/.test(String(divisionId || ''))
+          ? ` <a href="https://www.macleague.org/division/${divisionId}/pitchsmart" target="_blank" rel="noopener">See official counts on MAC League</a>`
+          : '';
+        containerEl.innerHTML = `<div class="emptyState">No pitch count data mirrored for ${escapeHtml(opponentName)} yet.${link}</div>`;
         return;
       }
       const byPitcher = {};

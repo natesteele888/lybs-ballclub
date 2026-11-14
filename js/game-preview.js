@@ -362,7 +362,7 @@
           if (isOurTeam(side.name)) {
             window.PitchSmart.renderOurEligibility(slot, ourGames, divisionName, asOfDate, cfg.teamId);
           } else if (side.name) {
-            window.PitchSmart.renderOpponentEligibility(slot, side.name, divisionName, asOfDate);
+            window.PitchSmart.renderOpponentEligibility(slot, side.name, divisionName, asOfDate, m.divisionId);
           } else {
             slot.innerHTML = '<div class="emptyState">Team not identified.</div>';
           }

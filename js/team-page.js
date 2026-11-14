@@ -209,7 +209,7 @@
       // guess) when divisionId isn't one of the divisions this app knows
       // a name for.
       const division = (window.TonightGames.DIVISION_NAMES && window.TonightGames.DIVISION_NAMES[divisionId]) || null;
-      window.PitchSmart.renderOpponentEligibility(containerEl.querySelector('#tpPitchSlot'), opponentName, division, todayIso());
+      window.PitchSmart.renderOpponentEligibility(containerEl.querySelector('#tpPitchSlot'), opponentName, division, todayIso(), divisionId);
 
       containerEl.querySelector('#tpBack').addEventListener('click', () => opts.onBack && opts.onBack());
     },
