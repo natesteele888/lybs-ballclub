@@ -159,6 +159,7 @@
           ${opts.canEdit ? `<button class="btn btnTiny" data-pcid="${escapeHtml(pc.id)}" title="Remove">&times;</button>` : ''}
         </div>`).join('') || '<div class="emptyState">No pitch counts logged for this game yet.</div>';
       const form = opts.canEdit ? `
+        ${pitchCountImportHtml()}
         <div class="gcAddForm" style="margin-top:10px;">
           <div class="sectionLabel">Log a pitcher</div>
           <label>Pitcher name<input id="pcName" placeholder="First L"></label>
@@ -180,28 +181,92 @@
         const typed = slotEl.querySelector('#pcName').value.trim();
         const pitches = Number(slotEl.querySelector('#pcPitches').value);
         if (!typed || !Number.isFinite(pitches)) return;
-        // Resolve against the roster before storing -- js/pitch-smart.js's
-        // eligibility math groups appearances by this exact name string
-        // (appearancesByPitcher), with no roster/id tie at all. A free-typed
-        // field with no normalization means the SAME real pitcher logged as
-        // "Jake T" on Monday and "Jake T." (or just a typo) on Wednesday
-        // becomes two unrelated histories -- Wednesday's pitches never
-        // count against Monday's rest-day clock, and a pitcher who should
-        // still be resting can silently show eligible. toFirstLastInitial
-        // is the same canonicalizer js/stats-import.js already uses to match
-        // an uploaded GameChanger name against this same roster; reusing it
-        // here keeps one pitcher's name consistent across every game log
-        // rather than inventing a second normalization scheme. Falls back
-        // to the typed text verbatim for a non-roster call-up/guest pitcher,
-        // or when the typed name is ambiguous against the roster (matches
-        // more than one player) -- same "don't guess" rule matchRosterPlayer
-        // itself follows.
-        const canon = s => window.StatsImport.toFirstLastInitial(s).toLowerCase();
-        const matches = (opts.roster || []).filter(p => canon(p.name) === canon(typed));
-        const name = matches.length === 1 ? matches[0].name : typed;
-        game.pitchCounts = (game.pitchCounts || []).concat([{ id: uid('pc'), name, pitches }]);
+        game.pitchCounts = (game.pitchCounts || []).concat([{ id: uid('pc'), name: rosterName(typed), pitches }]);
         await window.Schedule.saveGame(teamId, game);
         renderLogged();
+      });
+      wirePitchCountImport();
+    }
+
+    // Resolve a typed or imported name against the roster before storing --
+    // js/pitch-smart.js's eligibility math groups appearances by this exact
+    // name string (appearancesByPitcher), with no roster/id tie at all. A
+    // free-typed field with no normalization means the SAME real pitcher
+    // logged as "Jake T" on Monday and "Jake T." (or just a typo) on
+    // Wednesday becomes two unrelated histories -- Wednesday's pitches never
+    // count against Monday's rest-day clock, and a pitcher who should still
+    // be resting can silently show eligible. toFirstLastInitial is the same
+    // canonicalizer js/stats-import.js already uses to match an uploaded
+    // GameChanger name against this same roster; reusing it here keeps one
+    // pitcher's name consistent across every game log rather than inventing
+    // a second normalization scheme. Falls back to the name verbatim for a
+    // non-roster call-up/guest pitcher, or when the name is ambiguous
+    // against the roster (matches more than one player) -- same "don't
+    // guess" rule matchRosterPlayer itself follows.
+    function canonName(s) { return window.StatsImport.toFirstLastInitial(s).toLowerCase(); }
+    function rosterName(typed) {
+      const matches = (opts.roster || []).filter(p => canonName(p.name) === canonName(typed));
+      return matches.length === 1 ? matches[0].name : typed;
+    }
+
+    // One-tap import from Walk-Up's Pitch Count on this same phone -- see
+    // js/pitch-count-import.js. Shown only when Pitch Count has pitches for
+    // this game's date, and nothing is saved until the coach reviews the
+    // list and taps Add. A pitcher already logged on this game starts
+    // unticked, so a second tap can't log the same outing twice.
+    function pitchCountRows() {
+      if (!window.PitchCountImport || !game.date) return [];
+      let found = [];
+      try { found = window.PitchCountImport.dayTotals(k => localStorage.getItem(k), game.date); } catch (e) { found = []; }
+      const logged = (game.pitchCounts || []).map(pc => canonName(pc.name));
+      return found.map((r, i) => {
+        const name = rosterName(r.name);
+        return { i, name, pitches: r.pitches, already: logged.indexOf(canonName(name)) >= 0 };
+      });
+    }
+    function pitchCountImportHtml() {
+      const rows = pitchCountRows();
+      // Nothing new to bring in once every pitcher is already on this game.
+      if (!rows.length || rows.every(r => r.already)) return '';
+      const n = rows.length;
+      return `
+        <div class="gcAddForm" id="pcImport" style="margin-top:10px;">
+          <div class="sectionLabel">From Pitch Count</div>
+          <div class="detailRow">Pitch Count on this phone has ${n} pitcher${n === 1 ? '' : 's'} for ${escapeHtml(game.date)}.</div>
+          <button class="btn btnSmall" id="pcImportOpen">Bring in from Pitch Count</button>
+        </div>`;
+    }
+    function wirePitchCountImport() {
+      const box = slotEl.querySelector('#pcImport');
+      const openBtn = slotEl.querySelector('#pcImportOpen');
+      if (!box || !openBtn) return;
+      openBtn.addEventListener('click', () => {
+        const rows = pitchCountRows();
+        if (!rows.length) { renderLogged(); return; }
+        const sameDay = window.Schedule.getGames(teamId).filter(g => g.date === game.date).length > 1;
+        box.innerHTML = `
+          <div class="sectionLabel">From Pitch Count</div>
+          ${sameDay ? '<div class="detailRow">Pitch Count adds up the whole day, so these totals include every game on this date.</div>' : ''}
+          ${rows.map(r => `
+            <label class="listRow" style="cursor:pointer;">
+              <input type="checkbox" data-pcimport="${r.i}" ${r.already ? '' : 'checked'}>
+              <div class="listRowMain"><div class="listRowTitle">${escapeHtml(r.name)}</div>${r.already ? '<div class="listRowSub">Already logged for this game</div>' : ''}</div>
+              <span class="badge badgeTbd">${escapeHtml(String(r.pitches))} pitches</span>
+            </label>`).join('')}
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn btnSmall" id="pcImportAdd">Add checked pitchers</button>
+            <button class="btn btnSmall btnGhost" id="pcImportCancel">Cancel</button>
+          </div>`;
+        box.querySelector('#pcImportCancel').addEventListener('click', () => renderLogged());
+        const addChecked = box.querySelector('#pcImportAdd');
+        addChecked.addEventListener('click', async () => {
+          const picked = rows.filter(r => { const cb = box.querySelector(`input[data-pcimport="${r.i}"]`); return cb && cb.checked; });
+          if (!picked.length) { renderLogged(); return; }
+          addChecked.disabled = true;
+          game.pitchCounts = (game.pitchCounts || []).concat(picked.map(r => ({ id: uid('pc'), name: r.name, pitches: r.pitches })));
+          await window.Schedule.saveGame(teamId, game);
+          renderLogged();
+        });
       });
     }
     renderLogged();
