@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LYBS Division Eligibility</title>
+<!--
+  Compact, one-field sibling of age-eligibility.html, made to sit at the
+  top of ONE program page on lunenburgybs.com (Crossbar) via an <iframe>:
+
+    division-check.html?sport=baseball  -> Spring Baseball program page
+    division-check.html?sport=softball  -> Spring Softball program page
+    division-check.html?sport=tball     -> Coed T-Ball program page
+
+  A parent types a birth date and sees the ONE division of that sport the
+  child is eligible for, with a Register button. Nothing is stored or
+  sent anywhere; the date never leaves the browser.
+
+  Cutoffs: reads the SAME data/league-info.json leagueAges that
+  age-eligibility.html (the live Find My Division page) and the in-app
+  League Ages tab read, with the same parse + inclusive range check
+  (parseAgeDate / eligibleDivisions), and the same "newest year in the
+  file" default. Change the dates there, never here.
+
+  Not part of the app shell (not in sw.js SHELL_FILES). Fixed light theme.
+  Posts its height to the parent as { lybsDivisionCheckHeight: h }.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --card: #FFFFFF;
+    --card-border: rgba(20, 24, 48, 0.12);
+    --sunken: rgba(20, 24, 48, 0.04);
+    --text: #13162E;
+    --text2: #555C78;
+    --text3: #7B8199;
+    --lybs-blue: #2E52E8;
+    --lybs-blue-deep: #1A2CBD;
+    --lybs-blue-bright: #4C6AEB;
+    --ok: #1F8A4E;
+    --font-display: 'Anton', 'Arial Narrow', sans-serif;
+    --font-label: 'Oswald', 'Arial Narrow', sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+  .card { max-width: 640px; margin: 0 auto; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px; }
+  .q { font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.2; margin: 0 0 10px; }
+  label { display: block; font-family: var(--font-label); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text2); }
+  input[type="date"] { margin-top: 6px; width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--sunken); color: var(--text); font-family: var(--font-body); font-size: 16px; }
+  .result { margin-top: 12px; }
+  .result:empty { display: none; }
+  .hit { border: 1px solid rgba(31, 138, 78, 0.35); background: rgba(31, 138, 78, 0.06); border-radius: 10px; padding: 12px; }
+  .hitLabel { font-family: var(--font-label); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ok); }
+  .hitName { font-family: var(--font-display); font-size: 24px; line-height: 1.15; margin-top: 2px; }
+  .hitSub { color: var(--text2); font-size: 13px; margin-top: 2px; }
+  .miss { color: var(--text2); font-size: 14px; padding: 4px 2px; }
+  .miss a { color: var(--lybs-blue-deep); font-weight: 600; }
+  .btn { display: block; background: linear-gradient(180deg, var(--lybs-blue-bright), var(--lybs-blue) 55%, var(--lybs-blue-deep)); color: #fff; border-radius: 10px; padding: 11px 16px; font-size: 14px; font-weight: 700; font-family: var(--font-label); letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; text-align: center; margin-top: 10px; }
+  .foot { font-size: 11.5px; color: var(--text3); margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="card" id="root">
+  <p class="q">Enter your child's birth date to see their division eligibility.</p>
+  <label for="dob">Child's birth date</label>
+  <input type="date" id="dob" autocomplete="off">
+  <div class="result" id="result" aria-live="polite"></div>
+  <div class="foot" id="foot"></div>
+</div>
+<script>
+(function () {
+  var REGISTER_URL = 'https://www.lunenburgybs.com/register';
+  var PROGRAM_URL = {
+    baseball: 'https://www.lunenburgybs.com/program/spring-baseball/28818',
+    softball: 'https://www.lunenburgybs.com/program/spring-softball/28828',
+    tball: 'https://www.lunenburgybs.com/program/coed-t-ball/28830'
+  };
+  var PROGRAM_NAME = { baseball: 'Spring Baseball', softball: 'Spring Softball', tball: 'Coed T-Ball' };
+
+  // Display names as each program page labels its own divisions, keyed by
+  // the division name in data/league-info.json. Dates come from the data.
+  var PAGE_NAME = {
+    'T-Ball': 'Coed T-Ball (6U)',
+    'Baseball 8U Rookies': 'Rookies Division (8U)',
+    'Baseball 10U Minors': 'Minors Division (10U)',
+    'Baseball 12U Majors': 'Majors Division (12U)',
+    'Softball 8U Rookies': 'Farm Division (8U)',
+    'Softball 10U Minors': 'Minors Division (10U)',
+    'Softball 12U Majors': 'Majors Division (12U)',
+    'Softball 16U Seniors': 'Senior Division (16U)'
+  };
+
+  var q = (new URLSearchParams(location.search).get('sport') || 'baseball').toLowerCase().replace(/[^a-z]/g, '');
+  var SPORT = (q === 'tball' || q === 'softball') ? q : 'baseball';
+
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+  // Same as age-eligibility.html.
+  function parseAgeDate(s) {
+    var m = (s || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    return m ? new Date(Number(m[3]), Number(m[1]) - 1, Number(m[2])) : null;
+  }
+  function sportOf(name) {
+    if (/^t-ball/i.test(name)) return 'tball';
+    if (/^baseball\s+/i.test(name)) return 'baseball';
+    if (/^softball\s+/i.test(name)) return 'softball';
+    return 'other';
+  }
+  function fmt(d) { return (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear(); }
+  function link(url, text) { return '<a href="' + url + '" target="_top">' + escapeHtml(text) + '</a>'; }
+
+  var lastHeight = 0;
+  function reportHeight() {
+    requestAnimationFrame(function () {
+      var h = document.documentElement.scrollHeight;
+      if (h !== lastHeight) {
+        lastHeight = h;
+        try { window.parent.postMessage({ lybsDivisionCheckHeight: h }, '*'); } catch (e) {}
+      }
+    });
+  }
+  window.addEventListener('resize', reportHeight);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(reportHeight);
+
+  var resultEl = document.getElementById('result');
+  var dobIn = document.getElementById('dob');
+
+  function render(data) {
+    var leagueAges = data && data.leagueAges;
+    var years = leagueAges ? Object.keys(leagueAges).filter(function (k) { return /^\d{4}$/.test(k); }).sort() : [];
+    if (!years.length) { resultEl.innerHTML = '<div class="miss">Age cutoffs aren’t available right now. Please check back soon.</div>'; reportHeight(); return; }
+    var year = years[years.length - 1];
+
+    // Same parse + inclusive check as age-eligibility.html's eligibleDivisions().
+    var all = leagueAges[year].map(function (a) {
+      var parts = (a.range || '').split(' to ');
+      return { division: a.division, sport: sportOf(a.division), start: parseAgeDate(parts[0]), end: parseAgeDate(parts[1]) };
+    }).filter(function (a) { return a.start && a.end; });
+    var mine = all.filter(function (a) { return a.sport === SPORT; });
+    function eligible(list, dob) { return list.filter(function (a) { return dob >= a.start && dob <= a.end; }); }
+
+    document.getElementById('foot').textContent = 'Based on the ' + year + ' season age chart (MAC League / Babe Ruth). Nothing you enter is saved.';
+
+    function show() {
+      var v = dobIn.value;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) { resultEl.innerHTML = ''; reportHeight(); return; }
+      var p = v.split('-').map(Number);
+      var dob = new Date(p[0], p[1] - 1, p[2]);
+      var hits = eligible(mine, dob);
+
+      if (hits.length) {
+        var h = hits[0];
+        resultEl.innerHTML =
+          '<div class="hit"><div class="hitLabel">Eligible for the ' + escapeHtml(year) + ' season</div>' +
+          '<div class="hitName">' + escapeHtml(PAGE_NAME[h.division] || h.division) + '</div>' +
+          '<div class="hitSub">Birth dates ' + fmt(h.start) + ' to ' + fmt(h.end) + '</div>' +
+          '<a class="btn" href="' + REGISTER_URL + '" target="_top">Register for ' + escapeHtml(PAGE_NAME[h.division] || h.division) + '</a></div>';
+        reportHeight();
+        return;
+      }
+
+      // Not in this program. Point to the program that fits, if one does.
+      var youngest = mine.reduce(function (m, a) { return !m || a.end > m.end ? a : m; }, null);
+      var oldest = mine.reduce(function (m, a) { return !m || a.start < m.start ? a : m; }, null);
+      var msg;
+      if (youngest && dob > youngest.end) {
+        var tb = SPORT !== 'tball' && eligible(all.filter(function (a) { return a.sport === 'tball'; }), dob).length;
+        msg = 'Your child is a bit young for ' + PROGRAM_NAME[SPORT] + ' in ' + year + '.' +
+          (tb ? ' They’re eligible for ' + link(PROGRAM_URL.tball, 'Coed T-Ball') + '.' : '');
+      } else if (oldest && dob < oldest.start) {
+        if (SPORT === 'tball') {
+          msg = 'Your child is past T-Ball age for ' + year + '. Check ' + link(PROGRAM_URL.baseball, 'Spring Baseball') + ' or ' + link(PROGRAM_URL.softball, 'Spring Softball') + '.';
+        } else {
+          msg = 'Your child is older than LYBS ' + PROGRAM_NAME[SPORT] + ' divisions for ' + year + '. Please contact the league.';
+        }
+      } else {
+        msg = 'That birth date doesn’t match a ' + PROGRAM_NAME[SPORT] + ' division for ' + year + '. Please contact the league.';
+      }
+      resultEl.innerHTML = '<div class="miss">' + msg + '</div>';
+      reportHeight();
+    }
+    dobIn.addEventListener('change', show);
+    dobIn.addEventListener('input', show);
+    reportHeight();
+  }
+
+  fetch('data/league-info.json?v=' + Date.now())
+    .then(function (r) { return r.json(); })
+    .then(render)
+    .catch(function () { render(null); });
+})();
+</script>
+</body>
+</html>

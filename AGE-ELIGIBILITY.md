@@ -65,3 +65,30 @@ A few things baked into this snippet, worth knowing before changing it:
 ## If this needs real changes later
 
 The chart/calculator logic (`ageChartSvg()`, `eligibleDivisions()`, the marker/scroll behavior) lives entirely inside `age-eligibility.html`'s own `<script>` tag -- it's a deliberate near-verbatim port of `js/league-info.js`'s own chart code, not a shared module, because this page has to stand alone with no app shell to import from. If the in-app version's chart logic changes, this file's copy won't pick that up automatically and would need the same change ported over by hand.
+
+## Program-page division checker (`division-check.html`)
+
+A compact, one-field sibling of this page for the top of each program page on lunenburgybs.com. A parent enters a birth date and sees the one division of that program's sport the child is eligible for, with a Register button. Nothing is stored.
+
+- `division-check.html?sport=baseball` for Spring Baseball (Rookies 8U, Minors 10U, Majors 12U)
+- `division-check.html?sport=softball` for Spring Softball (Farm 8U, Minors 10U, Majors 12U, Senior 16U)
+- `division-check.html?sport=tball` for Coed T-Ball
+
+It reads the same `data/league-info.json` `leagueAges`, with the same parse and inclusive range check as `eligibleDivisions()` here, and the same newest-year default. Division names are shown the way each program page labels them (softball 8U is "Farm" there). A child too young or too old for the program gets pointed to the program that fits. The Clinic Finder loads this same file too, so all three can't disagree.
+
+Embed (change `sport=` per page):
+
+```html
+<iframe id="lybs-division-check" title="Division eligibility" scrolling="no"
+  style="width:100%;max-width:640px;border:0;display:block;overflow:hidden;" height="260"></iframe>
+<script>
+  document.getElementById('lybs-division-check').src =
+    'https://natesteele888.github.io/lybs-ballclub/division-check.html?sport=baseball&v=' + Date.now();
+  window.addEventListener('message', function (e) {
+    if (e.origin !== 'https://natesteele888.github.io') return;
+    if (e.data && typeof e.data.lybsDivisionCheckHeight === 'number') {
+      document.getElementById('lybs-division-check').style.height = e.data.lybsDivisionCheckHeight + 'px';
+    }
+  });
+</script>
+```
