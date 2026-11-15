@@ -80,7 +80,7 @@ Embed (change `sport=` per page):
 
 ```html
 <iframe id="lybs-division-check" title="Division eligibility" scrolling="no"
-  style="width:100%;max-width:640px;border:0;display:block;overflow:hidden;" height="260"></iframe>
+  style="width:100%;border:0;display:block;overflow:hidden;" height="260"></iframe>
 <script>
   document.getElementById('lybs-division-check').src =
     'https://natesteele888.github.io/lybs-ballclub/division-check.html?sport=baseball&v=' + Date.now();
