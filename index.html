@@ -297,7 +297,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261116b';</script>
+<script defer>window.BUILD_V = '20261116c';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -383,7 +383,7 @@
 <script defer src="js/schedule.js?v=210"></script>
 <script defer src="js/practices.js?v=194"></script>
 <script defer src="js/calendar-view.js?v=194"></script>
-<script defer src="js/roster.js?v=211"></script>
+<script defer src="js/roster.js?v=212"></script>
 <script defer src="js/song-requests.js?v=211"></script>
 <script defer src="js/drill-baserunning.js?v=194"></script>
 <script defer src="js/drill-ath.js?v=194"></script>
@@ -401,7 +401,8 @@
 <script defer src="js/practice-plan.js?v=194"></script>
 <script defer src="js/play-diagram.js?v=194"></script>
 <script defer src="js/stats-import.js?v=194"></script>
-<script defer src="js/social-submit.js?v=194"></script>
+<script defer src="js/social-submit.js?v=195"></script>
+<script defer src="js/card-photos.js?v=1"></script>
 <script defer src="js/gamechanger.js?v=194"></script>
 <script defer src="js/rules.js?v=207"></script>
 <script defer src="js/practice-catalog.js?v=194"></script>
@@ -1042,15 +1043,23 @@
       if (SR) await SR.ensureLoaded(TEAM_ID);
       const players = window.Roster.getPlayers(TEAM_ID);
       const srOpts = { isCoach: canEdit(), isBoard: IS_BOARD, byName: SESSION && SESSION.name, onChange: () => renderRosterTab() };
+      // Steele Cards card photos (js/card-photos.js): coaches on every row,
+      // a parent only on their own player's row (parent email match).
+      const CP = window.CardPhotos;
+      const cpWho = { isCoach: canEdit(), email: SESSION && SESSION.email, name: SESSION && SESSION.name };
+      if (CP) await CP.ensureLoaded(TEAM_ID);
+      const showCards = CP && players.some(p => CP._test.canSendFor(p, cpWho));
       window.Roster.render(TEAM_ID, el, {
         canEdit: canEdit(),
         topHtml: SR && canEdit() ? SR.panelHtml(TEAM_ID, players, srOpts) : '',
         extraHead: SR ? 'Walk-up' : '',
         extraCell: SR ? p => SR.cellHtml(TEAM_ID, p) : null,
+        extraCols: showCards ? [{ head: 'Card', cell: p => CP.cellHtml(TEAM_ID, p, cpWho) }] : [],
         onAdd: () => { rosterView = { mode: 'edit', player: {} }; renderRosterTab(); },
         onEdit: id => { rosterView = { mode: 'edit', player: window.Roster.getPlayers(TEAM_ID).find(p => p.id === id) }; renderRosterTab(); },
       });
       if (SR) { SR.wireCells(TEAM_ID, el, players, srOpts); if (canEdit()) SR.wirePanel(TEAM_ID, el, players, srOpts); }
+      if (showCards) CP.wireCells(TEAM_ID, el, players, cpWho, () => renderRosterTab());
     } else {
       window.Roster.renderForm(rosterView.player, el, {
         teamId: TEAM_ID,
