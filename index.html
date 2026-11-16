@@ -35,7 +35,7 @@
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"></noscript>
-<link rel="stylesheet" href="css/styles.css?v=212">
+<link rel="stylesheet" href="css/styles.css?v=213">
 <!-- Situations Trainer's own scoped "Sandlot" design system -- deliberately
      separate from styles.css, see css/situations.css's own header comment. -->
 <link rel="stylesheet" href="css/situations.css?v=194">
@@ -297,7 +297,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261110a';</script>
+<script defer>window.BUILD_V = '20261116a';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -382,7 +382,8 @@
 <script defer src="js/schedule.js?v=210"></script>
 <script defer src="js/practices.js?v=194"></script>
 <script defer src="js/calendar-view.js?v=194"></script>
-<script defer src="js/roster.js?v=194"></script>
+<script defer src="js/roster.js?v=211"></script>
+<script defer src="js/song-requests.js?v=211"></script>
 <script defer src="js/drill-baserunning.js?v=194"></script>
 <script defer src="js/drill-ath.js?v=194"></script>
 <script defer src="js/drill-pitching.js?v=194"></script>
@@ -1034,11 +1035,21 @@
     if (!el.innerHTML) el.innerHTML = '<div class="emptyState">Loading&hellip;</div>';
     await window.Roster.ensureLoaded(TEAM_ID);
     if (rosterView.mode === 'list') {
+      // Walk-up song requests (js/song-requests.js): a button on every
+      // player's row for the family, and the coach's approval queue on top.
+      const SR = window.SongRequests;
+      if (SR) await SR.ensureLoaded(TEAM_ID);
+      const players = window.Roster.getPlayers(TEAM_ID);
+      const srOpts = { isCoach: canEdit(), isBoard: IS_BOARD, byName: SESSION && SESSION.name, onChange: () => renderRosterTab() };
       window.Roster.render(TEAM_ID, el, {
         canEdit: canEdit(),
+        topHtml: SR && canEdit() ? SR.panelHtml(TEAM_ID, players, srOpts) : '',
+        extraHead: SR ? 'Walk-up' : '',
+        extraCell: SR ? p => SR.cellHtml(TEAM_ID, p) : null,
         onAdd: () => { rosterView = { mode: 'edit', player: {} }; renderRosterTab(); },
         onEdit: id => { rosterView = { mode: 'edit', player: window.Roster.getPlayers(TEAM_ID).find(p => p.id === id) }; renderRosterTab(); },
       });
+      if (SR) { SR.wireCells(TEAM_ID, el, players, srOpts); if (canEdit()) SR.wirePanel(TEAM_ID, el, players, srOpts); }
     } else {
       window.Roster.renderForm(rosterView.player, el, {
         teamId: TEAM_ID,
@@ -1217,8 +1228,11 @@
     document.getElementById('topBarTeamSwitchBtn').classList.toggle('hide', MY_TEAMS.length < 2);
     document.getElementById('appShell').classList.add('show');
     await window.ClubLogos.ensureLoaded();
-    switchTab('home');
+    // The coach's "Share the request link" and the request alerts open #walkup-songs: straight to the Roster's walk-up song buttons.
+    switchTab(location.hash === '#walkup-songs' ? 'roster' : 'home');
   }
+
+  window.addEventListener('hashchange', () => { if (location.hash === '#walkup-songs' && TEAM_ID) switchTab('roster'); });
 
   window.onIdentityReady = async function (teamId, role, identity, isBoard, allTeams) {
     if (window.__identityResolved) return false; // the other auth path already won this race -- see window.__identityResolved's own comment

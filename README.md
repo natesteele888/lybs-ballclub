@@ -15,6 +15,7 @@ No build step: open `index.html` (or run a static server) and it runs. Runs enti
 - **My Calendar** -- downloads an `.ics` file combining every team this device has logged into. Built from our own Schedule/Practices data, not synced from GameChanger (no feed exists to sync from).
 - **History** -- past-season archive (currently Spring/Summer 2026): schedule/scores pulled from each team's public GameChanger page. Deliberately scores/records only, no rosters or coaching staff -- GameChanger gates rosters behind login anyway, and a public repo's git history is no place for even a first-name-plus-last-initial list of kids from a season nobody's actively managing. See `data/season-archive.json`'s own `note` field.
 - **Club badges** -- Standings, History, and the live Schedule tab fuzzy-match opponent names against MAC League's 11 towns (`data/mac-league-clubs.json`, `js/club-logos.js`) and show that town's badge. Hotlinked straight to `macleague.org`'s own hosted images (`crossbar.s3.amazonaws.com`) -- never downloaded or re-hosted here, same display purpose the league's own site already uses them for.
+- **Walk-up song requests** -- every player's row on the Roster has a **Request walk-up song** button. A family picks a song from the league library, uploads one, or pastes a link, and sets where it starts with a preview. It lands as Waiting on coach; coaches see the queue at the top of the Roster (and get an alert on any phone that turned alerts on), approve in one tap or decline with a note, and the family hears back either way. Only an approved song becomes the player's song, the old one stays until then, and a coach can set a song directly with the same button. Walk-Up (`natesteele888/apps`, `walkup/`) reads the approved songs. Board members keep the **League song library** from the same card. Everything sits behind team sign-in in the Realtime Database (`js/song-requests.js` header has the paths); no song or name ever goes in this repo. Needs the deploy in Go live step 11.
 - **Result cards** -- every completed game (all of History, plus any played game on the live Schedule tab) renders as a big two-logo result card -- our crest and the opponent's badge, huge score numbers, a colored W/L/T pill (`js/game-card.js`). Games without a score yet stay in the compact list row.
 
 ## Design
@@ -78,6 +79,15 @@ Status as of 2026-10-03 -- project `lybs-ballclub` exists under natesteele888@gm
 8c. **Pull a team's parent contacts** the same way, once rosters are in: set the same `LYBS_APPS_SCRIPT_URL`/`LYBS_REVIEW_KEY`, run `node scripts/sync-contacts-from-dashboard.mjs 2026 Majors "Select" select`, review `data/dashboard-contacts-import.json`, then re-run with `FIREBASE_DB_URL`/`FIREBASE_DB_SECRET` set -- this **merges** emails onto the existing roster by matching name, it doesn't replace anything.
 9. ~~Deploy to GitHub Pages~~ -- **done**, live at `natesteele888.github.io/lybs-ballclub`.
 10. **GameChanger widget**: once Select's GameChanger team page exists, a coach goes to `web.gc.com -> Tools -> Create Scoreboard Widget`, copies the snippet, and pastes it into the GameChanger tab (visible once signed in as a coach).
+
+11. **Walk-up song requests** (one time, from a computer signed in to the Firebase account, Blaze plan): make the Web Push key pair and save both halves as secrets, then deploy the rules and functions together.
+   ```bash
+   npx web-push@3.6.7 generate-vapid-keys --json
+   npx firebase-tools@15.32.1 functions:secrets:set WEBPUSH_PUBLIC_KEY --project lybs-ballclub    # paste publicKey
+   npx firebase-tools@15.32.1 functions:secrets:set WEBPUSH_PRIVATE_KEY --project lybs-ballclub   # paste privateKey
+   npx firebase-tools@15.32.1 deploy --only database,functions --project lybs-ballclub
+   ```
+   Until the rules are deployed, sending a request fails with "Couldn't send that just now". Until the functions are deployed, requests still work, there are just no alerts.
 
 ## Privacy
 

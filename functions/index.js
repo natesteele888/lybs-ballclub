@@ -41,8 +41,26 @@
    The deployed URL is predictable (no need to paste it back into the
    app afterward): https://us-central1-lybs-ballclub.cloudfunctions.net/triggerStandingsSync
    -- js/data-admin.js already points at exactly that.
+
+   Walk-up song request alerts (added 2026-11-16, see js/song-requests.js):
+     pushKey          -- hands the app the public half of the Web Push
+                         key so a phone can turn alerts on. Public by
+                         design (it's what every browser is given).
+     onSongRequest    -- a family adds a request -> every coach phone that
+                         turned alerts on gets "#12 Sam asked for a song".
+     onSongDecision   -- a coach approves or declines -> the phone that
+                         asked (if it turned alerts on) gets the answer.
+   Both read pushSubs/{teamId}/... (written by the app, readable by
+   nothing but this file) and drop a subscription the push service says
+   is gone. One-time setup for these, on top of the steps above:
+     1. npx web-push generate-vapid-keys --json
+     2. firebase functions:secrets:set WEBPUSH_PUBLIC_KEY   (the publicKey)
+     3. firebase functions:secrets:set WEBPUSH_PRIVATE_KEY  (the privateKey)
+     4. firebase deploy --only database,functions
    ============================================================ */
 const { onRequest } = require('firebase-functions/v2/https');
+const { onValueCreated, onValueUpdated } = require('firebase-functions/v2/database');
+const webpush = require('web-push');
 const { defineSecret } = require('firebase-functions/params');
 const logger = require('firebase-functions/logger');
 const admin = require('firebase-admin');
@@ -50,6 +68,8 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 const GITHUB_DISPATCH_TOKEN = defineSecret('GITHUB_DISPATCH_TOKEN');
+const WEBPUSH_PUBLIC_KEY = defineSecret('WEBPUSH_PUBLIC_KEY');
+const WEBPUSH_PRIVATE_KEY = defineSecret('WEBPUSH_PRIVATE_KEY');
 
 exports.triggerStandingsSync = onRequest(
   {
@@ -125,3 +145,66 @@ exports.triggerStandingsSync = onRequest(
     res.status(200).json({ ok: true });
   }
 );
+
+/* ---------- walk-up song request alerts ---------- */
+const DB_TRIGGER = { instance: 'lybs-ballclub-default-rtdb', region: 'us-central1', secrets: [WEBPUSH_PUBLIC_KEY, WEBPUSH_PRIVATE_KEY] };
+
+exports.pushKey = onRequest(
+  { secrets: [WEBPUSH_PUBLIC_KEY], region: 'us-central1', cors: ['https://natesteele888.github.io'] },
+  (req, res) => {
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.type('text/plain').send(WEBPUSH_PUBLIC_KEY.value().trim());
+  }
+);
+
+function playerLabel(p) {
+  if (!p) return 'A player';
+  const first = String(p.name || '').trim().split(/\s+/)[0] || '';
+  return ((p.number ? '#' + p.number + ' ' : '') + first).trim() || 'A player';
+}
+async function rosterPlayer(teamId, pid) {
+  const roster = (await admin.database().ref(`teams/${teamId}/roster`).get()).val();
+  const list = Array.isArray(roster) ? roster : Object.values(roster || {});
+  return list.find(p => p && p.id === pid) || null;
+}
+// Sends one alert to every subscription under ref; drops the ones the push service says are gone.
+async function sendAll(ref, payload) {
+  const subs = (await ref.get()).val() || {};
+  webpush.setVapidDetails('https://natesteele888.github.io/lybs-ballclub/', WEBPUSH_PUBLIC_KEY.value().trim(), WEBPUSH_PRIVATE_KEY.value().trim());
+  const body = JSON.stringify(payload);
+  await Promise.all(Object.keys(subs).map(async key => {
+    const rec = subs[key];
+    if (!rec || !rec.sub || !rec.sub.endpoint) return;
+    try {
+      await webpush.sendNotification(rec.sub, body, { TTL: 24 * 3600, urgency: 'normal' });
+    } catch (e) {
+      if (e && (e.statusCode === 404 || e.statusCode === 410)) await ref.child(key).remove();
+      else logger.warn('push failed', e && e.statusCode);
+    }
+  }));
+}
+
+exports.onSongRequest = onValueCreated(Object.assign({ ref: '/teams/{teamId}/songRequests/{rid}' }, DB_TRIGGER), async event => {
+  const r = event.data.val();
+  if (!r || r.st !== 'pending') return; // a coach setting a song directly needs no alert
+  const { teamId } = event.params;
+  const p = await rosterPlayer(teamId, r.pid);
+  await sendAll(admin.database().ref(`pushSubs/${teamId}/coach`), {
+    title: 'Walk-up song request',
+    body: `${playerLabel(p)} asked for "${String(r.title || 'a song').slice(0, 80)}". Tap to approve or decline.`,
+    tag: 'walkup-requests',
+  });
+});
+
+exports.onSongDecision = onValueUpdated(Object.assign({ ref: '/teams/{teamId}/songRequests/{rid}' }, DB_TRIGGER), async event => {
+  const before = event.data.before.val() || {}, r = event.data.after.val() || {};
+  if (before.st !== 'pending' || (r.st !== 'approved' && r.st !== 'declined')) return;
+  const { teamId, rid } = event.params;
+  const p = await rosterPlayer(teamId, r.pid);
+  const title = String(r.title || 'the song').slice(0, 80);
+  const ref = admin.database().ref(`pushSubs/${teamId}/req/${rid}`);
+  await sendAll(ref, r.st === 'approved'
+    ? { title: 'Walk-up song approved', body: `"${title}" is now ${playerLabel(p)}'s walk-up song.`, tag: 'walkup-' + rid }
+    : { title: 'Walk-up song not approved', body: `The coach passed on "${title}"${r.note ? ': ' + String(r.note).slice(0, 120) : '.'}`, tag: 'walkup-' + rid });
+  await ref.remove(); // one answer per request, so the subscription for it is done
+});
