@@ -140,6 +140,11 @@
       host.id = 'toastHost';
       document.body.appendChild(host);
     }
+    // Two reads failing together (no signal) used to stack two identical
+    // red boxes. If the same words are still on screen, keep that one up
+    // a little longer instead of adding another.
+    const same = Array.from(host.children).find(t => t.textContent === message && !t.__leaving);
+    if (same) { clearTimeout(same.__hide); same.__hide = hideLater(same); return; }
     const el = document.createElement('div');
     el.className = `toast ${kind === 'info' ? 'toastInfo' : 'toastError'}`;
     // Keep failed loads/saves for the "Something wrong?" report (apps/health.js).
@@ -147,11 +152,15 @@
     el.textContent = message;
     host.appendChild(el);
     requestAnimationFrame(() => el.classList.add('toastShow'));
-    setTimeout(() => {
+    el.__hide = hideLater(el);
+  };
+  function hideLater(el) {
+    return setTimeout(() => {
+      el.__leaving = true;
       el.classList.remove('toastShow');
       setTimeout(() => el.remove(), 300);
     }, 4000);
-  };
+  }
 
   // RSVP -- shared by schedule.js and practices.js's detail views, since
   // a game and a practice both just need "who's coming" attached the same
