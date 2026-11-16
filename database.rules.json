@@ -28,6 +28,7 @@
         "practicePlans": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "playDiagrams": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "gameChangerSchedule": { ".read": "auth != null && root.child('fieldKiosks').child(auth.uid).child('ok').val() == true" },
+        "cardPhotoStatus": { ".write": false },
         "songRequests": {
           "$rid": {
             ".write": "auth != null && ((auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach') || (!data.exists() && newData.child('st').val() == 'pending' && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).exists())))",
@@ -211,6 +212,34 @@
           },
           "data": {
             ".validate": "newData.isString() && newData.val().length <= 9800000"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+
+    "cardPhotos": {
+      "$teamId": {
+        ".read": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).exists() || root.child('boardMembers').child(auth.uid).val() == true)",
+        "$pid": {
+          ".write": "auth != null && (root.child('boardMembers').child(auth.uid).val() == true || (!newData.exists() && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')))",
+          ".validate": "newData.hasChildren(['type', 'data', 'at'])",
+          "type": {
+            ".validate": "newData.isString() && newData.val().matches(/^image\\/(jpeg|png|webp)$/)"
+          },
+          "data": {
+            ".validate": "newData.isString() && newData.val().beginsWith('data:image/') && newData.val().length <= 4000000"
+          },
+          "at": {
+            ".validate": "newData.isString() && newData.val().length <= 40"
+          },
+          "w": {
+            ".validate": "newData.isNumber()"
+          },
+          "h": {
+            ".validate": "newData.isNumber()"
           },
           "$other": {
             ".validate": false
