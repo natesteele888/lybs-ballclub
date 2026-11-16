@@ -229,6 +229,8 @@ a { color: var(--lybs-blue-bright); }
 .loginEyebrow {
   font-family: var(--font-label); font-size: 12px; font-weight: 600; letter-spacing: 0.28em;
   text-transform: uppercase; color: var(--lybs-silver); margin: 2px 0 0;
+  /* Centered even when a slow font load wraps it onto two lines. */
+  text-align: center; padding: 0 12px;
 }
 .loginContent {
   background: linear-gradient(180deg, rgba(15,21,56,0.92), rgba(9,13,50,0.92));
