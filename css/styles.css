@@ -1484,3 +1484,24 @@ a { color: var(--lybs-blue-bright); }
    targets on a phone. The negative margin keeps the line spacing as it was. */
 .standingsTeamLink { min-height: 36px; }
 .helpText a { display: inline-block; padding: 9px 0; margin: -9px 0; }
+
+/* ---- Walk-up song requests (js/song-requests.js) ---- */
+.rosterTable td.rosterExtraCell { white-space: normal; min-width: 128px; }
+.rosterExtraCell .srAsk { display: block; margin-top: 4px; white-space: normal; text-align: left; line-height: 1.2; }
+.srChip { display: inline-block; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: rgba(var(--overlay-rgb),0.08); color: var(--text2); vertical-align: middle; }
+.srChip.ok { background: rgba(46,160,90,0.18); color: #7fdc9f; }
+.srChip.warn { background: rgba(240,170,40,0.18); color: #f3c662; }
+.srForm label { display: block; font-size: 11px; color: var(--lybs-silver); margin-bottom: 12px; font-family: var(--font-label); letter-spacing: 0.05em; text-transform: uppercase; }
+.srForm input:not([type=radio]):not([type=range]), .srForm select { display: block; width: 100%; box-sizing: border-box; margin-top: 5px; padding: 10px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(var(--sunken-rgb),0.6); color: var(--text); font-family: var(--font-body); font-size: 15px; text-transform: none; letter-spacing: 0; }
+.srKinds { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-bottom: 12px; }
+.srKinds label { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; min-height: 36px; }
+.srStart input[type=range] { width: 100%; margin: 0 0 4px; }
+.srHint { font-size: 12px; color: var(--text2); margin: 4px 0 10px; }
+.srNow { font-size: 13px; margin: 0 0 12px; }
+.srPanel { margin-bottom: 14px; }
+.srPanelHead { margin-bottom: 8px; }
+.srBadge { display: inline-block; min-width: 20px; padding: 1px 7px; border-radius: 999px; background: #e0463c; color: #fff; font-size: 12px; text-align: center; }
+.srReq { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--card-border); }
+.srReqMain { flex: 1 1 180px; min-width: 0; overflow-wrap: anywhere; }
+.srReqBtns, .srPanelTools { display: flex; flex-wrap: wrap; gap: 6px; }
+.srPanelTools { margin-top: 10px; }
