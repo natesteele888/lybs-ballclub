@@ -28,16 +28,54 @@
         "practicePlans": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "playDiagrams": { ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')" },
         "gameChangerSchedule": { ".read": "auth != null && root.child('fieldKiosks').child(auth.uid).child('ok').val() == true" },
+        "songRequests": {
+          "$rid": {
+            ".write": "auth != null && ((auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach') || (!data.exists() && newData.child('st').val() == 'pending' && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).exists())))",
+            ".validate": "newData.hasChildren(['pid', 'kind', 'title', 'st', 'at', 'start'])",
+            "pid": {
+              ".validate": "newData.isString() && newData.val().length <= 60"
+            },
+            "kind": {
+              ".validate": "newData.val() == 'library' || newData.val() == 'link' || newData.val() == 'upload'"
+            },
+            "lib": {
+              ".validate": "newData.isString() && newData.val().length <= 60"
+            },
+            "link": {
+              ".validate": "newData.isString() && newData.val().length <= 500 && newData.val().matches(/^https?:\\/\\//)"
+            },
+            "file": {
+              ".validate": "newData.isString() && newData.val().length <= 60"
+            },
+            "title": {
+              ".validate": "newData.isString() && newData.val().length <= 120"
+            },
+            "start": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 3600"
+            },
+            "st": {
+              ".validate": "newData.val() == 'pending' || newData.val() == 'approved' || newData.val() == 'declined'"
+            },
+            "note": {
+              ".validate": "newData.isString() && newData.val().length <= 300"
+            },
+            "by": {
+              ".validate": "newData.isString() && newData.val().length <= 60"
+            },
+            "at": {
+              ".validate": "newData.isString() && newData.val().length <= 40"
+            },
+            "decidedAt": {
+              ".validate": "newData.isString() && newData.val().length <= 40"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
         "walkupSongs": {
           ".read": "auth != null && root.child('fieldKiosks').child(auth.uid).child('ok').val() == true",
-          ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')",
-          "$playerId": {
-            ".validate": "newData.hasChildren(['song'])",
-            "song": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120" },
-            "start": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 600" },
-            "at": { ".validate": "newData.isNumber()" },
-            "$other": { ".validate": false }
-          }
+          ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')"
         }
       }
     },
@@ -154,6 +192,96 @@
     "leagueEvents": {
       ".read": true,
       ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true"
+    },
+
+    "songFiles": {
+      "$teamId": {
+        ".read": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).exists() || root.child('boardMembers').child(auth.uid).val() == true)",
+        "$fid": {
+          ".write": "auth != null && ((auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach') || (!data.exists() && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).exists())))",
+          ".validate": "newData.hasChildren(['type', 'size', 'data'])",
+          "type": {
+            ".validate": "newData.isString() && newData.val().matches(/^audio\\/[A-Za-z0-9.+-]{1,40}$/)"
+          },
+          "name": {
+            ".validate": "newData.isString() && newData.val().length <= 120"
+          },
+          "size": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 7340032"
+          },
+          "data": {
+            ".validate": "newData.isString() && newData.val().length <= 9800000"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+
+    "walkupLibrary": {
+      ".read": "auth != null && auth.provider != 'anonymous'",
+      "$id": {
+        ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true",
+        ".validate": "newData.hasChildren(['title', 'at'])",
+        "title": {
+          ".validate": "newData.isString() && newData.val().length <= 120"
+        },
+        "type": {
+          ".validate": "newData.isString() && newData.val().length <= 50"
+        },
+        "size": {
+          ".validate": "newData.isNumber()"
+        },
+        "at": {
+          ".validate": "newData.isString() && newData.val().length <= 40"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+
+    "walkupLibraryFiles": {
+      ".read": "auth != null && auth.provider != 'anonymous'",
+      "$id": {
+        ".write": "auth != null && root.child('boardMembers').child(auth.uid).val() == true",
+        ".validate": "newData.hasChildren(['type', 'size', 'data'])",
+        "type": {
+          ".validate": "newData.isString() && newData.val().matches(/^audio\\/[A-Za-z0-9.+-]{1,40}$/)"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length <= 120"
+        },
+        "size": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 7340032"
+        },
+        "data": {
+          ".validate": "newData.isString() && newData.val().length <= 9800000"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+
+    "pushSubs": {
+      "$teamId": {
+        "coach": {
+          "$key": {
+            ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).val() == 'coach')",
+            ".validate": "!newData.exists() || newData.hasChildren(['sub', 'at'])"
+          }
+        },
+        "req": {
+          "$rid": {
+            "$key": {
+              ".write": "auth != null && (auth.token.email == ('coach-' + $teamId + '-gate@lybsballclub.internal') || auth.token.email == ('player-' + $teamId + '-gate@lybsballclub.internal') || root.child('access').child($teamId).child(auth.uid).exists())",
+              ".validate": "!newData.exists() || newData.hasChildren(['sub', 'at'])"
+            }
+          }
+        }
+      }
     }
   }
 }
