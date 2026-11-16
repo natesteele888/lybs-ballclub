@@ -1,0 +1,67 @@
+name: Deploy database rules
+
+# Puts database.rules.json live on the Realtime Database whenever it
+# changes on main (and by hand from the Actions tab), so a merged rules
+# change never waits on someone running the Firebase CLI on a laptop.
+# Same two secrets every scraper here already uses:
+#   FIREBASE_DB_URL     e.g. https://lybs-ballclub-default-rtdb.firebaseio.com
+#   FIREBASE_DB_SECRET  the database's legacy secret (REST /.settings/rules)
+# Before pushing, it checks the file is valid JSON and passes
+# tests/field-kiosk-rules.test.js, and saves the rules that were live
+# as the "rules-before" artifact, so going back is one PUT of that file.
+# It stops without changing anything if the live rules match neither
+# database.rules.json nor any earlier version of it on main, so an edit
+# made straight in the Firebase console is never overwritten silently.
+# Running it by hand with "overwrite" ticked skips that check.
+on:
+  workflow_dispatch:
+    inputs:
+      overwrite:
+        description: 'Put the rules live even if the live ones were changed outside this repo'
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: [database.rules.json]
+
+concurrency:
+  group: database-rules
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Check the rules
+        run: node tests/field-kiosk-rules.test.js
+      - name: Save the rules that are live now
+        env:
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+        run: |
+          set -euo pipefail
+          test -n "$FIREBASE_DB_URL" && test -n "$FIREBASE_DB_SECRET"
+          curl -fsS "$FIREBASE_DB_URL/.settings/rules.json?auth=$FIREBASE_DB_SECRET" -o rules-before.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rules-before
+          path: rules-before.json
+          retention-days: 90
+      - name: Stop if the live rules were changed outside this repo
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.overwrite) }}
+        run: node scripts/rules-known.cjs rules-before.json
+      - name: Put the new rules live
+        env:
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+        run: |
+          set -euo pipefail
+          curl -fsS -X PUT -H 'Content-Type: application/json' --data-binary @database.rules.json "$FIREBASE_DB_URL/.settings/rules.json?auth=$FIREBASE_DB_SECRET" -o /dev/null
+          curl -fsS "$FIREBASE_DB_URL/.settings/rules.json?auth=$FIREBASE_DB_SECRET" -o rules-now.json
+          node scripts/rules-known.cjs rules-now.json --only-current

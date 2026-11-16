@@ -80,7 +80,7 @@ Status as of 2026-10-03 -- project `lybs-ballclub` exists under natesteele888@gm
 9. ~~Deploy to GitHub Pages~~ -- **done**, live at `natesteele888.github.io/lybs-ballclub`.
 10. **GameChanger widget**: once Select's GameChanger team page exists, a coach goes to `web.gc.com -> Tools -> Create Scoreboard Widget`, copies the snippet, and pastes it into the GameChanger tab (visible once signed in as a coach).
 
-11. **Walk-up song requests** (one time, from a computer signed in to the Firebase account, Blaze plan): make the Web Push key pair and save both halves as secrets, then deploy the rules and functions together.
+11. **Walk-up song requests** (one time, from a computer signed in to the Firebase account, Blaze plan): make the Web Push key pair and save both halves as secrets, then deploy the functions. The rules go live on their own when `database.rules.json` changes on main (see Field tablets below); the last command also deploys them by hand.
    ```bash
    npx web-push@3.6.7 generate-vapid-keys --json
    npx firebase-tools@15.32.1 functions:secrets:set WEBPUSH_PUBLIC_KEY --project lybs-ballclub    # paste publicKey
@@ -88,6 +88,15 @@ Status as of 2026-10-03 -- project `lybs-ballclub` exists under natesteele888@gm
    npx firebase-tools@15.32.1 deploy --only database,functions --project lybs-ballclub
    ```
    Until the rules are deployed, sending a request fails with "Couldn't send that just now". Until the functions are deployed, requests still work, there are just no alerts.
+
+## Field tablets (walk-up kiosk)
+
+A tablet at the field can run walk-up music for any Lunenburg team that doesn't bring its own, using Field mode in Walk-Up (`natesteele888/apps`, `walkup/field.html`).
+
+- **Letting a tablet in:** the tablet shows a 6-letter code. A board member opens **Data Admin > Field tablets**, checks the code matches, and taps **Let in**. Remove takes it back out.
+- **What it can see:** read only, for every team: roster, lineups, schedule, GameChanger id and schedule mirror, and walk-up songs. It can't change anything and can't see coach notes, contacts or access records (`database.rules.json`, checked by `tests/field-kiosk-rules.test.js`).
+- **Walk-up songs:** the tablet plays each player's approved song request (`teams/{teamId}/walkupSongs/{playerId}`, written when a coach approves one, see `js/song-requests.js`), from its own song library by title, at the approved start time.
+- **Rules go live by themselves:** `.github/workflows/database-rules.yml` pushes `database.rules.json` to the database when it changes on main, after the test passes, and keeps the rules that were live before as a downloadable artifact. If the live rules match no version of the file in this repo's history (someone edited them in the Firebase console), it stops and changes nothing; copy the edit into the file, or run it by hand with **overwrite** ticked.
 
 ## Privacy
 
