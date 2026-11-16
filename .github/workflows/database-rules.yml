@@ -39,7 +39,9 @@ jobs:
         with:
           node-version: '20'
       - name: Check the rules
-        run: node tests/field-kiosk-rules.test.js
+        run: |
+          node tests/field-kiosk-rules.test.js
+          node tests/card-photos.test.js
       - name: Save the rules that are live now
         env:
           FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}

@@ -24,9 +24,10 @@
    Pos / B-T, small avatar per row), minus the columns that don't
    belong on a youth roster -- those sites show age, height, weight,
    birthplace; none of that is appropriate here. The avatar is a
-   plain jersey-number badge, not a photo -- this app has no player
-   photo feature, deliberately, to avoid opening that privacy
-   question at all.
+   plain jersey-number badge, not a photo. The one photo this app
+   handles is a Steele Cards card photo (js/card-photos.js): sent to
+   the league board for approval, never shown on this table, and
+   once approved readable only by this team and the board.
 
    Pulling this straight from Crossbar (macleague.org's registration
    platform) or GameChanger instead of typing it in by hand isn't
@@ -95,18 +96,21 @@
     // rosters -- pass canEdit:false and no onEdit for a plain display table.
     renderTable(players, opts) {
       opts = opts || {};
+      // Extra columns after B/T: opts.extraCell/extraHead (one column, the
+      // original shape) and/or opts.extraCols [{ head, cell(p) }].
+      const cols = (opts.extraCell ? [{ head: opts.extraHead, cell: opts.extraCell }] : []).concat(opts.extraCols || []);
       const rows = players.map(p => `
         <tr class="${opts.canEdit ? 'rosterTableEditable' : ''}" data-id="${escapeHtml(p.id || '')}">
           <td class="rosterAvatarCell"><div class="rosterAvatar">${escapeHtml(p.number || '?')}</div></td>
           <td class="rosterTableName">${escapeHtml(p.name || '')}</td>
           <td>${escapeHtml(p.position || '—')}</td>
           <td class="numCell">${escapeHtml(p.batsThrows || '—')}</td>
-          ${opts.extraCell ? `<td class="rosterExtraCell">${opts.extraCell(p)}</td>` : ''}
-        </tr>`).join('') || `<tr><td colspan="${opts.extraCell ? 5 : 4}"><div class="emptyState">No players yet.</div></td></tr>`;
+          ${cols.map(c => `<td class="rosterExtraCell">${c.cell(p)}</td>`).join('')}
+        </tr>`).join('') || `<tr><td colspan="${4 + cols.length}"><div class="emptyState">No players yet.</div></td></tr>`;
       return `
         <div class="rosterTableWrap">
           <table class="rosterTable">
-            <thead><tr><th></th><th>Name</th><th>Pos</th><th class="numCell">B/T</th>${opts.extraCell ? `<th>${escapeHtml(opts.extraHead || '')}</th>` : ''}</tr></thead>
+            <thead><tr><th></th><th>Name</th><th>Pos</th><th class="numCell">B/T</th>${cols.map(c => `<th>${escapeHtml(c.head || '')}</th>`).join('')}</tr></thead>
             <tbody>${rows}</tbody>
           </table>
         </div>`;
