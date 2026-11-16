@@ -79,6 +79,15 @@ Status as of 2026-10-03 -- project `lybs-ballclub` exists under natesteele888@gm
 9. ~~Deploy to GitHub Pages~~ -- **done**, live at `natesteele888.github.io/lybs-ballclub`.
 10. **GameChanger widget**: once Select's GameChanger team page exists, a coach goes to `web.gc.com -> Tools -> Create Scoreboard Widget`, copies the snippet, and pastes it into the GameChanger tab (visible once signed in as a coach).
 
+## Field tablets (walk-up kiosk)
+
+A tablet at the field can run walk-up music for any Lunenburg team that doesn't bring its own, using Field mode in Walk-Up (`natesteele888/apps`, `walkup/field.html`).
+
+- **Letting a tablet in:** the tablet shows a 6-letter code. A board member opens **Data Admin > Field tablets**, checks the code matches, and taps **Let in**. Remove takes it back out.
+- **What it can see:** read only, for every team: roster, lineups, schedule, GameChanger id and schedule mirror, and walk-up songs. It can't change anything and can't see coach notes, contacts or access records (`database.rules.json`, checked by `tests/field-kiosk-rules.test.js`).
+- **Walk-up songs:** a coach sets each player's song on that player's Roster screen (`teams/{teamId}/walkupSongs/{playerId}` = song name and start time; no audio). The tablet finds the song in its own library by name.
+- **Rules go live by themselves:** `.github/workflows/database-rules.yml` pushes `database.rules.json` to the database when it changes on main, after the test passes, and keeps the rules that were live before as a downloadable artifact.
+
 ## Privacy
 
 Carries forward the same discipline as the `lybs-reporting` dashboard for **our own roster**: name/number/position only -- no DOB, contact info, or address, ever.

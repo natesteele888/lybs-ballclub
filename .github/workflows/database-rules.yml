@@ -1,0 +1,53 @@
+name: Deploy database rules
+
+# Puts database.rules.json live on the Realtime Database whenever it
+# changes on main (and by hand from the Actions tab), so a merged rules
+# change never waits on someone running the Firebase CLI on a laptop.
+# Same two secrets every scraper here already uses:
+#   FIREBASE_DB_URL     e.g. https://lybs-ballclub-default-rtdb.firebaseio.com
+#   FIREBASE_DB_SECRET  the database's legacy secret (REST /.settings/rules)
+# Before pushing, it checks the file is valid JSON and passes
+# tests/field-kiosk-rules.test.js, and saves the rules that were live
+# as the "rules-before" artifact, so going back is one PUT of that file.
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths: [database.rules.json]
+
+concurrency:
+  group: database-rules
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Check the rules
+        run: node tests/field-kiosk-rules.test.js
+      - name: Save the rules that are live now
+        env:
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+        run: |
+          set -euo pipefail
+          test -n "$FIREBASE_DB_URL" && test -n "$FIREBASE_DB_SECRET"
+          curl -fsS "$FIREBASE_DB_URL/.settings/rules.json?auth=$FIREBASE_DB_SECRET" -o rules-before.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rules-before
+          path: rules-before.json
+          retention-days: 90
+      - name: Put the new rules live
+        env:
+          FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
+        run: |
+          set -euo pipefail
+          curl -fsS -X PUT -H 'Content-Type: application/json' --data-binary @database.rules.json "$FIREBASE_DB_URL/.settings/rules.json?auth=$FIREBASE_DB_SECRET" -o /dev/null
+          curl -fsS "$FIREBASE_DB_URL/.settings/rules.json?auth=$FIREBASE_DB_SECRET" -o rules-now.json
+          node -e "const fs=require('fs');const a=JSON.parse(fs.readFileSync('database.rules.json','utf8'));const b=JSON.parse(fs.readFileSync('rules-now.json','utf8'));if(JSON.stringify(a)!==JSON.stringify(b)){console.error('Live rules do not match database.rules.json');process.exit(1)}console.log('Live rules match database.rules.json')"

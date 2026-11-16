@@ -1,6 +1,8 @@
 /* ============================================================
    Data Admin -- board-only screen showing how fresh the
-   macleague.org standings/scores mirror is.
+   macleague.org standings/scores mirror is, plus the Field tablets
+   list (js/field-tablets.js) where a board member lets a walk-up
+   tablet at the field in.
 
    No manual trigger here. Two versions of one existed and were both
    pulled: a GitHub Actions link-out (free, but only usable by whoever
@@ -58,7 +60,10 @@
         <div class="sectionLabel">League Data Sync</div>
         <div class="helpText">Synced automatically every 30 minutes, 8am&ndash;9pm ET, every day of the season.</div>
         ${rows ? `<div class="listBody" style="margin-top:12px;">${rows}</div>` : ''}
-        <button class="btn btnGhost btnTiny" id="dataAdminInfoBtn" style="margin-top:12px;">&#9432; About this data</button>`;
+        <button class="btn btnGhost btnTiny" id="dataAdminInfoBtn" style="margin-top:12px;">&#9432; About this data</button>
+        <div id="fieldTabletsSlot"></div>`;
+      const ftSlot = containerEl.querySelector('#fieldTabletsSlot');
+      if (ftSlot && window.FieldTablets) window.FieldTablets.render(ftSlot);
 
       const infoBtn = containerEl.querySelector('#dataAdminInfoBtn');
       if (infoBtn) {
