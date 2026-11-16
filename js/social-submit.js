@@ -102,6 +102,11 @@
   }
 
   window.SocialSubmit = {
+    // Shared with js/card-photos.js, so a Steele Cards card photo goes to the
+    // same review queue through the same door: same token, same endpoint,
+    // same canvas re-encode (which also drops the photo's location and camera
+    // details, since a canvas never carries EXIF), same blind-retry send.
+    FORM_TOKEN, ENDPOINT, shrink, send,
     render(containerEl, teamId) {
       const team = window.TeamConfig.current().name || window.TeamConfig.current().shortName || 'Our team';
       const division = window.TeamConfig.current().macLeagueDivisionName || '';
