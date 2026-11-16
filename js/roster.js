@@ -101,11 +101,12 @@
           <td class="rosterTableName">${escapeHtml(p.name || '')}</td>
           <td>${escapeHtml(p.position || '—')}</td>
           <td class="numCell">${escapeHtml(p.batsThrows || '—')}</td>
-        </tr>`).join('') || `<tr><td colspan="4"><div class="emptyState">No players yet.</div></td></tr>`;
+          ${opts.extraCell ? `<td class="rosterExtraCell">${opts.extraCell(p)}</td>` : ''}
+        </tr>`).join('') || `<tr><td colspan="${opts.extraCell ? 5 : 4}"><div class="emptyState">No players yet.</div></td></tr>`;
       return `
         <div class="rosterTableWrap">
           <table class="rosterTable">
-            <thead><tr><th></th><th>Name</th><th>Pos</th><th class="numCell">B/T</th></tr></thead>
+            <thead><tr><th></th><th>Name</th><th>Pos</th><th class="numCell">B/T</th>${opts.extraCell ? `<th>${escapeHtml(opts.extraHead || '')}</th>` : ''}</tr></thead>
             <tbody>${rows}</tbody>
           </table>
         </div>`;
@@ -115,6 +116,7 @@
       opts = opts || {};
       const players = window.Roster.getPlayers(teamId);
       containerEl.innerHTML = `
+        ${opts.topHtml || ''}
         <div class="sectionHeader">
           <div></div>
           ${opts.canEdit ? '<button class="btn btnSmall" id="addPlayerBtn">+ Add player</button>' : ''}
