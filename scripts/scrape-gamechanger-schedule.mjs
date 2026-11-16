@@ -48,7 +48,8 @@
      FIREBASE_DB_URL=... FIREBASE_DB_SECRET=... node scripts/scrape-gamechanger-schedule.mjs
    ============================================================ */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { dirname, fileURLToPath } from 'node:path';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
 const REQUEST_DELAY_MS = 1000;
@@ -92,7 +93,11 @@ async function main() {
   const dbUrl = process.env.FIREBASE_DB_URL;
   const dbSecret = process.env.FIREBASE_DB_SECRET;
   if (!dbUrl || !dbSecret) {
-    throw new Error('FIREBASE_DB_URL and FIREBASE_DB_SECRET are both required -- unlike other scrapers here, the gcTeamId list this script needs only exists in the real database, there is no local fallback.');
+    // Unlike other scrapers here, the gcTeamId list this script needs only
+    // exists in the real database, so there is nothing to do without them.
+    // Skip cleanly (like scrape-standings.mjs) instead of failing every run.
+    console.log('FIREBASE_DB_URL/FIREBASE_DB_SECRET not set -- nothing to mirror. Add both as repo Actions secrets to turn this on.');
+    return;
   }
 
   const teamIds = await knownTeamIds();
