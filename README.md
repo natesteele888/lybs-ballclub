@@ -15,6 +15,7 @@ No build step: open `index.html` (or run a static server) and it runs. Runs enti
 - **My Calendar** -- downloads an `.ics` file combining every team this device has logged into. Built from our own Schedule/Practices data, not synced from GameChanger (no feed exists to sync from).
 - **History** -- past-season archive (currently Spring/Summer 2026): schedule/scores pulled from each team's public GameChanger page. Deliberately scores/records only, no rosters or coaching staff -- GameChanger gates rosters behind login anyway, and a public repo's git history is no place for even a first-name-plus-last-initial list of kids from a season nobody's actively managing. See `data/season-archive.json`'s own `note` field.
 - **Club badges** -- Standings, History, and the live Schedule tab fuzzy-match opponent names against MAC League's 11 towns (`data/mac-league-clubs.json`, `js/club-logos.js`) and show that town's badge. Hotlinked straight to `macleague.org`'s own hosted images (`crossbar.s3.amazonaws.com`) -- never downloaded or re-hosted here, same display purpose the league's own site already uses them for.
+- **Walk-up song requests** -- every player's row on the Roster has a **Request walk-up song** button. A family picks a song from the league library, uploads one, or pastes a link, and sets where it starts with a preview. It lands as Waiting on coach; coaches see the queue at the top of the Roster (and get an alert on any phone that turned alerts on), approve in one tap or decline with a note, and the family hears back either way. Only an approved song becomes the player's song, the old one stays until then, and a coach can set a song directly with the same button. Walk-Up (`natesteele888/apps`, `walkup/`) reads the approved songs. Board members keep the **League song library** from the same card. Everything sits behind team sign-in in the Realtime Database (`js/song-requests.js` header has the paths); no song or name ever goes in this repo. Needs the deploy in Go live step 11.
 - **Result cards** -- every completed game (all of History, plus any played game on the live Schedule tab) renders as a big two-logo result card -- our crest and the opponent's badge, huge score numbers, a colored W/L/T pill (`js/game-card.js`). Games without a score yet stay in the compact list row.
 
 ## Design
@@ -79,14 +80,23 @@ Status as of 2026-10-03 -- project `lybs-ballclub` exists under natesteele888@gm
 9. ~~Deploy to GitHub Pages~~ -- **done**, live at `natesteele888.github.io/lybs-ballclub`.
 10. **GameChanger widget**: once Select's GameChanger team page exists, a coach goes to `web.gc.com -> Tools -> Create Scoreboard Widget`, copies the snippet, and pastes it into the GameChanger tab (visible once signed in as a coach).
 
+11. **Walk-up song requests** (one time, from a computer signed in to the Firebase account, Blaze plan): make the Web Push key pair and save both halves as secrets, then deploy the functions. The rules go live on their own when `database.rules.json` changes on main (see Field tablets below); the last command also deploys them by hand.
+   ```bash
+   npx web-push@3.6.7 generate-vapid-keys --json
+   npx firebase-tools@15.32.1 functions:secrets:set WEBPUSH_PUBLIC_KEY --project lybs-ballclub    # paste publicKey
+   npx firebase-tools@15.32.1 functions:secrets:set WEBPUSH_PRIVATE_KEY --project lybs-ballclub   # paste privateKey
+   npx firebase-tools@15.32.1 deploy --only database,functions --project lybs-ballclub
+   ```
+   Until the rules are deployed, sending a request fails with "Couldn't send that just now". Until the functions are deployed, requests still work, there are just no alerts.
+
 ## Field tablets (walk-up kiosk)
 
 A tablet at the field can run walk-up music for any Lunenburg team that doesn't bring its own, using Field mode in Walk-Up (`natesteele888/apps`, `walkup/field.html`).
 
 - **Letting a tablet in:** the tablet shows a 6-letter code. A board member opens **Data Admin > Field tablets**, checks the code matches, and taps **Let in**. Remove takes it back out.
 - **What it can see:** read only, for every team: roster, lineups, schedule, GameChanger id and schedule mirror, and walk-up songs. It can't change anything and can't see coach notes, contacts or access records (`database.rules.json`, checked by `tests/field-kiosk-rules.test.js`).
-- **Walk-up songs:** a coach sets each player's song on that player's Roster screen (`teams/{teamId}/walkupSongs/{playerId}` = song name and start time; no audio). The tablet finds the song in its own library by name.
-- **Rules go live by themselves:** `.github/workflows/database-rules.yml` pushes `database.rules.json` to the database when it changes on main, after the test passes, and keeps the rules that were live before as a downloadable artifact.
+- **Walk-up songs:** the tablet plays each player's approved song request (`teams/{teamId}/walkupSongs/{playerId}`, written when a coach approves one, see `js/song-requests.js`), from its own song library by title, at the approved start time.
+- **Rules go live by themselves:** `.github/workflows/database-rules.yml` pushes `database.rules.json` to the database when it changes on main, after the test passes, and keeps the rules that were live before as a downloadable artifact. If the live rules match no version of the file in this repo's history (someone edited them in the Firebase console), it stops and changes nothing; copy the edit into the file, or run it by hand with **overwrite** ticked.
 
 ## Privacy
 

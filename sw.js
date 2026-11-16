@@ -17,7 +17,7 @@
 // zone at the field didn't just show stale data -- it broke outright: the
 // shell loaded but every tab's own module was missing, since only
 // index.html/styles.css/manifest.json were ever cached.
-const CACHE_NAME = 'lybs-ballclub-shell-20261116a';
+const CACHE_NAME = 'lybs-ballclub-shell-20261116b';
 // Only ever delete our own caches. Every natesteele888.github.io app shares
 // one origin and so one Cache Storage, so deleting "everything but ours"
 // wiped other apps' offline copies (Power Program, Toolbox...) on each update.
@@ -41,7 +41,6 @@ const SHELL_FILES = [
   './js/coach-notes.js',
   './js/data-admin.js',
   './js/field-tablets.js',
-  './js/walkup-song.js',
   './js/depth-chart.js',
   './js/drill-ath.js',
   './js/drill-baserunning.js',
@@ -75,6 +74,7 @@ const SHELL_FILES = [
   './js/signals.js',
   './js/signup.js',
   './js/situations.js',
+  './js/song-requests.js',
   './js/social-submit.js',
   './js/standings.js',
   './js/stats-import.js',
@@ -171,5 +171,35 @@ self.addEventListener('fetch', (event) => {
     // of failing outright.
     const late = await networkPromise;
     return late || Response.error();
+  })());
+});
+
+// Walk-up song request alerts (js/song-requests.js, sent by functions/index.js):
+// a coach hears about a new request, a family hears the coach's answer.
+// The payload only ever says which player and which song, and only goes to
+// phones that turned the alert on while signed in to the team.
+self.addEventListener('push', (event) => {
+  let d = {};
+  try { d = event.data ? event.data.json() : {}; } catch (e) { d = { body: event.data ? event.data.text() : '' }; }
+  const title = String(d.title || 'Ballclub').slice(0, 80);
+  event.waitUntil(self.registration.showNotification(title, {
+    body: String(d.body || '').slice(0, 200),
+    tag: String(d.tag || 'walkup-songs').slice(0, 60),
+    icon: './assets/images/icon-192.png',
+    badge: './assets/images/icon-192.png',
+    data: { url: './#walkup-songs' },
+  }));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  // Only ever opens this app's own Roster, never an address from the payload.
+  const url = new URL('./#walkup-songs', self.registration.scope).href;
+  event.waitUntil((async () => {
+    const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const w of wins) {
+      if (w.url.startsWith(self.registration.scope) && 'focus' in w) { try { await w.navigate(url); } catch (e) {} return w.focus(); }
+    }
+    return self.clients.openWindow(url);
   })());
 });

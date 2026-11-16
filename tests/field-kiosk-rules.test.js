@@ -2,7 +2,7 @@
 // Checks database.rules.json for the field tablet (walk-up kiosk) grants:
 // an approved tablet may READ only the game-day paths, never write team data,
 // never read coach-only or access records; only the board lets a tablet in;
-// coaches (not players) set walk-up songs. Also run by
+// coaches (not players) set walk-up songs; song-request rules stay as main has them. Also run by
 // .github/workflows/database-rules.yml before the rules go live.
 const assert = require('assert');
 const fs = require('fs');
@@ -36,8 +36,15 @@ assert.ok(!JSON.stringify(rules.access || {}).includes('fieldKiosks'));
 // walk-up songs: coaches write (same rule as lineups), players don't
 assert.strictEqual(team.walkupSongs['.write'], team.lineups['.write']);
 assert.ok(!team.walkupSongs['.write'].includes("'player-'"));
-const ws = team.walkupSongs.$playerId;
-assert.ok(ws.song && ws.start && ws.at && ws.$other && ws.$other['.validate'] === false, 'walk-up song keeps only song, start, at');
+// the approved song is whatever js/song-requests.js approvedSong writes
+// ({kind, title, start, at, rid, lib|link|file}); this PR only adds the read
+assert.deepStrictEqual(Object.keys(team.walkupSongs).sort(), ['.read', '.write']);
+// song requests (main) are untouched by the tablet grant
+assert.ok(team.songRequests && !JSON.stringify(team.songRequests).includes('fieldKiosks'));
+for (const k of ['songFiles', 'walkupLibrary', 'walkupLibraryFiles', 'pushSubs']) {
+  assert.ok(rules[k], `${k} rules kept`);
+  assert.ok(!JSON.stringify(rules[k]).includes('fieldKiosks'), `${k} not opened to tablets`);
+}
 
 // letting a tablet in is board-only; a tablet can only ask for itself
 assert.strictEqual(rules.fieldKiosks['.read'], BOARD);
