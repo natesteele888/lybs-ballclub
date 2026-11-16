@@ -32,3 +32,11 @@ path, and stubs the page globals `dbGet`, `dbPut`, `sharedPath`, `BUILD_V`,
 `escapeHtml` and `openInfoModal`. Keep those paths and names, or change
 `apps/situations` (its `index.html` and the file list in its `sw.js`) in the
 same session.
+
+## Ballclub borrows the Steele Cards Card Maker
+
+The Roster's "See card" (`js/card-photos.js`, `KIT_BASE`) loads
+`card-kit/card-kit.js`, `card-kit/steele-card.js` and `card-kit/layers/` from
+`natesteele888/lybs-cards` by path (`../lybs-cards/card-kit/` on the same
+github.io site, so the canvas can be saved). If those files move or rename,
+change `KIT_BASE` in the same session.
