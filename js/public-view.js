@@ -154,4 +154,9 @@
 
   const teamSelect = document.getElementById('publicTeamSelect');
   if (teamSelect) teamSelect.addEventListener('change', () => { activeTeamId = teamSelect.value; renderPanel(); });
+
+  // index.html's "Couldn't load this" Try again calls this when the message
+  // is on this page: reloading would drop a signed-out family back on the
+  // code screen.
+  window.PublicView = { retry: renderPanel };
 })();

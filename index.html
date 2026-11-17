@@ -297,7 +297,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261116f';</script>
+<script defer>window.BUILD_V = '20261117a';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -458,6 +458,11 @@
       if (el.textContent.trim() !== 'Loading\u2026' || !el.getClientRects().length) return;
       el.innerHTML = 'Couldn\u2019t load this. Check your signal and try again.<br><button class="btn btnSmall" type="button" style="margin-top:10px;">Try again</button>';
       el.querySelector('button').addEventListener('click', () => {
+        if (el.closest('#publicView') && window.PublicView) {
+          el.textContent = 'Loading\u2026';
+          window.PublicView.retry();
+          return;
+        }
         const panel = el.closest('.tabPanel.active');
         if (!panel) { location.reload(); return; }
         panel.innerHTML = ''; // so the tab shows Loading again while it retries
@@ -1274,7 +1279,7 @@
      TEAM_REGISTRY, LeagueInfo, Standings, and LeagueEvents to already
      exist, no ordering constraint relative to auth.js/access-control.js
      since it never touches onIdentityReady or the gated app shell at all. -->
-<script defer src="js/public-view.js?v=195"></script>
+<script defer src="js/public-view.js?v=196"></script>
 <!-- sw.js has been carefully version-bumped alongside every change this
      whole build -- but a service worker file on disk does nothing on its
      own until something calls navigator.serviceWorker.register() for it.
