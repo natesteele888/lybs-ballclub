@@ -48,7 +48,12 @@ jobs:
           FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
         run: |
           set -euo pipefail
-          test -n "$FIREBASE_DB_URL" && test -n "$FIREBASE_DB_SECRET"
+          # (a bare "test -n A && test -n B" doesn't stop a -e script, so a missing secret used to
+          # surface as curl's "No host part in the URL")
+          if [ -z "$FIREBASE_DB_URL" ] || [ -z "$FIREBASE_DB_SECRET" ]; then
+            echo "::error::The FIREBASE_DB_URL and FIREBASE_DB_SECRET Actions secrets aren't set, so the rules can't go live. Nothing was changed."
+            exit 1
+          fi
           curl -fsS "$FIREBASE_DB_URL/.settings/rules.json?auth=$FIREBASE_DB_SECRET" -o rules-before.json
       - uses: actions/upload-artifact@v4
         with:
