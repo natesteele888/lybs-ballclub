@@ -60,6 +60,22 @@ const noEmail = { id: 'p3', name: 'Jo K', number: '3' };
   assert.strictEqual(CP.cellHtml('team-x', other, { email: 'family@example.com' }), '', 'no button on another kid');
   assert.ok(!CP.cellHtml('team-x', kid, { isCoach: true }).includes('example.com'), 'cell never shows the email');
 
+  // seeing the card: only once approved, and the card's words carry no email
+  assert.ok(CP.cellHtml('team-x', other, { isCoach: true }).includes('data-card-see="p2"'), 'See card once approved');
+  assert.ok(!CP.cellHtml('team-x', kid, { isCoach: true }).includes('data-card-see'), 'no See card before approval');
+  const fakeKit = { cardData: (pl, tm, st) => ({ pl, tm, st }) };
+  const cd = T.cardFor(Object.assign({ position: 'SS', batsThrows: 'R/R' }, kid), { name: 'Sample Team', macLeagueDivisionName: 'Majors' }, fakeKit, 2027);
+  assert.ok(!JSON.stringify(cd).includes('xample.com'), 'parent email never reaches the card');
+  assert.strictEqual(JSON.stringify(cd.pl), JSON.stringify({ name: 'Sam P', number: '7', position: 'SS', batsThrows: 'R/R' }));
+  assert.strictEqual(JSON.stringify(cd.tm), JSON.stringify({ name: 'Sample Team', division: 'Majors' }));
+  assert.strictEqual(cd.st.season, '2027');
+  // the Card Maker sits next to this app on the same github.io site
+  assert.strictEqual(new URL(T.KIT_BASE, 'https://example.github.io/lybs-ballclub/index.html').pathname, '/lybs-cards/card-kit/');
+  const kitDir = path.join(__dirname, '../../lybs-cards/card-kit');
+  if (fs.existsSync(kitDir)) {
+    ['card-kit.js', 'steele-card.js', 'layers'].forEach(f => assert.ok(fs.existsSync(path.join(kitDir, f)), 'lybs-cards has card-kit/' + f));
+  }
+
   // rules: team + board read, only the board (or the queue's own key) writes
   const rules = JSON.parse(fs.readFileSync(path.join(__dirname, '../database.rules.json'), 'utf8')).rules;
   const cp = rules.cardPhotos.$teamId;

@@ -29,10 +29,21 @@
         this button can say "Approved". Nothing here is public and no
         photo is ever committed to this repo.
 
+   Seeing the card
+     Once a photo is approved, the row also gets "See card": the real
+     Steele Cards card, front and back, drawn on the phone from the
+     approved photo and the roster line, with a button to save both as
+     pictures. The drawing code is Steele Cards' own Card Maker
+     (lybs-cards card-kit/), loaded by path from the same github.io
+     site (KIT_BASE), so a card here always matches the Card Maker. If
+     those files move, change KIT_BASE. Nothing is uploaded.
+
    This file never writes to the database itself.
    ============================================================ */
 (function () {
   const SENT_KEY = 'lybs-card-photo-sent'; // this device's "sent, waiting" marks
+  // Steele Cards' Card Maker, same github.io site as this app (lybs-cards repo, card-kit/).
+  const KIT_BASE = '../lybs-cards/card-kit/';
   const cache = {}; // teamId -> { pid: {st, at} }
   const pending = {};
 
@@ -80,6 +91,15 @@
     return sentAt ? 'sent' : (server && server.st === 'approved' ? 'approved' : '');
   }
 
+  // The card's words, from the roster line and this team. Only what a card
+  // shows: SteeleCardKit.cardData drops everything else (the parent email).
+  function cardFor(player, cfg, K, year) {
+    const p = player || {};
+    return K.cardData({ name: p.name, number: p.number, position: p.position, batsThrows: p.batsThrows },
+      { name: (cfg && (cfg.name || cfg.shortName)) || '', division: (cfg && cfg.macLeagueDivisionName) || '' },
+      { name: 'LYBS', season: String(year || new Date().getFullYear()) });
+  }
+
   function readSent() { try { return JSON.parse(localStorage.getItem(SENT_KEY) || '{}') || {}; } catch (e) { return {}; } }
   function markSent(teamId, pid) {
     const all = readSent();
@@ -108,7 +128,8 @@
     const chip = st === 'approved' ? '<span class="srChip ok">Card photo approved</span>'
       : st === 'sent' ? '<span class="srChip warn">Waiting on the board</span>'
       : st === 'declined' ? '<span class="srChip">Not approved, send another</span>' : '';
-    return `${chip}<button type="button" class="btn btnGhost btnSmall" data-card-pid="${esc(p.id)}" aria-label="Send a card photo for ${esc(playerLabel(p))}">${st === 'approved' ? 'New card photo' : 'Card photo'}</button>`;
+    const see = st === 'approved' ? `<button type="button" class="btn btnSmall" data-card-see="${esc(p.id)}" aria-label="See the card for ${esc(playerLabel(p))}">See card</button>` : '';
+    return `${chip}${see}<button type="button" class="btn btnGhost btnSmall" data-card-pid="${esc(p.id)}" aria-label="Send a card photo for ${esc(playerLabel(p))}">${st === 'approved' ? 'New card photo' : 'Card photo'}</button>`;
   }
 
   function wireCells(teamId, el, players, who, onChange) {
@@ -116,6 +137,94 @@
       ev.stopPropagation();
       const p = players.find(x => x.id === b.dataset.cardPid);
       if (p && canSendFor(p, who)) openForm(teamId, p, who, onChange);
+    }));
+    el.querySelectorAll('[data-card-see]').forEach(b => b.addEventListener('click', ev => {
+      ev.stopPropagation();
+      const p = players.find(x => x.id === b.dataset.cardSee);
+      if (p && canSendFor(p, who)) openCard(teamId, p);
+    }));
+  }
+
+  /* ---------- seeing the card ---------- */
+  let kit = null;
+  function loadScript(src) {
+    return new Promise((ok, no) => {
+      const s = document.createElement('script');
+      s.src = src; s.onload = ok; s.onerror = () => no(new Error('kit'));
+      document.head.appendChild(s);
+    });
+  }
+  // The Card Maker's two files, its template art and its fonts, once per visit.
+  function loadKit() {
+    if (kit) return kit;
+    kit = (async () => {
+      if (!window.SteeleCardKit) await loadScript(KIT_BASE + 'card-kit.js');
+      if (!window.SteeleCard) await loadScript(KIT_BASE + 'steele-card.js');
+      if (!document.getElementById('cpKitFonts')) {
+        const l = document.createElement('link');
+        l.id = 'cpKitFonts'; l.rel = 'stylesheet';
+        l.href = 'https://fonts.googleapis.com/css2?family=Anton&family=Michroma&family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,wght@1,400;1,700&display=swap';
+        document.head.appendChild(l);
+      }
+      await window.SteeleCard.loadLayers(KIT_BASE);
+      if (document.fonts && document.fonts.load) {
+        await Promise.all(['italic 58px Anton', 'italic 24px Michroma', '500 12px Oswald', "italic 12px 'Source Serif 4'"]
+          .map(f => document.fonts.load(f).catch(() => null)));
+      }
+      return { K: window.SteeleCardKit, SC: window.SteeleCard };
+    })();
+    kit.catch(() => { kit = null; }); // a failed load can be tried again
+    return kit;
+  }
+  function imageFrom(dataUrl) {
+    return new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = dataUrl; });
+  }
+
+  async function openCard(teamId, player) {
+    window.openInfoModal(`Card for ${playerLabel(player)}`, `
+      <div class="srForm" id="cpCard">
+        <canvas id="cpCanvas" width="712" height="1000" style="display:block;width:100%;max-width:340px;margin:0 auto 10px;border-radius:12px;"></canvas>
+        <div class="srHint" id="cpCardMsg">Drawing the card...</div>
+        <div class="detailActions">
+          <button class="btn btnGhost" id="cpFlip" disabled>Back</button>
+          <button class="btn" id="cpSave" disabled>Save front and back</button>
+        </div>
+      </div>`);
+    const root = document.getElementById('cpCard');
+    const $ = s => root.querySelector(s);
+    const say = (t, bad) => { const m = $('#cpCardMsg'); if (m) { m.textContent = t; m.style.color = bad ? 'var(--status-red)' : ''; } };
+    let parts, photo;
+    try { parts = await loadKit(); } catch (e) { return say('Could not load the card design. Check your connection and try again.', true); }
+    try {
+      const v = await window.dbGet(`cardPhotos/${teamId}/${player.id}`);
+      if (!v || typeof v.data !== 'string' || v.data.indexOf('data:image/') !== 0) return say('The approved photo is not here yet. Try again in a little while.', true);
+      photo = await imageFrom(v.data);
+    } catch (e) {
+      return say('The photo is approved, but card photos are not switched on at the league yet, so it cannot be shown here.', true);
+    }
+    if (!document.body.contains(root)) return; // closed while it loaded
+    const { K, SC } = parts;
+    const data = cardFor(player, window.TeamConfig.current(), K);
+    let side = 'front';
+    const draw = () => SC.render($('#cpCanvas'), { side, data, photo, imgScale: 1.3, imgOffsetX: 0, imgOffsetY: 0 });
+    draw();
+    say('This is the real Steele Cards card. Saving puts two pictures on this phone; nothing is uploaded.');
+    $('#cpFlip').disabled = false; $('#cpSave').disabled = false;
+    $('#cpFlip').addEventListener('click', () => { side = side === 'front' ? 'back' : 'front'; $('#cpFlip').textContent = side === 'front' ? 'Back' : 'Front'; draw(); });
+    $('#cpSave').addEventListener('click', ev => window.withBusyButton(ev.target, 'Saving...', async () => {
+      for (const s of ['front', 'back']) {
+        const c = document.createElement('canvas');
+        SC.render(c, { side: s, data, photo, imgScale: 1.3, imgOffsetX: 0, imgOffsetY: 0 });
+        const blob = await new Promise(ok => c.toBlob(ok, 'image/jpeg', 0.92));
+        if (!blob) return say('Could not save the card on this phone.', true);
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = ('steele-card-' + (data.first || 'player') + '-' + (data.last || '') + '-' + s).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-') + '.jpg';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        await new Promise(ok => setTimeout(ok, 400));
+      }
+      say('Saved front and back to this phone.');
     }));
   }
 
@@ -163,7 +272,7 @@
   }
 
   window.CardPhotos = {
-    ensureLoaded, cellHtml, wireCells, openForm,
-    _test: { canSendFor, payload, stateFor },
+    ensureLoaded, cellHtml, wireCells, openForm, openCard,
+    _test: { canSendFor, payload, stateFor, cardFor, KIT_BASE },
   };
 })();
