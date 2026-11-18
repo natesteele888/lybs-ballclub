@@ -101,6 +101,10 @@
   Object.keys(STARTS).forEach(p => { LM['POS_' + p] = STARTS[p]; });
   const POSN = { P: '1', C: '2', '1B': '3', '2B': '4', '3B': '5', SS: '6', LF: '7', CF: '8', RF: '9' };
   const POSLIST = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF'];
+  // Spelled out under each chip: first-time parents and young players don't
+  // know the scorebook letters yet (persona test team, Nov 18).
+  const POSNAME = { P: 'Pitcher', C: 'Catcher', '1B': 'First', '2B': 'Second', '3B': 'Third',
+    SS: 'Short', LF: 'Left', CF: 'Center', RF: 'Right' };
   const POSFULL = {
     P: 'Pitcher', C: 'Catcher', '1B': 'First baseman', '2B': 'Second baseman', '3B': 'Third baseman',
     SS: 'Shortstop', LF: 'Left fielder', CF: 'Center fielder', RF: 'Right fielder',
@@ -677,7 +681,7 @@
       }
       function buildMeChips() {
         containerEl.querySelector('#sitMeChips').innerHTML = POSLIST.map(p =>
-          `<button class="sitChip${S.me === p ? ' on' : ''}" data-me="${p}">${escapeHtml(p)}</button>`).join('') +
+          `<button class="sitChip sitPosChip${S.me === p ? ' on' : ''}" data-me="${p}" aria-label="${POSFULL[p]}" title="${POSFULL[p]}">${escapeHtml(p)}<small>${POSNAME[p]}</small></button>`).join('') +
           `<button class="sitChip${!S.me ? ' on' : ''}" data-me="">Everybody</button>`;
       }
 
@@ -866,6 +870,10 @@
           </div>
 
           <div id="sitBuilderView">
+          <div class="sitStart" id="sitStart" hidden>
+            <div><b>New here?</b> 1. Tap a base to put a runner on. 2. Tap the field where the ball is hit. 3. Tap <b>Run the play</b> to see where everyone goes.</div>
+            <button class="btn btnGhost btnSmall" id="sitStartOk">Got it</button>
+          </div>
           <div class="sitBoard">
             <div>
               <div class="sitLbl">RUNNERS</div>
@@ -983,6 +991,18 @@
         const c = e.target.closest('[data-me]'); if (!c) return;
         S.me = c.dataset.me || null; buildMeChips(); drawPlay();
       });
+      // The "New here?" steps show until someone taps Got it, once per device.
+      (function startHere() {
+        const box = containerEl.querySelector('#sitStart');
+        let seen = false;
+        try { seen = localStorage.getItem('lybs_sit_start_seen') === '1'; } catch (e) {}
+        if (!box || seen) return;
+        box.hidden = false;
+        containerEl.querySelector('#sitStartOk').addEventListener('click', () => {
+          box.hidden = true;
+          try { localStorage.setItem('lybs_sit_start_seen', '1'); } catch (e) {}
+        });
+      })();
       containerEl.querySelector('#sitFundamentalsBtn').addEventListener('click', () => {
         window.openInfoModal('Fundamentals', fundamentalsHtml());
       });
