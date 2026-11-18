@@ -129,11 +129,12 @@
       <div class="helpText" style="margin-top:8px;">Birth date, left (older) to right (younger) &mdash; drag to scroll.</div>`;
   }
 
-  // Google's documented consumer Maps URL for opening Street View at a
-  // point -- no API key needed. lat/lng come from a one-time geocode of
-  // each address -- see scripts/geocode-facilities.mjs.
-  function streetViewUrl(lat, lng) {
-    return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
+  // Directions from where the user is now. Coordinates (from a one-time
+  // geocode of each address -- see scripts/geocode-facilities.mjs) land on
+  // the field itself; the address is the fallback when a row has none.
+  function fieldDirectionsUrl(f) {
+    const hasCoords = f.lat != null && f.lng != null;
+    return window.directionsLink(hasCoords ? `${f.lat},${f.lng}` : f.address);
   }
 
   window.LeagueInfo = {
@@ -163,7 +164,7 @@
 
       function fieldRow(f) {
         const badge = window.ClubLogos.badgeHtml(f.town, 44);
-        const hasCoords = f.lat != null && f.lng != null;
+        const canRoute = (f.lat != null && f.lng != null) || !!f.address;
         return `
           <div class="listRow" style="cursor:default;">
             ${badge || '<div class="fieldBadgeFallback">' + escapeHtml((f.town || '?').trim().charAt(0).toUpperCase()) + '</div>'}
@@ -173,7 +174,7 @@
             </div>
             <div class="fieldRowLinks">
               ${f.address ? `<button type="button" class="btn btnGhost btnTiny mapTriggerBtn" data-map-label="${escapeHtml(f.name)}" data-map-address="${escapeHtml(f.address)}">Map</button>` : ''}
-              ${hasCoords ? `<a class="btn btnGhost btnTiny" href="${streetViewUrl(f.lat, f.lng)}" target="_blank" rel="noopener">Street View</a>` : ''}
+              ${canRoute ? `<a class="btn btnGhost btnTiny" href="${fieldDirectionsUrl(f)}" target="_blank" rel="noopener">Directions</a>` : ''}
             </div>
           </div>`;
       }
