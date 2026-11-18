@@ -1,0 +1,9 @@
+{
+  "_howTo": "The league's own practice plans, by division. Every coach in a division sees that division's plans at the top of Coaching > Practice Plan and can copy one into their team's plans. Fill in goals (the league's development goals for that level, in the league's words) and plans. A plan is {\"id\": \"majors-wk1\", \"title\": \"Week 1: throwing and catching\", \"focus\": \"one line on what this practice builds\", \"blocks\": [{\"label\": \"Warm-up / Stretch\", \"minutes\": 10}, {\"label\": \"a drill title from the Drill Library, or any block name\", \"minutes\": 15, \"drillId\": \"optional id from data/practice-catalog-seed.json\"}]}. Nothing here is real until the league writes it: empty lists show coaches that plans are coming.",
+  "divisions": {
+    "T-Ball": { "goals": [], "plans": [] },
+    "Rookies": { "goals": [], "plans": [] },
+    "Minors": { "goals": [], "plans": [] },
+    "Majors": { "goals": [], "plans": [] }
+  }
+}
