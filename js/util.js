@@ -75,6 +75,15 @@
   // touching, just the duplicate function bodies removed.
   window.mapUrl = window.mapLink;
 
+  // Turn-by-turn directions to a place, starting from wherever the phone is.
+  // Google's documented Maps URL: leaving out `origin` makes Maps start
+  // from the user's current location, and on Android/iPhone it opens the
+  // Maps app straight into directions. `destination` can be "lat,lng"
+  // (exact field gate) or a street address.
+  window.directionsLink = function directionsLink(destination) {
+    return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination || '')}`;
+  };
+
   // Local date parts, NOT toISOString().slice(0,10) -- that reads the UTC
   // date, which in US Eastern time is already tomorrow's date for roughly
   // 4-5 hours every evening (8:30pm EDT, for instance, is already after
