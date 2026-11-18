@@ -1515,3 +1515,13 @@ a { color: var(--lybs-blue-bright); }
 .teamSponsorItem { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .teamSponsorLogo { width: 72px; height: 48px; object-fit: contain; background: #fff; border-radius: 6px; padding: 4px; flex: 0 0 auto; }
 .teamSponsorName { font-weight: 600; overflow-wrap: anywhere; }
+
+/* Team picker rows (js/access-control.js showTeamPicker): the team's name
+   on top, its sport, division and the user's role under it, and a "Now"
+   tag on the team that's open. */
+.teamPickerBtn { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; margin-bottom: 8px; text-align: left; min-height: 48px; }
+.teamPickerName { font-weight: 700; }
+.teamPickerFacts { font-size: 13px; opacity: .75; }
+.teamPickerNow { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 6px; font-size: 12px; background: rgba(76,106,235,0.24); }
+.teamPickerBtnNow { border-color: rgba(76,106,235,0.6); }
+#topBarTeamSwitchName { display: inline-block; max-width: 12ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
