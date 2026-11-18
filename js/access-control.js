@@ -319,6 +319,9 @@
         const token = await window.googleAuth.getIdToken();
         await redeemInvites(user.uid, user.email, token);
         await enter(user, token);
+        // A board member who opened a coach link from the Dashboard
+        // (js/board-invite.js). Never throws, so it can't undo the entry.
+        if (window.BoardInvite) await window.BoardInvite.handle(user, token);
       } catch (e) {
         if (looksLikeNoSignal(e) && await resumeLastEntry(user)) return;
         throw e;
