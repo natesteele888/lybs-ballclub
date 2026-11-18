@@ -63,6 +63,34 @@
   const CATEGORY_STAGE = { Pitching: 0.2, 'Catching concepts': 0.2, 'Team Situational': 0.4 };
 
   const cache = {}; // teamId -> plans[]
+
+  // The league's own plans and development goals, by division
+  // (data/league-practice-plans.json). The board fills that file in;
+  // until it does, each division's list is empty and coaches see a plain
+  // "coming" note instead of anything made up here.
+  let leaguePlansPromise = null;
+  function loadLeaguePlans() {
+    if (!leaguePlansPromise) {
+      leaguePlansPromise = fetch('data/league-practice-plans.json?v=' + window.BUILD_V)
+        .then(r => (r.ok ? r.json() : null))
+        .catch(() => null)
+        .then(d => (d && d.divisions) || {});
+    }
+    return leaguePlansPromise;
+  }
+  function leagueBlocksMinutes(plan) {
+    return (plan.blocks || []).reduce((sum, b) => sum + (Number(b.minutes) || 0), 0);
+  }
+  function teamPlanFromLeague(plan) {
+    return {
+      id: uid('pp'), name: plan.title || 'League plan', date: todayIso(), fromLeaguePlan: plan.id || null,
+      blocks: (plan.blocks || []).map(b => {
+        const block = { id: uid('blk'), label: b.label || 'Block', minutes: Number(b.minutes) || 10 };
+        if (b.drillId) block.drillId = b.drillId;
+        return block;
+      }),
+    };
+  }
   const pending = {}; // teamId -> in-flight ensurePlans() promise
 
   // Caches the in-flight fetch, not just the resolved value -- the
@@ -246,6 +274,7 @@
     getPlans(teamId) { return cache[teamId] || []; },
     blockFromDrill,
     addDrillToPlan,
+    teamPlanFromLeague,
 
     async render(containerEl, teamId) {
       let plans = await ensurePlans(teamId);
@@ -256,6 +285,7 @@
       // session with the real value, since ensureLoaded() memoizes and
       // never re-fetches or downgrades.
       await window.PracticeCatalog.ensureLoaded(false);
+      const leaguePlans = await loadLeaguePlans();
       let view = { mode: 'list' };
       // Same pattern as js/lineup-builder.js's own unsavedIds: a plan
       // created by '#ppNew' but abandoned via '#ppBack' without ever being
@@ -282,6 +312,32 @@
         division: (defaultDivision && genDivisions.includes(defaultDivision)) ? defaultDivision : (genDivisions[0] || null),
       };
 
+      function leagueSectionHtml() {
+        const division = defaultDivision;
+        const entry = (division && leaguePlans[division]) || { goals: [], plans: [] };
+        const goals = Array.isArray(entry.goals) ? entry.goals : [];
+        const lp = Array.isArray(entry.plans) ? entry.plans : [];
+        const label = division ? escapeHtml(division) : 'your division';
+        const goalsHtml = goals.length
+          ? `<div class="helpText" style="margin-bottom:8px;">${goals.map(g => `&bull; ${escapeHtml(g)}`).join('<br>')}</div>`
+          : `<div class="helpText" style="margin-bottom:8px;">The league's development goals for ${label} will show here once the board writes them.</div>`;
+        const plansHtml = lp.length
+          ? lp.map((p, i) => `
+            <div class="listRow" style="cursor:default;">
+              <div class="listRowMain">
+                <div class="listRowTitle">${escapeHtml(p.title || 'League plan')}</div>
+                <div class="listRowSub">${p.focus ? escapeHtml(p.focus) + ' &middot; ' : ''}${(p.blocks || []).length} block${(p.blocks || []).length === 1 ? '' : 's'} &middot; ${leagueBlocksMinutes(p)} min</div>
+              </div>
+              <button class="btn btnGhost btnTiny" data-copyleague="${i}">Copy to my plans</button>
+            </div>`).join('')
+          : `<div class="emptyState">No league practice plans for ${label} yet. When the league posts them, every ${label} coach sees them here and can copy one in.</div>`;
+        return `
+          <div class="sectionLabel">League practice plans &middot; ${label}</div>
+          ${goalsHtml}
+          <div class="listBody" style="margin-bottom:16px;">${plansHtml}</div>
+          <div class="sectionLabel">My team's plans</div>`;
+      }
+
       function listHtml() {
         const rows = plans.map(p => `
           <div class="listRow" data-id="${escapeHtml(p.id)}">
@@ -298,6 +354,7 @@
           <button class="btn" id="ppNew" style="width:100%;margin-bottom:10px;">+ New plan</button>
           <button class="btn btnGhost" id="ppGenToggle" style="width:100%;margin-bottom:14px;">${genOpen ? '&times; Cancel' : '✨ Generate a season plan'}</button>
           ${genOpen ? generateFormHtml() : ''}
+          ${leagueSectionHtml()}
           <div class="listBody">${rows || '<div class="emptyState">No practice plans saved yet.</div>'}</div>`;
       }
 
@@ -469,6 +526,19 @@
             refresh();
           });
           containerEl.querySelector('#ppGenToggle').addEventListener('click', () => { genOpen = !genOpen; refresh(); });
+          containerEl.querySelectorAll('[data-copyleague]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+              const entry = leaguePlans[defaultDivision] || {};
+              const src = (entry.plans || [])[Number(btn.dataset.copyleague)];
+              if (!src) return;
+              const copy = teamPlanFromLeague(src);
+              plans.unshift(copy);
+              await savePlans(teamId, plans);
+              window.showToast('Copied to your plans', 'info');
+              view = { mode: 'edit', id: copy.id };
+              refresh();
+            });
+          });
           containerEl.querySelectorAll('[data-gendivision]').forEach(btn => {
             btn.addEventListener('click', () => { genForm.division = btn.dataset.gendivision; refresh(); });
           });

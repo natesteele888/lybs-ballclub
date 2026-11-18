@@ -17,7 +17,7 @@
 // zone at the field didn't just show stale data -- it broke outright: the
 // shell loaded but every tab's own module was missing, since only
 // index.html/styles.css/manifest.json were ever cached.
-const CACHE_NAME = 'lybs-ballclub-shell-20261118f';
+const CACHE_NAME = 'lybs-ballclub-shell-20261118g';
 // Only ever delete our own caches. Every natesteele888.github.io app shares
 // one origin and so one Cache Storage, so deleting "everything but ours"
 // wiped other apps' offline copies (Power Program, Toolbox...) on each update.
@@ -96,6 +96,7 @@ const SHELL_FILES = [
   './assets/images/lybs-icon.png',
   './assets/images/lybs-wordmark.png',
   './data/league-info.json',
+  './data/league-practice-plans.json',
   './data/mac-league-clubs.json',
   './data/mac-league-fall-2026-schedule.json',
   './data/pitch-smart-rules.json',
