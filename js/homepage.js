@@ -18,7 +18,9 @@
                        try to name a "leader" the way Game Ball does --
                        every category's normally won by someone
                        different, so there's no one name that fits.
-                       Plus our own logo and a link to our real
+                       Plus "Sponsored by" (js/team-sponsor.js): the season's
+                       sponsor the board lined up with this team, name and
+                       logo only. Plus our own logo and a link to our real
                        macleague.org/Crossbar team page. No phone/email
                        lives in this app for anyone, coaches included --
                        see roster.js and league-info.js's header
@@ -390,6 +392,7 @@
             </div>
           </div>
           <div class="pcStatRow" style="margin:12px 0 0;">${statTiles.join('')}</div>
+          <div class="teamSponsor" id="homeSponsorSlot" hidden></div>
           ${leagueMatch ? `<a class="btn btnSmall btnWrap" style="width:100%;margin-top:4px;" href="${window.LeagueTeams.teamUrl(cfg.shortName || cfg.name, cfg.macLeagueDivisionId)}" target="_blank" rel="noopener">Team page &amp; coach contact on macleague.org</a>` : ''}
         </div>
 
@@ -449,6 +452,10 @@
         ${leagueNextDate && leagueNextGames.length ? `
           <div class="helpText" style="margin-top:12px;">MAC League &middot; ${escapeHtml(fmtDate(leagueNextDate))} &middot; every division, any town</div>
           <div class="homeTicker" id="homeUpcomingLeagueTicker">${leagueNextGames.map(window.LeagueSchedule.gameCardHtml).join('')}</div>` : ''}`;
+
+      // "Sponsored by" -- see js/team-sponsor.js. Fills in after the page is
+      // up, so a slow or refused answer never holds up the Home tab.
+      if (window.TeamSponsor) window.TeamSponsor.render(containerEl.querySelector('#homeSponsorSlot'), teamId);
 
       const viewStandingsBtn = containerEl.querySelector('#homeViewStandings');
       if (viewStandingsBtn) viewStandingsBtn.addEventListener('click', () => opts.onViewStandings && opts.onViewStandings());
