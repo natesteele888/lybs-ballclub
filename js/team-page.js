@@ -160,7 +160,10 @@
                   <div class="listRowTitle">${escapeHtml(f.name)}</div>
                   <div class="listRowSub">${escapeHtml(f.address)}</div>
                 </div>
-                <a class="btn btnGhost btnTiny" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(f.address)}" target="_blank" rel="noopener">Map</a>
+                <div class="fieldRowLinks">
+                  <a class="btn btnGhost btnTiny" href="${window.mapLink(f.address)}" target="_blank" rel="noopener">Map</a>
+                  <a class="btn btnGhost btnTiny" href="${window.directionsLink(f.lat != null && f.lng != null ? f.lat + ',' + f.lng : f.address)}" target="_blank" rel="noopener">Directions</a>
+                </div>
               </div>`).join('')}
           </div>` : ''}
 
