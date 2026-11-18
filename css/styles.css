@@ -1507,3 +1507,11 @@ a { color: var(--lybs-blue-bright); }
 .srReqMain { flex: 1 1 180px; min-width: 0; overflow-wrap: anywhere; }
 .srReqBtns, .srPanelTools { display: flex; flex-wrap: wrap; gap: 6px; }
 .srPanelTools { margin-top: 10px; }
+
+/* "Sponsored by" on the Home team card (js/team-sponsor.js) */
+.teamSponsor { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); }
+.teamSponsorLabel { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; color: var(--lybs-silver); }
+.teamSponsorList { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.teamSponsorItem { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.teamSponsorLogo { width: 72px; height: 48px; object-fit: contain; background: #fff; border-radius: 6px; padding: 4px; flex: 0 0 auto; }
+.teamSponsorName { font-weight: 600; overflow-wrap: anywhere; }
