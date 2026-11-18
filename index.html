@@ -35,7 +35,7 @@
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"></noscript>
-<link rel="stylesheet" href="css/styles.css?v=215">
+<link rel="stylesheet" href="css/styles.css?v=216">
 <!-- Situations Trainer's own scoped "Sandlot" design system -- deliberately
      separate from styles.css, see css/situations.css's own header comment. -->
 <link rel="stylesheet" href="css/situations.css?v=195">
@@ -95,7 +95,7 @@
   <img class="loginCrest" src="assets/images/lybs-icon.png" alt="" style="width:110px;">
   <div class="loginContent">
     <h1>Which team?</h1>
-    <p class="sub">This Google account has access to more than one team.</p>
+    <p class="sub">You're on more than one team. Pick the one to open. You can switch any time with the team button at the top.</p>
     <div id="teamPickerList"></div>
     <button class="btn btnGhost" id="teamPickerCancelBtn" style="margin-top:10px;">Cancel</button>
   </div>
@@ -144,7 +144,7 @@
            -- logging out would also sign out of Google entirely (see
            js/auth.js's logOutOfApp()), which would mean a fresh OAuth
            round-trip just to look at a different kid's team. -->
-      <button class="topBarShareBtn hide" id="topBarTeamSwitchBtn" title="Switch to a different team">Switch Team</button>
+      <button class="topBarShareBtn hide" id="topBarTeamSwitchBtn" title="Switch to a different team" aria-label="Switch team"><span id="topBarTeamSwitchName">Switch team</span> <span aria-hidden="true">&#8644;</span></button>
       <!-- Board-only -- toggled by onIdentityReady below, same IS_BOARD
            flag that gates BOARD_ONLY_TABS. A real cross-origin link (to
            lybs-reporting, the league's registration/admin dashboard), not
@@ -297,7 +297,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261118c';</script>
+<script defer>window.BUILD_V = '20261118d';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -1244,6 +1244,11 @@
     document.getElementById('topBarShareBtn').classList.toggle('hide', !canEdit());
     document.getElementById('topBarSwitchBtn').classList.toggle('hide', !IS_BOARD);
     document.getElementById('topBarTeamSwitchBtn').classList.toggle('hide', MY_TEAMS.length < 2);
+    // A coach (or parent) on two teams sees WHICH team is open right on
+    // the switch button, so a softball-and-baseball coach can't mistake
+    // one team's roster for the other's.
+    const openCfg = (window.TeamConfig && window.TeamConfig.current()) || {};
+    document.getElementById('topBarTeamSwitchName').textContent = openCfg.shortName || openCfg.name || 'Switch team';
     document.getElementById('appShell').classList.add('show');
     await window.ClubLogos.ensureLoaded();
     // A phone linked to a Wear OS watch keeps the watch's Schedule current on every open (js/calendar-family.js).
@@ -1262,7 +1267,10 @@
   };
 
   document.getElementById('topBarTeamSwitchBtn').addEventListener('click', async () => {
-    const picked = await window.AccessControl.switchTeam();
+    const picked = await window.AccessControl.switchTeam(TEAM_ID).catch(e => {
+      console.error('Switch team failed:', e); // dbGet already showed its own no-connection toast
+      return null;
+    });
     if (picked) await applyIdentity(picked.teamId, picked.role, picked.identity, picked.isBoard, picked.allTeams);
   });
 })();
@@ -1279,7 +1287,7 @@
      google-auth.js. Placed next to auth.js anyway since the two play the
      same role (driving entry into the app) for their respective sign-in
      paths. -->
-<script defer src="js/access-control.js?v=210"></script>
+<script defer src="js/access-control.js?v=211"></script>
 <!-- public-view.js wires up #publicViewLink/#publicViewBack -- needs
      TEAM_REGISTRY, LeagueInfo, Standings, and LeagueEvents to already
      exist, no ordering constraint relative to auth.js/access-control.js
