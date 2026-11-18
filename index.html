@@ -297,7 +297,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261117b';</script>
+<script defer>window.BUILD_V = '20261118a';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -403,12 +403,14 @@
 <script defer src="js/stats-import.js?v=194"></script>
 <script defer src="js/social-submit.js?v=197"></script>
 <script defer src="js/card-photos.js?v=2"></script>
-<script defer src="js/gamechanger.js?v=194"></script>
+<script defer src="js/gamechanger.js?v=195"></script>
 <script defer src="js/rules.js?v=207"></script>
 <script defer src="js/practice-catalog.js?v=194"></script>
 <script defer src="js/situations.js?v=207"></script>
 <script defer src="js/standings.js?v=194"></script>
-<script defer src="js/calendar-family.js?v=194"></script>
+<!-- The watch link (natesteele888/apps watchlink.js, same github.io site): sends the family calendar to the Steele Family watch app. -->
+<script defer src="https://natesteele888.github.io/apps/watchlink.js"></script>
+<script defer src="js/calendar-family.js?v=195"></script>
 <script defer src="js/archive.js?v=207"></script>
 <script defer src="js/league-schedule.js?v=194"></script>
 <script defer src="js/team-details.js?v=194"></script>
@@ -1243,6 +1245,8 @@
     document.getElementById('topBarTeamSwitchBtn').classList.toggle('hide', MY_TEAMS.length < 2);
     document.getElementById('appShell').classList.add('show');
     await window.ClubLogos.ensureLoaded();
+    // A phone linked to a Wear OS watch keeps the watch's Schedule current on every open (js/calendar-family.js).
+    if (window.FamilyCalendar) window.FamilyCalendar.syncWatch(TEAM_ID, MY_TEAMS.length ? MY_TEAMS.map(g => g.teamId) : null).catch(() => {});
     // The coach's "Share the request link" and the request alerts open #walkup-songs: straight to the Roster's walk-up song buttons.
     switchTab(location.hash === '#walkup-songs' ? 'roster' : 'home');
   }

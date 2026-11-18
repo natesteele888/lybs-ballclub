@@ -87,6 +87,7 @@
   }
 
   window.GameChanger = {
+    extractGcTeamId,
     async load(teamId) {
       return window.dbGet(window.teamPath(teamId, 'gameChangerSnippet'));
     },
