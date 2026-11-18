@@ -36,33 +36,6 @@
   // step (lybs-reporting's apps-script/Code.gs header, step 4-5) is done.
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwj5OT5Ftcam6HvgVIYdpGFYP07-A7a1GN97IT18ICnspB6B54PlgpiYJAZhup_5A8X7Q/exec';
 
-  // The LYBS Sponsors app's backend (natesteele888/sponsor-banner-inventory,
-  // config.js there). Its teamSponsors action answers a coach of this team
-  // with the names of the sponsors lined up with the team, nothing more --
-  // no contacts, levels or money (see docs/sponsors-tab.md there). Anyone
-  // else, or a backend not updated yet, gets a refusal, and the box simply
-  // stays a free-text box.
-  const SPONSORS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyY2MHbPp37YtO1nPDm_kJwL6GFW4gkZhP_4OSD1UFqkHwt6n2o2yomQCG6tSjTQ83y/exec';
-  const sponsorCache = {}; // teamId -> names, for this page load only
-
-  async function teamSponsors(teamId) {
-    if (sponsorCache[teamId]) return sponsorCache[teamId];
-    if (window.__isMockBackend && window.__isMockBackend()) return [];
-    if (!window.getFirebaseIdToken) return [];
-    try {
-      const idToken = await window.getFirebaseIdToken();
-      const res = await fetch(SPONSORS_ENDPOINT, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'teamSponsors', teamId, idToken }),
-      });
-      const data = await res.json();
-      if (!data || !data.ok || !Array.isArray(data.sponsors)) return [];
-      const names = data.sponsors.map(n => String(n || '').trim()).filter(Boolean).slice(0, 20);
-      sponsorCache[teamId] = names;
-      return names;
-    } catch (e) { return []; }
-  }
-
   function sid() { return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10); }
 
   function tags(division) {
@@ -180,9 +153,7 @@
           <textarea class="drillFreeInput" id="ssDesc" style="min-height:80px;resize:vertical;" placeholder="Down two in the last inning, the whole lineup put the ball in play and we walked it off."></textarea>
         </label>
         <label class="drillFieldLabel" style="margin-top:12px;">Sponsor to thank <span style="text-transform:none;font-weight:400;">(optional)</span>
-          <input class="drillFreeInput" id="ssSponsor" placeholder="Sponsor name" list="ssSponsorList" autocomplete="off">
-          <datalist id="ssSponsorList"></datalist>
-          <div class="helpText" id="ssSponsorHint" style="margin:4px 0 0;display:none;"></div>
+          <input class="drillFreeInput" id="ssSponsor" placeholder="Sponsor name">
         </label>
         <label class="drillFieldLabel" style="margin-top:12px;">Photo</label>
         <div class="ssDrop" id="ssDrop">
@@ -215,18 +186,6 @@
       gameSel.addEventListener('change', () => { selectedGameId = gameSel.value; refreshPreview(); });
       containerEl.querySelector('#ssDesc').addEventListener('input', refreshPreview);
       containerEl.querySelector('#ssSponsor').addEventListener('input', refreshPreview);
-      teamSponsors(teamId).then(names => {
-        const input = containerEl.querySelector('#ssSponsor');
-        const list = containerEl.querySelector('#ssSponsorList');
-        const hint = containerEl.querySelector('#ssSponsorHint');
-        if (!input || !list || !names.length) return;
-        list.innerHTML = names.map(n => `<option value="${escapeHtml(n)}">`).join('');
-        hint.textContent = names.length === 1
-          ? `Your team's sponsor: ${names[0]}`
-          : `Your team's sponsors: ${names.join(', ')}. Tap the box to pick one.`;
-        hint.style.display = '';
-        if (names.length === 1 && !input.value.trim()) { input.value = names[0]; refreshPreview(); }
-      });
 
       const drop = containerEl.querySelector('#ssDrop');
       const fileInput = containerEl.querySelector('#ssPhoto');
