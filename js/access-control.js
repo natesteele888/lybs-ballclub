@@ -186,7 +186,18 @@
     const configs = await Promise.all(teams.map(g => window.TeamConfig.peek(g.teamId, token)));
     return teams.map((g, i) => Object.assign({}, g, {
       name: (configs[i] && (configs[i].shortName || configs[i].name)) || g.teamId,
+      sport: (configs[i] && configs[i].sport) || '',
+      division: (configs[i] && configs[i].macLeagueDivisionName) || '',
     }));
+  }
+
+  // Softball first, then baseball, then anything else, A-Z inside each --
+  // a coach with a softball team and a baseball team sees them in two
+  // clear runs instead of one mixed list.
+  const SPORT_ORDER = { Softball: 0, Baseball: 1 };
+  function sortForPicker(named) {
+    return named.slice().sort((a, b) =>
+      ((SPORT_ORDER[a.sport] ?? 9) - (SPORT_ORDER[b.sport] ?? 9)) || String(a.name).localeCompare(String(b.name)));
   }
 
   // Resolves to the picked {teamId, role, name}, or null if cancelled.
@@ -194,14 +205,20 @@
   // remembered choice yet, or one that no longer matches a current
   // grant) and later, reopened from the app shell's own "Switch team"
   // button (switchTeam() below).
-  function showTeamPicker(named) {
+  function showTeamPicker(named, currentTeamId) {
+    named = sortForPicker(named);
     return new Promise(resolve => {
       const screen = document.getElementById('teamPickerScreen');
       const list = document.getElementById('teamPickerList');
-      list.innerHTML = named.map((g, i) => `
-        <button class="btn btnGhost" data-pick="${i}" style="width:100%;margin-bottom:8px;text-align:left;">
-          ${escapeHtml(g.name)} <span style="opacity:.7;">&middot; ${g.role === 'coach' ? 'Coach' : 'Parent'}</span>
-        </button>`).join('');
+      list.innerHTML = named.map((g, i) => {
+        const facts = [g.sport, g.division, g.role === 'coach' ? 'Coach' : 'Parent'].filter(Boolean).join(' · ');
+        const isNow = g.teamId === currentTeamId;
+        return `
+        <button class="btn btnGhost teamPickerBtn${isNow ? ' teamPickerBtnNow' : ''}" data-pick="${i}"${isNow ? ' aria-current="true"' : ''}>
+          <span class="teamPickerName">${escapeHtml(g.name)}${isNow ? ' <span class="teamPickerNow">Now</span>' : ''}</span>
+          <span class="teamPickerFacts">${escapeHtml(facts)}</span>
+        </button>`;
+      }).join('');
       let settled = false;
       const finish = picked => { if (settled) return; settled = true; screen.classList.add('hide'); resolve(picked); };
       list.querySelectorAll('[data-pick]').forEach(btn => {
@@ -323,13 +340,24 @@
     // {teamId, role, name}, or null if cancelled or there's nothing to
     // switch to (not a real multi-grant account after all, e.g. the
     // board-only stopgap, or every other grant got revoked since entry).
-    async switchTeam() {
+    async switchTeam(currentTeamId) {
       const user = window.googleAuth.currentUser();
       if (!user) return null;
-      const token = await window.googleAuth.getIdToken();
-      const grants = await resolveGrants(user.uid, token);
+      // With signal, grants are read fresh. With none (a field with no
+      // bars), fall back to the teams this account entered with last time
+      // on this phone -- the database rules still decide what each read
+      // returns, and the next open with signal re-checks the grants.
+      let token, grants;
+      try {
+        token = await window.googleAuth.getIdToken();
+        grants = await resolveGrants(user.uid, token);
+      } catch (e) {
+        const last = looksLikeNoSignal(e) ? readLastEntry(user.uid) : null;
+        if (!last) throw e;
+        grants = { board: last.board, teams: last.teams || [] };
+      }
       if (grants.teams.length < 2) return null;
-      const picked = await showTeamPicker(await namedGrants(grants.teams, token));
+      const picked = await showTeamPicker(await namedGrants(grants.teams, token), currentTeamId);
       if (!picked) return null;
       rememberChoice(picked.teamId);
       const identity = window.Identity.setSession(picked.teamId, picked.role, user.name);
