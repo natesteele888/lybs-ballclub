@@ -345,6 +345,9 @@
               "note": {
                 ".validate": "newData.isString() && newData.val().length <= 120"
               },
+              "mins": {
+                ".validate": "newData.isNumber() && newData.val() >= 15 && newData.val() <= 180"
+              },
               "at": {
                 ".validate": "newData.isNumber()"
               },
