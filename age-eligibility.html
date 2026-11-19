@@ -317,7 +317,15 @@
     function scrollMarkerIntoView() {
       var marker = document.querySelector('.chartMarkerLine');
       var wrap = document.querySelector('.chartWrap');
-      if (!marker || !wrap) return;
+      if (!wrap) return;
+      if (!marker) {
+        // No birth date yet: open on the first division bar (the
+        // Baseball & T-Ball row) rather than the chart's oldest year,
+        // where that row is empty on a phone.
+        var firstBar = document.querySelector('.chartSvg rect');
+        if (firstBar) wrap.scrollLeft = Math.max(0, Number(firstBar.getAttribute('x')) - 24);
+        return;
+      }
       var mx = Number(marker.getAttribute('x1'));
       wrap.scrollLeft = Math.max(0, mx - wrap.clientWidth / 2);
     }
