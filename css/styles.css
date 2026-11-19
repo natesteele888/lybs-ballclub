@@ -1525,3 +1525,7 @@ a { color: var(--lybs-blue-bright); }
 .teamPickerNow { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 6px; font-size: 12px; background: rgba(76,106,235,0.24); }
 .teamPickerBtnNow { border-color: rgba(76,106,235,0.6); }
 #topBarTeamSwitchName { display: inline-block; max-width: 12ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
+
+/* Standings tab: one button per division, the team's own first. */
+.standingsDivPicker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.standingsDivPicker .btnTiny { font-size: 12px; }
