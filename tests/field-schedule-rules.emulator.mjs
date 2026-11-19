@@ -53,6 +53,8 @@ await ok('a team not on this field cannot book it', assertFails(set(ref(outsider
 await ok('a coach cannot lock their own block', assertFails(set(ref(coachB, slot(D2)), { team: B, kind: 'game', locked: true, at })));
 await ok('coach B books another block', assertSucceeds(set(ref(coachB, slot(D2)), { team: B, kind: 'game', opp: 'Townsend', at })));
 await ok('the coach gate code books too', assertSucceeds(set(ref(gateA, slot(D3)), { team: A, kind: 'practice', at })));
+await ok('a practice can carry its length', assertSucceeds(set(ref(coachA, slot('2099-04-12/1730')), { team: A, kind: 'practice', mins: 90, at })));
+await ok('a silly practice length is refused', assertFails(set(ref(coachA, slot('2099-04-13/1730')), { team: A, kind: 'practice', mins: 500, at })));
 await ok('a bad kind is refused', assertFails(set(ref(coachA, slot('2099-04-10/1730')), { team: A, kind: 'party', at })));
 await ok('a bad time key is refused', assertFails(set(ref(coachA, slot('2099-04-10/2575')), { team: A, kind: 'practice', at })));
 
