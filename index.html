@@ -173,6 +173,7 @@
   <div class="tabPanel active" id="tab-home"></div>
   <div class="tabPanel" id="tab-schedule"></div>
   <div class="tabPanel" id="tab-practices"></div>
+  <div class="tabPanel" id="tab-fields"></div>
   <div class="tabPanel" id="tab-roster"></div>
   <div class="tabPanel" id="tab-gamechanger"></div>
   <div class="tabPanel" id="tab-standings"></div>
@@ -297,7 +298,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261119c';</script>
+<script defer>window.BUILD_V = '20261119d';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -383,6 +384,7 @@
 <script defer src="js/mac-report.js?v=210"></script>
 <script defer src="js/schedule.js?v=210"></script>
 <script defer src="js/practices.js?v=194"></script>
+<script defer src="js/field-schedule.js?v=1"></script>
 <script defer src="js/calendar-view.js?v=194"></script>
 <script defer src="js/roster.js?v=212"></script>
 <script defer src="js/song-requests.js?v=211"></script>
@@ -491,7 +493,7 @@
   // whichever category is active) ----
   const NAV_CATEGORIES = [
     { id: 'home', label: 'Home', tabs: ['home'] },
-    { id: 'schedule', label: 'Schedule', tabs: ['schedule', 'practices', 'gamechanger'] },
+    { id: 'schedule', label: 'Schedule', tabs: ['schedule', 'practices', 'fields', 'gamechanger'] },
     { id: 'roster', label: 'Roster', tabs: ['roster', 'depth', 'pitching', 'lineups', 'duty', 'signup', 'awards', 'equipment', 'signals', 'access'] },
     { id: 'standings', label: 'Standings', tabs: ['standings', 'seeding', 'stats', 'archive', 'fallSchedule'] },
     { id: 'league', label: 'League', tabs: ['league'] },
@@ -513,7 +515,7 @@
   ];
   const TAB_LABELS = {
     home: 'Home',
-    schedule: 'Schedule', practices: 'Practices', calendar: 'My Calendar', gamechanger: 'GameChanger',
+    schedule: 'Schedule', practices: 'Practices', fields: 'Field Time', calendar: 'My Calendar', gamechanger: 'GameChanger',
     roster: 'Roster', standings: 'Standings', seeding: 'Seeding', stats: 'Stats', archive: 'History', fallSchedule: 'Fall Schedule', depth: 'Depth Chart', lineups: 'Lineups', duty: 'Snack Duty', signup: 'Sign-Up', awards: 'Awards', equipment: 'Equipment', signals: 'Signal Library', access: 'Team Access',
     league: 'League', rules: 'Rules', pitching: 'Pitching', coaching: 'Coaching', situations: 'Situations', leagueEvents: 'League Events', catalog: 'Practice Catalog', dataAdmin: 'Data Admin',
   };
@@ -1181,6 +1183,10 @@
     if (name === 'home') window.Homepage.render(document.getElementById('tab-home'), TEAM_ID, { onWatchLive: () => switchTab('gamechanger'), onViewSignups: () => switchTab('signup'), onViewStandings: () => switchTab('standings'), canEdit: canEdit(), authorName: SESSION.name });
     else if (name === 'schedule') renderScheduleTab();
     else if (name === 'practices') renderPracticesTab();
+    // Field Time (js/field-schedule.js): the shared booking sheet for a field
+    // several teams use. Everyone signed in sees it; coaches of the teams on
+    // that field book, and the board runs Settings.
+    else if (name === 'fields') window.FieldSchedule.render(document.getElementById('tab-fields'), { teamId: TEAM_ID, isCoach: canEdit(), isBoard: IS_BOARD, name: SESSION.name });
     else if (name === 'roster') renderRosterTab();
     else if (name === 'gamechanger') window.GameChanger.render(TEAM_ID, document.getElementById('tab-gamechanger'), { canEdit: canEdit(), addedBy: SESSION.name, isBoard: IS_BOARD });
     else if (name === 'standings') window.Standings.render(document.getElementById('tab-standings'), window.TeamConfig.current().macLeagueDivisionId);

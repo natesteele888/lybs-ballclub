@@ -74,7 +74,7 @@
    from the Dashboard (js/board-invite.js) keep working as before.
    ============================================================ */
 const { onRequest } = require('firebase-functions/v2/https');
-const { onValueCreated, onValueUpdated } = require('firebase-functions/v2/database');
+const { onValueCreated, onValueUpdated, onValueDeleted } = require('firebase-functions/v2/database');
 const webpush = require('web-push');
 const { defineSecret } = require('firebase-functions/params');
 const logger = require('firebase-functions/logger');
@@ -222,6 +222,37 @@ exports.onSongDecision = onValueUpdated(Object.assign({ ref: '/teams/{teamId}/so
     ? { title: 'Walk-up song approved', body: `"${title}" is now ${playerLabel(p)}'s walk-up song.`, tag: 'walkup-' + rid }
     : { title: 'Walk-up song not approved', body: `The coach passed on "${title}"${r.note ? ': ' + String(r.note).slice(0, 120) : '.'}`, tag: 'walkup-' + rid });
   await ref.remove(); // one answer per request, so the subscription for it is done
+});
+
+/* ---------- Field Time alerts (js/field-schedule.js) ----------
+   Same coach subscriptions as the walk-up alerts (pushSubs/{teamId}/coach),
+   so a coach who turned alerts on once gets both. Words in field-alerts.js. */
+const FieldAlerts = require('./field-alerts');
+async function fieldInfo(fieldId) {
+  const [teams, field] = await Promise.all([
+    admin.database().ref(`fieldSched/teams/${fieldId}`).get(),
+    admin.database().ref(`fieldSched/fields/${fieldId}`).get(),
+  ]);
+  return { teams: teams.val() || {}, field: field.val() || {} };
+}
+async function sendField(alert) {
+  if (!alert) return;
+  const to = Array.isArray(alert.to) ? alert.to : [alert.to];
+  await Promise.all(to.map(t => sendAll(admin.database().ref(`pushSubs/${t}/coach`), alert.payload)));
+}
+exports.onFieldRequest = onValueCreated(Object.assign({ ref: '/fieldSched/requests/{fieldId}/{rid}' }, DB_TRIGGER), async event => {
+  const { teams, field } = await fieldInfo(event.params.fieldId);
+  await sendField(FieldAlerts.requestAlert(event.data.val(), teams, field));
+});
+exports.onFieldAnswer = onValueUpdated(Object.assign({ ref: '/fieldSched/requests/{fieldId}/{rid}' }, DB_TRIGGER), async event => {
+  const { teams, field } = await fieldInfo(event.params.fieldId);
+  await sendField(FieldAlerts.answerAlert(event.data.before.val(), event.data.after.val(), teams, field));
+});
+exports.onFieldOpened = onValueDeleted(Object.assign({ ref: '/fieldSched/slots/{fieldId}/{date}/{time}' }, DB_TRIGGER), async event => {
+  const { fieldId, date, time } = event.params;
+  const { teams, field } = await fieldInfo(fieldId);
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  await sendField(FieldAlerts.openedAlert(`${date}/${time}`, event.data.val(), teams, field, today));
 });
 
 /* ---------- one sign-in for coaches: Dashboard teams -> Ballclub access ---------- */
