@@ -5,7 +5,10 @@
   "functions": [
     {
       "source": "functions",
-      "codebase": "default"
+      "codebase": "default",
+      "predeploy": [
+        "mkdir -p \"$RESOURCE_DIR/shared\" && cp \"$RESOURCE_DIR/../js/team-registry.js\" \"$RESOURCE_DIR/../js/board-invite.js\" \"$RESOURCE_DIR/shared/\""
+      ]
     }
   ]
 }

@@ -108,6 +108,40 @@
     }
   }
 
+  // One sign-in for coaches: the teams the LYBS Dashboard gives this
+  // Google account come across as coach grants, by the Ballclub function
+  // dashboardCoachSync (functions/dashboard-sync.js), which reads the
+  // Dashboard itself and decides on its own; this only asks. Waits at most
+  // a few seconds, and any failure (no signal, not deployed yet) just
+  // leaves the grants as they are. Asked on every sign-in that has no
+  // team yet, otherwise at most once every 30 minutes per account.
+  const DASH_SYNC_URL = 'https://us-central1-lybs-ballclub.cloudfunctions.net/dashboardCoachSync';
+  const DASH_SYNC_KEY = 'lybsDashSyncAt';
+  const DASH_SYNC_EVERY = 30 * 60 * 1000;
+  async function syncFromDashboard(uid, token) {
+    if (typeof fetch !== 'function') return null;
+    let last = null;
+    try { last = JSON.parse(localStorage.getItem(DASH_SYNC_KEY) || 'null'); } catch (e) {}
+    const had = readLastEntry(uid);
+    if (last && last.uid === uid && Date.now() - last.at < DASH_SYNC_EVERY && had && (had.teams || []).length) return null;
+    const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), 5000) : null;
+    try {
+      const res = await fetch(DASH_SYNC_URL, {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + token },
+        signal: ctrl ? ctrl.signal : undefined,
+      });
+      if (!res.ok) return null;
+      try { localStorage.setItem(DASH_SYNC_KEY, JSON.stringify({ uid, at: Date.now() })); } catch (e) {}
+      return await res.json();
+    } catch (e) {
+      return null;
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
+
   async function resolveGrants(uid, token) {
     const teamIds = knownTeamIds();
     const [isBoard, ...roles] = await Promise.all([
@@ -317,6 +351,7 @@
       if (!navigator.onLine && await resumeLastEntry(user)) return;
       try {
         const token = await window.googleAuth.getIdToken();
+        await syncFromDashboard(user.uid, token);
         await redeemInvites(user.uid, user.email, token);
         await enter(user, token);
         // A board member who opened a coach link from the Dashboard
@@ -329,6 +364,7 @@
     },
 
     forgetLastEntry,
+    syncFromDashboard,
 
     // Re-opens the team picker for the CURRENTLY signed-in Google
     // account -- the app shell's "Switch team" button (only shown when

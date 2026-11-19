@@ -57,6 +57,21 @@
      2. firebase functions:secrets:set WEBPUSH_PUBLIC_KEY   (the publicKey)
      3. firebase functions:secrets:set WEBPUSH_PRIVATE_KEY  (the privateKey)
      4. firebase deploy --only database,functions
+
+   One sign-in for coaches (added 2026-11-18, see functions/dashboard-sync.js):
+     dashboardCoachSync -- a coach signs in to Ballclub with Google and gets
+                         the teams the LYBS Dashboard gives them, as coach.
+   It reads the Dashboard's own project (lybs-dashboard), read only, with
+   no key. One-time setup, on top of the steps above:
+     1. Google Cloud console, project lybs-ballclub -> IAM: copy the email
+        of the "Default compute service account"
+        (<number>-compute@developer.gserviceaccount.com).
+     2. Project lybs-dashboard -> IAM -> Grant access: paste that email and
+        give it two roles, "Cloud Datastore Viewer" and
+        "Firebase Authentication Viewer". Nothing else.
+     3. firebase deploy --only functions:dashboardCoachSync
+   Until it is deployed the app's call just fails quietly, and coach links
+   from the Dashboard (js/board-invite.js) keep working as before.
    ============================================================ */
 const { onRequest } = require('firebase-functions/v2/https');
 const { onValueCreated, onValueUpdated } = require('firebase-functions/v2/database');
@@ -208,3 +223,41 @@ exports.onSongDecision = onValueUpdated(Object.assign({ ref: '/teams/{teamId}/so
     : { title: 'Walk-up song not approved', body: `The coach passed on "${title}"${r.note ? ': ' + String(r.note).slice(0, 120) : '.'}`, tag: 'walkup-' + rid });
   await ref.remove(); // one answer per request, so the subscription for it is done
 });
+
+/* ---------- one sign-in for coaches: Dashboard teams -> Ballclub access ---------- */
+const DashboardSync = require('./dashboard-sync');
+const DASHBOARD_PROJECT = 'lybs-dashboard';
+let _dashApp = null;
+function dashApp() {
+  if (!_dashApp) {
+    _dashApp = admin.initializeApp({
+      projectId: DASHBOARD_PROJECT,
+      credential: admin.credential.applicationDefault(),
+    }, 'dashboard');
+  }
+  return _dashApp;
+}
+
+exports.dashboardCoachSync = onRequest(
+  { region: 'us-central1', cors: ['https://natesteele888.github.io'] },
+  DashboardSync.makeHandler({
+    verifyToken: t => admin.auth().verifyIdToken(t),
+    dashUserByEmail: async email => {
+      try {
+        const u = await admin.auth(dashApp()).getUserByEmail(email);
+        return { uid: u.uid, emailVerified: u.emailVerified === true };
+      } catch (e) {
+        if (e && e.code === 'auth/user-not-found') return null;
+        throw e;
+      }
+    },
+    readApproved: async () => {
+      const snap = await admin.firestore(dashApp()).collection('lybs_bins').doc('lybs-approved').get();
+      return snap.exists ? snap.data() : null;
+    },
+    dbGet: async p => (await admin.database().ref(p).get()).val(),
+    dbUpdate: updates => admin.database().ref().update(updates),
+    log: (...a) => logger.error(...a),
+  })
+);
+

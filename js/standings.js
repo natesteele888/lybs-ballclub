@@ -35,8 +35,27 @@
     return `${hrs} hr${hrs === 1 ? '' : 's'} ago`;
   }
 
+  // One button per mirrored division, the team's own first and marked.
+  // Nothing (not even an empty row) when the mirror has one division or
+  // none, since there'd be nothing to switch to.
+  function divisionPickerHtml(ownId, shownId) {
+    const all = (window.TonightGames.availableDivisions && window.TonightGames.availableDivisions()) || [];
+    if (all.length < 2) return '';
+    const ordered = all.filter(d => d.id === ownId).concat(all.filter(d => d.id !== ownId));
+    return `<div class="standingsDivPicker" role="group" aria-label="Division">${ordered.map(d => `
+      <button type="button" class="btn btnTiny ${d.id === shownId ? '' : 'btnGhost'}" data-standings-div="${escapeHtml(d.id)}" aria-pressed="${d.id === shownId}">${escapeHtml(d.name)}${d.id === ownId ? ' (ours)' : ''}</button>`).join('')}
+    </div>`;
+  }
+
   window.Standings = {
-    async render(containerEl, divisionId) {
+    // divisionId is the team's own division. The whole league is one tap
+    // away: a row of division buttons on top (own division first and picked
+    // by default), so a coach can check Minors or Rookies too. opts.show is
+    // the division picked on that row.
+    async render(containerEl, divisionId, opts) {
+      opts = opts || {};
+      const ownId = divisionId;
+      divisionId = opts.show || ownId;
       containerEl.innerHTML = '<div class="emptyState">Loading…</div>';
       // Routed through TonightGames.ensureLoaded() rather than a bare dbGet
       // so this tab also gets the real first-visit seed that lives there
@@ -44,12 +63,17 @@
       // path, one seeding path instead of two copies of that logic.
       const data = await window.TonightGames.ensureLoaded();
       const division = data && data.divisions && data.divisions[divisionId];
+      const picker = divisionPickerHtml(ownId, divisionId);
+      const wirePicker = () => containerEl.querySelectorAll('[data-standings-div]').forEach(btn => {
+        btn.addEventListener('click', () => window.Standings.render(containerEl, ownId, { show: btn.getAttribute('data-standings-div') }));
+      });
       if (!division) {
-        containerEl.innerHTML = `
+        containerEl.innerHTML = picker + `
           <div class="emptyState">
             No standings mirrored yet for this division.<br>
             <span class="helpText">Run <code>node scripts/scrape-standings.mjs</code> (or let the scheduled GitHub Action do it once the season starts) to populate this.</span>
           </div>`;
+        wirePicker();
         return;
       }
       await Promise.all([window.ClubLogos.ensureLoaded(), window.LeagueInfo.ensureLoaded()]);
@@ -84,7 +108,7 @@
         ? '<th class="numCell">RF</th><th class="numCell">RA</th><th class="numCell">DIFF</th>'
         : '';
       const games = (division.todayGames || []).map(g => window.TonightGames.gameRowHtml(g, divisionId)).join('') || '<div class="emptyState">No games today.</div>';
-      containerEl.innerHTML = `
+      containerEl.innerHTML = picker + `
         <div class="sectionLabel" style="margin-bottom:6px;">${escapeHtml(ageLabel ? ageLabel + ' ' : '')}${escapeHtml(division.name || '')} Standings${seasonLabel ? ` &middot; ${escapeHtml(seasonLabel)}` : ''}</div>
         <div class="helpText">Mirrored from <a href="https://www.macleague.org/division/${escapeHtml(divisionId)}" target="_blank" rel="noopener">macleague.org</a> — standings as of ${timeAgo(division.fetchedAt)}.</div>
         <div class="standingsTableWrap">
@@ -95,6 +119,7 @@
         </div>
         <div class="sectionLabel" style="margin-top:14px;">Today's games</div>
         ${games}`;
+      wirePicker();
     },
 
     // "Standings-implied seeding" -- the current standings order, numbered,

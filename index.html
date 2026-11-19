@@ -35,7 +35,7 @@
      this is what actually uses them early. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"></noscript>
-<link rel="stylesheet" href="css/styles.css?v=216">
+<link rel="stylesheet" href="css/styles.css?v=218">
 <!-- Situations Trainer's own scoped "Sandlot" design system -- deliberately
      separate from styles.css, see css/situations.css's own header comment. -->
 <link rel="stylesheet" href="css/situations.css?v=195">
@@ -297,7 +297,7 @@
      cached one of those JSON files keeps serving it forever, even after the
      file changes on disk. Bump this alongside the ?v= bump whenever any
      data/*.json file changes. -->
-<script defer>window.BUILD_V = '20261119a';</script>
+<script defer>window.BUILD_V = '20261119c';</script>
 
 <!-- Theme toggle -- standalone and self-contained since both .topBarThemeBtn
      instances (public view + app shell) need it, independent of sign-in
@@ -408,7 +408,7 @@
 <script defer src="js/rules.js?v=207"></script>
 <script defer src="js/practice-catalog.js?v=194"></script>
 <script defer src="js/situations.js?v=208"></script>
-<script defer src="js/standings.js?v=194"></script>
+<script defer src="js/standings.js?v=217"></script>
 <!-- The watch link (natesteele888/apps watchlink.js, same github.io site): sends the family calendar to the Steele Family watch app. -->
 <script defer src="https://natesteele888.github.io/apps/watchlink.js"></script>
 <script defer src="js/calendar-family.js?v=195"></script>
@@ -1289,7 +1289,7 @@
      paths. -->
 <!-- board-invite.js: a coach link from the Dashboard, handled by access-control.js after a Google sign-in. -->
 <script defer src="js/board-invite.js?v=212"></script>
-<script defer src="js/access-control.js?v=212"></script>
+<script defer src="js/access-control.js?v=213"></script>
 <!-- public-view.js wires up #publicViewLink/#publicViewBack -- needs
      TEAM_REGISTRY, LeagueInfo, Standings, and LeagueEvents to already
      exist, no ordering constraint relative to auth.js/access-control.js

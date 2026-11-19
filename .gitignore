@@ -23,3 +23,8 @@ data/roster-seed.json
 # CLAUDE.md). For a human to review before the same script merges it into
 # a team's live roster in Firebase; never read by the app itself.
 data/dashboard-contacts-import.json
+
+# firebase.json's functions predeploy copies js/team-registry.js and
+# js/board-invite.js here so the deployed function uses the app's own team
+# list and matching (functions/dashboard-sync.js). A copy, never the source.
+functions/shared/
