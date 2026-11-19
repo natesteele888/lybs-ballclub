@@ -141,6 +141,12 @@
   window.leagueEventsPath = function () {
     return 'leagueEvents';
   };
+  // Field Time (js/field-schedule.js): org-wide like leagueEvents, because a
+  // field is shared by several teams. Its rules are database.rules.json's
+  // "fieldSched" entry, proved by tests/field-schedule-rules.emulator.mjs.
+  window.fieldSchedPath = function (key) {
+    return `fieldSched/${key}`;
+  };
 
   // ---- Mock store -------------------------------------------------------
   // Backed by localStorage under one namespaced key so a page reload

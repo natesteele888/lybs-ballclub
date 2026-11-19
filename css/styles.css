@@ -1529,3 +1529,71 @@ a { color: var(--lybs-blue-bright); }
 /* Standings tab: one button per division, the team's own first. */
 .standingsDivPicker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
 .standingsDivPicker .btnTiny { font-size: 12px; }
+
+/* ---- Field Time (js/field-schedule.js) ---- */
+.fsHead { margin-bottom: 12px; }
+.fsFieldRow, .fsToolbar, .fsLegendRow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.fsChip { font-family: var(--font-label); text-transform: uppercase; letter-spacing: .04em; font-size: 13px; min-height: 40px; padding: 8px 14px; border-radius: var(--radius-pill); border: 1px solid var(--card-border); background: rgba(var(--overlay-rgb), 0.04); color: var(--text); cursor: pointer; }
+.fsChipOn { background: var(--lybs-blue); border-color: var(--lybs-blue); color: #fff; }
+.fsSoon { font-size: 10px; opacity: .7; margin-left: 4px; }
+.fsToolbar .btn[aria-pressed="true"] { border-color: var(--lybs-blue); color: var(--text); background: rgba(46, 82, 232, 0.18); }
+.fsCount { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 4px; border-radius: var(--radius-pill); background: var(--status-red); color: #1a0606; font-size: 11px; line-height: 18px; text-align: center; }
+.fsActAs { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text2); }
+.fsBanner { border: 1px dashed var(--gold); color: var(--text); background: rgba(240, 200, 75, 0.08); border-radius: var(--radius-md); padding: 10px 12px; font-size: 13px; line-height: 1.5; margin-bottom: 10px; }
+.fsLegend { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text2); }
+.fsDot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex: none; }
+.fsWeekNav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; }
+.fsWeekLabel { font-family: var(--font-label); text-transform: uppercase; letter-spacing: .05em; font-size: 15px; }
+.fsCap { margin: 4px 0 10px; }
+.fsWeek { display: flex; flex-direction: column; gap: 8px; }
+.fsDay { display: grid; grid-template-columns: 76px 1fr; gap: 8px; align-items: start; padding: 8px; border-radius: var(--radius-md); background: var(--card); border: 1px solid var(--card-border); }
+.fsDayEmpty { opacity: .55; align-items: center; }
+.fsDayEmpty .helpText { margin: 0; }
+.fsToday { border-color: var(--lybs-blue); }
+.fsDayName { font-family: var(--font-label); text-transform: uppercase; font-size: 13px; letter-spacing: .04em; padding-top: 6px; }
+.fsBlocks { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 6px; }
+.fsBlock { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 56px; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--card-border); background: rgba(var(--overlay-rgb), 0.03); color: var(--text); text-align: left; cursor: pointer; font: inherit; }
+.fsBlock:disabled { cursor: default; opacity: .45; }
+.fsOpen { border-style: dashed; }
+.fsOpen .fsWho { color: var(--status-green); font-weight: 600; }
+.fsTaken, .fsMine { border-left: 5px solid var(--fs-team, var(--lybs-steel)); }
+.fsMine { background: rgba(46, 82, 232, 0.16); }
+.fsTime { font-size: 12px; color: var(--text2); }
+.fsWho { font-size: 14px; font-weight: 600; }
+.fsWhat { font-size: 12px; color: var(--text2); }
+.fsReqCard { margin-bottom: 12px; border-color: var(--gold); }
+.fsReq { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--card-border); font-size: 14px; line-height: 1.5; }
+.fsReq:first-of-type { border-top: 0; }
+.fsReqBtns { display: flex; gap: 6px; }
+.fsMsg { padding: 10px 0; border-top: 1px solid var(--card-border); font-size: 14px; line-height: 1.5; }
+.fsMsg:first-of-type { border-top: 0; }
+.fsMsg .helpText { margin: 2px 0 0; }
+.fsUnread { font-weight: 600; }
+.fsUnread::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--lybs-blue); margin-right: 6px; }
+.fsInboxTools { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 6px; }
+.fsForm { display: flex; flex-direction: column; gap: 10px; }
+.fsForm label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--text2); }
+.fsForm input:not([type="radio"]):not([type="checkbox"]), .fsForm select, .fsSettings input:not([type="checkbox"]):not([type="color"]), .fsSettings select, .fsSettings textarea { min-height: 40px; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--card-border); background: rgba(var(--sunken-rgb), 0.6); color: var(--text); font: inherit; font-size: 16px; }
+.fsKind { display: flex; gap: 16px; }
+.fsKind label { flex-direction: row; align-items: center; gap: 6px; color: var(--text); font-size: 15px; min-height: 40px; }
+.fsSetRow { display: flex !important; flex-direction: row !important; align-items: center; gap: 8px; font-size: 14px; color: var(--text); min-height: 40px; }
+.fsSetCol { flex-direction: column !important; align-items: stretch; }
+.fsSettings label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--text2); }
+.fsSetGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 10px 0 14px; }
+.fsSetDay { display: grid; grid-template-columns: 96px 1fr; gap: 8px; padding: 8px 0; border-top: 1px solid var(--card-border); }
+.fsSetDayName { font-family: var(--font-label); text-transform: uppercase; font-size: 13px; padding-top: 10px; }
+.fsSetBlocks { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.fsSetBlock { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text2); }
+.fsSetBlock input { width: 112px; }
+.fsTeamRows { display: flex; flex-direction: column; gap: 6px; margin: 6px 0 10px; }
+.fsTeamRow { display: grid; grid-template-columns: 1.4fr 1fr 1fr 44px 36px; gap: 6px; align-items: center; }
+.fsTeamRow input { min-width: 0; }
+.fsTeamRow input[type="color"] { width: 44px; height: 40px; padding: 2px; border-radius: var(--radius-sm); border: 1px solid var(--card-border); background: none; }
+.fsFoot { margin-top: 14px; }
+@media (max-width: 420px) {
+  .fsDay { grid-template-columns: 1fr; }
+  .fsDayName { padding-top: 0; }
+  .fsSetDay { grid-template-columns: 1fr; }
+  .fsTeamRow { grid-template-columns: 1fr 1fr 44px 36px; }
+  .fsTeamRow [data-t="division"] { display: none; }
+}
