@@ -140,7 +140,14 @@
   window.LeagueInfo = {
     async ensureLoaded() {
       if (cache) return cache;
-      cache = await fetch('data/league-info.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => null);
+      // Lunenburg's own dates (the LYBS Dashboard's League calendar, via
+      // js/league-events.js) open Important Dates; fetched alongside, and a
+      // failure there just leaves them out.
+      const [info] = await Promise.all([
+        fetch('data/league-info.json?v=' + window.BUILD_V).then(r => r.json()).catch(() => null),
+        window.LeagueEvents ? window.LeagueEvents.ensureLoaded().catch(() => null) : null,
+      ]);
+      cache = info;
       return cache;
     },
 
@@ -259,7 +266,37 @@
           else context = [before, after].filter(Boolean).join(' ');
           return { month: MONTH_ABBR[m[1]], day: m[2], context };
         }
-        return cache.seasons.map(s => `
+        // Lunenburg's own upcoming dates first, as their own card: the
+        // league's calendar from the LYBS Dashboard, the same list every
+        // team's Home shows. The MAC League's cards follow.
+        const lybs = window.LeagueEvents ? window.LeagueEvents.getUpcoming() : [];
+        const lybsCard = !lybs.length ? '' : `
+          <div class="dateSeasonCard dateSeasonCardCurrent">
+            <div class="dateSeasonHeader">
+              <div class="dateSeasonTitle">Lunenburg (LYBS) dates</div>
+            </div>
+            <div class="dateEventGrid">
+              ${lybs.map(ev => {
+                const d = ev.date ? new Date(ev.date + 'T12:00:00') : null;
+                const sub = [d ? d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : ev.when,
+                  ev.time, ev.location].filter(Boolean).join(' · ');
+                return `
+                  <div class="dateEventRow">
+                    ${d ? `
+                      <div class="dateChip">
+                        <div class="dateChipMonth">${escapeHtml(d.toLocaleDateString('en-US', { month: 'short' }))}</div>
+                        <div class="dateChipDay">${d.getDate()}</div>
+                      </div>` : ''}
+                    <div class="dateEventBody">
+                      <div class="dateEventTitle">${escapeHtml(ev.title || '')}</div>
+                      ${sub ? `<div class="dateEventSub">${escapeHtml(sub)}</div>` : ''}
+                      ${ev.description ? `<div class="dateEventSub">${escapeHtml(ev.description)}</div>` : ''}
+                    </div>
+                  </div>`;
+              }).join('')}
+            </div>
+          </div>`;
+        return lybsCard + cache.seasons.map(s => `
           <div class="dateSeasonCard ${s.status === 'current' ? 'dateSeasonCardCurrent' : ''}">
             <div class="dateSeasonHeader">
               <div class="dateSeasonTitle">${escapeHtml(s.label)}</div>
