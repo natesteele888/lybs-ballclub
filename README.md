@@ -54,14 +54,14 @@ python3 -m http.server 8080
 
 ## Go live
 
-Status as of 2026-10-03 -- project `lybs-ballclub` exists under natesteele888@gmail.com (same account as `lybs-dashboard`), the Web app is registered, and its API key is already wired into `index.html`.
+Status as of 2026-10-03 -- project `lybs-ballclub` exists under the owner's Google account (the same one as `lybs-dashboard`), the Web app is registered, and its API key is already wired into `index.html`.
 
 1. ~~Create a Firebase project and register a Web app~~ -- **done** (`console.firebase.google.com/project/lybs-ballclub`).
 2. **Create the Realtime Database instance** -- the one step that genuinely needs a console click (the CLI's non-interactive mode can't answer the "choose a location" prompt, and doing this by extracting a token and hand-rolling the API call isn't a safe shortcut to take, so this is a manual step): go to the project's **Build -> Realtime Database -> Create Database**, pick a US location (e.g. `us-central1`), start in **locked mode** (our rules file governs access either way). Note whatever URL it gives you -- it's usually `https://lybs-ballclub-default-rtdb.firebaseio.com`, but confirm it matches.
 3. Uncomment and set `window.FIREBASE_DB_URL` in `index.html` (right above `js/backend.js`) to that URL.
 4. **Deploy the security rules** already written in `database.rules.json` (gate-account-per-`{teamId,role}` model, matching `js/cloud-auth.js`):
    ```bash
-   npx firebase-tools@15.32.1 deploy --only database --project lybs-ballclub --account natesteele888@gmail.com
+   npx firebase-tools@15.32.1 deploy --only database --project lybs-ballclub --account <your Google account>
    ```
 5. **Enable the Email/Password sign-in provider** -- Console -> Build -> Authentication -> Sign-in method -> Email/Password -> Enable. This is what `cloud-auth.js`'s gate accounts (`signUp`/`signInWithPassword` against Identity Toolkit) actually run on; without it every login attempt fails.
 5b. **Enable the Google sign-in provider** -- Console -> Build -> Authentication -> Sign-in method -> Google -> Enable. Also add `natesteele888.github.io` under Authentication -> Settings -> Authorized domains (Firebase auto-adds `*.firebaseapp.com`/`*.web.app`, not a custom GitHub Pages domain). This is what `js/google-auth.js`'s `signInWithPopup`/`signInWithRedirect` actually run on.
